@@ -24,6 +24,8 @@ namespace Lemur::Scene
         // •`‰æˆ—
         virtual void Render(float elapsedTime) = 0;
 
+        virtual void DebugImgui() {};
+
         // €”õŠ®—¹‚µ‚Ä‚¢‚é‚©
         bool IsReady()const { return ready; }
         // €”õŠ®—¹İ’è

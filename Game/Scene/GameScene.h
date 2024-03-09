@@ -1,23 +1,23 @@
 #pragma once
-#include "BaseScene.h"
-#include "../Component/GameObject.h"
-#include "../Component/DemoPlayer.h"
-#include "../Component/DemoEnemy.h"
-#include "../Graphics/Shader.h"
-#include "../Graphics/Texture.h"
-#include "../Graphics/Framework.h"
+#include "./Lemur/Scene/BaseScene.h"
+#include "./Lemur/Component/GameObject.h"
+#include "./Lemur/Component/DemoPlayer.h"
+#include "./Lemur/Component/DemoEnemy.h"
+#include "./Lemur/Graphics/Shader.h"
+#include "./Lemur/Graphics/Texture.h"
+#include "./Lemur/Graphics/Framework.h"
 
 // BLOOM
-#include "../Graphics/Bloom.h"
+#include "./Lemur/Graphics/Bloom.h"
 
 // Audio
 #include <wrl.h>
-#include "../Audio/audio.h"
+#include "./Lemur/Audio/audio.h"
 
-#include "../Effekseer/Effect.h"
+#include "./Lemur/Effekseer/Effect.h"
 
 // Font
-#include"../Font/Font.h"
+#include"./Lemur/Font/Font.h"
 #include <dwrite.h>                
 #pragma comment(lib,"d2d1.lib")    
 #pragma comment(lib,"dwrite.lib")
@@ -25,14 +25,14 @@
 // GLTF
 #include "./Lemur/Model/GltfModel.h"
 
-#include "../Math/Vector.h"
+#include "./Lemur/Math/Vector.h"
 #include "./Lemur/Math/MathHelper.h"
 
-class DemoScene :public Lemur::Scene::BaseScene
+class GameScene :public Lemur::Scene::BaseScene
 {
 public:
-    DemoScene() {}
-    ~DemoScene() override {}
+    GameScene() {}
+    ~GameScene() override {}
 
     // 初期化
     void Initialize()override;
@@ -45,6 +45,9 @@ public:
 
     // 描画処理
     void Render(float elapsedTime)override;
+
+    // デバック
+    void DebugImgui()override;
 
     //HACK ユニークポインタ
     DemoPlayer* CreatePlayer()
@@ -82,10 +85,10 @@ private:
     float adapter_timer;
 
     //TODO 調整用
-    DirectX::XMFLOAT3 pos = {0.0f,0.0f,0.0f};
+    DirectX::XMFLOAT3 pos = { 0.0f,0.0f,0.0f };
 
     DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, 0.0f, 1.0f };
-    DirectX::XMFLOAT3 camera_target{ 0.0f, 0.0f, 0.0f};
+    DirectX::XMFLOAT3 camera_target{ 0.0f, 0.0f, 0.0f };
     float camera_range = 12.0f;
     //DirectX::XMFLOAT4 light_direction{ 0.0f, -1.0f, 1.0f, 1.0f };
 
@@ -132,7 +135,6 @@ private:
     };
     option_constants option_constant;
 
-    D3D11_TEXTURE2D_DESC mask_texture2dDesc{};
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
     std::shared_ptr<Sprite> dummy_sprite;
     Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader;
@@ -222,7 +224,7 @@ private:
     spotLights spot_light[8];
     float sp_angle = 0;
 
-    Vector3 spDirection;
+    Vector3 spDirection = {1,1,1};
 
     // PBR
     struct adjust_constants
@@ -240,7 +242,7 @@ private:
         DirectX::XMFLOAT4 fog_range; // x : near, y : far, zw : 空き
     };
     DirectX::XMFLOAT4 fog_color{ 0.2f, 0.2f, 0.2f, 1.0f }; // クリアカラーにしています
-    DirectX::XMFLOAT4 fog_range{0.1f, 100.0f, 0, 0};
+    DirectX::XMFLOAT4 fog_range{ 0.1f, 100.0f, 0, 0 };
 
     // 半球ライト
     struct hemisphere_light_constants
@@ -265,6 +267,13 @@ private:
     float light_view_near_z{ 2.0f };
     float light_view_far_z{ 18.0f };
 
+    // コントローラー用
+    float s_l;
+    float timer_s;
+    float s_l_max;
+    float f_d=0;
+    std::shared_ptr<Sprite> ohajiki;
 
 
+    
 };

@@ -25,6 +25,12 @@ public:
         float num = rand() % (Max - Min) + Min;
         return num /= 10.0f;
     }
+
+    static void NormalizeDirectXVector(DirectX::XMFLOAT4& vec) {
+        DirectX::XMVECTOR vector = DirectX::XMLoadFloat4(&vec);
+        vector = DirectX::XMVector4Normalize(vector);
+        DirectX::XMStoreFloat4(&vec, vector);
+    }
 };
 
 //(Left Hand Side ç∂ï”, Right Hand Side âEï”)

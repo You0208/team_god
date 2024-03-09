@@ -30,7 +30,6 @@ float4 main(VS_OUT pin) : SV_TARGET
         sampled.rgb = pow(sampled.rgb, GAMMA);
         basecolor_factor *= sampled;
     }
-    
     // エミッシブ
     float3 emmisive_factor = m.emissive_factor;
     const int emissive_texture = m.emissive_texture.index;

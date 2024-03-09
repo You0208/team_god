@@ -1,14 +1,13 @@
-#include "DemoScene.h"
+#include "GameScene.h"
 #include "./Lemur/Component/DemoEnemyManager.h"
-#include "../Graphics/Camera.h"
-#include "../Resource/ResourceManager.h"
-#include "../Scene/SceneManager.h"
+#include "./Lemur/Graphics/Camera.h"
+#include "./Lemur/Resource/ResourceManager.h"
+#include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
 // Effect
-#include "../Effekseer/EffekseerManager.h"
+#include "./Lemur/Effekseer/EffekseerManager.h"
 
-
-void DemoScene::Initialize()
+void GameScene::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
@@ -35,7 +34,7 @@ void DemoScene::Initialize()
 				hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].GetAddressOf());
 				_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 			}
-			{ // フォグ
+			{ // オプション
 				buffer_desc.ByteWidth = sizeof(option_constants);
 				hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
 				_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
@@ -131,6 +130,9 @@ void DemoScene::Initialize()
 		player = CreatePlayer();
 		player->Initialize();
 		player->SetPixelShader(Try.Get());
+
+
+		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}
 	// ポイントライト・スポットライトの初期位置設定
 	{
@@ -157,7 +159,7 @@ void DemoScene::Initialize()
 
 		spot_light[0].position = { 0, 10, 0, 0 };
 		spot_light[0].direction = { -1, -1, 1, 0 };
-		Mathf:: NormalizeDirectXVector(spot_light[0].direction);
+		Mathf::NormalizeDirectXVector(spot_light[0].direction);
 
 		spot_light[0].range = 300;
 		spot_light[0].angle = DirectX::XMConvertToRadians(25.0f);
@@ -189,7 +191,7 @@ void DemoScene::Initialize()
 	}
 }
 
-void DemoScene::Finalize()
+void GameScene::Finalize()
 {
 	player->Delete();
 	delete player;
@@ -197,11 +199,25 @@ void DemoScene::Finalize()
 	DemoEnemyManager::Instance().Clear();
 }
 
-void DemoScene::Update(HWND hwnd, float elapsedTime)
+void GameScene::Update(HWND hwnd, float elapsedTime)
 {
 	using namespace DirectX;
 	Camera& camera = Camera::Instance();
 	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	s_l = gamePad.GetAxisLY()*-1.0f;
+
+	if (s_l > 0.1f)
+	{
+		timer_s += elapsedTime;
+		if (s_l_max <= s_l)s_l_max = s_l;
+	}
+	else
+	{
+		if(timer_s>0)f_d = (s_l_max * 100.0f) / timer_s;
+		s_l_max = 0;
+		timer_s = 0;
+	}
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 	adapter_timer += 0.01f;
@@ -252,6 +268,12 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 	//---------------------------------------------------------------------------------------
 	{
 		ImGui::Begin("ImGUI");
+		ImGui::Text("s_l : %f", s_l);
+		ImGui::Text("f_d : %f", f_d);
+		ImGui::Text("s_l_max : %f", s_l_max);
+		ImGui::Text("timer_s : %f", timer_s);
+
+
 		ImGui::SliderFloat3("pos", &pos.x, -30.0f, +30.0f);
 
 		ImGui::SliderFloat4("parameters", &option_constant.parameters.x, 0.0f, +1.0f);
@@ -356,7 +378,7 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 	}
 }
 
-void DemoScene::Render(float elapsedTime)
+void GameScene::Render(float elapsedTime)
 {
 	HRESULT hr{ S_OK };
 
@@ -397,7 +419,7 @@ void DemoScene::Render(float elapsedTime)
 		//skinned_meshes[0]->Render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, &null_pixel_shader);
 		//skinned_meshes[1]->Render(immediate_context, { -0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 0.01f, 0, 0, 0, 0, 1 }, material_color, nullptr, &null_pixel_shader);
 		//skinned_meshes[2]->Render(immediate_context, { -1.0f, 0, 0, 0, 0, 1.0f, 0, 0, 0, 0, 1.0f, 0, 0, 0, 0, 1 }, material_color, nullptr, &null_pixel_shader);
-		
+
 		//static std::vector<GltfModel::node> animated_nodes{ gltf_models[0]->nodes };
 		//static float time{ 0 };
 		//gltf_models[0]->Animate(0, time += elapsedTime, animated_nodes, true);
@@ -446,7 +468,7 @@ void DemoScene::Render(float elapsedTime)
 		// FOG
 		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].Get(), 0, 0, &fog_constants, 0, 0);
 		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].GetAddressOf());
-		
+
 		// オプション
 		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].Get(), 0, 0, &option_constant, 0, 0);
 		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::OPTION), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
@@ -546,8 +568,8 @@ void DemoScene::Render(float elapsedTime)
 			C = { DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0]) * DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
 			S = { DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
 			R = { DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-			T = { DirectX::XMMatrixTranslation(translation.x , translation.y-1 , translation.z ) };
-			DirectX::XMStoreFloat4x4(&world, C* S* R* T);
+			T = { DirectX::XMMatrixTranslation(translation.x , translation.y - 1 , translation.z) };
+			DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 
 			ID3D11PixelShader* null_pixel_shader{ NULL };
 			//skinned_meshes[1]->Render(immediate_context, world, material_color, nullptr, stage_ps.Get());
@@ -566,10 +588,10 @@ void DemoScene::Render(float elapsedTime)
 			scale_factor = 1.0f;
 			// To change the units from centimeters to meters, set 'scale_factor' to 0.01.
 			C = { DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0]) * DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-			S = { DirectX::XMMatrixScaling(scaling.x+ option_constant.parameters.y, scaling.y + option_constant.parameters.y, scaling.z + option_constant.parameters.y) };
+			S = { DirectX::XMMatrixScaling(scaling.x + option_constant.parameters.y, scaling.y + option_constant.parameters.y, scaling.z + option_constant.parameters.y) };
 			R = { DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
 			T = { DirectX::XMMatrixTranslation(translation.x + pos.x, translation.y + pos.y, translation.z + pos.z) };
-			DirectX::XMStoreFloat4x4(&world, C* S* R* T);
+			DirectX::XMStoreFloat4x4(&world, C * S * R * T);
 			static std::vector<GltfModel::node> animated_nodes{ gltf_models[0]->nodes };
 			static float time{ 0 };
 			gltf_models[0]->Animate(0, time += elapsedTime, animated_nodes, false);
@@ -617,4 +639,9 @@ void DemoScene::Render(float elapsedTime)
 	};
 	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0, _countof(final_pass_shader_resource_views), pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
 
+	ohajiki->Render(immediate_context, 100, f_d*0.5f, 100, 100);
+}
+
+void GameScene::DebugImgui()
+{
 }

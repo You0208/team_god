@@ -36,8 +36,8 @@ bool Framework::Initialize()
 		Lemur::Audio::AudioManager::Instance().LoadAudio();
 	}
 
-	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
+	// シーン初期化5
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
 
 	return true;
 }
