@@ -126,11 +126,6 @@ void GameScene::Initialize()
 		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(),
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 
-		//// プレイヤー生成・初期化
-		player = CreatePlayer();
-		player->Initialize();
-		player->SetPixelShader(Try.Get());
-
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}

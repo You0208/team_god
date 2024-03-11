@@ -1,11 +1,11 @@
-#include "SelectScene.h"
 #include "FormationScene.h"
 #include "./Lemur/Graphics/Camera.h"
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
 
-void SelectScene::Initialize()
+#include "GameScene.h"
+void FormationScene::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
@@ -37,42 +37,28 @@ void SelectScene::Initialize()
 
     // ゲーム関連
     {
-        select_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select1.png");
-        select_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select2.png");
-        select_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select3.png");
+        formation = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation.png");
     }
 }
 
-void SelectScene::Finalize()
+void FormationScene::Finalize()
 {
 }
 
-void SelectScene::Update(HWND hwnd, float elapsedTime)
+void FormationScene::Update(HWND hwnd, float elapsedTime)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // ゲームパッド
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
+    if (gamePad.GetButton() & gamePad.BTN_B)
     {
-        if (stage_num < 2)stage_num += 1;
+        Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
     }
-    else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)
-    {
-        if (stage_num > 0)stage_num -= 1;
-    }
-
-
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)
-    {
-        Lemur::Scene::SceneManager::Instance().SetStageNum(stage_num);
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
-    }
-
     DebugImgui();
 }
 
-void SelectScene::Render(float elapsedTime)
+void FormationScene::Render(float elapsedTime)
 {
     HRESULT hr{ S_OK };
 
@@ -97,20 +83,14 @@ void SelectScene::Render(float elapsedTime)
     immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
     immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-    if (stage_num == 0) select_1->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    if (stage_num == 1) select_2->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    if (stage_num == 2) select_3->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-
+    formation->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void SelectScene::DebugImgui()
+void FormationScene::DebugImgui()
 {
     ImGui::Begin("ImGUI");
 
-    ImGui::Text("stage_num : %d", &stage_num);
     ImGui::SliderFloat("dissolve", &dissolve_value, 0.0f, 1.0f);
 
     ImGui::End();
 }
-

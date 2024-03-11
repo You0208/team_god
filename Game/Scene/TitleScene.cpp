@@ -4,6 +4,7 @@
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
 
+#include "SelectScene.h"
 void TitleScene::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -47,7 +48,13 @@ void TitleScene::Finalize()
 void TitleScene::Update(HWND hwnd, float elapsedTime)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+    // ゲームパッド
+    GamePad& gamePad = Input::Instance().GetGamePad();
 
+    if (gamePad.GetButton() & gamePad.BTN_B)
+    {
+        Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
+    }
     DebugImgui();
 }
 

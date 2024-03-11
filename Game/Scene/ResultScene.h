@@ -1,4 +1,3 @@
-
 #pragma once
 #include "./Lemur/Scene/BaseScene.h"
 #include "./Lemur/Component/GameObject.h"
@@ -29,11 +28,11 @@
 #include "./Lemur/Math/Vector.h"
 #include "./Lemur/Math/MathHelper.h"
 
-class TitleScene :public Lemur::Scene::BaseScene
+class ResultScene :public Lemur::Scene::BaseScene
 {
 public:
-    TitleScene() {}
-    ~TitleScene() override {}
+    ResultScene() {}
+    ~ResultScene() override {}
 
     // èâä˙âª
     void Initialize()override;
@@ -50,7 +49,7 @@ public:
     void DebugImgui()override;
 private:
 private:
-    std::shared_ptr<Sprite> title;
+    std::shared_ptr<Sprite> result;
 
     // MASK
     struct option_constants {

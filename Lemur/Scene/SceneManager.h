@@ -32,8 +32,12 @@ namespace Lemur::Scene
         void ChangeScene(BaseScene* scene);
 
         void Finalize();
+
+        void SetStageNum(int stage_num_) { stage_num = stage_num_; };
     private:
         BaseScene* currentScene = nullptr;
         BaseScene* nextScene = nullptr;
+
+        int stage_num;
     };
 }

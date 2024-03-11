@@ -49,24 +49,6 @@ public:
     // デバック
     void DebugImgui()override;
 
-    //HACK ユニークポインタ
-    DemoPlayer* CreatePlayer()
-    {
-        return new DemoPlayer(
-            new DemoPlayerInputComponent(),
-            new DemoPlayerPhysicsComponent(),
-            new DemoPlayerGraphicsComponent()
-        );
-    }
-
-    DemoEnemy* CreateEnemy()
-    {
-        return new DemoEnemy(
-            new DemoEnemyInputComponent(),
-            new DemoEnemyPhysicsComponent(),
-            new DemoEnemyGraphicsComponent()
-        );
-    }
 private:
 
     //DemoPlayer
