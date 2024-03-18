@@ -52,7 +52,7 @@ bool Character::ApplyDamage(int damage)
     }
     else
     {
-        OnDamaged();
+        OnDamage();
     }
 
     // 健康状態が変更した場合はtrueを返す
@@ -490,6 +490,27 @@ void Character::HitStopCalc()
     hit_stop_timer += high_resolution_timer::Instance().time_interval();
 #endif
 
+}
+
+void Character::UpdateTransform()
+{
+    // スケールの行列の作成。
+    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
+
+    // 回転の行列の作成。
+    DirectX::XMMATRIX X = DirectX::XMMatrixRotationX(rotation.x);
+    DirectX::XMMATRIX Y = DirectX::XMMatrixRotationY(rotation.y);
+    DirectX::XMMATRIX Z = DirectX::XMMatrixRotationZ(rotation.z);
+    DirectX::XMMATRIX R = Y * X * Z;
+    // 位置の行列の作成。
+    DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+
+    // 3地の行列を組み合わせてワールド行列を作成。
+    DirectX::XMMATRIX W = S * R * T;
+
+
+    // 計算したワールド行列を取り出す。
+    DirectX::XMStoreFloat4x4(&transform, W);
 }
 
 void Character::UpdateAnimation(float elapsedTime)

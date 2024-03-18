@@ -143,7 +143,7 @@ protected:
     virtual void OnLanding() {};
 
     // ダメージを受けたときに呼ばれる
-    virtual void OnDamaged() {}
+    virtual void OnDamage() {}
 
     // 死亡した時に呼ばれる
     virtual void OnDead() {}
@@ -167,6 +167,9 @@ public:
 
     // ヒットストップの計算
     void HitStopCalc();
+
+    // 行列の更新処理
+    void UpdateTransform();
 
 public:
 
