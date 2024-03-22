@@ -28,6 +28,9 @@
 #include "./Lemur/Math/Vector.h"
 #include "./Lemur/Math/MathHelper.h"
 
+//Game
+#include "../Stage/Stage.h"
+
 class GameScene :public Lemur::Scene::BaseScene
 {
 public:
@@ -50,6 +53,7 @@ public:
     void DebugImgui()override;
 
 private:
+    Stage* stage = nullptr;
 
     //DemoPlayer
     DemoPlayer* player = nullptr;

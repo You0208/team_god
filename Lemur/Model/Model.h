@@ -463,8 +463,6 @@ protected:
     void FetchSkeleton(FbxMesh* fbx_mesh, Skeleton& bind_pose);
     void FetchAnimations(FbxScene* fbx_scene, std::vector<Animation>& animation_clips, float sampling_rate /*この値が 0 の場合、アニメーション データはデフォルトのフレーム レートでサンプリングされる*/);
     void FetchScene(const char* fbx_filename, bool triangulate, float sampling_rate/*If this damage_value is 0, the animation data will be sampled at the default frame rate.*/);
-
-
 };
 
 // STATIC_BATCHING

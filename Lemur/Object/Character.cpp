@@ -168,7 +168,7 @@ void Character::Move(float vx, float vz, float speed)
     maxMoveSpeed = speed;
 }
 
-void Character::Turn(float vx, float vz, float speed)
+void Character::Turn(float elapsedTime,float vx, float vz, float speed)
 {
     speed *= high_resolution_timer::Instance().time_interval();
 
@@ -511,6 +511,14 @@ void Character::UpdateTransform()
 
     // 計算したワールド行列を取り出す。
     DirectX::XMStoreFloat4x4(&transform, W);
+}
+
+void Character::UpdateInvincibleTimer(float elapsedTime)
+{
+    if (invincibleTimer > 0.0f)
+    {
+        invincibleTimer -= elapsedTime;
+    }
 }
 
 void Character::UpdateAnimation(float elapsedTime)

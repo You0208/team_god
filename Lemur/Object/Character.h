@@ -120,7 +120,7 @@ public:
     // 移動処理
     void Move(float vx, float vz, float speed);
     // 方向転換
-    void Turn(float vx, float vz, float speed);
+    void Turn(float elapsedTime, float vx, float vz, float speed);
 
     void SetPixelShader(ID3D11PixelShader* ps) { pixelShader = ps; }
 
@@ -170,6 +170,9 @@ public:
 
     // 行列の更新処理
     void UpdateTransform();
+
+    // 無敵時間更新
+    void UpdateInvincibleTimer(float elapsedTime);
 
 public:
 

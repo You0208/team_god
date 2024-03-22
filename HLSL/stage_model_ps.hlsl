@@ -10,7 +10,6 @@ SamplerState sampler_states[3] : register(s0);
 Texture2D texture_maps[8] : register(t0);
 
 Texture2D noise_map : register(t9); // 先生ノイズは3D
-Texture2D color_map : register(t10); // 先生ノイズは3D
 
 Texture2D roughness_ : register(t4);
 Texture2D metalness_ : register(t5);
@@ -28,7 +27,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     // 色 
     const float GAMMA = 2.2;
 
-    float4 color = color_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord);
+    float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     color.rgb = pow(color.rgb, GAMMA);
     float alpha = color.a;
     

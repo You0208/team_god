@@ -7,6 +7,14 @@
 // Effect
 #include "./Lemur/Effekseer/EffekseerManager.h"
 
+// Game
+#include "../Stage/StageMain.h"
+#include "../Stage/StageManager.h"
+#include "../Character/EnemyManager.h"
+#include "../Character/Enemy_A.h"
+#include "../Character/UnitManager.h"
+#include "../Character/Unit_A.h"
+
 void GameScene::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -62,17 +70,6 @@ void GameScene::Initialize()
 			}
 		}
 
-		// GLTF
-		//D3D11_TEXTURE2D_DESC texture2d_desc;
-		//load_texture_from_file(graphics.GetDevice(), L"./resources/Image/environments/sunset_jhbcentral_4k/sunset_jhbcentral_4k.dds",
-		//	shader_resource_views[0].GetAddressOf(), &texture2d_desc);
-		//load_texture_from_file(graphics.GetDevice(), L"./resources/Image/environments/sunset_jhbcentral_4k/diffuse_iem.dds",
-		//	shader_resource_views[1].GetAddressOf(), &texture2d_desc);
-		//load_texture_from_file(graphics.GetDevice(), L"./resources/Image/environments/sunset_jhbcentral_4k/specular_pmrem.dds",
-		//	shader_resource_views[2].GetAddressOf(), &texture2d_desc);
-		//load_texture_from_file(graphics.GetDevice(), L"./resources/Image/environments/lut_ggx.dds",
-		//	shader_resource_views[3].GetAddressOf(), &texture2d_desc);
-
 		// SCENE
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
@@ -94,7 +91,6 @@ void GameScene::Initialize()
 
 		// dissolve
 		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
-		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\\Model\\fantasy_game_inn\\textures\\theInn_texture_diffuse_color.png", BaseColor.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
@@ -104,27 +100,26 @@ void GameScene::Initialize()
 	// ゲーム部分
 	{
 		Camera& camera = Camera::Instance();
+		// ステージ初期化
+		StageManager& stage_manager = StageManager::Instance();
+		StageMain* stage_main = new StageMain;
+		stage_manager.Register(stage_main);
 
-		// STATIC_BATCHING
-		//static_meshes[0] = std::make_unique<StaticMeshBatch>(device.Get(), ".\\resources_2\\terrain\\terrain.fbx", true);
-		//static_meshes[0] = std::make_unique<StaticMeshBatch>(graphics.GetDevice(), ".\\resources_2\\death_valley_-_terrain.fbx", true);
-		skinned_meshes[0] = std::make_unique<SkinnedMesh>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx", true);
-		//skinned_meshes[0] = std::make_unique<SkinnedMesh>(graphics.GetDevice(), ".\\resources_2\\ball\\ball.obj", true);
-		skinned_meshes[1] = std::make_unique<SkinnedMesh>(graphics.GetDevice(), ".\\resources_2\\Model\\plane\\plane.obj", true);
-		sprite_batches[0] = std::make_unique<SpriteBatch>(graphics.GetDevice(), L".\\resources_2\\screenshot.jpg", 1);
+		// プレイヤーの初期化
+		UnitManager& unitManager = UnitManager::Instance();
+		Unit_A* unit_A = new Unit_A();
+		unit_A->SetPosition(DirectX::XMFLOAT3(2.0f, 0, 5));
+		unitManager.Register(unit_A);		
 
-		//skinned_meshes[1] = std::make_unique<SkinnedMesh>(graphics.GetDevice(), ".\\resources_2\\Model\\latha.fbx", true);
-		//skinned_meshes[2] = std::make_unique<SkinnedMesh>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx", true);
-		skinned_meshes[2] = std::make_unique<SkinnedMesh>(graphics.GetDevice(), ".\\resources_2\\Model\\fantasy_game_inn\\source\\theInn.FBX.fbx", true);
 
-		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(), 
-		//	".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
-		gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(), ".\\resources_2\\french_street_low_poly\\scene.gltf");
-		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(), ".\\resources_2\\wizards_library\\scene.gltf");
-		//gltf_models[1] = std::make_unique<GltfModel>(graphics.GetDevice(), ".\\resources_2\\toon_cat_free\\scene.gltf");
-
-		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(),
-		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
+		// エネミーの初期化
+		EnemyManager& enemyManager = EnemyManager::Instance();
+		for (int i = 0; i < 2; ++i)
+		{
+			Enemy_A* enemy_A = new Enemy_A();
+			enemy_A->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
+			enemyManager.Register(enemy_A);
+		}
 
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
@@ -135,22 +130,22 @@ void GameScene::Initialize()
 		point_light[0].position.y = 1;
 		point_light[0].range = 10;
 		point_light[0].color = { 1, 0, 0, 1 };
-		//point_light[1].position.x = -10;
-		//point_light[1].position.y = 1;
-		//point_light[1].range = 10;
-		//point_light[1].color = { 0, 1, 0, 1 };
-		//point_light[2].position.y = 1;
-		//point_light[2].position.z = 10;
-		//point_light[2].range = 10;
-		//point_light[2].position.y = 1;
-		//point_light[2].color = { 0, 0, 1, 1 };
-		//point_light[3].position.y = 1;
-		//point_light[3].position.z = -10;
-		//point_light[3].range = 10;
-		//point_light[3].color = { 1, 1, 1, 1 };
-		//point_light[4].range = 10;
-		//point_light[4].color = { 1, 1, 1, 1 };
-		//ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
+		point_light[1].position.x = -10;
+		point_light[1].position.y = 1;
+		point_light[1].range = 10;
+		point_light[1].color = { 0, 1, 0, 1 };
+		point_light[2].position.y = 1;
+		point_light[2].position.z = 10;
+		point_light[2].range = 10;
+		point_light[2].position.y = 1;
+		point_light[2].color = { 0, 0, 1, 1 };
+		point_light[3].position.y = 1;
+		point_light[3].position.z = -10;
+		point_light[3].range = 10;
+		point_light[3].color = { 1, 1, 1, 1 };
+		point_light[4].range = 10;
+		point_light[4].color = { 1, 1, 1, 1 };
+		ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
 
 		spot_light[0].position = { 0, 10, 0, 0 };
 		spot_light[0].direction = { -1, -1, 1, 0 };
@@ -188,10 +183,12 @@ void GameScene::Initialize()
 
 void GameScene::Finalize()
 {
-	player->Delete();
-	delete player;
-	//エネミー終了
-	DemoEnemyManager::Instance().Clear();
+	//ステージ終了
+	if (stage != nullptr)
+	{
+		delete stage;
+		stage = nullptr;
+	}
 }
 
 void GameScene::Update(HWND hwnd, float elapsedTime)
@@ -216,7 +213,6 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 	adapter_timer += 0.01f;
-	//player->Update(elapsedTime);
 
 	// カメラ
 	{
@@ -225,9 +221,13 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		camera.SetRange(camera_range);
 	}
 
+	//ステージ更新処理
+	StageManager::Instance().update(elapsedTime);
+	EnemyManager::Instance().Update(elapsedTime);
+	//UnitManager::Instance().Update(elapsedTime);
+
 	// ３Dディゾルブ
 	{
-		skinned_meshes[0]->dissolve = option_constant.parameters.x;
 	}
 	// スポットライト
 	{
@@ -508,7 +508,6 @@ void GameScene::Render(float elapsedTime)
 	{
 		// ノイズ
 		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());//TODO
-		immediate_context->PSSetShaderResources(10/*slot(1番にセットします)*/, 1, BaseColor.GetAddressOf());//TODO
 		// シャドウ
 		immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
 	}
@@ -537,73 +536,11 @@ void GameScene::Render(float elapsedTime)
 
 
 		{
-			const DirectX::XMFLOAT4X4 coordinate_system_transforms[]{
-				{ -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },	// 0:RHS Y-UP
-				{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },		// 1:LHS Y-UP
-				{ -1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1 },	// 2:RHS Z-UP
-				{ 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1 },		// 3:LHS Z-UP
-			};
-#if 0
-			float scale_factor = 1.0f; // To change the units from centimeters to meters, set 'scale_factor' to 0.01.
-#else
-			float scale_factor = 0.1f; // To change the units from centimeters to meters, set 'scale_factor' to 0.01.
-#endif
-			DirectX::XMMATRIX C{ DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0]) * DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-			DirectX::XMMATRIX S = { DirectX::XMMatrixScaling(scaling.x + option_constant.parameters.y, scaling.y + option_constant.parameters.y, scaling.z + option_constant.parameters.y) };
-			DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-			DirectX::XMMATRIX T = { DirectX::XMMatrixTranslation(translation.x + pos.x, translation.y + pos.y, translation.z + pos.z) };
-			DirectX::XMFLOAT4X4 world;
-			DirectX::XMStoreFloat4x4(&world, C * S * R * T);
-			//skinned_meshes[0]->Render(immediate_context, world, material_color, nullptr, chara_ps.Get());
-			// STATIC_BATCHING
-			//drawcall_count = static_meshes[0]->render(immediate_context, world, material_color);
-			//skinned_meshes[2]->Render(immediate_context, world, material_color, nullptr, stage_ps.Get());
-			scale_factor = 100.0f;
-			// To change the units from centimeters to meters, set 'scale_factor' to 0.01.
-			C = { DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0]) * DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-			S = { DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
-			R = { DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-			T = { DirectX::XMMatrixTranslation(translation.x , translation.y - 1 , translation.z) };
-			DirectX::XMStoreFloat4x4(&world, C * S * R * T);
-
-			ID3D11PixelShader* null_pixel_shader{ NULL };
-			//skinned_meshes[1]->Render(immediate_context, world, material_color, nullptr, stage_ps.Get());
-
-			scale_factor = 5.0f;
-			// To change the units from centimeters to meters, set 'scale_factor' to 0.01.
-			C = { DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0]) * DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-			S = { DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
-			R = { DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-			T = { DirectX::XMMatrixTranslation(translation.x + pos.x, translation.y + pos.y, translation.z + pos.z) };
-			DirectX::XMStoreFloat4x4(&world, C * S * R * T);
-
-			//skinned_meshes[1]->render(immediate_context, world, material_color, nullptr, Try.Get());
-
-#if 1
-			scale_factor = 1.0f;
-			// To change the units from centimeters to meters, set 'scale_factor' to 0.01.
-			C = { DirectX::XMLoadFloat4x4(&coordinate_system_transforms[0]) * DirectX::XMMatrixScaling(scale_factor, scale_factor, scale_factor) };
-			S = { DirectX::XMMatrixScaling(scaling.x + option_constant.parameters.y, scaling.y + option_constant.parameters.y, scaling.z + option_constant.parameters.y) };
-			R = { DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-			T = { DirectX::XMMatrixTranslation(translation.x + pos.x, translation.y + pos.y, translation.z + pos.z) };
-			DirectX::XMStoreFloat4x4(&world, C * S * R * T);
-			static std::vector<GltfModel::node> animated_nodes{ gltf_models[0]->nodes };
-			static float time{ 0 };
-			gltf_models[0]->Animate(0, time += elapsedTime, animated_nodes, false);
-			gltf_models[0]->Render(immediate_context, world, animated_nodes);
-			//gltf_models[1]->Animate(0, time += elapsedTime, animated_nodes, false);
-			//gltf_models[1]->Render(immediate_context, world, animated_nodes);
-#endif			
-#if 0
-			immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-			immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-			sprite_batches[0]->Begin(immediate_context);
-			sprite_batches[0]->Render(immediate_context, 0, 0, 1280, 720);
-			sprite_batches[0]->End(immediate_context);
-#endif
+			//ステージ描画
+			StageManager::Instance().Render(0.1f, stage_ps.GetAddressOf());
+			//UnitManager::Instance().Render(0.1f, chara_ps.GetAddressOf());
+			EnemyManager::Instance().Render(0.1f, chara_ps.GetAddressOf());
 		}
-		// プレイヤー描画
-		//player->Render(elapsedTime);
 	}
 
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);

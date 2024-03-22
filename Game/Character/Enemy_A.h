@@ -1,5 +1,5 @@
 #pragma once
-#include "Lemur/Model/Model.h"
+#include "Lemur/Model/FbxModelManager.h"
 #include "Enemy.h"
 class Enemy_A :public Enemy
 {
@@ -147,6 +147,6 @@ private:
     // UŒ‚“–‚½‚è”»’è‚·‚é‚©
     bool attackCollisionFlag = false;
 
-    std::shared_ptr<SkinnedMesh> ModelEnemy_A;
+    std::shared_ptr<FbxModelManager> ModelEnemy_A;
 };
 

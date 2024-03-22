@@ -1,4 +1,4 @@
-#include "skinned_mesh.hlsli"
+#include "light.hlsli"
 
 VS_OUT main(VS_IN vin)
 {
@@ -49,6 +49,8 @@ VS_OUT main(VS_IN vin)
     }
 
 #endif
+    vout.binormal = normalize(cross(vout.world_normal.xyz, vout.world_tangent.xyz));
+  
     
     return vout;
 }

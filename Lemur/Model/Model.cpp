@@ -233,18 +233,32 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* device, const char* fbx_filename, std::ve
 
 void SkinnedMesh::UpdateAnimation(Animation::keyframe& keyframe)
 {
-    const size_t node_count{ keyframe.nodes.size() };
+    //const size_t node_count{ keyframe.nodes.size() };
+    //for (size_t node_index = 0; node_index < node_count; ++node_index)
+    //{
+    //    Animation::keyframe::node& node{ keyframe.nodes.at(node_index) };
+    //    XMMATRIX S{ XMMatrixScaling(node.scaling.x, node.scaling.y, node.scaling.z) };
+    //    XMMATRIX R{ XMMatrixRotationQuaternion(XMLoadFloat4(&node.rotation)) };
+    //    XMMATRIX T{ XMMatrixTranslation(node.translation.x, node.translation.y, node.translation.z) };
+
+    //    const int64_t parent_index{ scene_view.nodes.at(node_index).parent_index };
+    //    XMMATRIX P{ parent_index < 0 ? XMMatrixIdentity() : XMLoadFloat4x4(&keyframe.nodes.at(parent_index).global_transform) };
+
+    //    XMStoreFloat4x4(&node.global_transform, S * R * T * P);
+    //}
+    size_t node_count{ keyframe.nodes.size() };
     for (size_t node_index = 0; node_index < node_count; ++node_index)
     {
         Animation::keyframe::node& node{ keyframe.nodes.at(node_index) };
-        XMMATRIX S{ XMMatrixScaling(node.scaling.x, node.scaling.y, node.scaling.z) };
-        XMMATRIX R{ XMMatrixRotationQuaternion(XMLoadFloat4(&node.rotation)) };
-        XMMATRIX T{ XMMatrixTranslation(node.translation.x, node.translation.y, node.translation.z) };
+        DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(node.scaling.x,node.scaling.y,node.scaling.z) };
+        DirectX::XMMATRIX R{ DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&node.rotation)) };
+        DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(node.translation.x,node.translation.y,node.translation.z) };
 
-        const int64_t parent_index{ scene_view.nodes.at(node_index).parent_index };
-        XMMATRIX P{ parent_index < 0 ? XMMatrixIdentity() : XMLoadFloat4x4(&keyframe.nodes.at(parent_index).global_transform) };
+        int64_t parent_index{ scene_view.nodes.at(node_index).parent_index };
+        DirectX::XMMATRIX P{ parent_index < 0 ? DirectX::XMMatrixIdentity() :
+        DirectX::XMLoadFloat4x4(&keyframe.nodes.at(parent_index).global_transform) };
 
-        XMStoreFloat4x4(&node.global_transform, S * R * T * P);
+        DirectX::XMStoreFloat4x4(&node.global_transform, S * R * T * P);
     }
 }
 
@@ -348,7 +362,7 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         { "BONES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT },
     };
 
-    create_vs_from_cso(device, "Shader/lim_try_vs.cso", vertex_shader.ReleaseAndGetAddressOf(), input_layout.ReleaseAndGetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
+    create_vs_from_cso(device, "Shader/skinned_mesh_vs.cso", vertex_shader.ReleaseAndGetAddressOf(), input_layout.ReleaseAndGetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
     create_ps_from_cso(device, "Shader/skinned_mesh_ps.cso", pixel_shader.ReleaseAndGetAddressOf());
 
     D3D11_BUFFER_DESC buffer_desc{};

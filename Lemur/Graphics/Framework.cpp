@@ -37,7 +37,7 @@ bool Framework::Initialize()
 	}
 
 	// シーン初期化5
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new TitleScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
 
 	return true;
 }
