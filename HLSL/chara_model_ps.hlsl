@@ -9,10 +9,9 @@
 SamplerState sampler_states[3] : register(s0);
 Texture2D texture_maps[8] : register(t0);
 
-Texture2D noise_map : register(t9); // 先生ノイズは3D
+Texture2D metalSmoothTex : register(t4);
 
-Texture2D roughness_ : register(t4);
-Texture2D metalness_ : register(t5);
+Texture2D noise_map : register(t9); // 先生ノイズは3D
 
 // SHADOW
 SamplerComparisonState comparison_sampler_state : register(s5);
@@ -32,11 +31,11 @@ float4 main(VS_OUT pin) : SV_TARGET
     float alpha = color.a;
     
     // 金属度
-    float metallic = metalness_.Sample(sampler_states[ANISOTROPIC], pin.texcoord);
+    float metallic = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     
     // 滑らかさ
-    float smoothness = roughness_.Sample(sampler_states[ANISOTROPIC], pin.texcoord);
-   
+    float smoothness = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).a;
+    
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
     

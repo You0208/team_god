@@ -13,7 +13,7 @@ void SelectScene::Initialize()
 
     // シェーダー関連
     {
-        SetState();
+        InitializeState();
         HRESULT hr{ S_OK };
         // シーン定数バッファオブジェクトを生成
         {

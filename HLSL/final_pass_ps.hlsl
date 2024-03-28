@@ -14,7 +14,7 @@ float4 main(VS_OUT pin) : SV_TARGET
    float4 color = texture_maps[0].Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord);
     float alpha = color.a;
 
-#if 1
+#if 0
 	// Gamma process
     const float GAMMA = 2.2f;
     color.rgb = pow(color.rgb, 1.0 / GAMMA);
