@@ -28,7 +28,7 @@ void Enemy_A::Update(float elapsedTime)
     model_enemy_A->UpdateAnimation(elapsedTime);
 }
 
-void Enemy_A::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
+void Enemy_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
-    model_enemy_A->Render(elapsedTime, replaced_pixel_shader);
+    model_enemy_A->Render(scale, replaced_pixel_shader);
 }

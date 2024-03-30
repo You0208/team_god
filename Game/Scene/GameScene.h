@@ -1,8 +1,5 @@
 #pragma once
 #include "./Lemur/Scene/BaseScene.h"
-#include "./Lemur/Component/GameObject.h"
-#include "./Lemur/Component/DemoPlayer.h"
-#include "./Lemur/Component/DemoEnemy.h"
 #include "./Lemur/Graphics/Shader.h"
 #include "./Lemur/Graphics/Texture.h"
 #include "./Lemur/Graphics/Framework.h"
@@ -30,6 +27,7 @@
 
 //Game
 #include "../Stage/Stage.h"
+#include "../Character/Player.h"
 
 class GameScene :public Lemur::Scene::BaseScene
 {
@@ -49,29 +47,23 @@ public:
     // 描画処理
     void Render(float elapsedTime)override;
 
-
-private:
+    // Imgui
+    void DebugImgui()override;
+private:// ゲーム
     Stage* stage = nullptr;
 
-    //DemoPlayer
-    DemoPlayer* player = nullptr;
-    DemoEnemy* enemy = nullptr;
+    Player* player = nullptr;
 
     float second;
 
-    // skkind
-    std::shared_ptr<SkinnedMesh> skinned_meshes[8];
+    // コントローラー用
+    float s_l;
+    float timer_s;
+    float s_l_max;
+    float f_d = 0;
+    std::shared_ptr<Sprite> ohajiki;
 
-    // gltf
-    std::unique_ptr<GltfModel> gltf_models[8];
-
-    //DirectX::XMFLOAT4 light_direction{ 0.0f, -1.0f, 1.0f, 1.0f };
-
-    DirectX::XMFLOAT3 translation{ 0, 0, 0 };
-    DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
-    DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
-    DirectX::XMFLOAT4 material_color{ 1, 1, 1, 1 };
-private:
+private:// シェーダー
     std::unique_ptr<SpriteBatch> sprite_batches[8];
 
 
@@ -97,11 +89,5 @@ private:
     float light_view_size{ 12.0f };
     float light_view_near_z{ 2.0f };
     float light_view_far_z{ 18.0f };
-
-    // コントローラー用
-    float s_l;
-    float timer_s;
-    float s_l_max;
-    float f_d=0;
-    std::shared_ptr<Sprite> ohajiki;    
+ 
 };

@@ -29,6 +29,8 @@ void GameScene::Initialize()
 		InitializeFramebuffer();
 		// ピクセルシェーダーの初期化
 		InitializePS();
+		// ポイントライト・スポットライトの初期位置設定
+		InitializeLight();
 
 		// スカイマップテクスチャのロード
 		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
@@ -47,11 +49,18 @@ void GameScene::Initialize()
 	}
 	// ゲーム部分
 	{
+		// カメラ
 		Camera& camera = Camera::Instance();
+		// カメラ調整
+		camera_range = 20.0f;
+
 		// ステージ初期化
 		StageManager& stage_manager = StageManager::Instance();
 		StageMain* stage_main = new StageMain;
 		stage_manager.Register(stage_main);
+
+		// プレイヤーの初期化
+		player = new Player;
 
 		// プレイヤーの初期化
 		//UnitManager& unitManager = UnitManager::Instance();
@@ -68,14 +77,10 @@ void GameScene::Initialize()
 		//	enemyManager.Register(enemy_A);
 		//}
 
-		// カメラ調整
-		camera_range = 20.0f;
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}
 
-	// ポイントライト・スポットライトの初期位置設定
-	InitializeLight();
 }
 
 void GameScene::Finalize()
@@ -86,7 +91,15 @@ void GameScene::Finalize()
 		delete stage;
 		stage = nullptr;
 	}
+	//プレイヤー終了
+	if (player != nullptr)
+	{
+		delete player;
+		player = nullptr;
+	}
+	// エネミー終了
 	EnemyManager::Instance().Clear();
+	// ユニット終了
 	UnitManager::Instance().Clear();
 }
 
@@ -121,31 +134,19 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 			s_l_max = 0;
 			timer_s = 0;
 		}
+
+		// プレイヤーの更新
+		player->Update(elapsedTime);
 		// エフェクト更新処理
 		EffectManager::Instance().Update(elapsedTime);
 		//ステージ更新処理
 		StageManager::Instance().update(elapsedTime);
 		EnemyManager::Instance().Update(elapsedTime);
-		//UnitManager::Instance().Update(elapsedTime);
+		UnitManager::Instance().Update(elapsedTime);
 	}
 
-	//---------------------------------------------------------------------------------------
 	// Imgui
-	//---------------------------------------------------------------------------------------
-	{
-		BaseScene::DebugImgui();
-
-		ImGui::Begin("ImGUI");
-
-		// STATIC_BATCHING
-		if (ImGui::TreeNode("shadow"))
-		{
-			ImGui::Image(reinterpret_cast<void*>(double_speed_z->shader_resource_view.Get()), ImVec2(shadowmap_width / 5.0f, shadowmap_height / 5.0f));
-			ImGui::SliderFloat("shadow_depth_bias", &scene_constants.shadow_depth_bias, 0.1f, 0.01f);
-			ImGui::TreePop();
-		}
-		ImGui::End();
-	}
+	DebugImgui();
 }
 
 void GameScene::Render(float elapsedTime)
@@ -159,6 +160,7 @@ void GameScene::Render(float elapsedTime)
 	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
 	camera.SetPerspectiveFov(immediate_context);
+	
 	// 描画の設定
 	SetUpRendering();
 
@@ -201,25 +203,34 @@ void GameScene::Render(float elapsedTime)
 		const float scale = 0.01f;
 		if (enable_deferred)
 		{
+			// プレイヤー描画
+			player->Render(scale, defefferd_model.GetAddressOf());
 			//ステージ描画
 			StageManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			// ユニット描画
 			UnitManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			// エネミー描画
 			EnemyManager::Instance().Render(scale, defefferd_model.GetAddressOf());
 		}
 		else
 		{
+			// プレイヤー描画
+			player->Render(scale, stage_ps.GetAddressOf());
 			//ステージ描画
 			StageManager::Instance().Render(scale, stage_ps.GetAddressOf());
+			// ユニット描画
 			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			// エネミー描画
 			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
 		}
 	}
-	// ステートの設定
+
+	// ステートの再設定
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
 
+	// バッファーの変更
 	RenderingDeffered();
-
 
 	// ポストエフェクトの実行
 	if (enable_post_effect)
@@ -227,4 +238,20 @@ void GameScene::Render(float elapsedTime)
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
 		ExePostEffct();
 	}
+}
+
+void GameScene::DebugImgui()
+{
+	BaseScene::DebugImgui();
+
+	ImGui::Begin("ImGUI");
+
+	// STATIC_BATCHING
+	if (ImGui::TreeNode("shadow"))
+	{
+		ImGui::Image(reinterpret_cast<void*>(double_speed_z->shader_resource_view.Get()), ImVec2(shadowmap_width / 5.0f, shadowmap_height / 5.0f));
+		ImGui::SliderFloat("shadow_depth_bias", &scene_constants.shadow_depth_bias, 0.1f, 0.01f);
+		ImGui::TreePop();
+	}
+	ImGui::End();
 }
