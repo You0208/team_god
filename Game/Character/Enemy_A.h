@@ -13,74 +13,6 @@ public:
     // 描画処理
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
-    // 死亡したときに呼ばれる
-    void OnDead() override;
-
-    // デバッグプリミティブ描画
-    void DrawDebugPrimitive() override;
-
-    // 縄張り設定
-    void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
-
-protected:
-    // ダメージを受けたときに呼ばれる
-    void OnDamage() override;
-
-private:
-    // ターゲット位置をランダム設定
-    void SetRandomTargetPosition();
-
-    // 目標地点へ移動
-    void MoveToTarget(float elapsedTime, float speedRate);
-
-    // プレイヤー索敵
-    bool SearchPlayer();
-
-    // ノードとプレイヤーの衝突処理
-    void CollisionNodeVsPlayer(const char* nodeName, float boneRadius);
-
-    // 徘徊ステートへ遷移
-    void TransitionWanderState();
-
-    // 徘徊ステート更新処理
-    void UpdateWanderState(float elapsedTime);
-
-    // 待機ステートへ遷移
-    void TransitionIdleState();
-
-    // 待機ステート更新処理
-    void UpdateIdleState(float elapsedTime);
-
-    // 追跡ステートへ遷移
-    void TransitionPursuitState();
-
-    // 追跡ステート更新処理
-    void UpdatePursuitState(float elapsedTime);
-
-    // 攻撃ステートへ遷移
-    void TransitionAttackState();
-
-    // 攻撃ステート更新処理
-    void UpdateAttackState(float elapsedTime);
-
-    // 戦闘待機ステートへ遷移
-    void TransitionIdleBattleState();
-
-    // 戦闘待機ステート更新処理
-    void UpdateIdleBattleState(float elapsedTime);
-
-    // ダメージステートへ遷移
-    void TransitionDamageState();
-
-    // ダメージステート更新処理
-    void UpdateDamageState(float elapsedTime);
-
-    // 死亡ステートへ遷移
-    void TransitionDeathState();
-
-    // 死亡ステート更新処理
-    void UpdateDeathState(float elapsedTime);
-
 private:
 
     // ステート
@@ -147,6 +79,6 @@ private:
     // 攻撃当たり判定するか
     bool attackCollisionFlag = false;
 
-    std::shared_ptr<FbxModelManager> ModelEnemy_A;
+    std::shared_ptr<FbxModelManager> model_enemy_A;
 };
 

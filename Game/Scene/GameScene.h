@@ -103,8 +103,5 @@ private:
     float timer_s;
     float s_l_max;
     float f_d=0;
-    std::shared_ptr<Sprite> ohajiki;
-
-
-    
+    std::shared_ptr<Sprite> ohajiki;    
 };

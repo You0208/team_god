@@ -54,21 +54,22 @@ void GameScene::Initialize()
 		stage_manager.Register(stage_main);
 
 		// プレイヤーの初期化
-		UnitManager& unitManager = UnitManager::Instance();
-		Unit_A* unit_A = new Unit_A();
-		unit_A->SetPosition(DirectX::XMFLOAT3(2.0f, 0, 5));
-		unitManager.Register(unit_A);		
-
+		//UnitManager& unitManager = UnitManager::Instance();
+		//Unit_A* unit_A = new Unit_A();
+		//unit_A->SetPosition(DirectX::XMFLOAT3(2.0f, 0, 5));
+		//unitManager.Register(unit_A);		
 
 		// エネミーの初期化
-		EnemyManager& enemyManager = EnemyManager::Instance();
-		for (int i = 0; i < 2; ++i)
-		{
-			Enemy_A* enemy_A = new Enemy_A();
-			enemy_A->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-			enemyManager.Register(enemy_A);
-		}
+		//EnemyManager& enemyManager = EnemyManager::Instance();
+		//for (int i = 0; i < 2; ++i)
+		//{
+		//	Enemy_A* enemy_A = new Enemy_A();
+		//	enemy_A->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
+		//	enemyManager.Register(enemy_A);
+		//}
 
+		// カメラ調整
+		camera_range = 20.0f;
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}
@@ -85,6 +86,8 @@ void GameScene::Finalize()
 		delete stage;
 		stage = nullptr;
 	}
+	EnemyManager::Instance().Clear();
+	UnitManager::Instance().Clear();
 }
 
 void GameScene::Update(HWND hwnd, float elapsedTime)
@@ -194,21 +197,23 @@ void GameScene::Render(float elapsedTime)
 	}
 
 	//3D描画
-	if (enable_deferred)
 	{
-		//ステージ描画
-		StageManager::Instance().Render(0.1f, defefferd_model.GetAddressOf());
-		//UnitManager::Instance().Render(0.1f, chara_ps.GetAddressOf());
-		EnemyManager::Instance().Render(0.1f, defefferd_model.GetAddressOf());
+		const float scale = 0.01f;
+		if (enable_deferred)
+		{
+			//ステージ描画
+			StageManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			UnitManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			EnemyManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+		}
+		else
+		{
+			//ステージ描画
+			StageManager::Instance().Render(scale, stage_ps.GetAddressOf());
+			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
+		}
 	}
-	else
-	{
-		//ステージ描画
-		StageManager::Instance().Render(0.1f, stage_ps.GetAddressOf());
-		//UnitManager::Instance().Render(0.1f, chara_ps.GetAddressOf());
-		EnemyManager::Instance().Render(0.1f, chara_ps.GetAddressOf());
-	}
-
 	// ステートの設定
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
