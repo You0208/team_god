@@ -1,10 +1,10 @@
 #pragma once
 #include "Enemy.h"
-class Enemy_A :public Enemy
+class Enemy_B :public Enemy
 {
 public:
-    Enemy_A();
-    ~Enemy_A()override {};
+    Enemy_B();
+    ~Enemy_B()override {};
 
     // XVˆ—
     void Update(float elapsedTime) override;

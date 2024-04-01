@@ -1,9 +1,9 @@
-#include "Enemy_A.h"
+#include "Enemy_D.h"
 
 #include "Lemur/Collision/Collision.h"
 #include "Lemur/Math/MathHelper.h"
 
-Enemy_A::Enemy_A()
+Enemy_D::Enemy_D()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx");
@@ -15,7 +15,7 @@ Enemy_A::Enemy_A()
     model->PlayAnimation(0, true);
 }
 
-void Enemy_A::Update(float elapsedTime)
+void Enemy_D::Update(float elapsedTime)
 {
     // ‘¬—Íˆ—XV
     UpdateVelocity(elapsedTime);
@@ -27,7 +27,7 @@ void Enemy_A::Update(float elapsedTime)
     model->UpdateAnimation(elapsedTime);
 }
 
-void Enemy_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void Enemy_D::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
     model->Render(scale, replaced_pixel_shader);
 }

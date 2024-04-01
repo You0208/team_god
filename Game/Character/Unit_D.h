@@ -1,12 +1,11 @@
 #pragma once
 #include "Unit.h"
-#include "Lemur/Model/FbxModelManager.h"
 
-class Unit_A :public Unit
+class Unit_D :public Unit
 {
 public:
-    Unit_A();
-    ~Unit_A()override;
+    Unit_D();
+    ~Unit_D()override;
 
     void Update(float elapsedTime)override;
 
@@ -18,6 +17,13 @@ public:
     void DrawDebugPrimitive();
 
 private:
+
+    float moveSpeed = 5.0f;
+    float turnSpeed = DirectX::XMConvertToRadians(720);
+    float jumpSpeed = 20.0f;
+
+    // çUåÇìñÇΩÇËîªíËÇ∑ÇÈÇ©
+    bool attackCollisionFlag = false;
 };
 
 

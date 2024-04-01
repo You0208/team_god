@@ -1,7 +1,6 @@
-#include "Unit_A.h"
-#include "Lemur/Input/Input.h"
+#include "Unit_C.h"
 
-Unit_A::Unit_A()
+Unit_C::Unit_C()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
@@ -10,11 +9,11 @@ Unit_A::Unit_A()
     model->PlayAnimation(0, true);
 }
 
-Unit_A::~Unit_A()
+Unit_C::~Unit_C()
 {
 }
 
-void Unit_A::Update(float elapsedTime)
+void Unit_C::Update(float elapsedTime)
 {
     // ‘¬—Íˆ—XV
     UpdateVelocity(elapsedTime);
@@ -29,17 +28,16 @@ void Unit_A::Update(float elapsedTime)
     model->UpdateAnimation(elapsedTime);
 }
 
-void Unit_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void Unit_C::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
     model->Render(scale, replaced_pixel_shader);
 }
 
-void Unit_A::DrawDebugGUI()
+void Unit_C::DrawDebugGUI()
 {
-    model->DrawDebug("Unit_A");
+    model->DrawDebug("Unit_C");
 }
 
-void Unit_A::DrawDebugPrimitive()
+void Unit_C::DrawDebugPrimitive()
 {
 }
-
