@@ -54,8 +54,6 @@ private:// ゲーム
 
     Player* player = nullptr;
 
-    float second;
-
     // コントローラー用
     float s_l;
     float timer_s;
