@@ -17,7 +17,7 @@ void StageMain::Update(float elapsedTime)
 void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
     stage_main_model->Render(scale, replaced_pixel_shader);
-    stage_main_model->DrawDebug(0);
+    stage_main_model->DrawDebug("Stage");
 }
 
 bool StageMain::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)

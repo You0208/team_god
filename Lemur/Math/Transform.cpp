@@ -1,16 +1,17 @@
 #include "Transform.h"
 
 // デバッグ用
-void Transform::DrawDebug(int i)
+void Transform::DrawDebug(std::string name)
 {
-    if (ImGui::TreeNode("Transform"))
+    std::string T = std::string("Transform") + name;
+    if (ImGui::TreeNode(T.c_str()))
     {
-        std::string p = std::string("position") + std::to_string(i);
+        std::string p = std::string("position") + name;
         ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);
-        std::string s = std::string("scale") + std::to_string(i);
+        std::string s = std::string("scale") + name;
         ImGui::DragFloat3(s.c_str(), &scale.x, 0.001f, -FLT_MAX, FLT_MAX);
 
-        std::string r = std::string("rotation") + std::to_string(i);
+        std::string r = std::string("rotation") + name;
         DirectX::XMFLOAT3 rot{};
         rot.x = DirectX::XMConvertToDegrees(rotation.x);
         rot.y = DirectX::XMConvertToDegrees(rotation.y);
@@ -20,14 +21,14 @@ void Transform::DrawDebug(int i)
         rotation.y = DirectX::XMConvertToRadians(rot.y);
         rotation.z = DirectX::XMConvertToRadians(rot.z);
 
-        std::string s_f = std::string("scale_facter") + std::to_string(i);
+        std::string s_f = std::string("scale_facter") + name;
         ImGui::DragFloat(s_f.c_str(), &scaleFactor, 0.001f, 0.001f, 1.0f);
 
-        std::string c = std::string("Coordinate System") + std::to_string(i);
+        std::string c = std::string("Coordinate System") + name;
         ImGui::SliderInt(c.c_str(), &coordinateSystem, 0, static_cast<int>(CoordinateSystem::cLeftZup));
         ImGui::Text(coordinateSystemName[coordinateSystem].c_str());
 
-        std::string re = std::string("Reset") + std::to_string(i);
+        std::string re = std::string("Reset") + name;
         if (ImGui::Button(re.c_str()))
         {
             Reset();

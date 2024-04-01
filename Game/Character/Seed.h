@@ -16,12 +16,14 @@ public:
 
     void DrawDebugGUI();
 
-    // インスタンス取得
-    static Seed& Instance();
+    float GetTimer() { return timer; };
+    int GetNumber() { return number; };
+    void SetNumber(int number_) { number= number_; };
+    void DecNumber() { number--; }
+
 private:
-    std::shared_ptr<FbxModelManager> model_seed;
-
-
+    float timer;
+    int number;
 };
 
 

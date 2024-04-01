@@ -1,16 +1,14 @@
 #include "Seed.h"
 #include "Lemur/Input/Input.h"
-static Seed* instance = nullptr;
 
 Seed::Seed()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model_seed = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx");
 
-    scale.x = scale.y = scale.z = 0.01f;
+    scale.x = scale.y = scale.z = 1.0f;
     radius = 0.5f;
     height = 1.0f;
-    model_seed->transform.SetPositionZ(-5.0f);
 }
 
 Seed::~Seed()
@@ -19,6 +17,8 @@ Seed::~Seed()
 
 void Seed::Update(float elapsedTime)
 {
+    timer += elapsedTime;
+
     // 速力処理更新
     UpdateVelocity(elapsedTime);
 
@@ -26,7 +26,10 @@ void Seed::Update(float elapsedTime)
     UpdateInvincibleTimer(elapsedTime);
 
     // モデルアニメーション更新
-    model_seed->UpdateAnimation(elapsedTime);
+    model->UpdateAnimation(elapsedTime);
+
+    // 行列更新処理
+    UpdateTransform();
 
     // Imgui
     DrawDebugGUI();
@@ -34,18 +37,15 @@ void Seed::Update(float elapsedTime)
 
 void Seed::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
-    model_seed->Render(scale, replaced_pixel_shader);
+    model->Render(scale, replaced_pixel_shader);
 }
 
 void Seed::DrawDebugGUI()
 {
     ImGui::Begin("Seed");
 
+    ImGui::DragInt("number", &number);
+    ImGui::DragFloat("timer", &timer);
 
     ImGui::End();
-}
-
-Seed& Seed::Instance()
-{
-    return *instance;
 }

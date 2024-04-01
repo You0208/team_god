@@ -31,7 +31,7 @@ public:
 	{}
 	~Transform() {}
 
-	void DrawDebug(int i);
+	void DrawDebug(std::string i);
 	void Reset();
 
 	DirectX::XMMATRIX CalcWorld();

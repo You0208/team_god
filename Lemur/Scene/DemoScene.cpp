@@ -168,12 +168,12 @@ void DemoScene::Render(float elapsedTime)
 	if (enable_deferred)
 	{
 		test_model->Render(0.01f, defefferd_model.Get());
-		test_model->DrawDebug(0);
+		test_model->DrawDebug("Test");
 	}
 	else
 	{
 		test_model->Render(0.01f, Try.Get());
-		test_model->DrawDebug(0);
+		test_model->DrawDebug("Test");
 	}
 
 	// ステートの設定

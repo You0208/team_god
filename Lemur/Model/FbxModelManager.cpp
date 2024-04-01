@@ -67,7 +67,7 @@ void FbxModelManager::Render(const float& scale, ID3D11PixelShader** replaced_pi
     }
 }
 
-void FbxModelManager::DrawDebug(int i)
+void FbxModelManager::DrawDebug(std::string i)
 {
     GetTransform()->DrawDebug(i);
 }

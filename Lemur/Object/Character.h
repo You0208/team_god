@@ -215,7 +215,7 @@ public:
 
     DirectX::XMFLOAT3 velocity = { 0, 0, 0 };  // 速度
     DirectX::XMFLOAT3 position = { 0, 0, 0 };  // 位置
-    DirectX::XMFLOAT3 scale = { 3.0f, 3.0f, 3.0f }; // スケール
+    DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f }; // スケール
     DirectX::XMFLOAT3 rotation = { 0, 0, 0 }; //　回転
     DirectX::XMFLOAT4 material_color = { 1, 1, 1, 1 }; // 色
 
