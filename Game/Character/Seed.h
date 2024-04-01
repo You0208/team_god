@@ -3,11 +3,11 @@
 #include "Lemur/Graphics/Shader.h"
 #include "Lemur/Model/FbxModelManager.h"
 #include "Lemur/Effekseer/Effect.h"
-class Player :public Character
+class Seed :public Character
 {
 public:
-    Player();
-    ~Player()override;
+    Seed();
+    ~Seed()override;
 
     void Update(float elapsedTime);
 
@@ -17,14 +17,11 @@ public:
     void DrawDebugGUI();
 
     // インスタンス取得
-    static Player& Instance();
+    static Seed& Instance();
 private:
-    void InputProcess(float elapsed_time);
-private:
-    std::shared_ptr<FbxModelManager> model_player;
-    float moveSpeed = 5.0f;
-    float speed = {};
-    Effect* hitEffect = nullptr;
+    std::shared_ptr<FbxModelManager> model_seed;
+
+
 };
 
 

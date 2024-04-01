@@ -248,7 +248,7 @@ namespace Lemur::Scene
         bool enable_bloom = false;
         bool enable_fog = false;
 
-        bool enable_deferred = true;
+        bool enable_deferred = false;
         bool enable_deferred_post = false;
         bool enable_post_effect = false;
     private:

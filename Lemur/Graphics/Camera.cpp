@@ -113,8 +113,8 @@ void Camera::NonLockOnUpdate(float elapsedTime)
     float speed = rollSpeed * elapsedTime;
 
     // スティックの入力値に合わせてX軸とY軸を回転
-    angle.x -= ay * speed;
-    angle.y += ax * speed;
+   //angle.x -= ay * speed;
+   //angle.y += ax * speed;
 
 #if 0
     /*------------- マウス処理 -------------*/

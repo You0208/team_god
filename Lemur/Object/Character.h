@@ -1,5 +1,6 @@
 #pragma once
 #include "../Model/Model.h"
+#include "../Model/FbxModelManager.h"
 #include "../Graphics/Graphics.h"
 #include "../Resource/ResourceManager.h"
 #include "./Lemur/Input/Mouse.h"
@@ -26,7 +27,7 @@ public:
     // ルートモーションするノード設定
     void SetupRootMotion(const char* root_motion_nodeName)
     {
-        root_motion_node_index = Model->FindMeshNodeIndex(root_motion_nodeName);
+       // root_motion_node_index = model->FindMeshNodeIndex(root_motion_nodeName);
     }
 
     Animation animation_{};
@@ -86,10 +87,10 @@ public:
     const DirectX::XMFLOAT4& GetColor() { return material_color; }
 
     // モデル設定
-    void SetModel(std::shared_ptr<SkinnedMesh> Model) { this->Model = Model; }
+    void SetModel(std::shared_ptr<FbxModelManager> Model) { this->model = Model; }
 
-    // モデル取得(AI側でアニメーションの切り替えしたいから作りました Byトミー)
-    SkinnedMesh* GetModel()const { return Model.get(); }
+    // モデル取得
+    FbxModelManager* GetModel()const { return model.get(); }
 
     // アニメーションの切り替え
     void SetAnimationIndex(int index, const bool& loop = false)
@@ -111,11 +112,11 @@ public:
     int GetFrameIndex()const { return frame_index; }
 
     // アニメーションデータ取得
-    std::vector<Animation>* GetAnimation() { return &Model->animation_clips; };
+    std::vector<Animation>* GetAnimation() { return model->GetAnimation(); };
 
     // 描画設定
-    void Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_shader);
-    void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader);
+    void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
+    void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
 
     // 移動処理
     void Move(float vx, float vz, float speed);
@@ -245,7 +246,8 @@ public:
 
 
     float animation_tick = 0; // アニメーション
-    std::shared_ptr<SkinnedMesh> Model = nullptr;
+    std::shared_ptr<FbxModelManager> model;
+
     // アニメーション用(メンバ化しときました。これに相当する変数とかもしあったらごめん)
     //名前をclip_indexから変えました。
     int animation_index = 0;

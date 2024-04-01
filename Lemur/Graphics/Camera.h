@@ -72,7 +72,7 @@ private:
     DirectX::XMFLOAT3 eye = {};
 
     // …•½‚Ι©‚ι‚ρ‚β‚Θ‚­‚Δ‚Ώ‚ε‚Α‚Ζγ‚©‚ηλαΥ‚·‚ι‚½‚ί‚Μ•β³
-    float eye_y_offset = 4.0f;
+    float eye_y_offset = 8.0f;
 
     // ©‚½‚Άl‚Μ‘«³‚έ‚ι‚ρ‚β‚Θ‚­‚Δƒ`ƒ‡ƒCγ
     float target_y_offset = 1.5f;
