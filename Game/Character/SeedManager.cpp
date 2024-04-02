@@ -2,6 +2,7 @@
 #include "UnitManager.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "Lemur/Collision/Collision.h"
+#include "Game/CollisionManager.h"
 
 // 更新処理
 void SeedManager::Update(float elapsedTime)
@@ -36,7 +37,6 @@ void SeedManager::Update(float elapsedTime)
         }
     }
 
-    CollisionSeedVsUnit();
 
     // 破棄処理
     for (Seed* seed : removes)
@@ -88,47 +88,6 @@ void SeedManager::DrawDebugPrimitive()
     for (Seed* seed : seeds)
     {
         seed->DrawDebugPrimitive();
-    }
-}
-
-// 種とユニットの当たり判定
-void SeedManager::CollisionSeedVsUnit()
-{
-    UnitManager& unitManager = UnitManager::Instance();
-
-    // 全ての敵と総当たりで衝突判定
-    int unitCount = unitManager.GetUnitCount();
-    bool is_intersected =false;
-
-    // 種の総当たり
-    for (Seed* seed : seeds)
-    {
-        is_intersected = false;
-        // ユニットの総当たり
-        for (int i = 0; i < unitCount; ++i)
-        {
-            Unit* unit = unitManager.GetUnit(i);
-
-            if (unit->category==0||unit->category==3)
-            {
-                // 種がユニットの範囲に入っているとき
-                if (Collision::IntersectCylinderVsCylinder
-                (seed->GetPosition(),
-                    seed->GetRadius(),
-                    seed->GetHeight(),
-                    unit->GetPosition(),
-                    unit->GetRadius(),
-                    unit->GetHeight())
-                    )
-                {
-                    is_intersected = true;
-                    break; // 一度でも重なればループを抜ける
-                }
-            }
-        }
-
-        // 重なりがない場合、種を生まれた状態に設定
-        if (!is_intersected)seed->SetBorn(true);
     }
 }
 

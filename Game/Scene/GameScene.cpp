@@ -4,10 +4,13 @@
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
+
+
 // Effect
 #include "./Lemur/Effekseer/EffekseerManager.h"
 
 // Game
+#include "Game/CollisionManager.h"
 #include "../Stage/StageMain.h"
 #include "../Stage/StageManager.h"
 #include "../Character/EnemyManager.h"
@@ -148,6 +151,9 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		UnitManager::Instance().Update(elapsedTime);
 		// 種更新
 		SeedManager::Instance().Update(elapsedTime);
+
+		// 種とユニットの当たり判定
+		CollisionManager::Instance().CollisionSeedVsUnit();
 	}
 
 	// Imgui

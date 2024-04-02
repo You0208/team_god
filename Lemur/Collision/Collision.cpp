@@ -12,6 +12,12 @@ void CollisionPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 }
 
 
+bool Collision::IntersectSquareVsPoint(const DirectX::XMFLOAT2& lu, const DirectX::XMFLOAT2& rd, const DirectX::XMFLOAT2& point)
+{
+    //l1¶ãAl2‰E‰º
+    if ((point.x > lu.x) && (point.x < rd.x) && (point.y < lu.y) && (point.y > rd.y)) return true;
+    return false;
+}
 
 //@‹…‚Æ‹…Œğ·”»’è
 bool Collision::IntersectSphereVsSphereOut(

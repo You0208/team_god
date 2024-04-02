@@ -39,9 +39,6 @@ public:
     // íæ“¾
     Seed* GetSeed(int index) { return seeds.at(index); }
 
-    // í‚Æƒ†ƒjƒbƒg‚Ì“–‚½‚è”»’è
-    void CollisionSeedVsUnit();
-
     // ííœ
     void Remove(Seed* enemy);
 

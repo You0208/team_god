@@ -9,8 +9,10 @@ Unit_A::Unit_A()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
 
-    radius = 1.0f;
+    attack_radius = 1.0f;
+    radius = 0.3f;
     height = 0.5f;
+    dec_pos = 1.0f;
 
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
@@ -48,6 +50,7 @@ void Unit_A::DrawDebugGUI()
 void Unit_A::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, radius, height, { 1,0,0,1 });
+    debug_renderer->DrawCylinder(position, attack_radius, height, { 1,0,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 

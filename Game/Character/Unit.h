@@ -16,5 +16,20 @@ public:
     // ”jŠü
     void Destroy();
 
+    float GetAttackRadius() { return attack_radius; }
+
+    void SetSquare(DirectX::XMFLOAT2 square_[2]) { 
+        square[0] = square_[0]; 
+        square[1] = square_[1];
+    }
+
     int category;
+
+    // ŽlŠp
+    DirectX::XMFLOAT2 square[2];
+    float dec_pos;
+protected:
+    float attack_radius;
+
+
 };

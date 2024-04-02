@@ -108,6 +108,12 @@ void Seed::Update(float elapsedTime)
         if (unit != nullptr)
         {
             unit->SetPosition(position);
+            // ‰œs‚Í“K“–‚ÉÝ’è
+            DirectX::XMFLOAT2 square[2] = {
+                {position.x - radius,position.y+100.0f},
+                {position.x + radius,position.y - radius}
+            };
+            unit->SetSquare(square);
             unit->category = category;
             UnitManager::Instance().Register(unit);
         }

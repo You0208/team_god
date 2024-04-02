@@ -23,7 +23,13 @@ class CollisionPhysicsComponent :public PhysicsComponent
 class Collision
 {
 public:
-        // ‹…‚Æ‹…‚ÌŒğ·”»’è
+    // lŠp‚Æ“_‚Ì“–‚½‚è”»’è
+    static bool IntersectSquareVsPoint(
+        const DirectX::XMFLOAT2& lu,
+        const DirectX::XMFLOAT2& rd,
+        const DirectX::XMFLOAT2& point);
+
+    // ‹…‚Æ‹…‚ÌŒğ·”»’è
     static bool IntersectSphereVsSphereOut(
         const DirectX::XMFLOAT3& positionA,
         float radiusA,
