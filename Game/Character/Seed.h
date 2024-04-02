@@ -18,12 +18,16 @@ public:
 
     float GetTimer() { return timer; };
     int GetNumber() { return number; };
+    bool GetBorn() { return born; };
     void SetNumber(int number_) { number= number_; };
+    void SetCategory(int category_) { category = category_; };
     void DecNumber() { number--; }
 
 private:
-    float timer;
-    int number;
+    float timer;// 種が配置されてからの時間
+    int number;// 種番号
+    int category;// 種の種類
+    bool born;// ユニットが生まれるかどうか
 };
 
 

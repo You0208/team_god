@@ -12,7 +12,7 @@ void UnitManager::Update(float elapsedTime)
     }
 
     // 破棄処理
-    for (Unit* unit : units)
+    for (Unit* unit : removes)
     {
         std::vector<Unit*>::iterator it = std::find(units.begin(), units.end(), unit);
         if (it != units.end())
@@ -26,9 +26,6 @@ void UnitManager::Update(float elapsedTime)
     // 破棄リストをクリア
     removes.clear();
 
-
-    // ユニット同士の当たり判定
-    CollisionEnemyVsEnemis();
 }
 
 // 描画処理
@@ -63,7 +60,7 @@ void UnitManager::DrawDebugPrimitive()
 }
 
 // ユニット同士の衝突判定
-void UnitManager::CollisionEnemyVsEnemis()
+void UnitManager::CollisionUnitVsSeed()
 {
     UnitManager& unitManager = UnitManager::Instance();
 

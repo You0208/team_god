@@ -1,14 +1,17 @@
 #include "Seed.h"
 #include "Lemur/Input/Input.h"
+#include "UnitManager.h"
+#include "Unit_A.h"
+#include "Unit_B.h"
+#include "Unit_C.h"
+#include "Unit_D.h"
+#include "Unit_E.h"
+#include "Unit_F.h"
 
 Seed::Seed()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx");
-
-    scale.x = scale.y = scale.z = 1.0f;
-    radius = 0.5f;
-    height = 1.0f;
 }
 
 Seed::~Seed()
@@ -19,6 +22,94 @@ void Seed::Update(float elapsedTime)
 {
     timer += elapsedTime;
 
+#if 0
+    // í‚ª”­‰è‚µ‚½
+    if (born)
+    {
+        switch (category)
+        {
+        case 0:
+        {
+            Unit_A* unit = new Unit_A;
+            unit->SetPosition(position);// À•W‚ğ“n‚·
+            UnitManager::Instance().Register(unit);
+            break;
+        }
+        case 1:
+        {
+            Unit_B* unit = new Unit_B;
+            unit->SetPosition(position);// À•W‚ğ“n‚·
+            UnitManager::Instance().Register(unit);
+            break;
+        }
+        case 2:
+        {
+            Unit_C* unit = new Unit_C;
+            unit->SetPosition(position);// À•W‚ğ“n‚·
+            UnitManager::Instance().Register(unit);
+            break;
+        }
+        case 3:
+        {
+            Unit_D* unit = new Unit_D;
+            unit->SetPosition(position);// À•W‚ğ“n‚·
+            UnitManager::Instance().Register(unit);
+            break;
+        }
+        case 4:
+        {
+            Unit_E* unit = new Unit_E;
+            unit->SetPosition(position);// À•W‚ğ“n‚·
+            UnitManager::Instance().Register(unit);
+            break;
+        }
+        case 5:
+        {
+            Unit_F* unit = new Unit_F;
+            unit->SetPosition(position);// À•W‚ğ“n‚·
+            UnitManager::Instance().Register(unit);
+            break;
+        }
+        }
+
+        death = true;// í‚ğÁ‚·
+    }
+#else
+    if (born)
+    {
+        Unit* unit = nullptr;
+
+        switch (category)
+        {
+        case 0:
+            unit = new Unit_A;
+            break;
+        case 1:
+            unit = new Unit_B;
+            break;
+        case 2:
+            unit = new Unit_C;
+            break;
+        case 3:
+            unit = new Unit_D;
+            break;
+        case 4:
+            unit = new Unit_E;
+            break;
+        case 5:
+            unit = new Unit_F;
+            break;
+        }
+
+        if (unit != nullptr)
+        {
+            unit->SetPosition(position);
+            UnitManager::Instance().Register(unit);
+        }
+
+        death = true;// í‚ğÁ‚·
+    }
+#endif
     // ‘¬—Íˆ—XV
     UpdateVelocity(elapsedTime);
 
@@ -46,6 +137,7 @@ void Seed::DrawDebugGUI()
 
     ImGui::DragInt("number", &number);
     ImGui::DragFloat("timer", &timer);
+    ImGui::Checkbox("born", &born);
 
     ImGui::End();
 }

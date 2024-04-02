@@ -116,6 +116,8 @@ void Player::Flick(float elapsedTime)
         Seed* seed = new Seed();
         // 種番号をつける
         seed->SetNumber(seed_number);
+        // 種の種類を登録
+        seed->SetCategory(unit_category);
         // 座標を確定
         seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/);
         // リストに追加
@@ -128,7 +130,7 @@ void Player::Flick(float elapsedTime)
 
 }
 
-// はじき更新
+// 種更新
 void Player::SeedUpdate(float elapsedTime)
 {
     // 時間切れの種を消す（seed->deathがtrueのとき）
@@ -142,6 +144,16 @@ void Player::SeedUpdate(float elapsedTime)
             // 死亡に切り替え
             seed->death = true;
 
+        }
+        else
+        {
+            // 種の更新
+            seed->Update(elapsedTime);
+        }
+
+        // 死亡時の処理
+        if (seed->death)
+        {
             for (Seed* s : seeds)
             {
                 // もし削除予定の種番号よりも大きい番号の種があれば、番号を減算する
@@ -150,8 +162,6 @@ void Player::SeedUpdate(float elapsedTime)
             // 現在の種番号を減算
             seed_number--;
         }
-        // 種の更新
-        seed->Update(elapsedTime);
     }
 }
 

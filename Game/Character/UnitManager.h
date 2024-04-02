@@ -35,13 +35,13 @@ public:
     void DrawDebugPrimitive();
 
     // ユニット数取得
-    int GetEnemyCount() const { return static_cast<int>(units.size()); }
+    int GetUnitCount() const { return static_cast<int>(units.size()); }
 
     // ユニット取得
-    Unit* GetEnemy(int index) { return units.at(index); }
+    Unit* GetUnit(int index) { return units.at(index); }
 
     // ユニット同士の衝突判定
-    void CollisionEnemyVsEnemis();
+    void CollisionUnitVsSeed();
 
     // ユニット削除
     void Remove(Unit* units);
