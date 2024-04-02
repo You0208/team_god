@@ -30,6 +30,7 @@ void UnitManager::Update(float elapsedTime)
 // •`‰æˆ—
 void UnitManager::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
 {
+    DrawDebugPrimitive();
     for (Unit* unit : units)
     {
         unit->Render(elapsedTime, replaced_pixel_shader);
@@ -55,37 +56,6 @@ void UnitManager::DrawDebugPrimitive()
     for (Unit* unit : units)
     {
         unit->DrawDebugPrimitive();
-    }
-}
-
-// ƒ†ƒjƒbƒg“¯m‚ÌÕ“Ë”»’è
-void UnitManager::CollisionUnitVsSeed()
-{
-    UnitManager& unitManager = UnitManager::Instance();
-
-    // ‘S‚Ä‚Ì“G‚Æ‘“–‚½‚è‚ÅÕ“Ë”»’è
-    int unitCount = units.size();
-    for (int i = 0; i < unitCount; ++i)
-    {
-        Unit* unitA = units.at(i);
-        for (int j = i + 1; j < unitCount; ++j)
-        {
-            Unit* unitB = units.at(j);
-            // Õ“Ë”»’è
-            DirectX::XMFLOAT3 outPosition;
-            if (Collision::IntersectCylinderVsCylinder
-            (unitA->GetPosition(),
-                unitA->GetRadius(),
-                unitA->GetHeight(),
-                unitB->GetPosition(),
-                unitB->GetRadius(),
-                unitB->GetHeight(),
-                outPosition)
-                )
-            {
-                unitB->SetPosition(outPosition);
-            }
-        }
     }
 }
 

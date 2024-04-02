@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Lemur/Input/Input.h"
 #include "SeedManager.h"
+#include "UnitManager.h"
 static Player* instance = nullptr;
 
 Player::Player()
@@ -100,6 +101,8 @@ void Player::Flick(float elapsedTime)
     if (f_d >= 0.1f)
     {
         Seed* seed = new Seed();
+        // ユニットがいないなら即座に発芽
+        if (UnitManager::Instance().GetUnitCount() == 0)seed->SetBorn(true);
         // 種の種類を登録
         seed->SetCategory(unit_category);
         // 座標を確定

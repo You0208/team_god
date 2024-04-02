@@ -137,6 +137,31 @@ bool Collision::IntersectCylinderVsCylinder(
     return true;
 }
 
+bool Collision::IntersectCylinderVsCylinder(const DirectX::XMFLOAT3& positionA, float radiusA, float heightA, const DirectX::XMFLOAT3& positionB, float radiusB, float heightB)
+{
+    // Aの足元がBの頭より上なら当たっていない
+    if (positionA.y > positionB.y + heightB)
+    {
+        return false;
+    }
+    // Aの頭がBの足元より下なら当たっていない
+    if (positionA.y + heightA < positionB.y)
+    {
+        return false;
+    }
+
+    // A→Bの単位ベクトルを算出
+    float vx = positionB.x - positionA.x;//ベクトルを求める
+    float vz = positionB.z - positionA.z;//ベクトルを求める
+    float distXZ = sqrtf(vx * vx + vz * vz);//距離を求める
+    float radius = radiusA + radiusB;//半径の合計を求める
+    if (distXZ > radius)//比べる
+    {
+        return false;
+    }
+    return true;
+}
+
 bool Collision::IntersectSphereVsCylinderOut(
     const DirectX::XMFLOAT3& spherePosition,
     float sphereRadius,

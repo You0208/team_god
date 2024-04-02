@@ -1,10 +1,16 @@
 #include "Unit_A.h"
+#include "SeedManager.h"
 #include "Lemur/Input/Input.h"
+#include "Lemur/Graphics/DebugRenderer.h"
+#include "Lemur/Collision/Collision.h"
 
 Unit_A::Unit_A()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
+
+    radius = 1.0f;
+    height = 0.5f;
 
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
@@ -41,5 +47,7 @@ void Unit_A::DrawDebugGUI()
 
 void Unit_A::DrawDebugPrimitive()
 {
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, radius, height, { 1,0,0,1 });
 }
 

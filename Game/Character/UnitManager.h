@@ -40,9 +40,6 @@ public:
     // ユニット取得
     Unit* GetUnit(int index) { return units.at(index); }
 
-    // ユニット同士の衝突判定
-    void CollisionUnitVsSeed();
-
     // ユニット削除
     void Remove(Unit* units);
 

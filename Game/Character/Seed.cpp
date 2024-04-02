@@ -11,7 +11,11 @@
 Seed::Seed()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\seed.fbx");
+    scaleFactor = 0.1f;
+    radius = 0.3f;
+    height = 0.3f;
+
 }
 
 Seed::~Seed()
@@ -104,12 +108,16 @@ void Seed::Update(float elapsedTime)
         if (unit != nullptr)
         {
             unit->SetPosition(position);
+            unit->category = category;
             UnitManager::Instance().Register(unit);
         }
 
         death = true;// 種を消す
     }
 #endif
+    // スケール更新
+    UpdateScale();
+
     // 速力処理更新
     UpdateVelocity(elapsedTime);
 
@@ -140,4 +148,10 @@ void Seed::DrawDebugGUI()
     ImGui::Checkbox("born", &born);
 
     ImGui::End();
+}
+
+void Seed::DrawDebugPrimitive()
+{
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, radius, height, { 1,0,0,1 });
 }

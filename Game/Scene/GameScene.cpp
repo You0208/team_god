@@ -234,6 +234,15 @@ void GameScene::Render(float elapsedTime)
 		}
 	}
 
+	//TODO debug
+	{
+		DirectX::XMFLOAT4X4 view;
+		DirectX::XMFLOAT4X4 projection;
+		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
+	}
+
 	// ステートの再設定
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());

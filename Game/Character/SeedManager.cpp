@@ -1,13 +1,11 @@
 #include "SeedManager.h"
+#include "UnitManager.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "Lemur/Collision/Collision.h"
 
 // 更新処理
 void SeedManager::Update(float elapsedTime)
 {
-    // 時間切れの種を消す（seed->deathがtrueのとき）
-    seeds.erase(std::remove_if(seeds.begin(), seeds.end(), [](Seed* seed) {return seed->death; }), seeds.end());
-
     for (Seed* seed : seeds)
     {
         // 時間切れの時
@@ -15,7 +13,6 @@ void SeedManager::Update(float elapsedTime)
         {
             // 死亡に切り替え
             seed->death = true;
-
         }
         else
         {
@@ -33,8 +30,13 @@ void SeedManager::Update(float elapsedTime)
             }
             // 現在の種番号を減算
             seed_number--;
+
+            // 種をリストから消す
+            Remove(seed);
         }
     }
+
+    CollisionSeedVsUnit();
 
     // 破棄処理
     for (Seed* seed : removes)
@@ -55,6 +57,7 @@ void SeedManager::Update(float elapsedTime)
 // 描画処理
 void SeedManager::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
 {
+    DrawDebugPrimitive();
     for (Seed* seed : seeds)
     {
         seed->Render(elapsedTime, replaced_pixel_shader);
@@ -88,34 +91,44 @@ void SeedManager::DrawDebugPrimitive()
     }
 }
 
-// エネミー同士の衝突判定
-void SeedManager::CollisionSeedVsSeeds()
+// 種とユニットの当たり判定
+void SeedManager::CollisionSeedVsUnit()
 {
-    SeedManager& seedManager = SeedManager::Instance();
+    UnitManager& unitManager = UnitManager::Instance();
 
     // 全ての敵と総当たりで衝突判定
-    int seedCount = seeds.size();
-    for (int i = 0; i < seedCount; ++i)
+    int unitCount = unitManager.GetUnitCount();
+    bool is_intersected =false;
+
+    // 種の総当たり
+    for (Seed* seed : seeds)
     {
-        Seed* seedA = seeds.at(i);
-        for (int j = i + 1; j < seedCount; ++j)
+        is_intersected = false;
+        // ユニットの総当たり
+        for (int i = 0; i < unitCount; ++i)
         {
-            Seed* seedB = seeds.at(j);
-            // 衝突判定
-            DirectX::XMFLOAT3 outPosition;
-            if (Collision::IntersectCylinderVsCylinder
-            (seedA->GetPosition(),
-                seedA->GetRadius(),
-                seedA->GetHeight(),
-                seedB->GetPosition(),
-                seedB->GetRadius(),
-                seedB->GetHeight(),
-                outPosition)
-                )
+            Unit* unit = unitManager.GetUnit(i);
+
+            if (unit->category==0||unit->category==3)
             {
-                seedB->SetPosition(outPosition);
+                // 種がユニットの範囲に入っているとき
+                if (Collision::IntersectCylinderVsCylinder
+                (seed->GetPosition(),
+                    seed->GetRadius(),
+                    seed->GetHeight(),
+                    unit->GetPosition(),
+                    unit->GetRadius(),
+                    unit->GetHeight())
+                    )
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
             }
         }
+
+        // 重なりがない場合、種を生まれた状態に設定
+        if (!is_intersected)seed->SetBorn(true);
     }
 }
 

@@ -109,12 +109,25 @@ void Camera::NonLockOnUpdate(float elapsedTime)
     float lx = game_pad.GetAxisLX();
     float ly = game_pad.GetAxisLY();
 
+    float wx = game_pad.GetTriggerL();
+    float wy = game_pad.GetTriggerR();
     // カメラの回転速度
     float speed = rollSpeed * elapsedTime;
 
-    // スティックの入力値に合わせてX軸とY軸を回転
-   //angle.x -= ay * speed;
-   //angle.y += ax * speed;
+    //TODO Debug
+    if (game_pad.GetButton() & game_pad.BTN_B)
+    {
+        angle.x -= wx * speed;
+        angle.y += wy * speed;
+    }
+    else
+    {
+        angle.x += wx * speed;
+        angle.y -= wy * speed;
+    }
+
+    //angle.x -= ax * speed;
+    //angle.y += ay * speed;
 
 #if 0
     /*------------- マウス処理 -------------*/

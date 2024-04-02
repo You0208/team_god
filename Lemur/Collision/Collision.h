@@ -33,7 +33,7 @@ public:
     );
 
 
-    // 球と球の交差判定
+    // 球と球の交差判定（押し出しなし）
     static bool IntersectSphereVsSphere(
         const DirectX::XMFLOAT3& positionA,
         float radiusA,
@@ -52,6 +52,16 @@ public:
         DirectX::XMFLOAT3& outPositionB
     );
 
+    // 円柱と円柱の交差判定(outPositionなし)
+    static bool IntersectCylinderVsCylinder(
+        const DirectX::XMFLOAT3& positionA,
+        float radiusA,
+        float heightA,
+        const DirectX::XMFLOAT3& positionB,
+        float radiusB,
+        float heightB
+    );
+
     // 球と円柱の交差判定
     static bool IntersectSphereVsCylinderOut(
         const DirectX::XMFLOAT3& spherePosition,
@@ -62,7 +72,7 @@ public:
         DirectX::XMFLOAT3& outCylinderPosition
     );
 
-    // 球と円柱の交差判定(押し出し無しverを作りました。 byトミー)
+    // 球と円柱の交差判定（押し出しなし）
     static bool IntersectSphereVsCylinder(
         const DirectX::XMFLOAT3& spherePosition,
         float sphereradius,

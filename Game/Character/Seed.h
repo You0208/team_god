@@ -16,11 +16,16 @@ public:
 
     void DrawDebugGUI();
 
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive();
+
+
     float GetTimer() { return timer; };
     int GetNumber() { return number; };
     bool GetBorn() { return born; };
     void SetNumber(int number_) { number= number_; };
     void SetCategory(int category_) { category = category_; };
+    void SetBorn(bool born_) { born = born_; };
     void DecNumber() { number--; }
 
 private:

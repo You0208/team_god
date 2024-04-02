@@ -12,10 +12,10 @@ public:
 
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
-    void DrawDebugGUI();
+    void DrawDebugGUI()override;\
 
     // デバッグプリミティブ描画
-    void DrawDebugPrimitive();
+    void DrawDebugPrimitive()override;
 
 private:
 };

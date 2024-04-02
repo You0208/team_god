@@ -5,7 +5,3 @@ void Unit::Destroy()
 {
     UnitManager::Instance().Remove(this);
 }
-
-void Unit::DrawDebugPrimitive()
-{
-}

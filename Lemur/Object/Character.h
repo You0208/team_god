@@ -18,8 +18,9 @@ public:
     Character() {};
     virtual ~Character() {}
 
-    virtual void DebugImgui() {};
+    virtual void DrawDebugGUI() {};
     virtual void DrawDebugPrimitive() {};
+
     void AnimationUpdate(float elapsedTime);
 
     // ルートモーション更新

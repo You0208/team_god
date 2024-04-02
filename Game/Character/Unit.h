@@ -13,11 +13,8 @@ public:
 
     // 描画処理
     virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
-
     // 破棄
     void Destroy();
 
-    // デバッグプリミティブ描画
-    virtual void DrawDebugPrimitive();
-
+    int category;
 };
