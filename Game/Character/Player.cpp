@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Lemur/Input/Input.h"
+#include "SeedManager.h"
 static Player* instance = nullptr;
 
 Player::Player()
@@ -18,20 +19,11 @@ Player::Player()
 
 Player::~Player()
 {
-    // 種終了
-    for (Seed* seed : seeds)
-    {
-        delete seed;
-    }
-    seeds.clear();
 }
 
 // 更新処理
 void Player::Update(float elapsedTime)
 {
-    // 種更新
-    SeedUpdate(elapsedTime);
-
     // はじき処理
     Flick(elapsedTime);
 
@@ -62,12 +54,6 @@ void Player::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
     model->DrawDebug("Player");
     // かかしモデル描画
     model->Render(scale, replaced_pixel_shader);
-
-    // 種の描画
-    for (Seed* seed : seeds)
-    {
-        seed->Render(scale, replaced_pixel_shader);
-    }
 }
 
 // Imgui
@@ -114,55 +100,16 @@ void Player::Flick(float elapsedTime)
     if (f_d >= 0.1f)
     {
         Seed* seed = new Seed();
-        // 種番号をつける
-        seed->SetNumber(seed_number);
         // 種の種類を登録
         seed->SetCategory(unit_category);
         // 座標を確定
         seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/);
         // リストに追加
-        seeds.emplace_back(seed);
-        // 種番号を進める
-        seed_number++;
+        SeedManager::Instance().Register(seed);
         // はじき距離を初期化
         f_d = 0.0f;
     }
 
-}
-
-// 種更新
-void Player::SeedUpdate(float elapsedTime)
-{
-    // 時間切れの種を消す（seed->deathがtrueのとき）
-    seeds.erase(std::remove_if(seeds.begin(), seeds.end(), [](Seed* seed) {return seed->death; }), seeds.end());
-
-    for (Seed* seed : seeds)
-    {
-        // 時間切れの時
-        if (seed->GetTimer() >= 15.0f)
-        {
-            // 死亡に切り替え
-            seed->death = true;
-
-        }
-        else
-        {
-            // 種の更新
-            seed->Update(elapsedTime);
-        }
-
-        // 死亡時の処理
-        if (seed->death)
-        {
-            for (Seed* s : seeds)
-            {
-                // もし削除予定の種番号よりも大きい番号の種があれば、番号を減算する
-                if (seed->GetNumber() < s->GetNumber())s->DecNumber();
-            }
-            // 現在の種番号を減算
-            seed_number--;
-        }
-    }
 }
 
 // 入力処理

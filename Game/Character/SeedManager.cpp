@@ -5,13 +5,35 @@
 // XVˆ—
 void SeedManager::Update(float elapsedTime)
 {
-    seeds.erase(std::remove_if(seeds.begin(), seeds.end(), [](Seed* seed) {
-        return seed->GetTimer() >= 15.0f;
-        }), seeds.end());
+    // ŠÔØ‚ê‚Ìí‚ğÁ‚·iseed->death‚ªtrue‚Ì‚Æ‚«j
+    seeds.erase(std::remove_if(seeds.begin(), seeds.end(), [](Seed* seed) {return seed->death; }), seeds.end());
 
     for (Seed* seed : seeds)
     {
-        seed->Update(elapsedTime);
+        // ŠÔØ‚ê‚Ì
+        if (seed->GetTimer() >= seed_limit_time)
+        {
+            // €–S‚ÉØ‚è‘Ö‚¦
+            seed->death = true;
+
+        }
+        else
+        {
+            // í‚ÌXV
+            seed->Update(elapsedTime);
+        }
+
+        // €–S‚Ìˆ—
+        if (seed->death)
+        {
+            for (Seed* s : seeds)
+            {
+                // ‚à‚µíœ—\’è‚Ìí”Ô†‚æ‚è‚à‘å‚«‚¢”Ô†‚Ìí‚ª‚ ‚ê‚ÎA”Ô†‚ğŒ¸Z‚·‚é
+                if (seed->GetNumber() < s->GetNumber())s->DecNumber();
+            }
+            // Œ»İ‚Ìí”Ô†‚ğŒ¸Z
+            seed_number--;
+        }
     }
 
     // ”jŠüˆ—

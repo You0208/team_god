@@ -23,9 +23,6 @@ public:
     // はじき処理
     void Flick(float elapsedTime);
 
-    // 種の更新処理
-    void SeedUpdate(float elapsedTime);
-
     // インスタンス取得
     static Player& Instance();
 private:
@@ -33,9 +30,6 @@ private:
     void InputProcess();
 
 private:
-    std::vector<Seed*> seeds;// 種のリスト
-    float seed_limit_time = 15.0f;// 種の制限時間
-    int seed_number = 0;// 次の種番号
 
     float moveSpeed = 5.0f;// 横移動の速度
     float sub_pos_z = -5.0f;// 減算されるZ座標

@@ -14,6 +14,7 @@
 #include "../Character/Enemy_A.h"
 #include "../Character/UnitManager.h"
 #include "../Character/Unit_A.h"
+#include "../Character/SeedManager.h"
 
 void GameScene::Initialize()
 {
@@ -101,6 +102,8 @@ void GameScene::Finalize()
 	EnemyManager::Instance().Clear();
 	// ユニット終了
 	UnitManager::Instance().Clear();
+	// 種終了
+	SeedManager::Instance().Clear();
 }
 
 void GameScene::Update(HWND hwnd, float elapsedTime)
@@ -143,6 +146,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		StageManager::Instance().update(elapsedTime);
 		EnemyManager::Instance().Update(elapsedTime);
 		UnitManager::Instance().Update(elapsedTime);
+		// 種更新
+		SeedManager::Instance().Update(elapsedTime);
 	}
 
 	// Imgui
@@ -211,6 +216,8 @@ void GameScene::Render(float elapsedTime)
 			UnitManager::Instance().Render(scale, defefferd_model.GetAddressOf());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			// 種描画
+			SeedManager::Instance().Render(scale, defefferd_model.GetAddressOf());
 		}
 		else
 		{
@@ -222,6 +229,8 @@ void GameScene::Render(float elapsedTime)
 			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			// 種描画
+			SeedManager::Instance().Render(scale, chara_ps.GetAddressOf());
 		}
 	}
 

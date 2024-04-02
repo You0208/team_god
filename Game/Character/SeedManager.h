@@ -49,5 +49,6 @@ private:
     std::vector<Seed*> seeds;
     std::set<Seed*>    removes;
 
-    int seed_number = 0;
+    float seed_limit_time = 15.0f;// í‚Ì§ŒÀŠÔ
+    int seed_number = 0;// Ÿ‚Ìí”Ô†
 };

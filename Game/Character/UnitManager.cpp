@@ -2,7 +2,6 @@
 #include "Lemur/Graphics/Graphics.h"
 #include "Lemur/Collision/Collision.h"
 
-
 // XVˆ—
 void UnitManager::Update(float elapsedTime)
 {
