@@ -35,6 +35,8 @@ void Unit_A::Update(float elapsedTime)
 
     // モデルアニメーション更新処理
     model->UpdateAnimation(elapsedTime);
+
+    DrawDebugGUI();
 }
 
 void Unit_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
@@ -44,6 +46,7 @@ void Unit_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 
 void Unit_A::DrawDebugGUI()
 {
+    //TODO 同じ種類複製するとやばい
     model->DrawDebug("Unit_A");
 }
 
