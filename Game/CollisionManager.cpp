@@ -52,96 +52,12 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
 
     // 着地場所より奥、かつ一番距離の近いユニットを探す
     int unitCount = unitManager.GetUnitCount();
-    //int near_index = 0;  // 一番近いユニット番号
-    //float dis_small = 0.0f; //一番短い距離
-    //
-    //Unit* unit = nullptr;
+  
+    Unit* unit = nullptr;   
+    std::vector<int> index; // 着地点に入ってるユニット番号
+    int near_index = 0;     // 手前のユニット番号
+    float near_pos = 0.0f;  // 一番手前の座標
 
-    //// ユニット総当たり
-    //for (int i = 0; i < unitCount; ++i)
-    //{
-    //    unit = unitManager.GetUnit(i);
-
-    //    if (unit->position.z >= position.y)//着地場所より奥
-    //    {
-    //        float d = sqrtf(unit->position.x - position.x * unit->position.x - position.x + unit->position.z - position.y * unit->position.z - position.y);
-    //        if (i == 0)// 始めのユニットは代入のみ
-    //        {
-    //            dis_small = d;
-    //            break;
-    //        }
-    //        if (dis_small > d)// 一番小さい距離を更新する
-    //        {
-    //            dis_small = d;
-    //            near_index = i;
-    //        }
-    //    }
-    //}
-
-    //// 一番近いユニットの後ろに入っていないかどうか確認（入っていればユニットの座標より前の座標を返す）
-    //if (unitCount > 0)
-    //{
-    //    unit = unitManager.GetUnit(near_index);
-    //    if (Collision::IntersectSquareVsPoint(unit->square[0], unit->square[1], position))
-    //    {
-    //        return DirectX::XMFLOAT2(position.x, unit->position.z - unit->dec_pos);
-    //    }
-    //}
-    //return position;
-
-    //// ユニットの総当たり
-    //for (int i = 0; i < unitCount; ++i)
-    //{
-    //    Unit* unit = unitManager.GetUnit(i);
-    //    // ユニットの後ろの四角に着地場所があれば、ユニットより少し手前の座標を返す
-    //    if (Collision::IntersectSquareVsPoint(unit->square[0], unit->square[1], position))
-    //    {
-    //        return DirectX::XMFLOAT2(position.x, unit->position.z - unit->dec_pos);
-    //    }
-    //}
-
-    //// 着地地点に四角がかぶっているユニットをの中で、一番手前にあるものを探す
-    //int near_index = 0;  // 手前のユニット番号
-    //float near_pos = 0.0f;
-    //Unit* unit = nullptr;
-
-    //// ユニット総当たり
-    //for (int i = 0; i < unitCount; ++i)
-    //{
-    //    unit = unitManager.GetUnit(i);
-
-    //    if (Collision::IntersectSquareVsPoint(unit->square[0], unit->square[1], position))
-    //    {
-    //        if (unit->position.z >= position.y)//着地場所より奥
-    //        {
-    //            if (i == 0)
-    //            {
-    //                near_pos = unit->position.z;
-    //                break;
-    //            }
-    //            if (unit->position.z < near_pos)
-    //            {
-    //                near_pos = unit->position.z;
-    //                near_index = i;
-    //            }
-    //        }
-    //    }
-    //}
-
-    //// 一番近いユニットの後ろに入っていないかどうか確認（入っていればユニットの座標より前の座標を返す）
-    //if (unitCount > 0)
-    //{
-    //    unit = unitManager.GetUnit(near_index);
-    //    if (Collision::IntersectSquareVsPoint(unit->square[0], unit->square[1], position))
-    //    {
-    //        return DirectX::XMFLOAT2(position.x, unit->position.z - unit->dec_pos);
-    //    }
-    //}
-    
-    Unit* unit = nullptr;
-    std::vector<int> index;
-    int near_index = 0;  // 手前のユニット番号
-    float near_pos = 0.0f;
     // ユニット総当たり
     for (int i = 0; i < unitCount; ++i)
     {
@@ -152,9 +68,9 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
         {
             index.push_back(i);// 番号を記録
         }
-
     }
 
+    // 該当ユニットがなければ終了
     if (index.size() == 0)  return position;
 
     // 記録した番号のユニットを当たる
@@ -162,7 +78,7 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
     {
         unit = unitManager.GetUnit(index.at(j));
 
-        if (j == 0)
+        if (j == 0)// 始めは比較なし
         {
             near_pos = unit->position.z;
             break;
