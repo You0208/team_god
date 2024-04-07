@@ -20,4 +20,6 @@ public:
     // デバッグプリミティブ描画
     virtual void DrawDebugPrimitive();
 
+public:
+    bool is_hit_unit = false;
 };

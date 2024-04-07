@@ -23,12 +23,22 @@ class CollisionPhysicsComponent :public PhysicsComponent
 class Collision
 {
 public:
+    // 2D
     // 四角と点の当たり判定
     static bool IntersectSquareVsPoint(
         const DirectX::XMFLOAT2& lu,
         const DirectX::XMFLOAT2& rd,
         const DirectX::XMFLOAT2& point);
 
+    // 円と円の当たり判定
+    static bool IntersectCircleVsCircle(
+        const DirectX::XMFLOAT2& positionA,
+        const float radiusA,
+        const DirectX::XMFLOAT2& positionB,
+        const float radiusB
+    );
+
+    // 3D
     // 球と球の交差判定
     static bool IntersectSphereVsSphereOut(
         const DirectX::XMFLOAT3& positionA,
@@ -37,7 +47,6 @@ public:
         float radiusB,
         DirectX::XMFLOAT3& outPositionB
     );
-
 
     // 球と球の交差判定（押し出しなし）
     static bool IntersectSphereVsSphere(

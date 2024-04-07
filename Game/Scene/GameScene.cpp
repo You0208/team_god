@@ -5,7 +5,6 @@
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
 
-
 // Effect
 #include "./Lemur/Effekseer/EffekseerManager.h"
 
@@ -124,6 +123,16 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// ライトの更新
 	LightUpdate();
+
+	// デバッグ用
+	{
+		if (gamePad.GetButtonDown() & gamePad.BTN_A)
+		{
+			Enemy_A* enemy = new Enemy_A;
+			// リストに追加
+			EnemyManager::Instance().Register(enemy);
+		}
+	}
 
 	// ゲーム
 	{

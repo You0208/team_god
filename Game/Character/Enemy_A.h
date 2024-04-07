@@ -12,6 +12,7 @@ public:
     // •`‰æˆ—
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
+    void DrawDebugGUI()override;
 private:
 };
 
