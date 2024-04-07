@@ -2,26 +2,39 @@
 
 #include "Lemur/Collision/Collision.h"
 #include "Lemur/Math/MathHelper.h"
+#include "../Stage/Fence.h"
 
 Enemy_A::Enemy_A()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    radius = 0.5f;
+    attack_power = 1;
+    attack_interval = 3.0f;
+
+    radius = 1.0f;
     height = 1.0f;
     position.x = 5.0f;
     rotation.y = -90.0f;
+
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
 }
 
 void Enemy_A::Update(float elapsedTime)
 {
-    // 移動
-    velocity.x = -1.0f;
+    switch (state_index)
+    {
+    case StateIndex::Move_State:
+        MoveUpdate(elapsedTime);
+        break;
+    case StateIndex::Attack_State:
+        AttackUpdate(elapsedTime);
+        break;
+    };
 
 
+    // ステート関係なく実行
     // 速力処理更新
     UpdateVelocity(elapsedTime);
 
@@ -34,12 +47,48 @@ void Enemy_A::Update(float elapsedTime)
     // モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
 
+    // デバッグ
     DrawDebugGUI();
+    DrawDebugPrimitive();
 }
 
 void Enemy_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
     model->Render(scale, replaced_pixel_shader);
+}
+
+void Enemy_A::AttackUpdate(float elapsedTime)
+{
+    timer += elapsedTime;
+
+    if (timer >= attack_interval)
+    {
+        if (Fence::Instance().ApplyDamage(attack_power))
+        {
+            model->PlayAnimation(1, false);
+            timer = 0.0f;
+        }
+    }
+    if (!model->IsPlayAnimation())
+    {
+        model->PlayAnimation(7, true);
+    }
+    
+}
+
+void Enemy_A::MoveUpdate(float elapsedTime)
+{
+    if (Collision::IntersectRectVsCircle(Fence::Instance().left_rect, { position.x,position.z }, radius))
+    {
+        velocity.x = 0.0f;
+        model->PlayAnimation(7, true);
+        state_index = int(StateIndex::Attack_State);
+    }
+    else
+    {
+        // 移動
+        velocity.x = -1.0f;
+    }
 }
 
 void Enemy_A::DrawDebugGUI()
@@ -67,4 +116,10 @@ void Enemy_A::DrawDebugGUI()
         ImGui::DragFloat(s_f.c_str(), &scaleFactor, 0.001f, 0.001f, 1.0f);
         ImGui::TreePop();
     }
+}
+
+void Enemy_A::DrawDebugPrimitive()
+{
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }

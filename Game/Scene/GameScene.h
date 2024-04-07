@@ -27,6 +27,7 @@
 
 //Game
 #include "../Stage/Stage.h"
+#include "../Stage/Fence.h"
 #include "../Character/Player.h"
 
 class GameScene :public Lemur::Scene::BaseScene
@@ -53,6 +54,8 @@ private:// ゲーム
     Stage* stage = nullptr;
 
     Player* player = nullptr;
+
+    Fence* fence = nullptr;
 
     // コントローラー用
     float s_l;

@@ -2,6 +2,7 @@
 
 #include<DirectXMath.h>
 #include "../Component/GameObject.h"
+#include "../Math/MathHelper.h"
 
 struct HitResult
 {
@@ -29,6 +30,13 @@ public:
         const DirectX::XMFLOAT2& lu,
         const DirectX::XMFLOAT2& rd,
         const DirectX::XMFLOAT2& point);
+
+    // ŽlŠp‚Æ‰~‚Ì“–‚½‚è”»’è
+    static bool IntersectRectVsCircle(
+        const Rect rect,
+        const DirectX::XMFLOAT2& position,
+        const float radius
+    );
 
     // ‰~‚Æ‰~‚Ì“–‚½‚è”»’è
     static bool IntersectCircleVsCircle(

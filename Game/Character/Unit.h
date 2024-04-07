@@ -1,6 +1,7 @@
 #pragma once
 #include "Lemur/Object/Character.h"
 #include "Lemur/Graphics/Shader.h"
+#include "Lemur/Math/MathHelper.h"
 
 class Unit :public Character
 {
@@ -18,18 +19,16 @@ public:
 
     float GetAttackRadius() { return attack_radius; }
 
-    void SetSquare(DirectX::XMFLOAT2 square_[2]) { 
-        square[0] = square_[0]; 
-        square[1] = square_[1];
+    void SetSquare(Rect square_) { 
+        square.left_up = square_.left_up;
+        square.right_down = square_.right_down;
     }
 
     int category;
 
     // éläp
-    DirectX::XMFLOAT2 square[2];
+    Rect square;
     float dec_pos;
 protected:
     float attack_radius;
-
-
 };

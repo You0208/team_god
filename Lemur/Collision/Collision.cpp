@@ -19,6 +19,13 @@ bool Collision::IntersectSquareVsPoint(const DirectX::XMFLOAT2& lu, const Direct
     return false;
 }
 
+bool Collision::IntersectRectVsCircle(const Rect rect, const DirectX::XMFLOAT2& position, const float radius)
+{
+    if ((position.x > rect.left_up.x) && (position.x < rect.right_down.x) && (position.y > rect.left_up.y - radius) && (position.y > rect.right_down.y + radius)) return true;
+    if ((position.x > rect.left_up.x - radius) && (position.x < rect.right_down.x + radius) && (position.y < rect.left_up.y) && (position.y > rect.right_down.y)) return true;
+    return false;
+}
+
 bool Collision::IntersectCircleVsCircle(const DirectX::XMFLOAT2& positionA, const float radiusA, const DirectX::XMFLOAT2& positionB, const float radiusB)
 {
     // A→Bの単位ベクトルを算出

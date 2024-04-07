@@ -14,6 +14,9 @@ public:
     // •`‰æˆ—
     virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
 
+    virtual void MoveUpdate(float elapsed_time) {};
+    virtual void AttackUpdate(float elapsed_time) {};
+
     // ”jŠü
     void Destroy();
 
@@ -22,4 +25,5 @@ public:
 
 public:
     bool is_hit_unit = false;
+
 };

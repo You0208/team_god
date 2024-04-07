@@ -185,9 +185,12 @@ public:
     bool    death = false;
 
     //Šî‘bUŒ‚—Í
-    float attack_power = 0;
+    int attack_power = 0;
     // ƒ‚[ƒVƒ‡ƒ“’l(›”{)
     float motion_value = 1.0f;
+
+    // UŒ‚ŠÔŠu
+    float attack_interval = 0.0f;
 
     // Šî‘b–hŒä—Í
     float defense_power = 0;

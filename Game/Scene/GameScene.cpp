@@ -14,6 +14,9 @@
 #include "../Stage/StageManager.h"
 #include "../Character/EnemyManager.h"
 #include "../Character/Enemy_A.h"
+#include "../Character/Enemy_B.h"
+#include "../Character/Enemy_C.h"
+#include "../Character/Enemy_D.h"
 #include "../Character/UnitManager.h"
 #include "../Character/Unit_A.h"
 #include "../Character/SeedManager.h"
@@ -65,21 +68,7 @@ void GameScene::Initialize()
 		// プレイヤーの初期化
 		player = new Player;
 
-		// プレイヤーの初期化
-		//UnitManager& unitManager = UnitManager::Instance();
-		//Unit_A* unit_A = new Unit_A();
-		//unit_A->SetPosition(DirectX::XMFLOAT3(2.0f, 0, 5));
-		//unitManager.Register(unit_A);		
-
-		// エネミーの初期化
-		//EnemyManager& enemyManager = EnemyManager::Instance();
-		//for (int i = 0; i < 2; ++i)
-		//{
-		//	Enemy_A* enemy_A = new Enemy_A();
-		//	enemy_A->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		//	enemyManager.Register(enemy_A);
-		//}
-
+		fence = new Fence;
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}
@@ -99,6 +88,12 @@ void GameScene::Finalize()
 	{
 		delete player;
 		player = nullptr;
+	}
+	//プレイヤー終了
+	if (fence != nullptr)
+	{
+		delete fence;
+		fence = nullptr;
 	}
 	// エネミー終了
 	EnemyManager::Instance().Clear();
@@ -128,7 +123,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	{
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
-			Enemy_A* enemy = new Enemy_A;
+			Enemy_B* enemy = new Enemy_B;
 			// リストに追加
 			EnemyManager::Instance().Register(enemy);
 		}
@@ -152,6 +147,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 		// プレイヤーの更新
 		player->Update(elapsedTime);
+		// 柵の更新
+		fence->Update(elapsedTime);
 		// エフェクト更新処理
 		EffectManager::Instance().Update(elapsedTime);
 		//ステージ更新処理
@@ -225,6 +222,8 @@ void GameScene::Render(float elapsedTime)
 		{
 			// プレイヤー描画
 			player->Render(scale, defefferd_model.GetAddressOf());
+			// 柵描画
+			fence->Render(scale, defefferd_model.GetAddressOf());
 			//ステージ描画
 			StageManager::Instance().Render(scale, defefferd_model.GetAddressOf());
 			// ユニット描画
@@ -238,6 +237,8 @@ void GameScene::Render(float elapsedTime)
 		{
 			// プレイヤー描画
 			player->Render(scale, stage_ps.GetAddressOf());
+			// 柵描画
+			fence->Render(scale, stage_ps.GetAddressOf());
 			//ステージ描画
 			StageManager::Instance().Render(scale, stage_ps.GetAddressOf());
 			// ユニット描画

@@ -105,7 +105,7 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
         unit = unitManager.GetUnit(i);
 
         // 着地地点が四角に入っているとき
-        if (Collision::IntersectSquareVsPoint(unit->square[0], unit->square[1], position))
+        if (Collision::IntersectSquareVsPoint(unit->square.left_up, unit->square.right_down, position))
         {
             index.push_back(i);// 番号を記録
         }
@@ -132,7 +132,7 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
     }
 
     unit = unitManager.GetUnit(index.at(near_index));
-    if (Collision::IntersectSquareVsPoint(unit->square[0], unit->square[1], position))
+    if (Collision::IntersectSquareVsPoint(unit->square.left_up, unit->square.right_down, position))
     {
         return DirectX::XMFLOAT2(position.x, unit->position.z - unit->dec_pos);
     }

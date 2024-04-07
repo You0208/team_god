@@ -2,6 +2,12 @@
 #include <cstdlib>
 #include  <DirectXMath.h>
 
+struct Rect
+{
+    DirectX::XMFLOAT2 left_up;
+    DirectX::XMFLOAT2 right_down;
+};
+
 // •‚“®¬”Zp
 class Mathf
 {

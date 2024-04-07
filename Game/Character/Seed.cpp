@@ -109,7 +109,7 @@ void Seed::Update(float elapsedTime)
         {
             unit->SetPosition(position);
             // ‰œs‚Í“K“–‚Éİ’è
-            DirectX::XMFLOAT2 square[2] = {
+            Rect square = {
                 {position.x - radius,position.z + 100.0f},
                 {position.x + radius,position.z - radius}
             };
