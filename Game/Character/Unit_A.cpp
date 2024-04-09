@@ -101,7 +101,8 @@ void Unit_A::DrawDebugGUI()
 void Unit_A::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, attack_radius, height, { 1,0,0,1 });
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //debug_renderer->DrawCylinder(position, attack_radius, height, { 1,0,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawBox(position, rotation, scale, { 0,1,0,1 });
 }
 

@@ -21,14 +21,42 @@ public:
     // 円柱描画
     void DrawCylinder(const DirectX::XMFLOAT3& position, float radius, float height, const DirectX::XMFLOAT4& color);
 
+    // 箱描画
+    void DrawBox(
+        const DirectX::XMFLOAT3& position,
+        const DirectX::XMFLOAT3& angle,
+        const DirectX::XMFLOAT3& size,
+        const DirectX::XMFLOAT4& color);
+
+    struct Mesh
+    {
+        Microsoft::WRL::ComPtr<ID3D11Buffer>	vertexBuffer;
+        UINT									vertexCount;
+    };
+    struct Instance
+    {
+        Mesh* mesh;
+        DirectX::XMFLOAT4X4		worldTransform;
+        DirectX::XMFLOAT4		color;
+    };
+    Mesh										boxMesh;
+    std::vector<Instance>						instances;
 private:
+    // メッシュ生成
+    void CreateMesh(ID3D11Device* device, const std::vector<DirectX::XMFLOAT3>& vertices, Mesh& mesh);
+
     // 球メッシュ作成
     void CreateSphereMesh(ID3D11Device* device, float radius, int slices, int stacks);
 
     // 円柱メッシュ作成
     void CreateCylinderMesh(ID3D11Device* device, float radius1, float radius2, float start, float height, int slices, int stacks);
 
+    // 箱メッシュ作成
+    void CreateBoxMesh(ID3D11Device* device, float width, float height, float depth);
+
 private:
+
+
     struct CbMesh
     {
         DirectX::XMFLOAT4X4	wvp;
