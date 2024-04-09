@@ -22,6 +22,11 @@ Fence::Fence()
     front_rect.right_down.x = 3.0f;
     front_rect.right_down.y = -6.0f;
 
+    back_rect.left_up.x = -5.0f;
+    back_rect.left_up.y = 6.0f;
+    back_rect.right_down.x = 3.0f;
+    back_rect.right_down.y = 5.0f;
+
     health = 10;
 
     instance = this;
@@ -53,6 +58,9 @@ void Fence::DrawDebugGui()
     if (ImGui::TreeNode(T.c_str()))
     {
         ImGui::DragInt("Health", &health, 0, 10);
+        ImGui::SliderFloat2("back_rect_left_up", &back_rect.left_up.x, 10.0f, -10.0f);
+        ImGui::SliderFloat2("back_rect_right_down", &back_rect.right_down.x, 10.0f, -10.0f);
+
         ImGui::SliderFloat2("left_rect_left_up", &left_rect.left_up.x, 10.0f, -10.0f);
         ImGui::SliderFloat2("left_rect_right_down", &left_rect.right_down.x, 10.0f, -10.0f);
 
@@ -92,6 +100,11 @@ void Fence::DrawDebugPrimitive()
     debug_renderer->DrawSphere({ front_rect.left_up.x,0.5f,front_rect.left_up.y }, 0.1f, { 0,1,0,1 });
     // Žè‘OŽlŠp‚Ì‰E‰º
     debug_renderer->DrawSphere({ front_rect.right_down.x,0.5f,front_rect.right_down.y }, 0.1f, { 0,1,0,1 });
+
+    // ‰œŽlŠp‚Ì¶ã
+    debug_renderer->DrawSphere({ back_rect.left_up.x,0.5f,back_rect.left_up.y }, 0.1f, { 0,1,0,1 });
+    // ‰œŽlŠp‚Ì‰E‰º
+    debug_renderer->DrawSphere({ back_rect.right_down.x,0.5f,back_rect.right_down.y }, 0.1f, { 0,1,0,1 });
 }
 
 Fence& Fence::Instance()

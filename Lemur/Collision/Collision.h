@@ -46,6 +46,20 @@ public:
         const float radiusB
     );
 
+    // 三角形の内点判定
+    static bool IntersectTriangleVsPoint(
+        const Triangle T,
+        const DirectX::XMFLOAT2& P
+    );
+
+    // 三角形と円の当たり判定
+    static bool IntersectTriangleVsCircle(
+        const Triangle T,
+        const DirectX::XMFLOAT2& P,
+        const float radius
+    );
+
+
     // 3D
     // 球と球の交差判定
     static bool IntersectSphereVsSphereOut(

@@ -22,6 +22,9 @@ public:
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
+
+    // 死亡処理
+    void OnDead()override;
 private:
     enum StateIndex
     {
@@ -29,7 +32,6 @@ private:
         Attack_State
     };
 
-    int state_index;
 
     float timer;
 };

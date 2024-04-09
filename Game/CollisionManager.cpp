@@ -44,48 +44,6 @@ void CollisionManager::CollisionSeedVsUnit()
     }
 }
 
-void CollisionManager::CollisionEnemyVsUnit()
-{
-    UnitManager& unitManager = UnitManager::Instance();
-    EnemyManager& enemytManager = EnemyManager::Instance();
-
-    // 全ての敵と総当たりで衝突判定
-    int unitCount = unitManager.GetUnitCount();
-    int enemyCount = enemytManager.GetEnemyCount();
-
-    bool is_intersected = false;
-
-    // 種の総当たり
-    for (int j = 0; j < enemyCount; ++j)
-    {
-        Enemy* enemy = enemytManager.GetEnemy(j);
-
-        is_intersected = false;
-        // ユニットの総当たり
-        for (int i = 0; i < unitCount; ++i)
-        {
-            Unit* unit = unitManager.GetUnit(i);
-
-            if (unit->category == 0 || unit->category == 3)
-            {
-                // 種がユニットの攻撃範囲に入っているとき
-                if (Collision::IntersectCircleVsCircle
-                (
-                    { enemy->GetPosition().x, enemy->GetPosition().y },
-                    enemy->GetRadius(),
-                    { unit->GetPosition().x,unit->GetPosition().y },
-                    unit->GetAttackRadius()
-                )
-                    )
-                {
-                    break; // 一度でも重なればループを抜ける
-                }
-            }
-        }
-    }
-}
-
-
 //TODO まず一番自分に近いユニットを算出する必要がある
 DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 position)
 {

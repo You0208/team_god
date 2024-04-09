@@ -22,20 +22,26 @@ public:
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
+
+    // 死亡処理
+    void OnDead()override;
+
 private:
     enum StateIndex
     {
         Move_State,
         Attack_State
     };
+
+    // 移動用の位置保存
     float old_position;
+    // 進む距離
     float dis;
-
-    float move_dis;
-
-    int state_index;
-
+    // 攻撃間隔
     float attack_timer;
+    // 移動タイマー
     float move_timer;
+    // 移動間隔
+    float move_timer_max;
 };
 

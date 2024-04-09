@@ -114,6 +114,40 @@ void Camera::NonLockOnUpdate(float elapsedTime)
     // カメラの回転速度
     float speed = rollSpeed * elapsedTime;
 
+    {
+        // IMGUIのマウス入力値を使ってカメラ操作する
+        ImGuiIO io = ImGui::GetIO();
+
+        // マウスカーソルの移動量を求める
+        float moveX = io.MouseDelta.x * 0.02f;
+        float moveY = io.MouseDelta.y * 0.02f;
+
+        // マウス左ボタン押下中
+        if (io.MouseDown[ImGuiMouseButton_Right])
+        {
+            // Y軸回転
+            angle.y += moveX * 0.5f;
+            if (angle.y > DirectX::XM_PI)
+            {
+                angle.y -= DirectX::XM_2PI;
+            }
+            else if (angle.y < -DirectX::XM_PI)
+            {
+                angle.y += DirectX::XM_2PI;
+            }
+            // X軸回転
+            angle.x += moveY * 0.5f;
+            if (angle.x > DirectX::XM_PI)
+            {
+                angle.x -= DirectX::XM_2PI;
+            }
+            else if (angle.x < -DirectX::XM_PI)
+            {
+                angle.x += DirectX::XM_2PI;
+            }
+        }
+    }
+
     //TODO Debug
     if (game_pad.GetButton() & game_pad.BTN_B)
     {

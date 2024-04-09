@@ -26,6 +26,8 @@ public:
 
     int category;
 
+    int attack_times;
+
     // éläp
     Rect square;
     float dec_pos;

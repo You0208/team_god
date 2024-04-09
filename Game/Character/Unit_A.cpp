@@ -1,18 +1,23 @@
 #include "Unit_A.h"
-#include "SeedManager.h"
+#include "EnemyManager.h"
+#include "UnitManager.h"
 #include "Lemur/Input/Input.h"
 #include "Lemur/Graphics/DebugRenderer.h"
 #include "Lemur/Collision/Collision.h"
+#include "interval.h"
 
 Unit_A::Unit_A()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\test2test.fbx");
 
-    attack_radius = 1.0f;
-    radius = 0.3f;
-    height = 0.5f;
-    dec_pos = 1.0f;
+    attack_times = 5;// UŒ‚‰ñ”
+    attack_power = 1;// UŒ‚—Í
+    attack_interval = 0.5f;// UŒ‚ŠÔŠu
+    attack_radius = 1.0f;// UŒ‚”ÍˆÍ
+    radius = 0.3f;// ”¼Œa
+    height = 0.5f;// ƒfƒoƒbƒO—p
+    dec_pos = 1.0f;// 
 
     // ‚Æ‚è‚ ‚¦‚¸ƒAƒjƒ[ƒVƒ‡ƒ“
     model->PlayAnimation(0, true);
@@ -37,11 +42,54 @@ void Unit_A::Update(float elapsedTime)
     model->UpdateAnimation(elapsedTime);
 
     DrawDebugGUI();
+
+    AttackEnemy(elapsedTime);
 }
 
 void Unit_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
     model->Render(scale, replaced_pixel_shader);
+}
+
+void Unit_A::AttackEnemy(float elapsedTime)
+{
+    EnemyManager& enemyManager = EnemyManager::Instance();
+
+    int enemyCount = enemyManager.GetEnemyCount();
+
+    //TODO ƒ‚[ƒVƒ‡ƒ“‚ª—ˆ‚½‚ç‚Ü‚½•Ï‚¦‚é
+    // “G‚Ì‘“–‚½‚è
+    for (int j = 0; j < enemyCount; ++j)
+    {
+        Enemy* enemy = enemyManager.GetEnemy(j);
+
+        // “G‚ªƒ†ƒjƒbƒg‚ÌUŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚é‚Æ‚«
+        if (Collision::IntersectCircleVsCircle
+        (
+            {position.x,position.z},                // ƒ†ƒjƒbƒg‚ÌˆÊ’u(XZ•½–Ê)
+            attack_radius,                          // UŒ‚”ÍˆÍ
+            {enemy->position.x,enemy->position.z},  // “G‚ÌˆÊ’u(XZ•½–Ê)
+            enemy->radius                           // “G‚Ì“–‚½‚è”»’è
+        ))
+        {
+            attack_timer += elapsedTime;
+
+            if (attack_timer >= attack_interval)
+            {
+                if (enemy->ApplyDamage(attack_power))
+                {
+                    attack_timer = 0.0f;
+                    attack_times--;
+                }
+            }
+        }
+    }
+
+    // UŒ‚‰ñ”‚ğÁ”ï‚µ‚«‚Á‚½‚çÁ–Å
+    if (attack_times <= 0)
+    {
+        UnitManager::Instance().Remove(this);
+    }
 }
 
 void Unit_A::DrawDebugGUI()

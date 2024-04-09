@@ -1,4 +1,5 @@
 #include "Enemy_A.h"
+#include "EnemyManager.h"
 
 #include "Lemur/Collision/Collision.h"
 #include "Lemur/Math/MathHelper.h"
@@ -12,10 +13,12 @@ Enemy_A::Enemy_A()
     attack_power = 1;
     attack_interval = 3.0f;
 
+    health = 10;
     radius = 1.0f;
     height = 1.0f;
     position.x = 5.0f;
     rotation.y = -90.0f;
+    speed_power = -1.0f;
 
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
@@ -33,6 +36,10 @@ void Enemy_A::Update(float elapsedTime)
         break;
     };
 
+    if (health <= 0)
+    {
+        OnDead();
+    }
 
     // ステート関係なく実行
     // 速力処理更新
@@ -87,16 +94,20 @@ void Enemy_A::MoveUpdate(float elapsedTime)
     else
     {
         // 移動
-        velocity.x = -1.0f;
+        velocity.x = speed_power;
     }
 }
 
 void Enemy_A::DrawDebugGUI()
 {
     std::string name = "Enemy_A";
+
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))
     {
+        std::string spe = std::string("speed") + name;
+        ImGui::DragFloat(spe.c_str(), &speed_power, 5.0f, -5.0f);
+
         std::string p = std::string("position") + name;
         ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);
         std::string s = std::string("scale") + name;
@@ -122,4 +133,9 @@ void Enemy_A::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+}
+
+void Enemy_A::OnDead()
+{
+    EnemyManager::Instance().Remove(this);
 }

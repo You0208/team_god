@@ -1,6 +1,8 @@
 #pragma once
 #include "Lemur/Object/Character.h"
 #include "Lemur/Graphics/Shader.h"
+#include "../Stage/Fence.h"
+
 
 class Enemy :public Character
 {
@@ -26,4 +28,6 @@ public:
 public:
     bool is_hit_unit = false;
 
+    // ステート
+    int state_index;
 };

@@ -8,6 +8,13 @@ struct Rect
     DirectX::XMFLOAT2 right_down;
 };
 
+struct Triangle
+{
+    DirectX::XMFLOAT2 A;
+    DirectX::XMFLOAT2 B;
+    DirectX::XMFLOAT2 C;
+};
+
 // ïÇìÆè¨êîéZèp
 class Mathf
 {
@@ -80,6 +87,12 @@ inline DirectX::XMFLOAT3 operator/(float lhs, const DirectX::XMFLOAT3& rhs)
 {
     return { lhs / rhs.x,lhs / rhs.y,lhs / rhs.z };
 }
+
+inline DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs)
+{
+    return { lhs.x - rhs.x,lhs.y - rhs.y};
+}
+
 
 
 inline DirectX::XMFLOAT3& operator+=(DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
@@ -163,5 +176,13 @@ inline DirectX::XMFLOAT3 Normalize(const DirectX::XMFLOAT3& f)
 {
     DirectX::XMFLOAT3 ret{};
     DirectX::XMStoreFloat3(&ret, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&f)));
+    return ret;
+}
+
+//ê≥ãKâª
+inline DirectX::XMFLOAT2 Normalize(const DirectX::XMFLOAT2& f)
+{
+    DirectX::XMFLOAT2 ret{};
+    DirectX::XMStoreFloat2(&ret, DirectX::XMVector2Normalize(DirectX::XMLoadFloat2(&f)));
     return ret;
 }

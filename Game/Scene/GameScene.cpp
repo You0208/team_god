@@ -72,7 +72,6 @@ void GameScene::Initialize()
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\‚¨‚Í‚¶‚«.png");
 	}
-
 }
 
 void GameScene::Finalize()
@@ -123,7 +122,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	{
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
-			Enemy_B* enemy = new Enemy_B;
+			Enemy_C* enemy = new Enemy_C;
 			// ƒŠƒXƒg‚É’Ç‰Á
 			EnemyManager::Instance().Register(enemy);
 		}

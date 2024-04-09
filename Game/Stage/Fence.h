@@ -30,4 +30,7 @@ public:
 
     Rect left_rect;
     Rect front_rect;
+
+    // ò‚Í‚È‚¢‚¯‚Ç“–‚½‚è”»’è—p‚É
+    Rect back_rect;
 };
