@@ -220,6 +220,18 @@ void DebugRenderer::DrawCylinder(const DirectX::XMFLOAT3& position, float radius
     cylinders.emplace_back(cylinder);
 }
 
+void DebugRenderer::DrawCapsule(const DirectX::XMFLOAT4X4& transform, float radius, float height, const DirectX::XMFLOAT4& color)
+{
+}
+
+void DebugRenderer::DrawBone(const DirectX::XMFLOAT4X4& transform, float length, const DirectX::XMFLOAT4& color)
+{
+}
+
+void DebugRenderer::DrawBox(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& size, const DirectX::XMFLOAT4& color)
+{
+}
+
 // ‹…ƒƒbƒVƒ…ì¬
 void DebugRenderer::CreateSphereMesh(ID3D11Device* device, float radius, int slices, int stacks)
 {
@@ -363,4 +375,16 @@ void DebugRenderer::CreateCylinderMesh(ID3D11Device* device, float radius1, floa
         HRESULT hr = device->CreateBuffer(&desc, &subresourceData, cylinderVertexBuffer.GetAddressOf());
         _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
     }
+}
+
+void DebugRenderer::CreateBoxMesh(ID3D11Device* device, float width, float height, float depth)
+{
+}
+
+void DebugRenderer::CreateHalfSphereMesh(ID3D11Device* device, float radius, int subdivisions)
+{
+}
+
+void DebugRenderer::CreateBoneMesh(ID3D11Device* device, float length)
+{
 }

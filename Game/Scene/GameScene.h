@@ -91,4 +91,9 @@ private:// シェーダー
     float light_view_near_z{ 2.0f };
     float light_view_far_z{ 18.0f };
  
+    // 三角形
+    Triangle Try_T;
+    // 円
+    DirectX::XMFLOAT2 P0;
+    float r0;
 };

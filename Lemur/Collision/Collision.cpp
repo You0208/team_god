@@ -69,13 +69,27 @@ bool Collision::IntersectTriangleVsPoint(const Triangle T, const DirectX::XMFLOA
     return false;
 }
 
-bool Collision::IntersectTriangleVsCircle(const Triangle T, const DirectX::XMFLOAT2& P,const float radius)
+bool Collision::IntersectTriangleVsCircle(const Triangle T, const DirectX::XMFLOAT2& P, const float radius)
 {
+    // ラムダ関数の定義
+    auto shortestDistance = [](const DirectX::XMFLOAT2& P, const struct DirectX::XMFLOAT2& T1, const struct DirectX::XMFLOAT2& T2) -> float {
+        DirectX::XMFLOAT2 PA = P - T1;           // A-P
+        DirectX::XMFLOAT2 T21 = T2 - T1;         // A-B
+        T21 = Normalize(T21);                    // 方向ベクトル正規化
+        float t0 = Dot(T21, PA);                 // 内積=AB・PA
+        DirectX::XMFLOAT2 T12 = T1 + (T21 * t0); // ABをt0倍してA座標に加算
+        float L0 = Length(T12 - P);              // 最短点と中心点の距離
+        return L0;
+        };
+
+    // 内点判定
     if (IntersectTriangleVsPoint(T, P))return true;
     else
     {
-        // 各線分と中心点の最短距離を求め、その長さが半径以下なら接触
-
+        float L0 = shortestDistance(P, T.A, T.B);// ABとの最短距離
+        float L1 = shortestDistance(P, T.B, T.C);// BCとの最短距離
+        float L2 = shortestDistance(P, T.C, T.A);// CAとの最短距離
+        if (L0 <= radius || L1 <= radius || L2 <= radius)return true;
     }
     return false;
 }

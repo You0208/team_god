@@ -88,11 +88,45 @@ inline DirectX::XMFLOAT3 operator/(float lhs, const DirectX::XMFLOAT3& rhs)
     return { lhs / rhs.x,lhs / rhs.y,lhs / rhs.z };
 }
 
+// 2D
+inline DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs)
+{
+    return { lhs.x + rhs.x,lhs.y + rhs.y};
+}
 inline DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs)
 {
     return { lhs.x - rhs.x,lhs.y - rhs.y};
 }
 
+inline DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs)
+{
+    return { lhs.x * rhs.x,lhs.y * rhs.y };
+}
+
+inline DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs)
+{
+    return { lhs.x / rhs.x,lhs.y / rhs.y };
+}
+
+inline DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2& lhs, const float rhs)
+{
+    return { lhs.x * rhs,lhs.y * rhs };
+}
+
+inline DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& lhs, const float rhs)
+{
+    return { lhs.x / rhs,lhs.y / rhs };
+}
+
+inline DirectX::XMFLOAT2 operator*(float lhs, const DirectX::XMFLOAT2& rhs)
+{
+    return { lhs * rhs.x,lhs * rhs.y};
+}
+
+inline DirectX::XMFLOAT2 operator/(float lhs, const DirectX::XMFLOAT2& rhs)
+{
+    return { lhs / rhs.x,lhs / rhs.y };
+}
 
 
 inline DirectX::XMFLOAT3& operator+=(DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
@@ -185,4 +219,34 @@ inline DirectX::XMFLOAT2 Normalize(const DirectX::XMFLOAT2& f)
     DirectX::XMFLOAT2 ret{};
     DirectX::XMStoreFloat2(&ret, DirectX::XMVector2Normalize(DirectX::XMLoadFloat2(&f)));
     return ret;
+}
+
+// ì‡êœ
+inline float Dot(DirectX::XMFLOAT3 v1, DirectX::XMFLOAT3 v2)
+{
+    return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
+}
+
+// ì‡êœ
+inline float Dot(DirectX::XMFLOAT2 v1, DirectX::XMFLOAT2 v2)
+{
+    return (v1.x * v2.x + v1.y * v2.y );
+}
+
+// äOêœ
+inline DirectX::XMFLOAT3 Cross(DirectX::XMFLOAT3 v1, DirectX::XMFLOAT3 v2)
+{
+    return { v1.y * v2.z - v1.z * v2.y ,v1.z * v2.x - v1.x * v2.z,v1.x * v2.y - v1.y * v2.x };
+}
+
+// í∑Ç≥
+inline float Length(DirectX::XMFLOAT3 v1)
+{
+    return sqrtf(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z);
+}
+
+// í∑Ç≥
+inline float Length(DirectX::XMFLOAT2 v1)
+{
+    return sqrtf(v1.x * v1.x + v1.y * v1.y + );
 }
