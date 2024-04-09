@@ -1,4 +1,5 @@
 #include "Collision.h"
+#include "Lemur/Graphics/DebugRenderer.h"
 
 
 void CollisionPhysicsComponent::Initialize(GameObject* gameobj)
@@ -43,8 +44,6 @@ bool Collision::IntersectCircleVsCircle(const DirectX::XMFLOAT2& positionA, cons
 bool Collision::IntersectTriangleVsPoint(const Triangle T, const DirectX::XMFLOAT2& P)
 {
     using namespace DirectX;
-    //線上は外とみなします。
-    //ABCが三角形かどうかのチェックは省略...
 
     XMFLOAT2 AB = T.B - T.A;
     XMFLOAT2 BP = P - T.B;
@@ -55,7 +54,7 @@ bool Collision::IntersectTriangleVsPoint(const Triangle T, const DirectX::XMFLOA
     XMFLOAT2 CA = T.A - T.C;
     XMFLOAT2 AP = P - T.A;
 
-    //外積    Z成分だけ計算すればよいです
+    //外積
     double c1 = AB.x * BP.y - AB.y * BP.x;
     double c2 = BC.x * CP.y - BC.y * CP.x;
     double c3 = CA.x * AP.y - CA.y * AP.x;
@@ -71,26 +70,69 @@ bool Collision::IntersectTriangleVsPoint(const Triangle T, const DirectX::XMFLOA
 
 bool Collision::IntersectTriangleVsCircle(const Triangle T, const DirectX::XMFLOAT2& P, const float radius)
 {
-    // ラムダ関数の定義
-    auto shortestDistance = [](const DirectX::XMFLOAT2& P, const struct DirectX::XMFLOAT2& T1, const struct DirectX::XMFLOAT2& T2) -> float {
-        DirectX::XMFLOAT2 PA = P - T1;           // A-P
-        DirectX::XMFLOAT2 T21 = T2 - T1;         // A-B
-        T21 = Normalize(T21);                    // 方向ベクトル正規化
-        float t0 = Dot(T21, PA);                 // 内積=AB・PA
-        DirectX::XMFLOAT2 T12 = T1 + (T21 * t0); // ABをt0倍してA座標に加算
-        float L0 = Length(T12 - P);              // 最短点と中心点の距離
-        return L0;
-        };
-
     // 内点判定
-    if (IntersectTriangleVsPoint(T, P))return true;
+    if (IntersectTriangleVsPoint(T, P))
+    {
+        return true;
+    }
     else
     {
-        float L0 = shortestDistance(P, T.A, T.B);// ABとの最短距離
-        float L1 = shortestDistance(P, T.B, T.C);// BCとの最短距離
-        float L2 = shortestDistance(P, T.C, T.A);// CAとの最短距離
-        if (L0 <= radius || L1 <= radius || L2 <= radius)return true;
+        // 三角の各辺と円の当たり判定
+        bool judge1 = IntersectCircleVsLine(T.A, T.B, P, radius);
+        bool judge2 = IntersectCircleVsLine(T.B, T.C, P, radius);
+        bool judge3 = IntersectCircleVsLine(T.C, T.A, P, radius);
+        if (judge1 || judge2 || judge3)return true;
     }
+    return false;
+}
+
+bool Collision::IntersectCircleVsLine(const DirectX::XMFLOAT2& L_S, const DirectX::XMFLOAT2& L_E, const DirectX::XMFLOAT2& P, const float radius)
+{
+    using namespace DirectX;
+    // ベクトルの作成
+    XMFLOAT2 start_to_center = P - L_S;
+    XMFLOAT2 end_to_center = P - L_E;
+    XMFLOAT2 start_to_end = L_E - L_S;
+
+    // 単位ベクトル化する
+    XMFLOAT2 normal_start_to_end = Normalize(start_to_end);
+
+    /*
+        射影した線分の長さ
+            始点と円の中心で外積を行う
+            ※始点 => 終点のベクトルは単位化しておく
+    */
+    float distance_projection = start_to_center.x * normal_start_to_end.y - normal_start_to_end.x * start_to_center.y;
+
+    // 線分と円の最短の長さが半径よりも小さい
+    if (fabs(distance_projection) < radius)
+    {
+        // 始点 => 終点と始点 => 円の中心の内積を計算する
+        float dot01 = start_to_center.x * start_to_end.x + start_to_center.y * start_to_end.y;
+        // 始点 => 終点と終点 => 円の中心の内積を計算する
+        float dot02 = end_to_center.x * start_to_end.x + end_to_center.y * start_to_end.y;
+
+        // 二つの内積の掛け算結果が0以下なら当たり
+        if (dot01 * dot02 <= 0.0f)
+        {
+            return true;
+        }
+        /*
+    上の条件から漏れた場合、円は線分上にはないので、
+    始点 => 円の中心の長さか、終点 => 円の中心の長さが
+    円の半径よりも短かったら当たり
+        */
+        if (Length(start_to_center) < radius ||
+            Length(end_to_center) < radius)
+        {
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
     return false;
 }
 

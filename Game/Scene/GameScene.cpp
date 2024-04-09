@@ -21,6 +21,8 @@
 #include "../Character/Unit_A.h"
 #include "../Character/SeedManager.h"
 
+#include "Lemur/Graphics/DebugRenderer.h"
+
 void GameScene::Initialize()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -72,6 +74,15 @@ void GameScene::Initialize()
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}
+
+	// デバッグ
+	{
+		Try_T.B.y = 2.0;
+		Try_T.C.x = 2.0;
+		Try_T.C.y = 1.0;
+
+		r0 = 0.1f;
+	}
 }
 
 void GameScene::Finalize()
@@ -120,6 +131,22 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// デバッグ用
 	{
+		DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+
+		debug_renderer->DrawSphere({ Try_T.A.x,1,Try_T.A.y }, 0.1f, { 1,0,1,1 });
+		debug_renderer->DrawSphere({ Try_T.B.x,1,Try_T.B.y }, 0.1f, { 1,0,1,1 });
+		debug_renderer->DrawSphere({ Try_T.C.x,1,Try_T.C.y }, 0.1f, { 1,0,1,1 });
+
+
+		if (Collision::IntersectTriangleVsCircle(Try_T, P0, r0))
+		{
+			debug_renderer->DrawSphere({ P0.x,1,P0.y }, r0, { 1,0,0,1 });
+		}
+		else
+		{
+			debug_renderer->DrawSphere({ P0.x,1,P0.y }, r0, { 0,0,1,1 });
+		}
+
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
 			Enemy_C* enemy = new Enemy_C;
@@ -278,7 +305,11 @@ void GameScene::DebugImgui()
 	BaseScene::DebugImgui();
 
 	ImGui::Begin("ImGUI");
-
+	ImGui::SliderFloat2("TA", &Try_T.A.x, -10.0f, 10.0f);
+	ImGui::SliderFloat2("TB", &Try_T.B.x, -10.0f, 10.0f);
+	ImGui::SliderFloat2("TC", &Try_T.C.x, -10.0f, 10.0f);
+	ImGui::SliderFloat2("P0", &P0.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("r0", &r0, 0.0f, 10.0f);
 	// STATIC_BATCHING
 	if (ImGui::TreeNode("shadow"))
 	{

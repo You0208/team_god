@@ -248,5 +248,5 @@ inline float Length(DirectX::XMFLOAT3 v1)
 // ’·‚³
 inline float Length(DirectX::XMFLOAT2 v1)
 {
-    return sqrtf(v1.x * v1.x + v1.y * v1.y );
+    return sqrtf(v1.x * v1.x + v1.y * v1.y);
 }

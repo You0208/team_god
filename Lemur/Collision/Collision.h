@@ -59,6 +59,13 @@ public:
         const float radius
     );
 
+    // ‰~‚Æü•ª‚Ì“–‚½‚è”»’è
+    static bool IntersectCircleVsLine(
+        const DirectX::XMFLOAT2& L_S,
+        const DirectX::XMFLOAT2& L_E,
+        const DirectX::XMFLOAT2& P,
+        const float radius
+    );
 
     // 3D
     // ‹…‚Æ‹…‚ÌŒğ·”»’è
