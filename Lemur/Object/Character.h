@@ -103,26 +103,26 @@ public:
     //---------Getter--------------------------------------------------------------------------
     //
     // モデルの数値
-    const DirectX::XMFLOAT3& GetPosition() const { return position; }                       // 位置
-    const DirectX::XMFLOAT3& GetAngle() const { return rotation; }                          // 回転
-    const DirectX::XMFLOAT3& GetScale() const { return scale; }                             // スケール
-    const float& GetScaleFactor() const { return scaleFactor; }                             // スケールファクター
-    const float GetRadius() const { return radius; }                                        // 半径
-    const float GetHeight() const { return height; }                                        // 高さ
-    const DirectX::XMFLOAT4& GetColor()const { return material_color; }                     // 色
-    const FbxModelManager* GetModel()const { return model.get(); }                          // モデル
+    const DirectX::XMFLOAT3& GetPosition() const { return position; }                         // 位置
+    const DirectX::XMFLOAT3& GetAngle() const { return rotation; }                            // 回転
+    const DirectX::XMFLOAT3& GetScale() const { return scale; }                               // スケール
+    const float& GetScaleFactor() const { return scaleFactor; }                               // スケールファクター
+    const float& GetRadius() const { return radius; }                                         // 半径
+    const float& GetHeight() const { return height; }                                         // 高さ
+    const DirectX::XMFLOAT4& GetColor()const { return material_color; }                       // 色
+    const FbxModelManager*   GetModel()const { return model.get(); }                          // モデル
 
     // ステータス
-    const int GetHealth() const { return health; }                                          // HP
-    const int GetMaxHealth() const { return max_health; }                                   // MaxHP
-    const float GetAttackCollisionRange()const { return attack_collision_range; }           // 攻撃当たり判定
-    const bool IsGround() const { return isGround; }                                        // 設置判定
-    const bool IsDead() const { return death; }                                             // 死亡判定
+    const int&  GetHealth() const { return health; }                                          // HP
+    const int&  GetMaxHealth() const { return max_health; }                                   // MaxHP
+    const float& GetAttackCollisionRange()const { return attack_collision_range; }            // 攻撃当たり判定
+    const bool& IsGround() const { return isGround; }                                         // 設置判定
+    const bool& IsDead() const { return death; }                                              // 死亡判定
 
     // アニメーション
-    const bool GetEndAnimation()const { return end_animation; }                             // アニメーション終了フラグ
-    const int GetFrameIndex()const { return frame_index; }                                  // アニメーションフレーム
-    const std::vector<Animation>* GetAnimation()const { return model->GetAnimation(); };    // アニメーションデータ
+    const bool& GetEndAnimation()const { return end_animation; }                              // アニメーション終了フラグ
+    const int&  GetFrameIndex()const { return frame_index; }                                  // アニメーションフレーム
+    const std::vector<Animation>* GetAnimation()const { return model->GetAnimation(); };      // アニメーションデータ
 
 
     //---------Setter--------------------------------------------------------------------------
@@ -141,59 +141,59 @@ public:
 
 protected:
     //----------モデル関連------------------------------------------------
-    std::shared_ptr<FbxModelManager> model;
-    Animation::keyframe keyframe{};// キーフレーム
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> PS;// ピクセルシェーダー
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> PS=nullptr;       // ピクセルシェーダー
+    std::shared_ptr<FbxModelManager> model = nullptr;           // モデル
+    Animation::keyframe keyframe = {};                          // キーフレーム
 
-    DirectX::XMFLOAT3 velocity = { 0, 0, 0 };  // 速度
-    DirectX::XMFLOAT3 position = { 0, 0, 0 };  // 位置
-    DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f }; // スケール
-    float   scaleFactor = 1.0f;// スケールのまとめ
-    DirectX::XMFLOAT3 rotation = { 0, 0, 0 }; //　回転
-    DirectX::XMFLOAT4 material_color = { 1, 1, 1, 1 }; // 色
-    DirectX::XMFLOAT3 direction = { 0,0,1 };// 方向
+    DirectX::XMFLOAT3   velocity       = { 0, 0, 0 };           // 速度
+    DirectX::XMFLOAT3   position       = { 0, 0, 0 };           // 位置
+    DirectX::XMFLOAT3   scale          = { 1.0f, 1.0f, 1.0f };  // スケール
+    float               scaleFactor    = 1.0f;                  // スケールのまとめ
+    DirectX::XMFLOAT3   rotation       = { 0, 0, 0 };           //　回転
+    DirectX::XMFLOAT4   material_color = { 1, 1, 1, 1 };        // 色
+    DirectX::XMFLOAT3   direction      = { 0,0,1 };             // 方向
 
     //----------ゲーム関連------------------------------------------------
-    float   radius = 1.0f; // 半径
-    float   height = 0.0f; // 高さ 
+    float   radius                 = 1.0f;          // 半径
+    float   height                 = 0.0f;          // 高さ 
 
-    int     max_health = 5; // 最大健康状態
-    int     health = max_health; // 健康状態
-    bool    death = false;// 死亡判定
+    int     max_health             = 5;             // 最大健康状態
+    int     health                 = max_health;    // 健康状態
+    bool    death                  = false;         // 死亡判定
 
-    int     attack_power = 0;//基礎攻撃力
-    float   attack_interval = 0.0f;// 攻撃間隔
-    float attack_collision_range = 0.3f;// 攻撃半径
-    float   speed_power = 10.0f;// スピードパラメータ
-    float   defense_power = 0;// 基礎防御力
+    int     attack_power           = 0;             // 基礎攻撃力
+    float   attack_interval        = 0.0f;          // 攻撃間隔
+    float   attack_collision_range = 0.3f;          // 攻撃半径
+    float   speed_power            = 10.0f;         // スピードパラメータ
+    float   defense_power          = 0;             // 基礎防御力
 
-    float   maxMoveSpeed = 5.0f; // 最大速度
-    float   moveVecX = 0.0f; // X方向移動
-    float   moveVecZ = 0.0f; // Z方向移動
-    float   friction = 0.7f; // 摩擦力
-    float   acceleration = 1.5f; // 加速力
-    float   gravity = -1.0f; // 重力
+    float   maxMoveSpeed           = 5.0f;          // 最大速度
+    float   moveVecX               = 0.0f;          // X方向移動
+    float   moveVecZ               = 0.0f;          // Z方向移動
+    float   friction               = 0.7f;          // 摩擦力
+    float   acceleration           = 1.5f;          // 加速力
+    float   gravity                = -1.0f;         // 重力
 
-    float   invincibleTimer = 1.0f; // 無敵時間
-    float	airControl = 0.3f; // 空気抵抗
+    float   invincibleTimer        = 1.0f;          // 無敵時間
+    float	airControl             = 0.3f;          // 空気抵抗
 
-    bool    isGround = false; // 着地フラグ
+    bool    isGround               = false;         // 着地フラグ
 
     //----------アニメーション関連------------------------------------------------
-    bool animation_loop_flag = true;// ループフラグ
-    bool end_animation = false;// アニメーション終了フラグ
-    float animation_blend_time = 0.0f;// ブレンド
-    float animation_blend_seconds = 0.0f;// ブレンド秒
-    float animation_tick = 0; // アニメーション
-    int animation_index = 0;// アニメーション番号
-    int frame_index = 0;// アニメーションのクリップ番号
-    float anim_calc_rate = 1.0f;// アニメーションの再生速度
+    bool    animation_loop_flag     = true;         // ループフラグ
+    bool    end_animation           = false;        // アニメーション終了フラグ
+    float   animation_blend_time    = 0.0f;         // ブレンド
+    float   animation_blend_seconds = 0.0f;         // ブレンド秒
+    float   animation_tick          = 0;            // アニメーション
+    int     animation_index         = 0;            // アニメーション番号
+    int     frame_index             = 0;            // アニメーションのクリップ番号
+    float   anim_calc_rate          = 1.0f;         // アニメーションの再生速度
 
     
-    float hit_stop_time;// ヒットストップする時間
-    float hit_stop_rate = 1.0f;// ヒットストップ係数
-    float hit_stop_timer;// ヒットストップ経過時間
+    float   hit_stop_time           =0.0f;          // ヒットストップする時間
+    float   hit_stop_rate           = 1.0f;         // ヒットストップ係数
+    float   hit_stop_timer          =0.0f;          // ヒットストップ経過時間
    
-    bool is_hit_stop = false; // ヒットストップしてるか
+    bool    is_hit_stop             = false;        // ヒットストップしてるか
 
 };

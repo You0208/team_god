@@ -23,12 +23,11 @@ public:
     void Destroy();
 
     // Getter
-    int GetCategory() { return category; }
-    float GetAttackRadius() { return attack_radius; }
-    float GetDecPos() { return dec_pos; }
-    Triangle GetTriangle1() { return triangle_1; }
-    Triangle GetTriangle2() { return triangle_2; }
-    Rect GetRect() { return square; }
+    int         GetCategory() { return category; }
+    float       GetDecPos() { return dec_pos; }
+    Triangle    GetTriangle1() { return triangle_1; }
+    Triangle    GetTriangle2() { return triangle_2; }
+    Rect        GetRect() { return square; }
 
     // Setter
     void SetCategory(int category_) { category = category_; }
@@ -69,15 +68,15 @@ protected:
         Attack,  // 攻撃行動
         Death   // 死亡
     };
-    State				state = State::Idle;
 
-    Enemy* attack_enemy;    // 攻撃対象エネミー
-    Unit* buff_unit;        // バフ対象ユニット
-    float dec_pos;          // 種がユニットに跳ね返される距離
-    int category;           // ユニットのカテゴリー
-    int attack_times;       // 攻撃回数
-    float attack_radius;    // 円攻撃範囲半径
-    Triangle triangle_1;    // 左三角攻撃範囲
-    Triangle triangle_2;    // 右三角攻撃範囲
-    Rect square;            // ユニットの後方範囲
+    State		state           = State::Idle;      // ステート
+
+    Enemy*      attack_enemy    = nullptr;          // 攻撃対象エネミー
+    Unit*       buff_unit       = nullptr;          // バフ対象ユニット
+    float       dec_pos         = 0.0f;             // 種がユニットに跳ね返される距離
+    int         category        = 0;                // ユニットのカテゴリー
+    int         attack_times    = 0;                // 攻撃回数
+    Triangle    triangle_1      = {};               // 左三角攻撃範囲
+    Triangle    triangle_2      = {};               // 右三角攻撃範囲
+    Rect        square          = {};               // ユニットの後方範囲
 };

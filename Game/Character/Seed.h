@@ -29,10 +29,10 @@ public:
     void DecNumber() { number--; }
 
 private:
-    float timer;// 種が配置されてからの時間
-    int number;// 種番号
-    int category;// 種の種類
-    bool born;// ユニットが生まれるかどうか
+    float   timer;   // 種が配置されてからの時間
+    int     number;  // 種番号
+    int     category;// 種の種類
+    bool    born;    // ユニットが生まれるかどうか
 };
 
 

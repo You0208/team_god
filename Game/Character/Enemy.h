@@ -54,8 +54,8 @@ protected:
         Attack,
         Death
     };
-    State state = State::Move;
+    State state         = State::Move; // ステート
 
-    bool is_hit_unit = false;// プレイヤーに当たったか    
-    int state_index;// ステート
+    bool is_hit_unit    = false;       // プレイヤーに当たったか    
+    int  state_index    =0;            // ステート
 };

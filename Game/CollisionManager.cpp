@@ -29,7 +29,7 @@ void CollisionManager::CollisionSeedVsUnit()
                 ({ seed->GetPosition().x,seed->GetPosition().z },
                     seed->GetRadius(),
                     { unit->GetPosition().x,unit->GetPosition().z },
-                    unit->GetAttackRadius()
+                    unit->GetAttackCollisionRange()
                 ))
                 {
                     is_intersected = true;

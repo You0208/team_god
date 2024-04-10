@@ -15,7 +15,7 @@ private:
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
 private:
-    float timer;
+    float timer;// タイマー
 };
 
 class Enemy_B :public Enemy
@@ -33,11 +33,11 @@ private:
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
 private:
-    float old_position;// 移動用の位置保存
-    float dis;// 進む距離
-    float attack_timer;// 攻撃間隔
-    float move_timer;// 移動タイマー
-    float move_timer_max;// 移動間隔
+    float   old_position   = 0.0f;      // 移動用の位置保存
+    float   dis            = 1.0f;      // 進む距離
+    float   attack_timer   = 1.0f;      // 攻撃間隔
+    float   move_timer     = 0.0f;      // 移動タイマー
+    float   move_timer_max = 1.0f;      // 移動間隔
 };
 
 class Enemy_C :public Enemy
@@ -54,14 +54,20 @@ private:
     // 移動
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
-
+    // ユニットとの当たり判定
     void JudgeUnit();
 private:
-    DirectX::XMFLOAT2 destination = { 0,0 };// 目的地
+    enum Move
+    {
+        Straight,
+        Avoid
+    };
 
-    float timer = 0.0f;// タイマー
-    int move_state = 0;// 移動ステート
-    bool is_touched_unit = false;// ユニットに触れたか
+    float   timer                       = 0.0f;      // タイマー
+    int     move_state                  = Straight;  // 移動ステート
+    bool    is_touched_unit             = false;     // ユニットに触れたか
+
+    DirectX::XMFLOAT2   destination     = { 0,0 };   // 目的地
 };
 
 class Enemy_D :public Enemy
@@ -79,12 +85,23 @@ private:
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
 private:
-    int move_state;             // 移動の状態
-    float dis;                  // 移動量
-    float dis_max;              // 移動量規定値
-    float speed_power_Y = 10.0f;// Y方向の移動量
-    int direction_state = 0;    // 方向の状態
-    bool is_last_touched;       // 前回の移動で柵に触れたか
+    enum Move
+    {
+        Straight,
+        Diagonal
+    };
+    enum Direction
+    {
+        Under,
+        Up
+    };
 
-    float attack_timer;         // 攻撃間隔
+    int     move_state      = Move::Straight;         // 移動の状態
+    int     direction_state = Direction::Under;       // 方向の状態
+    float   dis             = 0.0f;                   // 移動量
+    float   dis_max         = 1.0f;                   // 移動量規定値
+    float   speed_power_Y   = 10.0f;                  // Y方向の移動量
+    bool    is_last_touched = false;                  // 前回の移動で柵に触れたか
+
+    float   attack_timer    = 1.0f;                   // 攻撃間隔
 };

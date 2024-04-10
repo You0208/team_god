@@ -8,13 +8,13 @@ Unit_D::Unit_D()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
 
-    attack_times = 5;    // UŒ‚‰ñ”
-    attack_power = 1;    // UŒ‚—Í
-    attack_interval = 0.5f; // UŒ‚ŠÔŠu
-    attack_radius = 1.0f; // UŒ‚”ÍˆÍ
-    radius = 0.3f; // ”¼Œa
-    height = 0.5f; // ƒfƒoƒbƒO—p
-    dec_pos = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½Ží‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
+    attack_times           = 5;    // UŒ‚‰ñ”
+    attack_power           = 1;    // UŒ‚—Í
+    attack_interval        = 0.5f; // UŒ‚ŠÔŠu
+    attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
+    radius                 = 0.3f; // ”¼Œa
+    height                 = 0.5f; // ƒfƒoƒbƒO—p
+    dec_pos                = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½Ží‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
 
     // ‚Æ‚è‚ ‚¦‚¸ƒAƒjƒ[ƒVƒ‡ƒ“
     model->PlayAnimation(Animation::Idle, true);
@@ -23,7 +23,7 @@ Unit_D::Unit_D()
 void Unit_D::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, attack_radius, height, { 1,0,0,1 });
+    debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
     debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
@@ -42,7 +42,7 @@ void Unit_D::UpdateIdleState(float elapsed_time)
         if (Collision::IntersectCircleVsCircle
         (
             { position.x,position.z },                // ƒ†ƒjƒbƒg‚ÌˆÊ’u(XZ•½–Ê)
-            attack_radius,                          // UŒ‚”ÍˆÍ
+            attack_collision_range,                          // UŒ‚”ÍˆÍ
             { unit->GetPosition().x,unit->GetPosition().z },  // “G‚ÌˆÊ’u(XZ•½–Ê)
             unit->GetRadius()                           // “G‚Ì“–‚½‚è”»’è
         ))
@@ -84,7 +84,7 @@ void Unit_D::UpdateAttackState(float elapsed_time)
         if (Collision::IntersectCircleVsCircle
         (
             { position.x,position.z },                // ƒ†ƒjƒbƒg‚ÌˆÊ’u(XZ•½–Ê)
-            attack_radius,                          // UŒ‚”ÍˆÍ
+            attack_collision_range,                          // UŒ‚”ÍˆÍ
             { unit->GetPosition().x,unit->GetPosition().z },  // “G‚ÌˆÊ’u(XZ•½–Ê)
             unit->GetRadius()                           // “G‚Ì“–‚½‚è”»’è
         ))

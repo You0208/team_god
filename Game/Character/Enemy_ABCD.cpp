@@ -9,15 +9,15 @@ Enemy_A::Enemy_A()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;     // 攻撃力
-    attack_interval = 3.0f;  // 攻撃間隔
+    attack_power    = 1;        // 攻撃力
+    attack_interval = 3.0f;     // 攻撃間隔
 
-    health = 10;    // HP
-    radius = 1.0f;  // 半径
-    height = 1.0f;  // デバッグ用
-    position.x = 5.0f;  // 初期位置
-    rotation.y = -90.0f;// 初期角度
-    speed_power = -1.0f; // 速度
+    health          = 10;       // HP
+    radius          = 1.0f;     // 半径
+    height          = 1.0f;     // デバッグ用
+    position.x      = 5.0f;     // 初期位置
+    rotation.y      = -90.0f;   // 初期角度
+    speed_power     = -1.0f;    // 速度
 
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Move, true);
@@ -38,6 +38,7 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
 {
     // タイマーを加算
     timer += elapsed_time;
+
     // 攻撃間隔とタイマーを比べる
     if (timer >= attack_interval)
     {
@@ -92,20 +93,21 @@ Enemy_B::Enemy_B()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;        // 攻撃力
+    attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
 
-    radius = 1.0f;     // 半径
-    height = 1.0f;     // デバッグ用
-    position.x = 5.0f;     // 初期位置
-    rotation.y = -90.0f;   // 初期方向
+    radius          = 1.0f;     // 半径
+    height          = 1.0f;     // デバッグ用
+    position.x      = 5.0f;     // 初期位置
+    rotation.y      = -90.0f;   // 初期方向
 
-    dis = 3.0f;     // 一気に進む距離
-    move_timer = 0.0f;     // タイマー
-    move_timer_max = 3.0f;     // 動くまでの時間
-    speed_power = -3.0f;    // スピード
+    dis             = 3.0f;     // 一気に進む距離
+    move_timer      = 0.0f;     // タイマー
+    move_timer_max  = 3.0f;     // 動くまでの時間
+    speed_power     = -3.0f;    // スピード
 
-    health = 10;       // HP
+    health          = 10;       // HP
+
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Move, true);
 }
@@ -119,6 +121,7 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
 {
     // タイマーを加算
     attack_timer += elapsed_time;
+
     // 攻撃間隔とタイマーを比べる
     if (attack_timer >= attack_interval)
     {
@@ -150,12 +153,16 @@ void Enemy_B::UpdateMoveState(float elapsed_time)
     // タイマーを加算
     move_timer += elapsed_time;
 
-    if (move_timer >= move_timer_max)                   //タイマーが4秒を超えたとき
+    //タイマーが指定秒を超えたとき
+    if (move_timer >= move_timer_max)                   
     {
-        velocity.x = speed_power;                       // 速度を代入
-        if (abs(old_position - position.x) >= dis)      // 既定の距離進んだら
+        // 速度を代入
+        velocity.x = speed_power;
+        // 既定の距離進んだら
+        if (abs(old_position - position.x) >= dis)
         {
-            move_timer = 0.0f;                          // 再び待機
+            // 再び待機
+            move_timer = 0.0f;                          
         }
     }
     // 柵に当たったら
@@ -191,15 +198,15 @@ Enemy_C::Enemy_C()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;         // 攻撃力　
+    attack_power    = 1;         // 攻撃力　
     attack_interval = 3.0f;      // 攻撃間隔
 
-    radius = 1.0f;      // 半径
-    height = 1.0f;      // デバッグ要
-    position.x = 5.0f;      // 初期位置
-    rotation.y = -90.0f;    // 初期角度
-    speed_power = -1.0f;     // 速度
-    health = 10;        // HP
+    radius          = 1.0f;      // 半径
+    height          = 1.0f;      // デバッグ要
+    position.x      = 5.0f;      // 初期位置
+    rotation.y      = -90.0f;    // 初期角度
+    speed_power     = -1.0f;     // 速度
+    health          = 10;        // HP
 
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Move, true);
@@ -220,6 +227,7 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
 {
     // タイマーを加算
     timer += elapsed_time;
+
     // 攻撃間隔とタイマーを比べる
     if (timer >= attack_interval)
     {
@@ -248,7 +256,7 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
 
 void Enemy_C::UpdateMoveState(float elapsed_time)
 {
-    // 柵に触れたら
+    // 柵に触れたら攻撃ステートへ
     if (Collision::IntersectRectVsCircle(Fence::Instance().left_rect, { position.x,position.z }, radius) ||
         Collision::IntersectRectVsCircle(Fence::Instance().front_rect, { position.x,position.z }, radius))
     {
@@ -258,12 +266,15 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
     {
         switch (move_state)
         {
-        case 0:
+        case Move::Straight:// 直線
             // 移動
             velocity.x = speed_power;
-            if (is_touched_unit)move_state = 1;
+            // ユニットに触れたらステートを切り替え
+            if (is_touched_unit)move_state = Move::Avoid;
             break;
-        case 1:// ユニットに触った時
+
+        case Move::Avoid:// ユニットに触った時
+
             // 現在地から目的地までのベクトルを算出
             DirectX::XMFLOAT2 Vec =
             {
@@ -281,9 +292,10 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
             // 目的地に着いたら戻す
             if (position.z >= destination.y)
             {
+                // 初期化
                 is_touched_unit = false;
                 velocity.x = velocity.z = 0.0f;
-                move_state = 0;
+                move_state = Move::Straight;
             }
 
             break;
@@ -294,28 +306,67 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
 void Enemy_C::JudgeUnit()
 {
     UnitManager& unitManager = UnitManager::Instance();
-
     int unitCount = unitManager.GetUnitCount();
 
-    // 敵の総当たり
+    // ユニットにの総当たり
     for (int j = 0; j < unitCount; ++j)
     {
         Unit* unit = unitManager.GetUnit(j);
 
-        // 敵がユニットの攻撃範囲に触れたとき
-        if (Collision::IntersectCircleVsCircle
-        (
-            { unit->GetPosition().x,unit->GetPosition().z },   // ユニットの位置(XZ平面)
-            unit->GetAttackRadius(),                 // 攻撃範囲
-            { position.x,position.z },               // 敵の位置(XZ平面)
-            radius                                   // 敵の当たり判定
-        ))
+        if (unit->GetCategory() == 0 || unit->GetCategory() == 3)
         {
-            is_touched_unit = true;
-            destination = {
-                unit->GetPosition().x,
-                unit->GetPosition().z + unit->GetRadius() + radius
-            };
+            // 敵がユニットの攻撃範囲に触れたとき
+            if (Collision::IntersectCircleVsCircle
+            (
+                { unit->GetPosition().x,unit->GetPosition().z },   // ユニットの位置(XZ平面)
+                unit->GetAttackCollisionRange(),                   // 攻撃範囲
+                { position.x,position.z },                         // 敵の位置(XZ平面)
+                radius                                             // 敵の当たり判定
+            ))
+            {
+                is_touched_unit = true;
+                // 目的地を決定する
+                destination = {
+                    unit->GetPosition().x,
+                    unit->GetPosition().z + unit->GetAttackCollisionRange() + radius
+                };
+            }
+        }
+        else if (unit->GetCategory() == 1 || unit->GetCategory() == 2)
+        {
+            // 敵がユニットの攻撃範囲に触れたとき
+            if (Collision::IntersectTriangleVsCircle
+            (
+                unit->GetTriangle1(),
+                { position.x,position.z },                         // 敵の位置(XZ平面)
+                radius                                             // 敵の当たり判定
+            ))
+            {
+                is_touched_unit = true;
+                // 目的地を決定する
+                destination = {
+                    unit->GetPosition().x,
+                    unit->GetPosition().z + unit->GetRadius() + radius
+                };
+            }
+            // 敵がユニットの攻撃範囲に触れたとき
+            else if (Collision::IntersectTriangleVsCircle
+            (
+                unit->GetTriangle1(),
+                { position.x,position.z },                         // 敵の位置(XZ平面)
+                radius                                             // 敵の当たり判定
+            ))
+            {
+                is_touched_unit = true;
+                // 目的地を決定する
+                destination = {
+                    unit->GetPosition().x,
+                    unit->GetPosition().z + unit->GetRadius() + radius
+                };
+            }
+        }
+        if (unit->GetCategory() == 4 || unit->GetCategory() == 5)
+        {
         }
     }
 }
@@ -327,22 +378,22 @@ Enemy_D::Enemy_D()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;        // 攻撃力
+    attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
 
-    radius = 1.0f;     // 半径
-    height = 1.0f;     //デバッグ用
-    position.x = 5.0f;     // 初期位置
-    rotation.y = -90.0f;   // 初期方向
+    radius          = 1.0f;     // 半径
+    height          = 1.0f;     //デバッグ用
+    position.x      = 5.0f;     // 初期位置
+    rotation.y      = -90.0f;   // 初期方向
 
-    move_state = 0;        // 移動状態
-    speed_power = -1.0f;    // 横移動量
-    speed_power_Y = -1.0f;    // 縦移動量
+    move_state      = 0;        // 移動状態
+    speed_power     = -1.0f;    // 横移動量
+    speed_power_Y   = -1.0f;    // 縦移動量
     direction_state = 0;        // 方向の状態
-    dis_max = 1.0f;     // 移動量規定値
+    dis_max         = 1.0f;     // 移動量規定値
     is_last_touched = false;    // 前回柵に触れたか
 
-    health = 10;       // HP
+    health          = 10;       // HP
 
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Move, true);
@@ -399,7 +450,7 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
 
     switch (move_state)
     {
-    case 0:
+    case Move::Straight:
         // 横移動
         velocity.x = speed_power;
         // 移動量を記録
@@ -414,7 +465,7 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
             move_state = 1;                         // 移動状態を変化
         }
         break;
-    case 1:
+    case Move::Diagonal:
         // 横移動
         velocity.x = speed_power;
         // 移動量を記録
@@ -431,7 +482,7 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
         // 縦移動
         switch (direction_state)
         {
-        case 0:
+        case Direction::Under:
             velocity.z = speed_power_Y;// 縦移動
 
             // 後ろ方向に振り切っていたら
@@ -440,7 +491,7 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
                 is_last_touched = true;
             }
             break;
-        case 1:
+        case Direction::Up:
             velocity.z = -speed_power_Y;// 縦移動
 
             // 後ろ方向に振り切っていたら
