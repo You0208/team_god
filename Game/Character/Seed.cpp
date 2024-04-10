@@ -15,7 +15,6 @@ Seed::Seed()
     scaleFactor = 0.1f;
     radius = 0.3f;
     height = 0.3f;
-
 }
 
 Seed::~Seed()

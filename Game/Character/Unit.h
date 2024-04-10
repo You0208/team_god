@@ -24,6 +24,9 @@ public:
         square.right_down = square_.right_down;
     }
 
+    Triangle GetTriangle1() { return triangle_1; }
+    Triangle GetTriangle2() { return triangle_2; }
+
     int category;
 
     int attack_times;
@@ -31,6 +34,9 @@ public:
     // lŠp
     Rect square;
     float dec_pos;
+
 protected:
     float attack_radius;
+    Triangle triangle_1; // ¶OŠpUŒ‚”ÍˆÍ
+    Triangle triangle_2;// ‰EOŠpUŒ‚”ÍˆÍ
 };

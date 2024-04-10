@@ -21,21 +21,47 @@ void CollisionManager::CollisionSeedVsUnit()
         {
             Unit* unit = unitManager.GetUnit(i);
 
+            // 攻撃範囲が円
             if (unit->category == 0 || unit->category == 3)
             {
                 // 種がユニットの攻撃範囲に入っているとき
-                if (Collision::IntersectCylinderVsCylinder
-                (seed->GetPosition(),
+                if (Collision::IntersectCircleVsCircle
+                ({ seed->GetPosition().x,seed->GetPosition().z },
                     seed->GetRadius(),
-                    seed->GetHeight(),
-                    unit->GetPosition(),
-                    unit->GetAttackRadius(),
-                    unit->GetHeight())
-                    )
+                    { unit->GetPosition().x,unit->GetPosition().z },
+                    unit->GetAttackRadius()
+                ))
                 {
                     is_intersected = true;
                     break; // 一度でも重なればループを抜ける
                 }
+            }
+            // 攻撃範囲が三角
+            if (unit->category == 1 || unit->category == 2)
+            {
+                // 種がユニットの攻撃範囲に入っているとき
+                if (Collision::IntersectTriangleVsCircle
+                (
+                    unit->GetTriangle1(),
+                    { seed->GetPosition().x,seed->GetPosition().z },
+                    seed->GetRadius()
+                    ))
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
+                // 種がユニットの攻撃範囲に入っているとき
+                if (Collision::IntersectTriangleVsCircle
+                (
+                    unit->GetTriangle2(),
+                    { seed->GetPosition().x,seed->GetPosition().z },
+                    seed->GetRadius()
+                ))
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
+
             }
         }
 
@@ -44,7 +70,6 @@ void CollisionManager::CollisionSeedVsUnit()
     }
 }
 
-//TODO まず一番自分に近いユニットを算出する必要がある
 DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 position)
 {
     UnitManager& unitManager = UnitManager::Instance();

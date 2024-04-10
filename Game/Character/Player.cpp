@@ -14,7 +14,7 @@ Player::Player()
 
     // 座標を減算
     position.z = sub_pos_z;
-
+    unit_category = 2;
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
 }

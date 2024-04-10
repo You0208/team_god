@@ -4,20 +4,19 @@
 #include "Lemur/Input/Input.h"
 #include "Lemur/Graphics/DebugRenderer.h"
 #include "Lemur/Collision/Collision.h"
-#include "interval.h"
 
 Unit_A::Unit_A()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
 
-    attack_times = 5;// UŒ‚‰ñ”
-    attack_power = 1;// UŒ‚—Í
-    attack_interval = 0.5f;// UŒ‚ŠÔŠu
-    attack_radius = 1.0f;// UŒ‚”ÍˆÍ
-    radius = 0.3f;// ”¼Œa
-    height = 0.5f;// ƒfƒoƒbƒO—p
-    dec_pos = 1.0f;// 
+    attack_times    = 5;    // UŒ‚‰ñ”
+    attack_power    = 1;    // UŒ‚—Í
+    attack_interval = 0.5f; // UŒ‚ŠÔŠu
+    attack_radius   = 1.0f; // UŒ‚”ÍˆÍ
+    radius          = 0.3f; // ”¼Œa
+    height          = 0.5f; // ƒfƒoƒbƒO—p
+    dec_pos         = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½Ží‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
 
     // ‚Æ‚è‚ ‚¦‚¸ƒAƒjƒ[ƒVƒ‡ƒ“
     model->PlayAnimation(0, true);
