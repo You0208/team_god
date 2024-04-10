@@ -1,4 +1,5 @@
 #pragma once
+#include "Enemy.h"
 #include "Lemur/Object/Character.h"
 #include "Lemur/Graphics/Shader.h"
 #include "Lemur/Math/MathHelper.h"
@@ -10,7 +11,13 @@ public:
     ~Unit() {}
 
     // 更新処理
-    virtual void Update(float elapsed_time) = 0;
+    virtual void Update(float elapsed_time);
+
+    // Imgui
+    virtual void DrawDebugGUI(int n) {};
+
+    // デバッグプリミティブ描画
+    virtual void DrawDebugPrimitive() {};
 
     // 破棄
     void Destroy();
@@ -31,14 +38,20 @@ public:
     }
 
 protected:
+    // 死亡ステートへ遷移
+    virtual void TransitionDeathState();
+
+    // 死亡ステート更新処理
+    virtual void UpdateDeathState(float elapsed_time);
+
     // 待機ステートへ遷移
-    virtual void TransitionIdleState() = 0;
+    virtual void TransitionIdleState();
 
     // 待機ステート更新処理
     virtual void UpdateIdleState(float elapsed_time) = 0;
 
     // 攻撃ステートへ遷移
-    virtual void TransitionAttackState() = 0;
+    virtual void TransitionAttackState();
 
     // 攻撃ステート更新処理
     virtual void UpdateAttackState(float elapsed_time) = 0;
@@ -58,7 +71,8 @@ protected:
     };
     State				state = State::Idle;
 
-
+    Enemy* attack_enemy;    // 攻撃対象エネミー
+    Unit* buff_unit;        // バフ対象ユニット
     float dec_pos;          // 種がユニットに跳ね返される距離
     int category;           // ユニットのカテゴリー
     int attack_times;       // 攻撃回数

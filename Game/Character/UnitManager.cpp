@@ -10,6 +10,12 @@ void UnitManager::Update(float elapsedTime)
         unit->Update(elapsedTime);
     }
 
+    for (int i = 0; i < GetUnitCount(); i++)
+    {
+        Unit* unit = units.at(i);
+        unit->DrawDebugGUI(i);
+    }
+
     // ”jŠüˆ—
     for (Unit* unit : removes)
     {

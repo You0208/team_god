@@ -1,12 +1,8 @@
 #include "Seed.h"
 #include "Lemur/Input/Input.h"
 #include "UnitManager.h"
-#include "Unit_A.h"
-#include "Unit_B.h"
-#include "Unit_C.h"
-#include "Unit_D.h"
-#include "Unit_E.h"
-#include "Unit_F.h"
+#include "Unit_ABC.h"
+#include "Unit_DEF.h"
 
 Seed::Seed()
 {

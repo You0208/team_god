@@ -15,7 +15,8 @@
 #include "../Character/EnemyManager.h"
 #include "../Character/Enemy_ABCD.h"
 #include "../Character/UnitManager.h"
-#include "../Character/Unit_A.h"
+#include "../Character/Unit_ABC.h"
+#include "../Character/Unit_DEF.h"
 #include "../Character/SeedManager.h"
 
 #include "Lemur/Graphics/DebugRenderer.h"
