@@ -11,6 +11,12 @@ void EnemyManager::Update(float elapsedTime)
         enemy->Update(elapsedTime);
     }
 
+    for (int i = 0; i < GetEnemyCount(); i++)
+    {
+        Enemy* enemy = enemies.at(i);
+        enemy->DrawDebugGUI(i);
+    }
+
     // ”jŠüˆ—
     for (Enemy* enemy : removes)
     {

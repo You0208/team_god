@@ -31,7 +31,6 @@ public:
     }
 
 protected:
-
     // 待機ステートへ遷移
     virtual void TransitionIdleState() = 0;
 
@@ -54,7 +53,8 @@ protected:
     enum class State
     {
         Idle,   // 待機行動
-        Attack  // 攻撃行動
+        Attack,  // 攻撃行動
+        Death   // 死亡
     };
     State				state = State::Idle;
 

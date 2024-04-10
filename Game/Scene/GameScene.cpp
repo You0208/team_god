@@ -13,10 +13,7 @@
 #include "../Stage/StageMain.h"
 #include "../Stage/StageManager.h"
 #include "../Character/EnemyManager.h"
-#include "../Character/Enemy_A.h"
-#include "../Character/Enemy_B.h"
-#include "../Character/Enemy_C.h"
-#include "../Character/Enemy_D.h"
+#include "../Character/Enemy_ABCD.h"
 #include "../Character/UnitManager.h"
 #include "../Character/Unit_A.h"
 #include "../Character/SeedManager.h"
@@ -150,7 +147,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 #endif
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
-			Enemy_C* enemy = new Enemy_C;
+			Enemy_D* enemy = new Enemy_D;
 			// ƒŠƒXƒg‚É’Ç‰Á
 			EnemyManager::Instance().Register(enemy);
 		}
