@@ -20,6 +20,7 @@ public:
     // Getter
     int GetCategory() { return category; }
     float GetAttackRadius() { return attack_radius; }
+    float GetDecPos() { return dec_pos; }
     Triangle GetTriangle1() { return triangle_1; }
     Triangle GetTriangle2() { return triangle_2; }
     Rect GetRect() { return square; }

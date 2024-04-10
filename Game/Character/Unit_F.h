@@ -11,19 +11,12 @@ public:
 
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
-    void DrawDebugGUI();
-
     // デバッグプリミティブ描画
     void DrawDebugPrimitive();
+private:
+    void DrawDebugGUI();
 
 private:
-
-    float moveSpeed = 5.0f;
-    float turnSpeed = DirectX::XMConvertToRadians(720);
-    float jumpSpeed = 20.0f;
-
-    // 攻撃当たり判定するか
-    bool attackCollisionFlag = false;
 };
 
 

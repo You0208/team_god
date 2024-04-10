@@ -12,27 +12,22 @@ public:
     // 描画処理
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+
+private:
     // 攻撃更新
     void AttackUpdate(float elapsedTime) override;
 
     // 移動更新
     void MoveUpdate(float elapsedTime) override;
 
+    // Imgui
     void DrawDebugGUI()override;
-
-    // デバッグプリミティブ描画
-    void DrawDebugPrimitive()override;
-
     // 死亡処理
     void OnDead()override;
 
 private:
-    enum StateIndex
-    {
-        Move_State,
-        Attack_State
-    };
-
     int move_state;             // 移動の状態
     float dis;                  // 移動量
     float dis_max;              // 移動量規定値

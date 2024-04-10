@@ -16,18 +16,26 @@ public:
     // 描画処理
     virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
 
-    virtual void MoveUpdate(float elapsed_time) {};
-    virtual void AttackUpdate(float elapsed_time) {};
+    // デバッグプリミティブ描画
+    virtual void DrawDebugPrimitive();
 
     // 破棄
     void Destroy();
 
-    // デバッグプリミティブ描画
-    virtual void DrawDebugPrimitive();
+protected:
+    // 移動ステート更新
+    virtual void MoveUpdate(float elapsed_time) {};
 
-public:
-    bool is_hit_unit = false;
+    // 攻撃ステート更新
+    virtual void AttackUpdate(float elapsed_time) {};
 
-    // ステート
-    int state_index;
+protected:
+    enum StateIndex
+    {
+        Move_State,
+        Attack_State
+    };
+
+    bool is_hit_unit = false;// プレイヤーに当たったか    
+    int state_index;// ステート
 };

@@ -11,14 +11,15 @@ public:
 
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
-    // 敵への攻撃
-    void AttackEnemy(float elapsedTime);
-
-    void DrawDebugGUI();
-
     // デバッグプリミティブ描画
     void DrawDebugPrimitive();
 
+private:
+    // 敵への攻撃
+    void AttackEnemy(float elapsedTime);
+
+    // Imgui
+    void DrawDebugGUI();
 private:
     float attack_timer;
 

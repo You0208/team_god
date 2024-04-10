@@ -12,6 +12,10 @@ public:
     // 描画処理
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
 
+    // デバッグプリミティブ描画
+    void DrawDebugPrimitive()override;
+
+private:
     // 攻撃更新
     void AttackUpdate(float elapsedTime) override;
 
@@ -19,9 +23,6 @@ public:
     void MoveUpdate(float elapsedTime) override;
 
     void DrawDebugGUI()override;
-
-    // デバッグプリミティブ描画
-    void DrawDebugPrimitive()override;
 
     // 死亡処理
     void OnDead()override;

@@ -117,7 +117,7 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
     unit = unitManager.GetUnit(index.at(near_index));
     if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))
     {
-        return DirectX::XMFLOAT2(position.x, unit->position.z - unit->GetDecPos());
+        return DirectX::XMFLOAT2(position.x, unit->GetPosition().z - unit->GetDecPos());
     }
 
     return position;
