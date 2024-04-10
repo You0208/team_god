@@ -9,9 +9,6 @@ public:
     // 更新処理
     void Update(float elapsedTime) override;
 
-    // 描画処理
-    void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) override;
-
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 

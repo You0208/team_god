@@ -45,7 +45,7 @@ void Enemy_C::JudgeUnit()
         // “G‚ªƒ†ƒjƒbƒg‚ÌUŒ‚”ÍˆÍ‚ÉG‚ê‚½‚Æ‚«
         if (Collision::IntersectCircleVsCircle
         (
-            { unit->position.x,unit->position.z },   // ƒ†ƒjƒbƒg‚ÌˆÊ’u(XZ•½–Ê)
+            { unit->GetPosition().x,unit->GetPosition().z },   // ƒ†ƒjƒbƒg‚ÌˆÊ’u(XZ•½–Ê)
             unit->GetAttackRadius(),                 // UŒ‚”ÍˆÍ
             { position.x,position.z },               // “G‚ÌˆÊ’u(XZ•½–Ê)
             radius                                   // “G‚Ì“–‚½‚è”»’è
@@ -181,11 +181,6 @@ void Enemy_C::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
-}
-
-void Enemy_C::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
-{
-    model->Render(scale, replaced_pixel_shader);
 }
 
 void Enemy_C::AttackUpdate(float elapsedTime)

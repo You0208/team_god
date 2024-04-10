@@ -13,9 +13,6 @@ public:
     // XVˆ—
     void Update(float elapsedTime);
 
-    // •`‰æˆ—
-    void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
-
     // Imgui
     void DrawDebugGUI();
 

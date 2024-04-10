@@ -69,11 +69,6 @@ void Unit_B::Update(float elapsedTime)
     AttackEnemy(elapsedTime);
 }
 
-void Unit_B::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
-{
-    model->Render(scale, replaced_pixel_shader);
-}
-
 void Unit_B::AttackEnemy(float elapsedTime)
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
@@ -91,8 +86,8 @@ void Unit_B::AttackEnemy(float elapsedTime)
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_1,
-            { enemy->position.x,enemy->position.z },  // “G‚ÌˆÊ’u(XZ•½–Ê)
-            enemy->radius                           // “G‚Ì“–‚½‚è”»’è
+            { enemy->GetPosition().x,enemy->GetPosition().z },  // “G‚ÌˆÊ’u(XZ•½–Ê)
+            enemy->GetRadius()                           // “G‚Ì“–‚½‚è”»’è
         ))
         {
             attack_timer += elapsedTime;
@@ -110,8 +105,8 @@ void Unit_B::AttackEnemy(float elapsedTime)
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_2,
-            { enemy->position.x,enemy->position.z },  // “G‚ÌˆÊ’u(XZ•½–Ê)
-            enemy->radius                           // “G‚Ì“–‚½‚è”»’è
+            { enemy->GetPosition().x,enemy->GetPosition().z },  // “G‚ÌˆÊ’u(XZ•½–Ê)
+            enemy->GetRadius()                           // “G‚Ì“–‚½‚è”»’è
         ))
         {
             attack_timer += elapsedTime;

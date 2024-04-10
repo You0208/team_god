@@ -13,9 +13,6 @@ public:
     // 更新処理
     virtual void Update(float elapsedTime) = 0;
 
-    // 描画処理
-    virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
-
     // デバッグプリミティブ描画
     virtual void DrawDebugPrimitive();
 

@@ -45,11 +45,6 @@ void Unit_A::Update(float elapsedTime)
     AttackEnemy(elapsedTime);
 }
 
-void Unit_A::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
-{
-    model->Render(scale, replaced_pixel_shader);
-}
-
 void Unit_A::AttackEnemy(float elapsedTime)
 {
     EnemyManager& enemyManager = EnemyManager::Instance();
@@ -67,8 +62,8 @@ void Unit_A::AttackEnemy(float elapsedTime)
         (
             {position.x,position.z},                // ƒ†ƒjƒbƒg‚ÌˆÊ’u(XZ•½–Ê)
             attack_radius,                          // UŒ‚”ÍˆÍ
-            {enemy->position.x,enemy->position.z},  // “G‚ÌˆÊ’u(XZ•½–Ê)
-            enemy->radius                           // “G‚Ì“–‚½‚è”»’è
+            {enemy->GetPosition().x,enemy->GetPosition().z},  // “G‚ÌˆÊ’u(XZ•½–Ê)
+            enemy->GetRadius()                           // “G‚Ì“–‚½‚è”»’è
         ))
         {
             attack_timer += elapsedTime;

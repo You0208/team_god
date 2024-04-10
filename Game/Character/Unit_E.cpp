@@ -28,11 +28,6 @@ void Unit_E::Update(float elapsedTime)
     model->UpdateAnimation(elapsedTime);
 }
 
-void Unit_E::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
-{
-    model->Render(scale, replaced_pixel_shader);
-}
-
 void Unit_E::UpdateAttackState(float elapsed_time)
 {
 }

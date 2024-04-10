@@ -12,9 +12,6 @@ public:
     // XVˆ—
     virtual void Update(float elapsed_time) = 0;
 
-    // •`‰æˆ—
-    virtual void Render(float elapsed_time, ID3D11PixelShader** replaced_pixel_shader) = 0;
-
     // ”jŠü
     void Destroy();
 

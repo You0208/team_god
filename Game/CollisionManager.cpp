@@ -104,12 +104,12 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
 
         if (j == 0)// Žn‚ß‚Í”äŠr‚È‚µ
         {
-            near_pos = unit->position.z;
+            near_pos = unit->GetPosition().z;
             break;
         }
-        else if (unit->position.z < near_pos)
+        else if (unit->GetPosition().z < near_pos)
         {
-            near_pos = unit->position.z;
+            near_pos = unit->GetPosition().z;
             near_index = j;
         }
     }

@@ -10,8 +10,6 @@ public:
 
     void Update(float elapsed_time)override;
 
-    void Render(float elapsed_time, ID3D11PixelShader** replaced_pixel_shader) override;
-
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 

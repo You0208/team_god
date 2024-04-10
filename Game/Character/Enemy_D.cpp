@@ -64,11 +64,6 @@ void Enemy_D::Update(float elapsedTime)
     DrawDebugPrimitive();
 }
 
-void Enemy_D::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
-{
-    model->Render(scale, replaced_pixel_shader);
-}
-
 void Enemy_D::AttackUpdate(float elapsedTime)
 {
     attack_timer += elapsedTime;

@@ -30,6 +30,38 @@ bool Character::ApplyDamage(int damage)
     return true;
 }
 
+void Character::DrawDebugGUI(std::string name, int i)
+{
+    std::string num = std::to_string(i);
+    name = name + num;
+
+    std::string T = std::string("Transform") + name;
+    if (ImGui::TreeNode(T.c_str()))
+    {
+        std::string spe = std::string("speed") + name;
+        ImGui::DragFloat(spe.c_str(), &speed_power, 5.0f, -5.0f);
+
+        std::string p = std::string("position") + name;
+        ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);
+        std::string s = std::string("scale") + name;
+        ImGui::DragFloat3(s.c_str(), &scale.x, 0.001f, -FLT_MAX, FLT_MAX);
+
+        std::string r = std::string("rotation") + name;
+        DirectX::XMFLOAT3 rot{};
+        rot.x = DirectX::XMConvertToDegrees(rotation.x);
+        rot.y = DirectX::XMConvertToDegrees(rotation.y);
+        rot.z = DirectX::XMConvertToDegrees(rotation.z);
+        ImGui::DragFloat3(r.c_str(), &rot.x, 0.5f, -FLT_MAX, FLT_MAX);
+        rotation.x = DirectX::XMConvertToRadians(rot.x);
+        rotation.y = DirectX::XMConvertToRadians(rot.y);
+        rotation.z = DirectX::XMConvertToRadians(rot.z);
+
+        std::string s_f = std::string("scale_facter") + name;
+        ImGui::DragFloat(s_f.c_str(), &scaleFactor, 0.001f, 0.001f, 1.0f);
+        ImGui::TreePop();
+    }
+}
+
 void Character::Render(float scale, ID3D11PixelShader* replaced_pixel_shader)
 {
     if (model->GetAnimation()->size() > 0)
@@ -64,7 +96,7 @@ void Character::Move(float vx, float vz, float speed)
     maxMoveSpeed = speed;
 }
 
-void Character::Turn(float elapsedTime,float vx, float vz, float speed)
+void Character::Turn(float elapsed_time,float vx, float vz, float speed)
 {
     speed *= high_resolution_timer::Instance().time_interval();
 
@@ -116,22 +148,22 @@ void Character::Jump(float speed)
     velocity.y = speed;
 }
 
-void Character::UpdateVelocity(float elapsedTime)
+void Character::UpdateVelocity(float elapsed_time)
 {
     // 経過フレーム
-    float elapsedFrame = 60.0f * elapsedTime;
+    float elapsed_frame = 60.0f * elapsed_time;
 
     // 垂直速力更新処理
-    UpdataVerticalVelocity(elapsedFrame);
+    UpdataVerticalVelocity(elapsed_frame);
 
     // 水平速力更新処理
-    UpdataHorizontalVelocity(elapsedFrame);
+    UpdataHorizontalVelocity(elapsed_frame);
 
     // 垂直移動更新処理
-    UpdateVerticalMove(elapsedTime);
+    UpdateVerticalMove(elapsed_time);
 
     // 水平移動更新処理
-    UpdateHorizontalMove(elapsedTime);
+    UpdateHorizontalMove(elapsed_time);
 }
 
 void Character::HitStopON(float hit_stop_time_)
@@ -264,8 +296,8 @@ void Character::UpdateHorizontalMove(float elapsedTime)
     if (velocityLengthXZ > 0.0f)
     {
         // 水平移動値
-        float mx = velocity.x * elapsedTime;
-        float mz = velocity.z * elapsedTime;
+        float mx = velocity.x * elapsed_time;
+        float mz = velocity.z * elapsed_time;
 
         // レイの開始位置と終点位置設定
         DirectX::XMFLOAT4 start = { position.x,position.y,position.z,1 };

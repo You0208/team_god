@@ -13,7 +13,7 @@ void SeedManager::Update(float elapsedTime)
         if (seed->GetTimer() >= seed_limit_time)
         {
             // Ž€–S‚ÉØ‚è‘Ö‚¦
-            seed->death = true;
+            seed->SetDead(true);
         }
         else
         {
@@ -22,7 +22,7 @@ void SeedManager::Update(float elapsedTime)
         }
 
         // Ž€–SŽž‚Ìˆ—
-        if (seed->death)
+        if (seed->IsDead())
         {
             for (Seed* s : seeds)
             {

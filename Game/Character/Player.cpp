@@ -49,15 +49,6 @@ void Player::Update(float elapsedTime)
 
 }
 
-// 描画処理
-void Player::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
-{
-    // デバッグ表示
-    model->DrawDebug("Player");
-    // かかしモデル描画
-    model->Render(scale, replaced_pixel_shader);
-}
-
 // Imgui
 void Player::DrawDebugGUI()
 {
