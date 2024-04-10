@@ -8,20 +8,20 @@ Enemy_B::Enemy_B()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;           // 攻撃力
+    attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
 
-    radius = 1.0f;              // 半径
-    height = 1.0f;              // デバッグ用
-    position.x = 5.0f;          // 初期位置
-    rotation.y = -90.0f;        // 初期方向
+    radius          = 1.0f;     // 半径
+    height          = 1.0f;     // デバッグ用
+    position.x      = 5.0f;     // 初期位置
+    rotation.y      = -90.0f;   // 初期方向
 
-    dis = 3.0f;                 // 一気に進む距離
-    move_timer = 0.0f;          // タイマー
-    move_timer_max = 3.0f;      // 動くまでの時間
-    speed_power = -3.0f;        // スピード
+    dis             = 3.0f;     // 一気に進む距離
+    move_timer      = 0.0f;     // タイマー
+    move_timer_max  = 3.0f;     // 動くまでの時間
+    speed_power     = -3.0f;    // スピード
 
-    health = 10;                // HP
+    health          = 10;       // HP
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
 }

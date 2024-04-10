@@ -9,22 +9,22 @@ Enemy_D::Enemy_D()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;           // UŒ‚—Í
+    attack_power    = 1;        // UŒ‚—Í
     attack_interval = 3.0f;     // UŒ‚ŠÔŠu
 
-    radius = 1.0f;              // ”¼Œa
-    height = 1.0f;              //ƒfƒoƒbƒO—p
-    position.x = 5.0f;          // ‰ŠúˆÊ’u
-    rotation.y = -90.0f;        // ‰Šú•ûŒü
+    radius          = 1.0f;     // ”¼Œa
+    height          = 1.0f;     //ƒfƒoƒbƒO—p
+    position.x      = 5.0f;     // ‰ŠúˆÊ’u
+    rotation.y      = -90.0f;   // ‰Šú•ûŒü
 
-    move_state = 0;             // ˆÚ“®ó‘Ô
-    speed_power = -1.0f;        // ‰¡ˆÚ“®—Ê
-    speed_power_Y = -1.0f;      // cˆÚ“®—Ê
+    move_state      = 0;        // ˆÚ“®ó‘Ô
+    speed_power     = -1.0f;    // ‰¡ˆÚ“®—Ê
+    speed_power_Y   = -1.0f;    // cˆÚ“®—Ê
     direction_state = 0;        // •ûŒü‚Ìó‘Ô
-    dis_max = 1.0f;             // ˆÚ“®—Ê‹K’è’l
+    dis_max         = 1.0f;     // ˆÚ“®—Ê‹K’è’l
     is_last_touched = false;    // ‘O‰ñò‚ÉG‚ê‚½‚©
 
-    health = 10;                // HP
+    health          = 10;       // HP
 
     // ‚Æ‚è‚ ‚¦‚¸ƒAƒjƒ[ƒVƒ‡ƒ“
     model->PlayAnimation(0, true);

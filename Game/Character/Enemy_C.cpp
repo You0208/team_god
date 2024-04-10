@@ -12,15 +12,15 @@ Enemy_C::Enemy_C()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
 
-    attack_power = 1;           // 攻撃力　
-    attack_interval = 3.0f;     // 攻撃間隔
+    attack_power    = 1;         // 攻撃力　
+    attack_interval = 3.0f;      // 攻撃間隔
 
-    radius = 1.0f;              // 半径
-    height = 1.0f;              // デバッグ要
-    position.x = 5.0f;          // 初期位置
-    rotation.y = -90.0f;        // 初期角度
-    speed_power = -1.0f;        // 速度
-    health = 10;                // HP
+    radius          = 1.0f;      // 半径
+    height          = 1.0f;      // デバッグ要
+    position.x      = 5.0f;      // 初期位置
+    rotation.y      = -90.0f;    // 初期角度
+    speed_power     = -1.0f;     // 速度
+    health          = 10;        // HP
 
     // とりあえずアニメーション
     model->PlayAnimation(0, true);

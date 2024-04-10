@@ -113,7 +113,7 @@ void Seed::Update(float elapsedTime)
                 {position.x + radius,position.z - radius}
             };
             unit->SetSquare(square);
-            unit->category = category;
+            unit->SetCategory(category);
             UnitManager::Instance().Register(unit);
         }
 

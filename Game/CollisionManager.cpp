@@ -22,7 +22,7 @@ void CollisionManager::CollisionSeedVsUnit()
             Unit* unit = unitManager.GetUnit(i);
 
             // UŒ‚”ÍˆÍ‚ª‰~
-            if (unit->category == 0 || unit->category == 3)
+            if (unit->GetCategory() == 0 || unit->GetCategory() == 3)
             {
                 // Ží‚ªƒ†ƒjƒbƒg‚ÌUŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚é‚Æ‚«
                 if (Collision::IntersectCircleVsCircle
@@ -37,7 +37,7 @@ void CollisionManager::CollisionSeedVsUnit()
                 }
             }
             // UŒ‚”ÍˆÍ‚ªŽOŠp
-            if (unit->category == 1 || unit->category == 2)
+            if (unit->GetCategory() == 1 || unit->GetCategory() == 2)
             {
                 // Ží‚ªƒ†ƒjƒbƒg‚ÌUŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚é‚Æ‚«
                 if (Collision::IntersectTriangleVsCircle
@@ -88,7 +88,7 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
         unit = unitManager.GetUnit(i);
 
         // ’…’n’n“_‚ªŽlŠp‚É“ü‚Á‚Ä‚¢‚é‚Æ‚«
-        if (Collision::IntersectSquareVsPoint(unit->square.left_up, unit->square.right_down, position))
+        if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))
         {
             index.push_back(i);// ”Ô†‚ð‹L˜^
         }
@@ -115,9 +115,9 @@ DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 po
     }
 
     unit = unitManager.GetUnit(index.at(near_index));
-    if (Collision::IntersectSquareVsPoint(unit->square.left_up, unit->square.right_down, position))
+    if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))
     {
-        return DirectX::XMFLOAT2(position.x, unit->position.z - unit->dec_pos);
+        return DirectX::XMFLOAT2(position.x, unit->position.z - unit->GetDecPos());
     }
 
     return position;
