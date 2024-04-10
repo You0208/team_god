@@ -12,20 +12,20 @@ Fence::Fence()
     rotation.y = DirectX::XMConvertToRadians(270.0f);
     scale.x = scale.y = scale.z = 50.0f;
 
-    left_rect.left_up.x = -6.0f;
-    left_rect.left_up.y = 3.0f;
-    left_rect.right_down.x = -5.0f;
-    left_rect.right_down.y = -5.0f;
+    left_rect.left_up.x     = -6.0f;
+    left_rect.left_up.y     = 5.0f;
+    left_rect.right_down.x  = -5.0f;
+    left_rect.right_down.y  = -5.0f;
 
-    front_rect.left_up.x = -5.0f;
-    front_rect.left_up.y = -5.0f;
-    front_rect.right_down.x = 3.0f;
+    front_rect.left_up.x    = -6.0f;
+    front_rect.left_up.y    = -5.0f;
+    front_rect.right_down.x = 5.0f;
     front_rect.right_down.y = -6.0f;
 
-    back_rect.left_up.x = -5.0f;
-    back_rect.left_up.y = 6.0f;
-    back_rect.right_down.x = 3.0f;
-    back_rect.right_down.y = 5.0f;
+    back_rect.left_up.x     = -6.0f;
+    back_rect.left_up.y     = 6.0f;
+    back_rect.right_down.x  = 5.0f;
+    back_rect.right_down.y  = 5.0f;
 
     health = 10;
 
@@ -48,7 +48,7 @@ void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
     DrawDebugPrimitive();
     // ‚©‚©‚µƒ‚ƒfƒ‹•`‰æ
-    model->Render(scale, replaced_pixel_shader);
+    //model->Render(scale, replaced_pixel_shader);
 }
 
 void Fence::DrawDebugGui()
@@ -92,56 +92,41 @@ void Fence::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     DirectX::XMFLOAT3 left_rect_size = {
-        left_rect.left_up.x - left_rect.right_down.x * 0.5f,
-        1,
-        left_rect.left_up.y - left_rect.right_down.y * 0.5f
+        (left_rect.right_down.x - left_rect.left_up.x) * 0.5f,
+        0.5f,
+        (left_rect.left_up.y - left_rect.right_down.y) * 0.5f
     };
     DirectX::XMFLOAT3 left_rect_center = {
-        left_rect.left_up.x+ left_rect_size.x,
-        1,
-        left_rect.left_up.y+ left_rect_size.y
+        left_rect.left_up.x + left_rect_size.x,
+        0,
+        left_rect.right_down.y + left_rect_size.z
     };
 
     DirectX::XMFLOAT3 front_rect_size = {
-        front_rect.left_up.x - front_rect.right_down.x * 0.5f,
-        1,
-        front_rect.left_up.y - front_rect.right_down.y * 0.5f
+    (front_rect.right_down.x - front_rect.left_up.x) * 0.5f,
+    0.5f,
+    (front_rect.left_up.y - front_rect.right_down.y) * 0.5f
     };
     DirectX::XMFLOAT3 front_rect_center = {
         front_rect.left_up.x + front_rect_size.x,
-        1,
-        front_rect.left_up.y + front_rect_size.y
+        0,
+        front_rect.right_down.y + front_rect_size.z
     };
 
     DirectX::XMFLOAT3 back_rect_size = {
-        back_rect.left_up.x - back_rect.right_down.x * 0.5f,
-        1,
-        back_rect.left_up.y - back_rect.right_down.y * 0.5f
+    (back_rect.right_down.x - back_rect.left_up.x) * 0.5f,
+    0.5f,
+    (back_rect.left_up.y - back_rect.right_down.y) * 0.5f
     };
     DirectX::XMFLOAT3 back_rect_center = {
         back_rect.left_up.x + back_rect_size.x,
-        1,
-        back_rect.left_up.y + back_rect_size.y
+        0,
+        back_rect.right_down.y + back_rect_size.z
     };
 
-    debug_renderer->DrawBox(left_rect_center, { 0,0,0 }, left_rect_size, { 0,0,0,1 });
-    debug_renderer->DrawBox(front_rect_center, { 0,0,0 }, front_rect_size, { 0,0,0,1 });
-    debug_renderer->DrawBox(back_rect_center, { 0,0,0 }, back_rect_size, { 0,0,0,1 });
-
-    //// ¶ŽlŠp‚Ì¶ã
-    //debug_renderer->DrawSphere({ left_rect.left_up.x,0.5f,left_rect.left_up.y }, 0.1f, { 0,1,0,1 });
-    //// ¶ŽlŠp‚Ì‰E‰º
-    //debug_renderer->DrawSphere({ left_rect.right_down.x,0.5f,left_rect.right_down.y }, 0.1f, { 0,1,0,1 });
-
-    //// Žè‘OŽlŠp‚Ì¶ã
-    //debug_renderer->DrawSphere({ front_rect.left_up.x,0.5f,front_rect.left_up.y }, 0.1f, { 0,1,0,1 });
-    //// Žè‘OŽlŠp‚Ì‰E‰º
-    //debug_renderer->DrawSphere({ front_rect.right_down.x,0.5f,front_rect.right_down.y }, 0.1f, { 0,1,0,1 });
-
-    //// ‰œŽlŠp‚Ì¶ã
-    //debug_renderer->DrawSphere({ back_rect.left_up.x,0.5f,back_rect.left_up.y }, 0.1f, { 0,1,0,1 });
-    //// ‰œŽlŠp‚Ì‰E‰º
-    //debug_renderer->DrawSphere({ back_rect.right_down.x,0.5f,back_rect.right_down.y }, 0.1f, { 0,1,0,1 });
+    debug_renderer->DrawBox(left_rect_center, { 0,0,0 }, left_rect_size, { 1,0,0,1 });
+    debug_renderer->DrawBox(front_rect_center, { 0,0,0 }, front_rect_size, { 1,0,0,1 });
+    debug_renderer->DrawBox(back_rect_center, { 0,0,0 }, back_rect_size, { 1,0,0,1 });
 }
 
 Fence& Fence::Instance()

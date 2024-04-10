@@ -131,6 +131,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// デバッグ用
 	{
+#if 0// 三角形当たり判定ためし
 		DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
 
 		debug_renderer->DrawSphere({ Try_T.A.x,1,Try_T.A.y }, 0.1f, { 1,0,1,1 });
@@ -146,7 +147,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		{
 			debug_renderer->DrawSphere({ P0.x,1,P0.y }, r0, { 0,0,1,1 });
 		}
-
+#endif
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
 			Enemy_C* enemy = new Enemy_C;
