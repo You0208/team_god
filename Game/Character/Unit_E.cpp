@@ -33,11 +33,27 @@ void Unit_E::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
     model->Render(scale, replaced_pixel_shader);
 }
 
+void Unit_E::UpdateAttackState(float elapsed_time)
+{
+}
+
 void Unit_E::DrawDebugGUI()
 {
     model->DrawDebug("Unit_C");
 }
 
 void Unit_E::DrawDebugPrimitive()
+{
+}
+
+void Unit_E::TransitionIdleState()
+{
+}
+
+void Unit_E::UpdateIdleState(float elapsed_time)
+{
+}
+
+void Unit_E::TransitionAttackState()
 {
 }

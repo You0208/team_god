@@ -97,3 +97,19 @@ void Unit_D::DrawDebugPrimitive()
     debug_renderer->DrawCylinder(position, attack_radius, height, { 1,0,0,1 });
     debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
+
+void Unit_D::TransitionIdleState()
+{
+}
+
+void Unit_D::UpdateIdleState(float elapsed_time)
+{
+}
+
+void Unit_D::TransitionAttackState()
+{
+}
+
+void Unit_D::UpdateAttackState(float elapsed_time)
+{
+}

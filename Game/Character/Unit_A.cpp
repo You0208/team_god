@@ -104,3 +104,19 @@ void Unit_A::DrawDebugPrimitive()
     debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
+void Unit_A::TransitionIdleState()
+{
+}
+
+void Unit_A::UpdateIdleState(float elapsed_time)
+{
+}
+
+void Unit_A::TransitionAttackState()
+{
+}
+
+void Unit_A::UpdateAttackState(float elapsed_time)
+{
+}
+

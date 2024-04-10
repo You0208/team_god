@@ -5,35 +5,6 @@
 #include "Lemur/Collision/Collision.h"
 
 
-void Character::AnimationUpdate(float elapsedTime)
-{
-    UpdateAnimation(elapsedTime);
-}
-
-void Character::RootmationUpdate(float elapsedTime)
-{
-    if (root_motion_node_index < 0)return;
-    if (frame_index < 1)return;
-    Animation::keyframe::node node;
-    Animation::keyframe::node old_node;
-    Animation::keyframe::node begin_node;
-
-
-    model->fbx_model->ComputeAnimation(animation_index, root_motion_node_index, frame_index, node);
-    model->fbx_model->ComputeAnimation(animation_index, root_motion_node_index, frame_index - 1, old_node);
-    model->fbx_model->ComputeAnimation(animation_index, root_motion_node_index, 0, begin_node);
-
-    keyframe.nodes.at(root_motion_node_index).translation = begin_node.translation;
-    model->fbx_model->UpdateAnimation(keyframe);
-
-    DirectX::XMFLOAT3 transration = node.translation - old_node.translation;
-    DirectX::XMMATRIX World = DirectX::XMLoadFloat4x4(&world);
-    DirectX::XMVECTOR Translation = DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&transration), World);
-    DirectX::XMStoreFloat3(&transration, Translation);
-    // todo ここ数字いじれる。
-    position += transration * 1.0f;
-}
-
 bool Character::ApplyDamage(int damage)
 {
     // 死亡している間は健康状態を変更しない
@@ -467,7 +438,7 @@ void Character::UpdateAnimation(float elapsedTime)
     animation_tick += elapsedTime;
 
     // 指定のアニメーションデータを取得
-    Animation& animation = GetAnimation()->at(animation_index);
+    const Animation& animation = GetAnimation()->at(animation_index);
 
     // 現在の時間がどのキーフレームの間にいるのか判定する
     const float  frameIndex_float = (animation_tick * animation.sampling_rate) * anim_calc_rate * hit_stop_rate;

@@ -10,10 +10,11 @@ public:
     ~Unit() {}
 
     // 更新処理
-    virtual void Update(float elapsedTime) = 0;
+    virtual void Update(float elapsed_time) = 0;
 
     // 描画処理
-    virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
+    virtual void Render(float elapsed_time, ID3D11PixelShader** replaced_pixel_shader) = 0;
+
     // 破棄
     void Destroy();
 
@@ -33,6 +34,34 @@ public:
     }
 
 protected:
+
+    // 待機ステートへ遷移
+    virtual void TransitionIdleState() = 0;
+
+    // 待機ステート更新処理
+    virtual void UpdateIdleState(float elapsed_time) = 0;
+
+    // 攻撃ステートへ遷移
+    virtual void TransitionAttackState() = 0;
+
+    // 攻撃ステート更新処理
+    virtual void UpdateAttackState(float elapsed_time) = 0;
+
+protected:
+    enum Animation
+    {
+        Idle,
+        Attack,
+        Out
+    };
+    enum class State
+    {
+        Idle,   // 待機行動
+        Attack  // 攻撃行動
+    };
+    State				state = State::Idle;
+
+
     float dec_pos;          // 種がユニットに跳ね返される距離
     int category;           // ユニットのカテゴリー
     int attack_times;       // 攻撃回数

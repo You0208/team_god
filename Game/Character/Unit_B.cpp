@@ -182,3 +182,19 @@ void Unit_B::DrawDebugPrimitive()
     debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
     debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
 }
+
+void Unit_B::TransitionIdleState()
+{
+}
+
+void Unit_B::UpdateIdleState(float elapsed_time)
+{
+}
+
+void Unit_B::TransitionAttackState()
+{
+}
+
+void Unit_B::UpdateAttackState(float elapsed_time)
+{
+}

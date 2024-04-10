@@ -18,81 +18,53 @@ public:
     Character() {};
     virtual ~Character() {}
 
+    // 描画設定
+    void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
+    void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
+
     virtual void DrawDebugGUI() {};
     virtual void DrawDebugPrimitive() {};
 
-    void AnimationUpdate(float elapsedTime);
+    //---------Getter--------------------------------------------------------------------------
+    
+    // モデルの数値
+    const DirectX::XMFLOAT3& GetPosition() const { return position; }                       // 位置
+    const DirectX::XMFLOAT3& GetAngle() const { return rotation; }                          // 回転
+    const DirectX::XMFLOAT3& GetScale() const { return scale; }                             // スケール
+    const float& GetScaleFactor() const { return scaleFactor; }                             // スケールファクター
+    const float GetRadius() const { return radius; }                                        // 半径
+    const float GetHeight() const { return height; }                                        // 高さ
+    const DirectX::XMFLOAT4& GetColor()const { return material_color; }                     // 色
+    const FbxModelManager* GetModel()const { return model.get(); }                          // モデル
 
-    // ルートモーション更新
-    void RootmationUpdate(float elapsedTime);
-    // ルートモーションするノード設定
-    void SetupRootMotion(const char* root_motion_nodeName)
-    {
-       // root_motion_node_index = model->FindMeshNodeIndex(root_motion_nodeName);
-    }
+    // ステータス
+    const int GetHealth() const { return health; }                                          // HP
+    const int GetMaxHealth() const { return max_health; }                                   // MaxHP
+    const float GetAttackCollisionRange()const { return attack_collision_range; }           // 攻撃当たり判定
+    const bool IsGround() const { return isGround; }                                        // 設置判定
 
-    Animation animation_{};
+    // アニメーション
+    const bool GetEndAnimation()const { return end_animation; }                             // アニメーション終了フラグ
+    const int GetFrameIndex()const { return frame_index; }                                  // アニメーションフレーム
+    const std::vector<Animation>* GetAnimation()const { return model->GetAnimation(); };    // アニメーションデータ
 
-    Animation::keyframe keyframe{};
-    DirectX::XMFLOAT4X4 world;
 
-public:
-    // 位置取得
-    const DirectX::XMFLOAT3& GetPosition() const { return position; }
-
-    // 位置更新
-    void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
-    // 位置更新
+    //---------Setter--------------------------------------------------------------------------
+    // モデルの数値
+    void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }      // 位置
     void SetPosition(const float pos_x, const float pos_y, const float pos_z) { position.x = pos_x, position.y = pos_y, position.z = pos_z; }
+    void SetAngle(const DirectX::XMFLOAT3& rotation) { this->rotation = rotation; }         // 回転
+    void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }                  // スケール
+    void SetScaleFactor(const float scaleFactor) { this->scaleFactor = scaleFactor; }       // スケールファクター
+    void SetModel(std::shared_ptr<FbxModelManager> Model) { this->model = Model; }          // モデル
+    void SetPixelShader(ID3D11PixelShader* ps) { pixelShader = ps; }                        // ピクセルシェーダー    
+    void SetAnimCalcRate(const float calc_rate_) { anim_calc_rate = calc_rate_; }           // アニメーションの再生速度倍率
 
-    // 回転取得
-    const DirectX::XMFLOAT3& GetAngle() const { return rotation; }
-
-    // 回転更新
-    void SetAngle(const DirectX::XMFLOAT3& rotation) { this->rotation = rotation; }
-
-    // スケール取得
-    const DirectX::XMFLOAT3& GetScale() const { return scale; }
-
-    // スケール更新
-    void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
-
-    // スケールファクター取得
-    const float& GetScaleFactor() const { return scaleFactor; }
-
-    // スケールファクター更新
-    void SetScaleFactor(const float scaleFactor) { this->scaleFactor = scaleFactor; }
-
-    // 半径取得
-    float GetRadius() const { return radius; }
-
-    // 高さ取得
-    float GetHeight() const { return height; }
-
-    // 地面に設置しているか
-    bool IsGround() const { return isGround; }
-
-    // 健康状態を取得
-    int GetHealth() const { return health; }
-
-    // 最大健康状態を取得
-    int GetMaxHealth() const { return max_health; }
 
     // ダメージを与える
     bool ApplyDamage(int damage);
 
-    // 攻撃当たり半径取得
-    float GetAttackCollisionRange()const { return attack_collision_range; }
-
-    // 色取得
-    const DirectX::XMFLOAT4& GetColor() { return material_color; }
-
-    // モデル設定
-    void SetModel(std::shared_ptr<FbxModelManager> Model) { this->model = Model; }
-
-    // モデル取得
-    FbxModelManager* GetModel()const { return model.get(); }
-
+protected:
     // アニメーションの切り替え
     void SetAnimationIndex(int index, const bool& loop = false)
     {
@@ -104,38 +76,18 @@ public:
 
         animation_blend_time = 0.0f;
         animation_blend_seconds = 1.0f;
-    }
-
-    // アニメーション終了フラグ取得
-    bool GetEndAnimation()const { return end_animation; }
-
-    // アニメーションフレーム取得
-    int GetFrameIndex()const { return frame_index; }
-
-    // アニメーションデータ取得
-    std::vector<Animation>* GetAnimation() { return model->GetAnimation(); };
-
-    // 描画設定
-    void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
-    void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
-
+    } 
+   
     // 移動処理
     void Move(float vx, float vz, float speed);
     // 方向転換
     void Turn(float elapsedTime, float vx, float vz, float speed);
-
-    void SetPixelShader(ID3D11PixelShader* ps) { pixelShader = ps; }
 
     // 速力更新
     void UpdateVelocity(float elapsedTime);
 
     // ヒットストップする(秒)
     void HitStopON(float hit_stop_time_);
-
-    // アニメーションの再生速度倍率設定
-    void SetAnimCalcRate(const float calc_rate_) { anim_calc_rate = calc_rate_; }
-protected:
-
 
     // ジャンプ処理
     void Jump(float speed);
@@ -177,7 +129,7 @@ public:
     void UpdateInvincibleTimer(float elapsedTime);
 
 public:
-
+    Animation::keyframe keyframe{};
     /* 攻撃、HP関係はスキルとかギャンブルとかで変動する機会多いから
      * 妥協でパブリックな。*/
     int     max_health = 5; // 最大健康状態

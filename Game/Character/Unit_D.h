@@ -16,6 +16,19 @@ public:
 
 private:
 
+    // 待機ステートへ遷移
+    void TransitionIdleState()override;
+
+    // 待機ステート更新処理
+    void UpdateIdleState(float elapsed_time)override;
+
+    // 攻撃ステートへ遷移
+    void TransitionAttackState()override;
+
+    // 攻撃ステート更新処理
+    void UpdateAttackState(float elapsed_time)override;
+
+
     // 敵への攻撃
     void AttackEnemy(float elapsedTime);
 
