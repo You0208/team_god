@@ -115,6 +115,7 @@ public:
     // ステータス
     const int&  GetHealth() const { return health; }                                          // HP
     const int&  GetMaxHealth() const { return max_health; }                                   // MaxHP
+    const int&  GetAttackPower() const { return attack_power; }                                   // MaxHP
     const float& GetAttackCollisionRange()const { return attack_collision_range; }            // 攻撃当たり判定
     const bool& IsGround() const { return isGround; }                                         // 設置判定
     const bool& IsDead() const { return death; }                                              // 死亡判定
@@ -138,20 +139,21 @@ public:
 
     // ステータス
     void SetDead(bool death_) { death = death_; }                                            // 死亡
+    void SetAttackPower(const int attack_power_) { attack_power = attack_power_; }           // 攻撃力
 
 protected:
     //----------モデル関連------------------------------------------------
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> PS=nullptr;       // ピクセルシェーダー
-    std::shared_ptr<FbxModelManager> model = nullptr;           // モデル
-    Animation::keyframe keyframe = {};                          // キーフレーム
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    =nullptr;                      // ピクセルシェーダー
+    std::shared_ptr<FbxModelManager> model          = nullptr;                     // モデル
+    Animation::keyframe keyframe                    = {};                          // キーフレーム
 
-    DirectX::XMFLOAT3   velocity       = { 0, 0, 0 };           // 速度
-    DirectX::XMFLOAT3   position       = { 0, 0, 0 };           // 位置
-    DirectX::XMFLOAT3   scale          = { 1.0f, 1.0f, 1.0f };  // スケール
-    float               scaleFactor    = 1.0f;                  // スケールのまとめ
-    DirectX::XMFLOAT3   rotation       = { 0, 0, 0 };           //　回転
-    DirectX::XMFLOAT4   material_color = { 1, 1, 1, 1 };        // 色
-    DirectX::XMFLOAT3   direction      = { 0,0,1 };             // 方向
+    DirectX::XMFLOAT3   velocity                    = { 0, 0, 0 };                 // 速度
+    DirectX::XMFLOAT3   position                    = { 0, 0, 0 };                 // 位置
+    DirectX::XMFLOAT3   scale                       = { 1.0f, 1.0f, 1.0f };        // スケール
+    float               scaleFactor                 = 1.0f;                        // スケールのまとめ
+    DirectX::XMFLOAT3   rotation                    = { 0, 0, 0 };                 //　回転
+    DirectX::XMFLOAT4   material_color              = { 1, 1, 1, 1 };              // 色
+    DirectX::XMFLOAT3   direction                   = { 0,0,1 };                   // 方向
 
     //----------ゲーム関連------------------------------------------------
     float   radius                 = 1.0f;          // 半径

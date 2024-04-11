@@ -41,13 +41,12 @@ void Unit_A::UpdateIdleState(float elapsed_time)
         // 敵がユニットの攻撃範囲に入っているとき
         if (Collision::IntersectCircleVsCircle
         (
-            { position.x,position.z },                // ユニットの位置(XZ平面)
-            attack_collision_range,                          // 攻撃範囲
+            { position.x,position.z },                          // ユニットの位置(XZ平面)
+            attack_collision_range,                             // 攻撃範囲
             { enemy->GetPosition().x,enemy->GetPosition().z },  // 敵の位置(XZ平面)
-            enemy->GetRadius()                           // 敵の当たり判定
+            enemy->GetRadius()                                  // 敵の当たり判定
         ))
         {
-            attack_enemy = enemy;
             // 攻撃ステートに切り替え
             TransitionAttackState();
         }
@@ -61,42 +60,46 @@ void Unit_A::UpdateIdleState(float elapsed_time)
 
 void Unit_A::UpdateAttackState(float elapsed_time)
 {
-    attack_timer += elapsed_time;// 攻撃タイマー
-
-    if (attack_timer >= attack_interval)
-    {
-        if (attack_enemy->ApplyDamage(attack_power))
-        {
-            attack_timer = 0.0f;
-            attack_times--;
-        }
-    }
-
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
     bool is_intersected = false;
 
+    attack_timer += elapsed_time;// 攻撃タイマー
+    // タイマーが規定時間を超えたら攻撃
+    if (attack_timer >= attack_interval)is_attack = true;
+
+    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
 
-        // 敵がユニットの攻撃範囲に入っているとき
+        // ユニットの攻撃範囲に入っている敵全員に攻撃
         if (Collision::IntersectCircleVsCircle
         (
-            { position.x,position.z },                // ユニットの位置(XZ平面)
-            attack_collision_range,                          // 攻撃範囲
+            { position.x,position.z },                          // ユニットの位置(XZ平面)
+            attack_collision_range,                             // 攻撃範囲
             { enemy->GetPosition().x,enemy->GetPosition().z },  // 敵の位置(XZ平面)
-            enemy->GetRadius()                           // 敵の当たり判定
+            enemy->GetRadius()                                  // 敵の当たり判定
         ))
         {
             is_intersected = true;
-            break;
+            if (is_attack)  enemy->ApplyDamage(ReturnDamage());
         }
     }
 
     // 範囲内に敵が一体も居なければ待機
     if (!is_intersected)    TransitionIdleState();
+    else// 誰か一体でも範囲内にいる場合
+    {
+        // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
+        if (is_attack)
+        {
+            is_attack = false;
+            attack_timer = 0.0f;
+            attack_times--;
+        }
+    }
 
     // 攻撃回数を消費しきったら消滅
     if (attack_times <= 0)
@@ -196,7 +199,6 @@ void Unit_B::UpdateIdleState(float elapsed_time)
             enemy->GetRadius()                           // 敵の当たり判定
         ))
         {
-            attack_enemy = enemy;
             TransitionAttackState();
         }
         // 右三角
@@ -207,7 +209,6 @@ void Unit_B::UpdateIdleState(float elapsed_time)
             enemy->GetRadius()                           // 敵の当たり判定
         ))
         {
-            attack_enemy = enemy;
             TransitionAttackState();
         }
     }
@@ -221,23 +222,15 @@ void Unit_B::UpdateIdleState(float elapsed_time)
 
 void Unit_B::UpdateAttackState(float elapsed_time)
 {
-    // 攻撃タイマー
-    attack_timer += elapsed_time;
-
-    if (attack_timer >= attack_interval)
-    {
-        if (attack_enemy->ApplyDamage(attack_power))
-        {
-            attack_timer = 0.0f;// タイマーを初期化
-            attack_times--;// 攻撃回数を減らす
-        }
-    }
-
-
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
     bool is_intersected = false;
 
+    attack_timer += elapsed_time;// 攻撃タイマー
+    // タイマーが規定時間を超えたら攻撃
+    if (attack_timer >= attack_interval)is_attack = true;
+
+    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -253,7 +246,7 @@ void Unit_B::UpdateAttackState(float elapsed_time)
         ))
         {
             is_intersected = true;
-            break;
+            if (is_attack)  enemy->ApplyDamage(ReturnDamage());
         }
         // 右三角
         if (Collision::IntersectTriangleVsCircle
@@ -264,13 +257,22 @@ void Unit_B::UpdateAttackState(float elapsed_time)
         ))
         {
             is_intersected = true;
-            break;
+            if (is_attack)  enemy->ApplyDamage(ReturnDamage());
         }
     }
 
     // 範囲内に敵が一体も居なければ待機
     if (!is_intersected)    TransitionIdleState();
-
+    else// 誰か一体でも範囲内にいる場合
+    {
+        // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
+        if (is_attack)
+        {
+            is_attack = false;
+            attack_timer = 0.0f;
+            attack_times--;
+        }
+    }
     // 攻撃回数を消費しきったら消滅
     if (attack_times <= 0)
     {
@@ -370,7 +372,6 @@ void Unit_C::UpdateIdleState(float elapsed_time)
             enemy->GetRadius()                           // 敵の当たり判定
         ))
         {
-            attack_enemy = enemy;
             TransitionAttackState();
         }
         // 手前三角
@@ -381,7 +382,6 @@ void Unit_C::UpdateIdleState(float elapsed_time)
             enemy->GetRadius()                           // 敵の当たり判定
         ))
         {
-            attack_enemy = enemy;
             TransitionAttackState();
         }
     }
@@ -395,30 +395,22 @@ void Unit_C::UpdateIdleState(float elapsed_time)
 
 void Unit_C::UpdateAttackState(float elapsed_time)
 {
-    // 攻撃タイマー
-    attack_timer += elapsed_time;
-
-    if (attack_timer >= attack_interval)
-    {
-        if (attack_enemy->ApplyDamage(attack_power))
-        {
-            attack_timer = 0.0f;// タイマーを初期化
-            attack_times--;// 攻撃回数を減らす
-        }
-    }
-
-
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
     bool is_intersected = false;
 
+    attack_timer += elapsed_time;// 攻撃タイマー
+    // タイマーが規定時間を超えたら攻撃
+    if (attack_timer >= attack_interval)is_attack = true;
+
+    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
 
         // 敵がユニットの攻撃範囲に入っているとき
-        // 奥三角
+        // 左三角
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_1,
@@ -427,9 +419,9 @@ void Unit_C::UpdateAttackState(float elapsed_time)
         ))
         {
             is_intersected = true;
-            break;
+            if (is_attack)  enemy->ApplyDamage(ReturnDamage());
         }
-        // 手前三角
+        // 右三角
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_2,
@@ -438,13 +430,22 @@ void Unit_C::UpdateAttackState(float elapsed_time)
         ))
         {
             is_intersected = true;
-            break;
+            if (is_attack)  enemy->ApplyDamage(ReturnDamage());
         }
     }
 
     // 範囲内に敵が一体も居なければ待機
     if (!is_intersected)    TransitionIdleState();
-
+    else// 誰か一体でも範囲内にいる場合
+    {
+        // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
+        if (is_attack)
+        {
+            is_attack = false;
+            attack_timer = 0.0f;
+            attack_times--;
+        }
+    }
     // 攻撃回数を消費しきったら消滅
     if (attack_times <= 0)
     {

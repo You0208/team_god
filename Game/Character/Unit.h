@@ -19,6 +19,9 @@ public:
     // デバッグプリミティブ描画
     virtual void DrawDebugPrimitive() {};
 
+    // 攻撃力を返す
+    int ReturnDamage();
+
     // 破棄
     void Destroy();
 
@@ -31,6 +34,8 @@ public:
 
     // Setter
     void SetCategory(int category_) { category = category_; }
+    void SetStrengAttack(int streng_attack_power_) { streng_attack_power = streng_attack_power_; }
+    void SetBuff(bool is_streng_) { is_streng = is_streng_; }
     void SetSquare(Rect square_) { 
         square.left_up = square_.left_up;
         square.right_down = square_.right_down;
@@ -69,14 +74,17 @@ protected:
         Death   // 死亡
     };
 
-    State		state           = State::Idle;      // ステート
+    State		state                       = State::Idle;      // ステート
 
-    Enemy*      attack_enemy    = nullptr;          // 攻撃対象エネミー
-    Unit*       buff_unit       = nullptr;          // バフ対象ユニット
-    float       dec_pos         = 0.0f;             // 種がユニットに跳ね返される距離
-    int         category        = 0;                // ユニットのカテゴリー
-    int         attack_times    = 0;                // 攻撃回数
-    Triangle    triangle_1      = {};               // 左三角攻撃範囲
-    Triangle    triangle_2      = {};               // 右三角攻撃範囲
-    Rect        square          = {};               // ユニットの後方範囲
+    float       dec_pos                     = 0.0f;             // 種がユニットに跳ね返される距離
+    bool        is_attack                   = false;            // 攻撃中かどうか
+    bool        is_streng                   = true;             // 強化中かどうか
+    int         category                    = 0;                // ユニットのカテゴリー
+    int         attack_times                = 0;                // 攻撃回数
+    int         streng_attack_power         = 0;                // 強化攻撃力
+    int         original_attack_power       = 0;                // 強化前 攻撃力
+    Triangle    triangle_1                  = {};               // 左三角攻撃範囲
+    Triangle    triangle_2                  = {};               // 右三角攻撃範囲
+    Rect        square                      = {};               // ユニットの後方範囲
+
 };

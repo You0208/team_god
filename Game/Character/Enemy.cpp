@@ -11,7 +11,7 @@ void Enemy::TransitionDeathState()
     // 速度を０に
     velocity.x = velocity.y = velocity.z = 0.0f;
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Out, true);
+    model->PlayAnimation(Animation::Out, false);
     // ステート切り替え
     state = State::Death;
 }
@@ -26,7 +26,7 @@ void Enemy::TransitionAttackState()
     // 速度を０に
     velocity.x = velocity.y = velocity.z = 0.0f;
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Attack, true);
+    model->PlayAnimation(Animation::Attack, false);
     // ステート切り替え
     state = State::Attack;
 }

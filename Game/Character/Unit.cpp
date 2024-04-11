@@ -32,6 +32,12 @@ void Unit::Update(float elapsed_time)
     DrawDebugPrimitive();
 }
 
+int Unit::ReturnDamage()
+{
+    if (!is_streng)return attack_power;
+    if (is_streng)return streng_attack_power;
+}
+
 void Unit::Destroy()
 {
     UnitManager::Instance().Remove(this);
@@ -40,7 +46,7 @@ void Unit::Destroy()
 void Unit::TransitionDeathState()
 {
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Out, true);
+    model->PlayAnimation(Animation::Out, false);
     // ステート切り替え
     state = State::Death;
 }
@@ -52,8 +58,6 @@ void Unit::UpdateDeathState(float elapsed_time)
 
 void Unit::TransitionIdleState()
 {
-    buff_unit = nullptr;
-    attack_enemy = nullptr;
     // アニメーションの切り替え
     model->PlayAnimation(Animation::Idle, true);
     // ステート切り替え
@@ -63,7 +67,7 @@ void Unit::TransitionIdleState()
 void Unit::TransitionAttackState()
 {
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Attack, true);
+    model->PlayAnimation(Animation::Attack, false);
     // ステート切り替え
     state = State::Attack;
 }
