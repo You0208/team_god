@@ -183,7 +183,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		// 種更新
 		SeedManager::Instance().Update(elapsedTime);
 
-		// 種とユニットの当たり判定
+		// 種とユニットの当たり判定（種が生まれるか）
 		CollisionManager::Instance().CollisionSeedVsUnit();
 	}
 

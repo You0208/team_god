@@ -67,6 +67,14 @@ public:
         const float radius
     );
 
+    // ‰~‚Æ“_‚Ì“–‚½‚è”»’è
+    static bool IntersectCircleVsPosition(
+        const DirectX::XMFLOAT2& position,
+        const DirectX::XMFLOAT2& O,
+        const float radius
+    );
+
+
     // 3D
     // ‹…‚Æ‹…‚ÌŒğ·”»’è
     static bool IntersectSphereVsSphereOut(

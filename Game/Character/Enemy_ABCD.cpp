@@ -68,7 +68,7 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
 void Enemy_A::UpdateMoveState(float elapsed_time)
 {
     // çÚÇ…êGÇÍÇÍÇŒçUåÇÉXÉeÅ[ÉgÇ÷
-    if (Collision::IntersectRectVsCircle(Fence::Instance().left_rect, { position.x,position.z }, radius))
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius))
     {
         TransitionAttackState();
     }
@@ -166,7 +166,7 @@ void Enemy_B::UpdateMoveState(float elapsed_time)
         }
     }
     // çÚÇ…ìñÇΩÇ¡ÇΩÇÁ
-    else if (Collision::IntersectRectVsCircle(Fence::Instance().left_rect, { position.x,position.z }, radius))
+    else if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius))
     {
         TransitionAttackState();
     }
@@ -257,8 +257,8 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
 void Enemy_C::UpdateMoveState(float elapsed_time)
 {
     // çÚÇ…êGÇÍÇΩÇÁçUåÇÉXÉeÅ[ÉgÇ÷
-    if (Collision::IntersectRectVsCircle(Fence::Instance().left_rect, { position.x,position.z }, radius) ||
-        Collision::IntersectRectVsCircle(Fence::Instance().front_rect, { position.x,position.z }, radius))
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius) ||
+        Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
     {
         TransitionAttackState();
     }
@@ -443,7 +443,7 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
 void Enemy_D::UpdateMoveState(float elapsed_time)
 {
     // ç∂çÚÇ…ìñÇΩÇ¡ÇΩÇÁ
-    if (Collision::IntersectRectVsCircle(Fence::Instance().left_rect, { position.x,position.z }, radius))
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius))
     {
         TransitionAttackState();
     }
@@ -486,7 +486,7 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
             velocity.z = speed_power_Y;// ècà⁄ìÆ
 
             // å„ÇÎï˚å¸Ç…êUÇËêÿÇ¡ÇƒÇ¢ÇΩÇÁ
-            if (Collision::IntersectRectVsCircle(Fence::Instance().back_rect, { position.x,position.z }, radius))
+            if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
             {
                 is_last_touched = true;
             }
@@ -495,7 +495,7 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
             velocity.z = -speed_power_Y;// ècà⁄ìÆ
 
             // å„ÇÎï˚å¸Ç…êUÇËêÿÇ¡ÇƒÇ¢ÇΩÇÁ
-            if (Collision::IntersectRectVsCircle(Fence::Instance().back_rect, { position.x,position.z }, radius))
+            if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
             {
                 is_last_touched = true;
             }

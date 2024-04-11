@@ -14,7 +14,7 @@ Player::Player()
 
     // 座標を減算
     position.z = sub_pos_z;
-    unit_category = 2;
+    unit_category = 0;
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
 }
@@ -94,12 +94,13 @@ void Player::Flick(float elapsedTime)
     {
         Seed* seed = new Seed();
         // ユニットがいないなら即座に発芽
-        if (UnitManager::Instance().GetUnitCount() == 0)seed->SetBorn(true);
+        if (UnitManager::Instance().GetUnitCount() == 0)    seed->SetBorn(true);
         // 種の種類を登録
         seed->SetCategory(unit_category);
 
         // ユニットの奥に行かないように
         f_d = CollisionManager::Instance().CollisionUnitBackVsSeed({ position.x ,f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }).y;
+        f_d = CollisionManager::Instance().CollisionSeedVsSeed({ position.x ,f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }).y;
 
         // 座標を確定
         seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, f_d);

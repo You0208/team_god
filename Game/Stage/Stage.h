@@ -22,4 +22,8 @@ public:
 
     virtual void DrawDebugGui() {}
 
+    Rect GetStageSize() { return stage_size; }
+
+protected:
+    Rect stage_size = {};// ステージ範囲
 };

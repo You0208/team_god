@@ -28,9 +28,14 @@ public:
     // インスタンス取得
     static Fence& Instance();
 
-    Rect left_rect;
-    Rect front_rect;
+    Rect GetLeftRect() { return left_rect; }
+    Rect GetFrontRect() { return front_rect; }
+    Rect GetBackRect() { return back_rect; }
 
-    // 柵はないけど当たり判定用に
-    Rect back_rect;
+private:    
+    // デバッグ用に四角使ってる
+    Rect left_rect      = {};
+    Rect front_rect     = {};
+    Rect back_rect      = {};   // 柵はないけど当たり判定用に
+    float rect_width    = 0.0f;
 };

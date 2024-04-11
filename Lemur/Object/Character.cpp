@@ -38,6 +38,9 @@ void Character::DrawDebugGUI(std::string name, int i)
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))
     {
+        std::string hp = std::string("HP") + name;
+        ImGui::DragInt(hp.c_str(), &health, 5.0f, -5.0f);
+
         std::string spe = std::string("speed") + name;
         ImGui::DragFloat(spe.c_str(), &speed_power, 5.0f, -5.0f);
 

@@ -34,6 +34,7 @@ public:
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 
+    void Update(float elapsed_time)override;
 private:
     // 待機ステート更新処理
     void UpdateIdleState(float elapsed_time)override;
@@ -45,6 +46,7 @@ private:
     void DrawDebugGUI(int n)override;
 private:
     float attack_timer;
+    float attack_width;
 };
 
 class Unit_F :public Unit
@@ -56,6 +58,7 @@ public:
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 
+    void Update(float elapsed_time)override;
 private:
     // 待機ステート更新処理
     void UpdateIdleState(float elapsed_time)override;
@@ -67,4 +70,5 @@ private:
     void DrawDebugGUI(int n)override;
 private:
     float attack_timer;
+    float attack_width;
 };

@@ -1,4 +1,6 @@
 #include "CollisionManager.h"
+#include <random>
+
 void CollisionManager::CollisionSeedVsUnit()
 {
     UnitManager& unitManager = UnitManager::Instance();
@@ -61,13 +63,77 @@ void CollisionManager::CollisionSeedVsUnit()
                     is_intersected = true;
                     break; // 一度でも重なればループを抜ける
                 }
-
+            }
+            // 攻撃範囲が四角
+            if (unit->GetCategory() == 4 || unit->GetCategory() == 5)
+            {
+                // 種がユニットの攻撃範囲に入っているとき
+                if (Collision::IntersectRectVsCircle
+                (
+                    unit->GetAttackRect(),
+                    { seed->GetPosition().x,seed->GetPosition().z },
+                    seed->GetRadius()
+                ))
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
+                // 種がユニットの攻撃範囲に入っているとき
+                if (Collision::IntersectRectVsCircle
+                (
+                    unit->GetAttackRect(),
+                    { seed->GetPosition().x,seed->GetPosition().z },
+                    seed->GetRadius()
+                ))
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
             }
         }
 
         // 重なりがない場合、種を生まれた状態に設定
         if (!is_intersected)seed->SetBorn(true);
     }
+}
+
+DirectX::XMFLOAT2 CollisionManager::CollisionSeedVsSeed(DirectX::XMFLOAT2 position)
+{
+    // 全ての種と総当たりで衝突判定
+    SeedManager& seedtManager = SeedManager::Instance();
+    int seedCount = seedtManager.GetSeedCount();
+    DirectX::XMFLOAT2 s_p = {};
+    if (seedCount < 2)
+    {
+        return position;
+    }
+    // 種の総当たり
+    for (int i = 0; i < seedCount; ++i)
+    {
+        Seed* seed = seedtManager.GetSeed(i);
+        s_p = { seed->GetPosition().x,seed->GetPosition().z };
+        // 着地地点が種の中にある
+        if (Collision::IntersectCircleVsPosition(position, s_p, seed->GetRadius()))
+        {
+            //std::mt19937 mt{ std::random_device{}() };
+            //std::uniform_int_distribution<float> width(-1.0f, 1.0f);
+            //std::uniform_int_distribution<float> height(0.0f, -1.0f);           
+            //DirectX::XMFLOAT2 out_direction = { float(width(mt)),float(height(mt)) };
+
+            float x = (rand() % 20 - 10) * 0.1f;
+            float y = (rand() % 10) * -0.1f;
+
+            DirectX::XMFLOAT2 out_direction = { x,y };
+            if (0.01f >= out_direction.x && -0.01f >= out_direction.x)  out_direction.x = 1.0f;
+            if (0.01f >= out_direction.y && -0.01f >= out_direction.y)  out_direction.y = -1.0f;
+
+            out_direction = Normalize(out_direction);
+
+            return { seed->GetPosition().x + out_direction.x * seed->GetRadius() * 2, seed->GetPosition().z + out_direction.y * seed->GetRadius() * 2 };
+        }
+    }
+
+    return position;
 }
 
 DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 position)

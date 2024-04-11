@@ -34,8 +34,8 @@ void Unit::Update(float elapsed_time)
 
 int Unit::ReturnDamage()
 {
-    if (!is_streng)return attack_power;
     if (is_streng)return streng_attack_power;
+    return attack_power;
 }
 
 void Unit::Destroy()

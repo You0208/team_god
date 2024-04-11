@@ -1,4 +1,5 @@
 #include "Fence.h"
+#include "StageManager.h"
 #include "Lemur/Graphics/DebugRenderer.h"
 static Fence* instance = nullptr;
 
@@ -11,21 +12,24 @@ Fence::Fence()
 
     rotation.y = DirectX::XMConvertToRadians(270.0f);
     scale.x = scale.y = scale.z = 50.0f;
+    rect_width = 1.0f;
 
-    left_rect.left_up.x     = -6.0f;
-    left_rect.left_up.y     = 5.0f;
-    left_rect.right_down.x  = -5.0f;
-    left_rect.right_down.y  = -5.0f;
+    Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageSize();
 
-    front_rect.left_up.x    = -6.0f;
-    front_rect.left_up.y    = -5.0f;
-    front_rect.right_down.x = 5.0f;
-    front_rect.right_down.y = -6.0f;
+    left_rect = {
+        { stage_size.left_up.x-rect_width,stage_size.left_up.y},
+        { stage_size.left_up.x,stage_size.right_down.y}
+    };
 
-    back_rect.left_up.x     = -6.0f;
-    back_rect.left_up.y     = 6.0f;
-    back_rect.right_down.x  = 5.0f;
-    back_rect.right_down.y  = 5.0f;
+    front_rect = {
+        { stage_size.left_up.x ,stage_size.right_down.y},
+        { stage_size.right_down.x,stage_size.right_down.y-rect_width}
+    };
+
+    back_rect = {
+        { stage_size.left_up.x ,stage_size.left_up.y+rect_width},
+        { stage_size.right_down.x,stage_size.left_up.y}
+    };
 
     health = 10;
 

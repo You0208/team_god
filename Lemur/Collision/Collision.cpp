@@ -136,6 +136,19 @@ bool Collision::IntersectCircleVsLine(const DirectX::XMFLOAT2& L_S, const Direct
     return false;
 }
 
+bool Collision::IntersectCircleVsPosition(const DirectX::XMFLOAT2& position, const DirectX::XMFLOAT2& o, const float radius)
+{
+    float dx = position.x - o.x;
+    float dy = position.y - o.y;
+    float d = dx * dx + dy * dy;
+    if (d < radius * radius)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 
 
 //@‹…‚Æ‹…Œð·”»’è

@@ -30,15 +30,16 @@ public:
     float       GetDecPos() { return dec_pos; }
     Triangle    GetTriangle1() { return triangle_1; }
     Triangle    GetTriangle2() { return triangle_2; }
-    Rect        GetRect() { return square; }
+    Rect        GetRect() { return unit_back; }
+    Rect        GetAttackRect() { return attack_rect; }
 
     // Setter
     void SetCategory(int category_) { category = category_; }
     void SetStrengAttack(int streng_attack_power_) { streng_attack_power = streng_attack_power_; }
     void SetBuff(bool is_streng_) { is_streng = is_streng_; }
     void SetSquare(Rect square_) { 
-        square.left_up = square_.left_up;
-        square.right_down = square_.right_down;
+        unit_back.left_up = square_.left_up;
+        unit_back.right_down = square_.right_down;
     }
 
 protected:
@@ -78,13 +79,14 @@ protected:
 
     float       dec_pos                     = 0.0f;             // í‚ªƒ†ƒjƒbƒg‚É’µ‚Ë•Ô‚³‚ê‚é‹——£
     bool        is_attack                   = false;            // UŒ‚’†‚©‚Ç‚¤‚©
-    bool        is_streng                   = true;             // ‹­‰»’†‚©‚Ç‚¤‚©
+    bool        is_streng                   = false;            // ‹­‰»’†‚©‚Ç‚¤‚©
     int         category                    = 0;                // ƒ†ƒjƒbƒg‚ÌƒJƒeƒSƒŠ[
     int         attack_times                = 0;                // UŒ‚‰ñ”
     int         streng_attack_power         = 0;                // ‹­‰»UŒ‚—Í
     int         original_attack_power       = 0;                // ‹­‰»‘O UŒ‚—Í
-    Triangle    triangle_1                  = {};               // ¶OŠpUŒ‚”ÍˆÍ
-    Triangle    triangle_2                  = {};               // ‰EOŠpUŒ‚”ÍˆÍ
-    Rect        square                      = {};               // ƒ†ƒjƒbƒg‚ÌŒã•û”ÍˆÍ
+    Triangle    triangle_1                  = {};               // OŠpUŒ‚”ÍˆÍ‚P
+    Triangle    triangle_2                  = {};               // OŠpUŒ‚”ÍˆÍ‚Q
+    Rect        attack_rect                 = {};               // ƒ†ƒjƒbƒg‚ÌlŠpUŒ‚”ÍˆÍ
+    Rect        unit_back                   = {};               // ƒ†ƒjƒbƒg‚ÌŒã•û”ÍˆÍ
 
 };

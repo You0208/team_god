@@ -36,7 +36,11 @@ public:
 
     void DrawDebugGui();
 
+    Stage* GetStage(int j) { return stages.at(j); }
+    int GetStageIndex() { return stage_index; }
+    void SetStageIndex(int stage_index_) { stage_index= stage_index_; }
 private:
     std::vector<Stage*> stages;
+    int stage_index;
 };
 
