@@ -1,7 +1,7 @@
 #include "EnemyManager.h"
+#include "Game/Stage/StageManager.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "Lemur/Collision/Collision.h"
-
 
 // 更新処理
 void EnemyManager::Update(float elapsedTime)
@@ -31,10 +31,6 @@ void EnemyManager::Update(float elapsedTime)
     }
     // 破棄リストをクリア
     removes.clear();
-
-
-    // 敵同士の当たり判定
-    CollisionEnemyVsEnemis();
 }
 
 // 描画処理
@@ -60,42 +56,12 @@ void EnemyManager::Clear()
     enemies.clear();
 }
 
+
 void EnemyManager::DrawDebugPrimitive()
 {
     for (Enemy* enemy : enemies)
     {
         enemy->DrawDebugPrimitive();
-    }
-}
-
-// エネミー同士の衝突判定
-void EnemyManager::CollisionEnemyVsEnemis()
-{
-    EnemyManager& enemyManager = EnemyManager::Instance();
-
-    // 全ての敵と総当たりで衝突判定
-    int enemyCount = enemies.size();
-    for (int i = 0; i < enemyCount; ++i)
-    {
-        Enemy* enemyA = enemies.at(i);
-        for (int j = i + 1; j < enemyCount; ++j)
-        {
-            Enemy* enemyB = enemies.at(j);
-            // 衝突判定
-            DirectX::XMFLOAT3 outPosition;
-            if (Collision::IntersectCylinderVsCylinder
-            (enemyA->GetPosition(),
-                enemyA->GetRadius(),
-                enemyA->GetHeight(),
-                enemyB->GetPosition(),
-                enemyB->GetRadius(),
-                enemyB->GetHeight(),
-                outPosition)
-                )
-            {
-                enemyB->SetPosition(outPosition);
-            }
-        }
     }
 }
 

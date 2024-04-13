@@ -27,13 +27,6 @@ public:
     // ステージ全削除
     void Clear();
 
-    // レイキャスト
-    bool RayCast(
-        const DirectX::XMFLOAT3& start,
-        const DirectX::XMFLOAT3& end,
-        HitResult& hit
-    );
-
     void DrawDebugGui();
 
     Stage* GetStage(int j) { return stages.at(j); }

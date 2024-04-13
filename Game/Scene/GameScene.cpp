@@ -18,6 +18,7 @@
 #include "../Character/Unit_ABC.h"
 #include "../Character/Unit_DEF.h"
 #include "../Character/SeedManager.h"
+#include "../Character/EnemySpawner.h"
 
 #include "Lemur/Graphics/DebugRenderer.h"
 
@@ -69,6 +70,9 @@ void GameScene::Initialize()
 		player = new Player;
 
 		fence = new Fence;
+
+		// 敵スポーン制御装置の初期化
+		EnemySpawner::Instance().Initialize();
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}
@@ -185,6 +189,9 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 		// 種とユニットの当たり判定（種が生まれるか）
 		CollisionManager::Instance().CollisionSeedVsUnit();
+
+		// スポーン
+		EnemySpawner::Instance().Update(elapsedTime);
 	}
 
 	// Imgui

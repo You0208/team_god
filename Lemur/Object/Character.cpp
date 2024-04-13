@@ -38,6 +38,9 @@ void Character::DrawDebugGUI(std::string name, int i)
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))
     {
+        std::string de = std::string("death") + name;
+        ImGui::Checkbox(de.c_str(), &death);
+
         std::string hp = std::string("HP") + name;
         ImGui::DragInt(hp.c_str(), &health, 5.0f, -5.0f);
 

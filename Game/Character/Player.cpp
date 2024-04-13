@@ -100,8 +100,7 @@ void Player::Flick(float elapsedTime)
 
         // ユニットの奥に行かないように
         f_d = CollisionManager::Instance().CollisionUnitBackVsSeed({ position.x ,f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }).y;
-        f_d = CollisionManager::Instance().CollisionSeedVsSeed({ position.x ,f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }).y;
-
+  
         // 座標を確定
         seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, f_d);
         // リストに追加

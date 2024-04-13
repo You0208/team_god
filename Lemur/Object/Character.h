@@ -22,15 +22,15 @@ public:
     // ダメージを与える
     bool ApplyDamage(int damage);
 
+    // 行列の更新処理
+    void UpdateTransform();
+
 protected:
     //----------モデル関連------------------------------------------------
     // サイズ更新
     void UpdateScale() {
         scale.x = scale.y = scale.z = scaleFactor;
     }
-
-    // 行列の更新処理
-    void UpdateTransform();
 
     //----------移動関連------------------------------------------------
     // 速力更新

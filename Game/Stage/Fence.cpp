@@ -14,7 +14,7 @@ Fence::Fence()
     scale.x = scale.y = scale.z = 50.0f;
     rect_width = 1.0f;
 
-    Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageSize();
+    Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision();
 
     left_rect = {
         { stage_size.left_up.x-rect_width,stage_size.left_up.y},

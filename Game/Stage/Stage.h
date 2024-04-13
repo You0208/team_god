@@ -1,6 +1,7 @@
 #pragma once
 #include "Lemur/Graphics/Shader.h"
 #include "Lemur/Collision/Collision.h"
+#include "Lemur/Model/FbxModelManager.h"
 
 // ステージ
 class Stage
@@ -15,15 +16,17 @@ public:
     //描画処理
     virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
 
-    // レイキャスト
-    virtual bool RayCast(const DirectX::XMFLOAT3& start,
-        const DirectX::XMFLOAT3& end,
-        HitResult& hit) = 0;
-
     virtual void DrawDebugGui() {}
 
-    Rect GetStageSize() { return stage_size; }
+    Rect                GetStageCollision() { return stage_collision; }
+    DirectX::XMFLOAT3   GetStagePos()       { return position; }
+    DirectX::XMFLOAT2   GetStageWidth()     { return stage_width; }
 
 protected:
-    Rect stage_size = {};// ステージ範囲
+    Rect                                stage_collision     = {};        // ステージの当たり判定用
+    DirectX::XMFLOAT2                   stage_width         = {};        // ステージの幅
+    DirectX::XMFLOAT3                   position            = {};        // ステージの中心
+    DirectX::XMFLOAT3                   scale               = {};        // ステージのサイズ（調整用）
+    float                               scale_facter        = 0.0f;      // スケールファクター
+    std::shared_ptr<FbxModelManager>    stage_model         = nullptr;   // モデル
 };

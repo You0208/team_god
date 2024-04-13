@@ -46,6 +46,8 @@ public:
 
 };
 
+
+
 //(Left Hand Side 左辺, Right Hand Side 右辺)
 //inline ... ヘッダに関数の中身を書く、グローバル関数はinline必要
 inline DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
@@ -249,4 +251,10 @@ inline float Length(DirectX::XMFLOAT3 v1)
 inline float Length(DirectX::XMFLOAT2 v1)
 {
     return sqrtf(v1.x * v1.x + v1.y * v1.y);
+}
+
+// float型の等号
+inline bool Equal(const float x, const float y, const float epsilon = FLT_EPSILON)
+{
+    return (fabsf(x - y) < epsilon);
 }

@@ -136,7 +136,7 @@ Unit_E::Unit_E()
     radius = 0.3f; // 半径
     height = 0.5f; // デバッグ用
     dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageSize();
+    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
     attack_rect =
     {
         {stage_size.left_up.x,position.z + attack_width},
@@ -166,7 +166,7 @@ void Unit_E::DrawDebugPrimitive()
 
 void Unit_E::Update(float elapsed_time)
 {
-    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageSize();
+    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
     attack_rect =
     {
         {stage_size.left_up.x,position.z + attack_width},
@@ -277,7 +277,7 @@ Unit_F::Unit_F()
     radius = 0.3f; // 半径
     height = 0.5f; // デバッグ用
     dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageSize();
+    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
     attack_rect =
     {
         {position.x-attack_width,stage_size.left_up.y},
@@ -307,7 +307,7 @@ void Unit_F::DrawDebugPrimitive()
 
 void Unit_F::Update(float elapsed_time)
 {
-    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageSize();
+    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
     attack_rect =
     {
         {position.x - attack_width,stage_size.left_up.y},

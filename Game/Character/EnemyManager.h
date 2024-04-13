@@ -17,7 +17,6 @@ public:
         static EnemyManager instance;
         return instance;
     }
-
     // 更新処理
     void Update(float elapsedTime);
 
@@ -39,13 +38,11 @@ public:
     // エネミー取得
     Enemy* GetEnemy(int index) { return enemies.at(index); }
 
-    // エネミー同士の衝突判定
-    void CollisionEnemyVsEnemis();
-
     // エネミー削除
     void Remove(Enemy* enemy);
 
 private:
-    std::vector<Enemy*> enemies;
-    std::set<Enemy*>    removes;
+    std::vector<Enemy*> enemies = {};
+    std::set<Enemy*>    removes = {};
+    DirectX::XMFLOAT2   shaft_pos = {};    // 各軸の位置
 };

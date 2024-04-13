@@ -15,8 +15,8 @@ Enemy_A::Enemy_A()
     health          = 10;       // HP
     radius          = 1.0f;     // 半径
     height          = 1.0f;     // デバッグ用
-    position.x      = 5.0f;     // 初期位置
-    rotation.y      = -90.0f;   // 初期角度
+    //position.x      = 5.0f;     // 初期位置
+    //rotation.y      = -90.0f;   // 初期角度
     speed_power     = -1.0f;    // 速度
 
     // とりあえずアニメーション
@@ -98,8 +98,8 @@ Enemy_B::Enemy_B()
 
     radius          = 1.0f;     // 半径
     height          = 1.0f;     // デバッグ用
-    position.x      = 5.0f;     // 初期位置
-    rotation.y      = -90.0f;   // 初期方向
+    //position.x      = 5.0f;     // 初期位置
+    //rotation.y      = -90.0f;   // 初期方向
 
     dis             = 3.0f;     // 一気に進む距離
     move_timer      = 0.0f;     // タイマー
@@ -203,8 +203,8 @@ Enemy_C::Enemy_C()
 
     radius          = 1.0f;      // 半径
     height          = 1.0f;      // デバッグ要
-    position.x      = 5.0f;      // 初期位置
-    rotation.y      = -90.0f;    // 初期角度
+    //position.x      = 5.0f;      // 初期位置
+    //rotation.y      = -90.0f;    // 初期角度
     speed_power     = -1.0f;     // 速度
     health          = 10;        // HP
 
@@ -383,8 +383,8 @@ Enemy_D::Enemy_D()
 
     radius          = 1.0f;     // 半径
     height          = 1.0f;     //デバッグ用
-    position.x      = 5.0f;     // 初期位置
-    rotation.y      = -90.0f;   // 初期方向
+    //position.x      = 5.0f;     // 初期位置
+    //rotation.y      = -90.0f;   // 初期方向
 
     move_state      = 0;        // 移動状態
     speed_power     = -1.0f;    // 横移動量

@@ -3,6 +3,31 @@
 #include "Lemur/Graphics/Shader.h"
 #include "../Stage/Fence.h"
 
+enum EnemyType
+{
+    A,
+    B,
+    C,
+    D
+};
+
+enum Shaft
+{
+    Side,
+    Vertical
+};
+
+struct EnemyScript
+{
+    float   second;    //スポーン時間(秒)
+    int     enemy_type;// 敵のタイプ
+    int     shaft;     // 軸
+    float   enemy_pos; // 敵の軸の長さに対する位置
+
+    DirectX::XMFLOAT3 pos;// スポーン位置
+};
+
+
 
 class Enemy :public Character
 {
