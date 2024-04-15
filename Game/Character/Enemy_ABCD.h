@@ -54,6 +54,8 @@ private:
     // ˆÚ“®
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
+    void UpdateMoveState_S(float elapsed_time);// ‰¡•ûŒüˆÚ“®
+    void UpdateMoveState_V(float elapsed_time);// c•ûŒüˆÚ“®
     // ƒ†ƒjƒbƒg‚Æ‚Ì“–‚½‚è”»’è
     void JudgeUnit();
 private:

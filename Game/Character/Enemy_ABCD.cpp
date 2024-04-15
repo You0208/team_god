@@ -15,9 +15,8 @@ Enemy_A::Enemy_A()
     health          = 10;       // HP
     radius          = 1.0f;     // 半径
     height          = 1.0f;     // デバッグ用
-    //position.x      = 5.0f;     // 初期位置
-    //rotation.y      = -90.0f;   // 初期角度
     speed_power     = -1.0f;    // 速度
+
 
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Move, true);
@@ -67,15 +66,20 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
 
 void Enemy_A::UpdateMoveState(float elapsed_time)
 {
+    if (shaft == Shaft::Side) rotation.y = DirectX::XMConvertToRadians(-90);
+    else if (shaft == Shaft::Vertical)rotation.y = DirectX::XMConvertToRadians(180);
+
     // 柵に触れれば攻撃ステートへ
-    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius))
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius)||
+        Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
     {
         TransitionAttackState();
     }
     else
     {
         // 移動
-        velocity.x = speed_power;
+        if (shaft == Shaft::Side) velocity.x = speed_power;
+        else if(shaft==Shaft::Vertical)velocity.z = speed_power;
     }
 
     // 死亡ステートへ
@@ -98,8 +102,6 @@ Enemy_B::Enemy_B()
 
     radius          = 1.0f;     // 半径
     height          = 1.0f;     // デバッグ用
-    //position.x      = 5.0f;     // 初期位置
-    //rotation.y      = -90.0f;   // 初期方向
 
     dis             = 3.0f;     // 一気に進む距離
     move_timer      = 0.0f;     // タイマー
@@ -150,32 +152,60 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
 
 void Enemy_B::UpdateMoveState(float elapsed_time)
 {
+    if (shaft == Shaft::Side) rotation.y = DirectX::XMConvertToRadians(-90);
+    else if (shaft == Shaft::Vertical)rotation.y = DirectX::XMConvertToRadians(180);
+    // 柵に当たったら
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius) ||
+        Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
+    {
+        TransitionAttackState();
+    }
+
     // タイマーを加算
     move_timer += elapsed_time;
 
     //タイマーが指定秒を超えたとき
     if (move_timer >= move_timer_max)                   
     {
-        // 速度を代入
-        velocity.x = speed_power;
-        // 既定の距離進んだら
-        if (abs(old_position - position.x) >= dis)
+        if (shaft == Shaft::Side)
         {
-            // 再び待機
-            move_timer = 0.0f;                          
+            // 速度を代入
+            velocity.x = speed_power;
+            // 既定の距離進んだら
+            if (abs(old_position - position.x) >= dis)
+            {
+                // 再び待機
+                move_timer = 0.0f;
+            }
         }
-    }
-    // 柵に当たったら
-    else if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius))
-    {
-        TransitionAttackState();
+        else
+        {
+            // 速度を代入
+            velocity.z = speed_power;
+            // 既定の距離進んだら
+            if (abs(old_position - position.z) >= dis)
+            {
+                // 再び待機
+                move_timer = 0.0f;
+            }
+        }
     }
     else
     {
-        // 前位置を変更
-        old_position = position.x;
-        // 移動
-        velocity.x = 0.0f;
+        if (shaft == Shaft::Side)
+        {
+            // 前位置を変更
+            old_position = position.x;
+            // 移動
+            velocity.x = 0.0f;
+        }
+        else
+        {
+            // 前位置を変更
+            old_position = position.z;
+            // 移動
+            velocity.z = 0.0f;
+        }
     }
 
     // 死亡ステートへ
@@ -256,6 +286,12 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
 
 void Enemy_C::UpdateMoveState(float elapsed_time)
 {
+    if (shaft == Shaft::Side)UpdateMoveState_S(elapsed_time);
+    else UpdateMoveState_V(elapsed_time);
+}
+
+void Enemy_C::UpdateMoveState_S(float elapsed_time)
+{
     // 柵に触れたら攻撃ステートへ
     if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius) ||
         Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
@@ -301,6 +337,10 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
             break;
         }
     }
+}
+
+void Enemy_C::UpdateMoveState_V(float elapsed_time)
+{
 }
 
 void Enemy_C::JudgeUnit()

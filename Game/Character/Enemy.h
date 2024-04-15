@@ -47,6 +47,7 @@ public:
     // 破棄
     void Destroy();
 
+    void SetShaft(int shaft_) { shaft = shaft_; }
 protected:
     // 死亡ステートへ遷移
     virtual void TransitionDeathState();
@@ -81,5 +82,6 @@ protected:
     };
     State state         = State::Move; // ステート
 
+    int     shaft       = Shaft::Side; // 敵の出てくる軸
     bool is_hit_unit    = false;       // プレイヤーに当たったか    
 };

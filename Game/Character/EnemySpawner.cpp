@@ -33,6 +33,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	case EnemyType::A:
 	{
 		enemy = new Enemy_A;
+		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
 		// リストに追加
@@ -41,7 +42,8 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	case EnemyType::B:
 	{
-		enemy = new Enemy_A;
+		enemy = new Enemy_B;
+		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
 		// リストに追加
@@ -51,6 +53,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	case EnemyType::C:
 	{
 		enemy = new Enemy_C;
+		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
 		// リストに追加
@@ -59,6 +62,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	break;
 	case EnemyType::D:
 		enemy = new Enemy_D;
+		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
 		// リストに追加
@@ -91,10 +95,10 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 	switch (shaft)
 	{
 	case Shaft::Side:// 横軸のに生成
-		spawn_pos = { (stage_pos.x + stage_width.x) - pos,0.0f,shaft_pos.y };
+		spawn_pos = { shaft_pos.x,0.0f,(stage_pos.y + stage_width.y) - pos };
 		break;
 	case Shaft::Vertical:// 縦軸の生成
-		spawn_pos = { shaft_pos.x,0.0f,(stage_pos.y + stage_width.y) - pos };
+		spawn_pos = { (stage_pos.x + stage_width.x) - pos,0.0f,shaft_pos.y };
 		break;
 	}
 
@@ -103,9 +107,9 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 
 void EnemySpawner::InitializeLevel1()
 {
-	level_1.emplace_back(SetEnemy(1.0f, EnemyType::A, Shaft::Side, 1.0f));
+	level_1.emplace_back(SetEnemy(1.0f, EnemyType::B, Shaft::Side, 2.0f));
 	level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Vertical, 2.0f));
-	level_1.emplace_back(SetEnemy(3.0f, EnemyType::C, Shaft::Side, 3.0f));
-	level_1.emplace_back(SetEnemy(4.0f, EnemyType::D, Shaft::Vertical, 4.0f));
-	level_1.emplace_back(SetEnemy(5.0f, EnemyType::A, Shaft::Side, 5.0f));
+	//level_1.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Side, 3.0f));
+	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::B, Shaft::Vertical, 4.0f));
+	//level_1.emplace_back(SetEnemy(5.0f, EnemyType::B, Shaft::Side, 5.0f));
 }
