@@ -49,34 +49,52 @@ public:
     void DrawDebugPrimitive()override;
     void DrawDebugGUI(int n)override;
 private:
-    // 攻撃
-    void UpdateAttackState(float elapsed_time)override;
-    // 移動
-    void TransitionMoveState()override {}
-    void UpdateMoveState(float elapsed_time)override;
-    void UpdateMoveState_S(float elapsed_time);// 横方向移動
-    void UpdateMoveState_V(float elapsed_time);// 縦方向移動
-    // ユニットとの当たり判定
-    void JudgeUnit_S();
-    void JudgeUnit_V();
-private:
     enum Move
     {
         Straight,
         Avoid
     };
-    enum UnitDestDir
+
+    // 攻撃
+    void UpdateAttackState(float elapsed_time)override;
+    // 移動
+    void TransitionMoveState()override {}
+    void UpdateMoveState(float elapsed_time)override;
+
+    // ユニットとの当たり判定
+    void JudgeUnit(bool isVertical);
+    void JudgeUnit_S();
+    void JudgeUnit_V();
+
+    // 移動
+    void HandleMovementState(const Rect& rect1, const Rect& rect2, float speedPower,
+        Move straightState, Move avoidState, float& velocityComponent,bool& touchedUnit, float elapsedTime);
+    void MoveToDestination(float elapsed_time, Move nextState);
+
+    bool ReachedDestination()
     {
-        Back,
-        Front,
-        Right,
-        Left
-    };
+        return (Equal(position.z, destination.y, 0.01f) && Equal(position.x, destination.x, 0.01f));
+    }
+
+    void ResetMovementState(Move nextState)
+    {
+        is_touched_unit = false;
+        velocity.x = velocity.z = 0.0f;
+        move_state = nextState;
+    }
+
+    bool CheckFenceCollision(const Rect& rect1, const Rect& rect2)
+    {
+        return (Collision::IntersectRectVsCircle(rect1, { position.x, position.z }, radius) ||
+            Collision::IntersectRectVsCircle(rect2, { position.x, position.z }, radius));
+    }
+
+private:
+ 
 
     float   timer                       = 0.0f;      // タイマー
     int     move_state                  = Straight;  // 移動ステート
     bool    is_touched_unit             = false;     // ユニットに触れたか
-    int     unit_edst_dir               = 0;
     DirectX::XMFLOAT2   destination     = { 0,0 };   // 目的地
 };
 

@@ -288,123 +288,28 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
 {
     if (shaft == Shaft::Side)
     {
-        // 当たり判定
-        JudgeUnit_S();
-        UpdateMoveState_S(elapsed_time);
+        // 移動
+        HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
+            speed_power, Move::Straight, Move::Avoid, velocity.x, is_touched_unit, elapsed_time);
+        //
+        JudgeUnit(true);
     }
     else
     {
-        // 当たり判定
-        JudgeUnit_V();
-        UpdateMoveState_V(elapsed_time);
+        // 移動
+        HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
+            speed_power, Move::Straight, Move::Avoid, velocity.y, is_touched_unit, elapsed_time);
+        //
+        JudgeUnit(false);
     }
 
-    // 死亡ステートへ
     if (IsDead())
     {
         TransitionDeathState();
     }
 }
 
-void Enemy_C::UpdateMoveState_S(float elapsed_time)
-{
-    // 柵に触れたら攻撃ステートへ
-    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius) ||
-        Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
-    {
-        TransitionAttackState();
-    }
-    else
-    {
-        switch (move_state)
-        {
-        case Move::Straight:// 直線
-            // 移動
-            velocity.x = speed_power;
-            // ユニットに触れたらステートを切り替え
-            if (is_touched_unit)move_state = Move::Avoid;
-            break;
-
-        case Move::Avoid:// ユニットに触った時
-
-            // 現在地から目的地までのベクトルを算出
-            DirectX::XMFLOAT2 Vec =
-            {
-                destination.x - position.x,
-                destination.y - position.z
-            };
-            // 正規化
-            Vec = Normalize(Vec);
-            // スピードにかける
-            Vec = { Vec.x * abs(speed_power),Vec.y * abs(speed_power) };
-            // 移動
-            velocity.x = Vec.x;
-            velocity.z = Vec.y;
-
-            // 目的地に着いたら戻す
-            if (Equal(position.z, destination.y, 0.01f) && Equal(position.x, destination.x, 0.01f))
-            {
-                // 初期化
-                is_touched_unit = false;
-                velocity.x = velocity.z = 0.0f;
-                move_state = Move::Straight;
-            }
-
-            break;
-        }
-    }
-}
-
-void Enemy_C::UpdateMoveState_V(float elapsed_time)
-{
-    // 柵に触れたら攻撃ステートへ
-    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius) ||
-        Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
-    {
-        TransitionAttackState();
-    }
-    else
-    {
-        switch (move_state)
-        {
-        case Move::Straight:// 直線
-            // 移動
-            velocity.y = speed_power;
-            // ユニットに触れたらステートを切り替え
-            if (is_touched_unit)move_state = Move::Avoid;
-            break;
-
-        case Move::Avoid:// ユニットに触った時
-
-            // 現在地から目的地までのベクトルを算出
-            DirectX::XMFLOAT2 Vec =
-            {
-                destination.x - position.x,
-                destination.y - position.z
-            };
-            // 正規化
-            Vec = Normalize(Vec);
-            // スピードにかける
-            Vec = { Vec.x * abs(speed_power),Vec.y * abs(speed_power) };
-            // 移動
-            velocity.x = Vec.x;
-            velocity.z = Vec.y;
-
-            // 目的地に着いたら戻す
-            if (Equal(position.z, destination.y, 0.01f) && Equal(position.x, destination.x, 0.01f))
-            {
-                // 初期化
-                is_touched_unit = false;
-                velocity.x = velocity.z = 0.0f;
-                move_state = Move::Straight;
-            }
-
-            break;
-        }
-    }
-}
-
-void Enemy_C::JudgeUnit_S()
+void Enemy_C::JudgeUnit(bool isVertical)
 {
     UnitManager& unitManager = UnitManager::Instance();
     int unitCount = unitManager.GetUnitCount();
@@ -414,84 +319,148 @@ void Enemy_C::JudgeUnit_S()
     {
         Unit* unit = unitManager.GetUnit(j);
 
-        if (unit->GetCategory() == 0 || unit->GetCategory() == 3)// 円
+        // 円
+        if (unit->GetCategory() == 0 || unit->GetCategory() == 3) 
         {
-            // 敵がユニットの攻撃範囲に触れたとき
-            if (Collision::IntersectCircleVsCircle
-            (
-                { unit->GetPosition().x,unit->GetPosition().z },   // ユニットの位置(XZ平面)
+            if (Collision::IntersectCircleVsCircle(
+                { unit->GetPosition().x, unit->GetPosition().z }, // ユニットの位置(XZ平面)
                 unit->GetAttackCollisionRange(),                   // 攻撃範囲
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
+                { position.x, position.z },                        // 敵の位置(XZ平面)
+                radius))                                           // 敵の当たり判定
             {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Back;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    unit->GetPosition().x,
-                    unit->GetPosition().z + unit->GetAttackCollisionRange() + radius
-                };
+                is_touched_unit = true; // ユニットに触れた
+                if (isVertical)
+                {
+                    destination = {
+                        unit->GetPosition().x,
+                        unit->GetPosition().z + unit->GetAttackCollisionRange() + radius
+                    };
+                }
+                else
+                {
+                    destination = {
+                        // ユニット左に避ける
+                        unit->GetPosition().x - radius - unit->GetAttackCollisionRange() ,
+                        unit->GetPosition().z
+                    };
+                }
             }
         }
-        else if (unit->GetCategory() == 1)// 三角形
+        else if (unit->GetCategory() == 1) // 三角形
         {
-            // 敵がユニットの攻撃範囲に触れたとき
-            // 右三角
-            if (Collision::IntersectTriangleVsCircle
-            (
-                unit->GetTriangle2(),
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
+            if (isVertical)
             {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Back;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    unit->GetPosition().x,
-                    unit->GetPosition().z + unit->GetRadius() + radius
-                };
+                // 敵がユニットの攻撃範囲に触れたとき
+                // 右三角
+                if (Collision::IntersectTriangleVsCircle
+                (
+                    unit->GetTriangle2(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        unit->GetPosition().x,
+                        unit->GetPosition().z + unit->GetRadius() + radius
+                    };
+                }
+            }
+            else if (!isVertical )
+            {
+                // 敵がユニットの攻撃範囲に触れたとき
+                if (Collision::IntersectTriangleVsCircle// 左三角
+                (
+                    unit->GetTriangle1(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        // ユニット左三角形の底辺方向に避ける
+                        unit->GetPosition().x - unit->GetRadius() - radius - unit->GetTriangleHeight(),
+                        unit->GetPosition().z
+                    };
+                }
+                // 敵がユニットの攻撃範囲に触れたとき
+                else if (Collision::IntersectTriangleVsCircle// 右三角
+                (
+                    unit->GetTriangle2(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        // ユニット右三角形の底辺方向に避ける
+                        unit->GetPosition().x + unit->GetRadius() + radius + unit->GetTriangleHeight(),
+                        unit->GetPosition().z
+                    };
+                }
             }
         }
         else if (unit->GetCategory() == 2)
         {
-            // 敵がユニットの攻撃範囲に触れたとき
-            // 奥三角
-            if (Collision::IntersectTriangleVsCircle
-            (
-                unit->GetTriangle1(),
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
+            if (isVertical)
             {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Back;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    unit->GetPosition().x,
-                    unit->GetPosition().z + unit->GetRadius() + radius + unit->GetTriangleHeight()
-                };
+                // 敵がユニットの攻撃範囲に触れたとき
+          // 奥三角
+                if (Collision::IntersectTriangleVsCircle
+                (
+                    unit->GetTriangle1(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        unit->GetPosition().x,
+                        unit->GetPosition().z + unit->GetRadius() + radius + unit->GetTriangleHeight()
+                    };
+                }
+                // 敵がユニットの攻撃範囲に触れたとき
+                // 手前三角
+                else if (Collision::IntersectTriangleVsCircle
+                (
+                    unit->GetTriangle2(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        unit->GetPosition().x,
+                        unit->GetPosition().z - unit->GetRadius() - radius - unit->GetTriangleHeight()
+                    };
+                }
             }
-            // 敵がユニットの攻撃範囲に触れたとき
-            // 手前三角
-            else if (Collision::IntersectTriangleVsCircle
-            (
-                unit->GetTriangle2(),
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
+            else if (!isVertical)
             {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Front;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    unit->GetPosition().x,
-                    unit->GetPosition().z - unit->GetRadius() - radius - unit->GetTriangleHeight()
-                };
+                // 敵がユニットの攻撃範囲に触れたとき
+                if (Collision::IntersectTriangleVsCircle// 奥三角
+                (
+                    unit->GetTriangle1(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        // ユニット左に避ける
+                        unit->GetPosition().x - unit->GetRadius() - radius,
+                        unit->GetPosition().z
+                    };
+                }
             }
         }
-        else if (unit->GetCategory() == 4)// 長方形
+        else if (unit->GetCategory() == 4 && isVertical) // 長方形
         {
             // 敵がユニットの攻撃範囲に触れたとき
             if (Collision::IntersectRectVsCircle
@@ -502,7 +471,6 @@ void Enemy_C::JudgeUnit_S()
             ))
             {
                 is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Back;// ユニットから見た敵の目的地方向
                 // 目的地を決定する
                 destination = {
                     unit->GetPosition().x,
@@ -510,97 +478,7 @@ void Enemy_C::JudgeUnit_S()
                 };
             }
         }
-    }
-}
-
-void Enemy_C::JudgeUnit_V()
-{
-    UnitManager& unitManager = UnitManager::Instance();
-    int unitCount = unitManager.GetUnitCount();
-
-    // ユニットにの総当たり
-    for (int j = 0; j < unitCount; ++j)
-    {
-        Unit* unit = unitManager.GetUnit(j);
-
-        if (unit->GetCategory() == 0 || unit->GetCategory() == 3)// 円
-        {
-            // 敵がユニットの攻撃範囲に触れたとき
-            if (Collision::IntersectCircleVsCircle
-            (
-                { unit->GetPosition().x,unit->GetPosition().z },   // ユニットの位置(XZ平面)
-                unit->GetAttackCollisionRange(),                   // 攻撃範囲
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
-            {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Left;// ユニットから見た敵の目的地方向
-                destination = {
-                    // ユニット左に避ける
-                    unit->GetPosition().x - radius - unit->GetAttackCollisionRange() ,
-                    unit->GetPosition().z
-                };
-            }
-        }
-        else if (unit->GetCategory() == 1)// 三角形
-        {
-            // 敵がユニットの攻撃範囲に触れたとき
-            if (Collision::IntersectTriangleVsCircle// 左三角
-            (
-                unit->GetTriangle1(),
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
-            {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Left;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    // ユニット左三角形の底辺方向に避ける
-                    unit->GetPosition().x - unit->GetRadius() - radius - unit->GetTriangleHeight(),
-                    unit->GetPosition().z
-                };
-            }
-            // 敵がユニットの攻撃範囲に触れたとき
-            else if (Collision::IntersectTriangleVsCircle// 右三角
-            (
-                unit->GetTriangle2(),
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
-            {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Right;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    // ユニット右三角形の底辺方向に避ける
-                    unit->GetPosition().x + unit->GetRadius() + radius + unit->GetTriangleHeight(),
-                    unit->GetPosition().z
-                };
-            }
-        }
-        else if (unit->GetCategory() == 2)
-        {
-            // 敵がユニットの攻撃範囲に触れたとき
-            if (Collision::IntersectTriangleVsCircle// 奥三角
-            (
-                unit->GetTriangle1(),
-                { position.x,position.z },                         // 敵の位置(XZ平面)
-                radius                                             // 敵の当たり判定
-            ))
-            {
-                is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Left;// ユニットから見た敵の目的地方向
-                // 目的地を決定する
-                destination = {
-                    // ユニット左に避ける
-                    unit->GetPosition().x - unit->GetRadius() - radius,
-                    unit->GetPosition().z
-                };
-            }
-        }
-        else if (unit->GetCategory() == 5)// 長方形
+        else if (unit->GetCategory() == 5 && !isVertical)
         {
             // 敵がユニットの攻撃範囲に触れたとき
             if (Collision::IntersectRectVsCircle
@@ -611,14 +489,56 @@ void Enemy_C::JudgeUnit_V()
             ))
             {
                 is_touched_unit = true;// ユニットに触れた
-                unit_edst_dir = UnitDestDir::Left;// ユニットから見た敵の目的地方向
                 // 目的地を決定する
                 destination = {
                     unit->GetPosition().x - unit->GetRadius() - radius,
-                    unit->GetPosition().z 
+                    unit->GetPosition().z
                 };
             }
         }
+    }
+}
+
+void Enemy_C::HandleMovementState(const Rect& rect1, const Rect& rect2, float speedPower, Move straightState, Move avoidState, float& velocityComponent, bool& touchedUnit, float elapsed_time)
+{
+    // 柵に触れたら
+    if (CheckFenceCollision(rect1, rect2))
+    {
+        // 攻撃ステートへ
+        TransitionAttackState();
+    }
+    else
+    {
+        switch (move_state)
+        {
+        case Move::Straight:
+            // まっすぐ動かす
+            velocityComponent = speedPower;
+            // ユニットに触れたらステートを変更
+            if (touchedUnit) move_state = avoidState;
+            break;
+
+        case Move::Avoid:
+            // 敵を目的地まで動かす
+            MoveToDestination(elapsed_time, straightState);
+            break;
+        }
+    }
+}
+
+void Enemy_C::MoveToDestination(float elapsed_time, Move nextState)
+{
+    DirectX::XMFLOAT2 destVec = { destination.x - position.x, destination.y - position.z };
+    destVec = Normalize(destVec);
+
+    destVec = { destVec.x * abs(speed_power), destVec.y * abs(speed_power) };
+
+    velocity.x = destVec.x;
+    velocity.z = destVec.y;
+
+    if (ReachedDestination())
+    {
+        ResetMovementState(nextState);// 移動状態のリセット
     }
 }
 
