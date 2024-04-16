@@ -31,6 +31,11 @@ Fence::Fence()
         { stage_size.right_down.x,stage_size.left_up.y}
     };
 
+    right_rect = {
+        { stage_size.right_down.x ,stage_size.left_up.y },
+        { stage_size.right_down.x + rect_width,stage_size.right_down.y}
+    };
+
     health = 10;
 
     instance = this;
@@ -128,9 +133,21 @@ void Fence::DrawDebugPrimitive()
         back_rect.right_down.y + back_rect_size.z
     };
 
+    DirectX::XMFLOAT3 right_rect_size = {
+    (right_rect.right_down.x - right_rect.left_up.x) * 0.5f,
+    0.5f,
+    (right_rect.left_up.y - right_rect.right_down.y) * 0.5f
+    };
+    DirectX::XMFLOAT3 right_rect_center = {
+        right_rect.left_up.x + right_rect_size.x,
+        0,
+        right_rect.right_down.y + right_rect_size.z
+    };
+
     debug_renderer->DrawBox(left_rect_center, { 0,0,0 }, left_rect_size, { 1,0,0,1 });
     debug_renderer->DrawBox(front_rect_center, { 0,0,0 }, front_rect_size, { 1,0,0,1 });
     debug_renderer->DrawBox(back_rect_center, { 0,0,0 }, back_rect_size, { 1,0,0,1 });
+    debug_renderer->DrawBox(right_rect_center, { 0,0,0 }, right_rect_size, { 1,0,0,1 });
 }
 
 Fence& Fence::Instance()

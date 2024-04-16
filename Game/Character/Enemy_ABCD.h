@@ -112,6 +112,9 @@ private:
     // ˆÚ“®
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
+
+    void UpdateMoveState_S(float elapsed_time);
+    void UpdateMoveState_V(float elapsed_time);
 private:
     enum Move
     {

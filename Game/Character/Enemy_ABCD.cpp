@@ -554,8 +554,6 @@ Enemy_D::Enemy_D()
 
     radius          = 1.0f;     // ”¼Œa
     height          = 1.0f;     //ƒfƒoƒbƒO—p
-    //position.x      = 5.0f;     // ‰ŠúˆÊ’u
-    //rotation.y      = -90.0f;   // ‰Šú•ûŒü
 
     move_state      = 0;        // ˆÚ“®ó‘Ô
     speed_power     = -1.0f;    // ‰¡ˆÚ“®—Ê
@@ -611,14 +609,8 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
     }
 }
 
-void Enemy_D::UpdateMoveState(float elapsed_time)
+void Enemy_D::UpdateMoveState_S(float elapsed_time)
 {
-    // ¶ò‚É“–‚½‚Á‚½‚ç
-    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius))
-    {
-        TransitionAttackState();
-    }
-
     switch (move_state)
     {
     case Move::Straight:
@@ -680,5 +672,84 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
     {
         TransitionDeathState();
     }
+}
+
+void Enemy_D::UpdateMoveState_V(float elapsed_time)
+{
+    switch (move_state)
+    {
+    case Move::Straight:
+        // cˆÚ“®
+        velocity.y = speed_power;
+        // ˆÚ“®—Ê‚ğ‹L˜^
+        dis += abs(speed_power) * elapsed_time;
+        // ˆÚ“®—Ê‚ª‹K’è’l‚ğ’´‚¦‚½‚ç
+        if (dis >= dis_max)
+        {
+            dis = 0.0f;                             // ˆÚ“®—Ê‚ğ‰Šú‰»
+            if (is_last_touched)direction_state = 0;// ‘O‰ñò‚ÉG‚ê‚Ä‹‚½‚çˆÚ“®•ûŒü‚ğŒÅ’è
+            else direction_state = rand() % 2;      // Ÿ‰ñ‚Ì•ûŒü‚ğŒˆ’è
+            is_last_touched = false;                // ‰Šú‰»
+            move_state = 1;                         // ˆÚ“®ó‘Ô‚ğ•Ï‰»
+        }
+        break;
+    case Move::Diagonal:
+        // cˆÚ“®
+        velocity.y = speed_power;
+        // ˆÚ“®—Ê‚ğ‹L˜^
+        dis += abs(speed_power) * elapsed_time;
+
+        // ˆÚ“®—Ê‚ª‹K’è’l‚ğ’´‚¦‚½‚çorŒã‚ë‚És‚«‚«‚Á‚½‚ç
+        if (dis >= dis_max || is_last_touched)
+        {
+            dis = 0.0f;       // ˆÚ“®—Ê‚ğ‰Šú‰»
+            velocity.z = 0.0f;// ‘¬“x‚ğ‰Šú‰»
+            move_state = 0;   // ˆÚ“®ó‘Ô‚ğ•Ï‰»
+        }
+
+        // cˆÚ“®
+        switch (direction_state)
+        {
+        case Direction::Under:
+            velocity.z = speed_power_Y;// cˆÚ“®
+
+            // Œã‚ë•ûŒü‚ÉU‚èØ‚Á‚Ä‚¢‚½‚ç
+            if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+            {
+                is_last_touched = true;
+            }
+            break;
+        case Direction::Up:
+            velocity.z = -speed_power_Y;// cˆÚ“®
+
+            // Œã‚ë•ûŒü‚ÉU‚èØ‚Á‚Ä‚¢‚½‚ç
+            if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+            {
+                is_last_touched = true;
+            }
+            break;
+        }
+        break;
+    }
+
+    // €–SƒXƒe[ƒg‚Ö
+    if (IsDead())
+    {
+        TransitionDeathState();
+    }
+}
+
+void Enemy_D::UpdateMoveState(float elapsed_time)
+{
+    // ò‚É“–‚½‚Á‚½‚ç
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetLeftRect(), { position.x,position.z }, radius)||
+        Collision::IntersectRectVsCircle(Fence::Instance().GetFrontRect(), { position.x,position.z }, radius))
+    {
+        TransitionAttackState();
+    }
+
+    if (shaft == Shaft::Side)UpdateMoveState_S(elapsed_time);
+    else    UpdateMoveState_V(elapsed_time);
+ 
 }
 

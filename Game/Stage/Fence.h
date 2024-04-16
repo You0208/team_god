@@ -37,5 +37,6 @@ private:
     Rect left_rect      = {};
     Rect front_rect     = {};
     Rect back_rect      = {};   // ò‚Í‚È‚¢‚¯‚Ç“–‚½‚è”»’è—p‚É
+    Rect right_rect = {};   // ò‚Í‚È‚¢‚¯‚Ç“–‚½‚è”»’è—p‚É
     float rect_width    = 0.0f;
 };
