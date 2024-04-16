@@ -258,3 +258,4 @@ inline bool Equal(const float x, const float y, const float epsilon = FLT_EPSILO
 {
     return (fabsf(x - y) < epsilon);
 }
+

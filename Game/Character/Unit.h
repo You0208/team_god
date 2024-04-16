@@ -28,6 +28,8 @@ public:
     // Getter
     int         GetCategory() { return category; }
     float       GetDecPos() { return dec_pos; }
+    float       GetTriangleHeight() { return t_height; }
+    float       GetTriangleBase() { return t_base; }
     Triangle    GetTriangle1() { return triangle_1; }
     Triangle    GetTriangle2() { return triangle_2; }
     Rect        GetRect() { return unit_back; }
@@ -84,6 +86,8 @@ protected:
     int         attack_times                = 0;                // UŒ‚‰ñ”
     int         streng_attack_power         = 0;                // ‹­‰»UŒ‚—Í
     int         original_attack_power       = 0;                // ‹­‰»‘O UŒ‚—Í
+    float       t_height                    = 0.0f;             // OŠpŒ`‚Ì‚‚³
+    float       t_base                      = 0.0f;             // OŠpŒ`‚Ì’ê•Ó’·
     Triangle    triangle_1                  = {};               // OŠpUŒ‚”ÍˆÍ‚P
     Triangle    triangle_2                  = {};               // OŠpUŒ‚”ÍˆÍ‚Q
     Rect        attack_rect                 = {};               // ƒ†ƒjƒbƒg‚ÌlŠpUŒ‚”ÍˆÍ

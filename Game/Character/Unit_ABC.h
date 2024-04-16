@@ -45,8 +45,6 @@ private:
 private:
     float attack_timer;
 
-    float t_height;         // 三角形の高さ
-    float t_base;           // 三角形の底辺長
 };
 
 class Unit_C :public Unit
@@ -70,7 +68,4 @@ private:
     void DrawDebugGUI(int n)override;
 private:
     float attack_timer;
-
-    float t_height;         // 三角形の高さ
-    float t_base;           // 三角形の底辺長
 };
