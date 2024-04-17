@@ -63,8 +63,6 @@ private:
 
     // ユニットとの当たり判定
     void JudgeUnit(bool isVertical);
-    void JudgeUnit_S();
-    void JudgeUnit_V();
 
     // 移動
     void HandleMovementState(const Rect& rect1, const Rect& rect2, float speedPower,
@@ -90,8 +88,6 @@ private:
     }
 
 private:
- 
-
     float   timer                       = 0.0f;      // タイマー
     int     move_state                  = Straight;  // 移動ステート
     bool    is_touched_unit             = false;     // ユニットに触れたか
