@@ -73,6 +73,13 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 
 void EnemySpawner::Update(float elapsed_time)
 {
+	// é≤à íuçXêV
+	shaft_pos =
+	{
+		{stage_pos.x + stage_width.x + stage_to_shaft},
+		{stage_pos.y + stage_width.y + stage_to_shaft}
+	};
+
 	timer += elapsed_time;
 	int count = level_1.size();
 	if (index < count)

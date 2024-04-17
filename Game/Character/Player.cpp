@@ -3,6 +3,8 @@
 #include "Game/CollisionManager.h"
 #include "SeedManager.h"
 #include "UnitManager.h"
+#include "Game/Stage/StageManager.h"
+
 static Player* instance = nullptr;
 
 Player::Player()
@@ -12,8 +14,15 @@ Player::Player()
     // モデルの初期化
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\nico.fbx");
 
+    sub_pos_z = -StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageWidth().y-1.0f;
+
     // 座標を減算
     position.z = sub_pos_z;
+
+    // 左右端
+    limit = { StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().left_up.x + 0.5f,
+         StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
+
     unit_category = 1;
     // とりあえずアニメーション
     model->PlayAnimation(0, true);
@@ -47,6 +56,15 @@ void Player::Update(float elapsedTime)
     // Imgui
     DrawDebugGUI();
 
+    // 移動の制限
+    if (position.x <= limit.x)
+    {
+        position.x = limit.x;
+    }
+    else if (position.x >= limit.y)
+    {
+        position.x = limit.y;
+    }
 }
 
 // Imgui

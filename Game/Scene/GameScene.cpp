@@ -59,7 +59,7 @@ void GameScene::Initialize()
 		// カメラ
 		Camera& camera = Camera::Instance();
 		// カメラ調整
-		camera_range = 20.0f;
+		camera_range = 30.0f;
 
 		// ステージ初期化
 		StageManager& stage_manager = StageManager::Instance();
@@ -272,7 +272,7 @@ void GameScene::Render(float elapsedTime)
 			// 柵描画
 			fence->Render(scale, stage_ps.GetAddressOf());
 			//ステージ描画
-			StageManager::Instance().Render(scale, stage_ps.GetAddressOf());
+			StageManager::Instance().Render(1.0f, stage_ps.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
 			// エネミー描画

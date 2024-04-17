@@ -47,6 +47,29 @@ Fence::~Fence()
 
 void Fence::Update(float elapsedTime)
 {
+    Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision();
+
+    left_rect = {
+        { stage_size.left_up.x - rect_width,stage_size.left_up.y},
+        { stage_size.left_up.x,stage_size.right_down.y}
+    };
+
+    front_rect = {
+        { stage_size.left_up.x ,stage_size.right_down.y},
+        { stage_size.right_down.x,stage_size.right_down.y - rect_width}
+    };
+
+    back_rect = {
+        { stage_size.left_up.x ,stage_size.left_up.y + rect_width},
+        { stage_size.right_down.x,stage_size.left_up.y}
+    };
+
+    right_rect = {
+        { stage_size.right_down.x ,stage_size.left_up.y },
+        { stage_size.right_down.x + rect_width,stage_size.right_down.y}
+    };
+
+
     // çsóÒçXêVèàóù
     UpdateTransform();
 
@@ -67,14 +90,14 @@ void Fence::DrawDebugGui()
     if (ImGui::TreeNode(T.c_str()))
     {
         ImGui::DragInt("Health", &health, 0, 10);
-        ImGui::SliderFloat2("back_rect_left_up", &back_rect.left_up.x, 10.0f, -10.0f);
-        ImGui::SliderFloat2("back_rect_right_down", &back_rect.right_down.x, 10.0f, -10.0f);
+        //ImGui::SliderFloat2("back_rect_left_up", &back_rect.left_up.x, 10.0f, -10.0f);
+        //ImGui::SliderFloat2("back_rect_right_down", &back_rect.right_down.x, 10.0f, -10.0f);
 
-        ImGui::SliderFloat2("left_rect_left_up", &left_rect.left_up.x, 10.0f, -10.0f);
-        ImGui::SliderFloat2("left_rect_right_down", &left_rect.right_down.x, 10.0f, -10.0f);
+        //ImGui::SliderFloat2("left_rect_left_up", &left_rect.left_up.x, 10.0f, -10.0f);
+        //ImGui::SliderFloat2("left_rect_right_down", &left_rect.right_down.x, 10.0f, -10.0f);
 
-        ImGui::SliderFloat2("front_rect_left_up", &front_rect.left_up.x, 10.0f, -10.0f);
-        ImGui::SliderFloat2("front_rect_right_down", &front_rect.right_down.x, 10.0f, -10.0f);
+        //ImGui::SliderFloat2("front_rect_left_up", &front_rect.left_up.x, 10.0f, -10.0f);
+        //ImGui::SliderFloat2("front_rect_right_down", &front_rect.right_down.x, 10.0f, -10.0f);
 
         std::string p = std::string("position") + name;
         ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);

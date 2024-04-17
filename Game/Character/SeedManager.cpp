@@ -1,5 +1,6 @@
 #include "SeedManager.h"
 #include "UnitManager.h"
+#include "Game/Stage/Fence.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "Lemur/Collision/Collision.h"
 #include "Game/CollisionManager.h"
@@ -52,6 +53,11 @@ void SeedManager::Update(float elapsedTime)
     }
     // 破棄リストをクリア
     removes.clear();
+
+    // 種VSユニット
+    SeedVsUnit();
+    // 種VS柵
+    SeedVsFence();
 }
 
 // 描画処理
@@ -95,4 +101,58 @@ void SeedManager::Remove(Seed* seed)
 {
     // 破棄リストに追加
     removes.insert(seed);
+}
+
+void SeedManager::SeedVsUnit()
+{
+    SeedManager& seedManager = SeedManager::Instance();
+    UnitManager& unitManager = UnitManager::Instance();
+
+    // 全ての種と総当たりで衝突判定
+    int seedCount = seedManager.GetSeedCount();
+    int unitCount = unitManager.GetUnitCount();
+
+    for (int i = 0; i < seedCount; ++i)
+    {
+        Seed* seed = seedManager.GetSeed(i);
+        for (int j = 0; j < unitCount; ++j)
+        {
+            Unit* unit = unitManager.GetUnit(j);
+
+            // ユニットと種が当たっていたら消す
+            if (Collision::IntersectCircleVsCircle(
+                { seed->GetPosition().x, seed->GetPosition().z },
+                seed->GetRadius(),
+                { unit->GetPosition().x, unit->GetPosition().z },
+                unit->GetRadius()
+            ))
+            {
+                seed->SetDead(true);
+            }
+        }
+    }
+
+}
+
+void SeedManager::SeedVsFence()
+{
+    SeedManager& seedManager = SeedManager::Instance();
+    // 全ての種と総当たりで衝突判定
+    int seedCount = seedManager.GetSeedCount();
+
+    for (int i = 0; i < seedCount; ++i)
+    {
+        Seed* seed = seedManager.GetSeed(i);
+        // 柵と種が当たっていたら消す
+        if (Collision::IntersectCircleVsCircle(
+            { seed->GetPosition().x, seed->GetPosition().z },
+            seed->GetRadius(),
+            { Fence::Instance().GetPosition().x, Fence::Instance().GetPosition().z },
+            Fence::Instance().GetRadius()
+        ))
+        {
+            seed->SetDead(true);
+        }
+    }
+
 }

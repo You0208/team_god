@@ -37,6 +37,9 @@ private:
     float timer_s;// コントローラーがはじかれるのにかかった時間
     float s_l_max;//はじかれた右スティックY座標の最大 
     float f_d = 0;// 最終的に導き出されたはじき座標
+
+
+    DirectX::XMFLOAT2 limit;
 };
 
 

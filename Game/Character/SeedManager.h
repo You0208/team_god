@@ -42,6 +42,12 @@ public:
     // ííœ
     void Remove(Seed* enemy);
 
+    // í‚Æƒ†ƒjƒbƒg‚Ì“–‚½‚è”»’è
+    void SeedVsUnit();
+
+    // í‚Æò‚Ì“–‚½‚è”»’è
+    void SeedVsFence();
+
     int seed_number = 0;// Ÿ‚Ìí”Ô†
 private:
     std::vector<Seed*> seeds;

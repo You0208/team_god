@@ -3,10 +3,10 @@
 StageMain::StageMain()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    stage_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
+    stage_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\stage_base.fbx");
     
     scale_facter = 1.0f;
-    stage_width = { 5,5 };
+    stage_width = { 9,9 };
     scale = { 1.0f,1.0f,1.0f };
     position = { 0.0f,0.0f,0.0f };
     stage_collision = {
@@ -38,6 +38,9 @@ void StageMain::DrawDebugGui()
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))
     {
+        ImGui::SliderFloat2("stage_collision_l", &stage_collision.left_up.x, 15.0f, -15.0f);
+        ImGui::SliderFloat2("stage_collision_r", &stage_collision.right_down.x, 15.0f, -15.0f);
+
         std::string de = std::string("death") + name;
         std::string p = std::string("position") + name;
         ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);
