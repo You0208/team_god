@@ -107,7 +107,7 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 
 void EnemySpawner::InitializeLevel1()
 {
-	level_1.emplace_back(SetEnemy(1.0f, EnemyType::C, Shaft::Side, 4.0f));
+	//level_1.emplace_back(SetEnemy(1.0f, EnemyType::D, Shaft::Vertical, 4.0f));
 	//level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Vertical, 2.0f));
 	//level_1.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Side, 3.0f));
 	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::B, Shaft::Vertical, 4.0f));

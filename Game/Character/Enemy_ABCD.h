@@ -124,7 +124,7 @@ private:
     enum Direction
     {
         Under,
-        Up
+        Up,
     };
 
     int     move_state      = Move::Straight;         // ˆÚ“®‚Ìó‘Ô

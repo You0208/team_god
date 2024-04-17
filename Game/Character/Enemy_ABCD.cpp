@@ -680,7 +680,7 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
     {
     case Move::Straight:
         // cˆÚ“®
-        velocity.y = speed_power;
+        velocity.z = speed_power;
         // ˆÚ“®—Ê‚ğ‹L˜^
         dis += abs(speed_power) * elapsed_time;
         // ˆÚ“®—Ê‚ª‹K’è’l‚ğ’´‚¦‚½‚ç
@@ -690,40 +690,40 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
             if (is_last_touched)direction_state = 0;// ‘O‰ñò‚ÉG‚ê‚Ä‹‚½‚çˆÚ“®•ûŒü‚ğŒÅ’è
             else direction_state = rand() % 2;      // Ÿ‰ñ‚Ì•ûŒü‚ğŒˆ’è
             is_last_touched = false;                // ‰Šú‰»
-            move_state = 1;                         // ˆÚ“®ó‘Ô‚ğ•Ï‰»
+            move_state = Move::Diagonal;            // ˆÚ“®ó‘Ô‚ğ•Ï‰»
         }
         break;
     case Move::Diagonal:
         // cˆÚ“®
-        velocity.y = speed_power;
+        velocity.z = speed_power;
         // ˆÚ“®—Ê‚ğ‹L˜^
         dis += abs(speed_power) * elapsed_time;
 
-        // ˆÚ“®—Ê‚ª‹K’è’l‚ğ’´‚¦‚½‚çorŒã‚ë‚És‚«‚«‚Á‚½‚ç
+        // ˆÚ“®—Ê‚ª‹K’è’l‚ğ’´‚¦‚½‚çor‰E‚És‚«‚«‚Á‚½‚ç
         if (dis >= dis_max || is_last_touched)
         {
-            dis = 0.0f;       // ˆÚ“®—Ê‚ğ‰Šú‰»
-            velocity.z = 0.0f;// ‘¬“x‚ğ‰Šú‰»
-            move_state = 0;   // ˆÚ“®ó‘Ô‚ğ•Ï‰»
+            dis = 0.0f;                     // ˆÚ“®—Ê‚ğ‰Šú‰»
+            velocity.x = 0.0f;              // ‘¬“x‚ğ‰Šú‰»
+            move_state = Move::Straight;    // ˆÚ“®ó‘Ô‚ğ•Ï‰»
         }
 
         // cˆÚ“®
         switch (direction_state)
         {
-        case Direction::Under:
-            velocity.z = speed_power_Y;// cˆÚ“®
+        case Direction::Under:// ‰E‘¤
+            velocity.x = speed_power_Y;// ‰EÎ‚ßˆÚ“®
 
             // Œã‚ë•ûŒü‚ÉU‚èØ‚Á‚Ä‚¢‚½‚ç
-            if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+            if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
             {
                 is_last_touched = true;
             }
             break;
-        case Direction::Up:
-            velocity.z = -speed_power_Y;// cˆÚ“®
+        case Direction::Up:// ¶‘¤
+            velocity.x = -speed_power_Y;// cˆÚ“®
 
             // Œã‚ë•ûŒü‚ÉU‚èØ‚Á‚Ä‚¢‚½‚ç
-            if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+            if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
             {
                 is_last_touched = true;
             }
