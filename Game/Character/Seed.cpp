@@ -1,8 +1,11 @@
 #include "Seed.h"
 #include "Lemur/Input/Input.h"
 #include "UnitManager.h"
+#include "SeedManager.h"
 #include "Unit_ABC.h"
 #include "Unit_DEF.h"
+
+#include <random>
 
 Seed::Seed()
 {
@@ -21,59 +24,6 @@ void Seed::Update(float elapsedTime)
 {
     timer += elapsedTime;
 
-#if 0
-    // 種が発芽した時
-    if (born)
-    {
-        switch (category)
-        {
-        case 0:
-        {
-            Unit_A* unit = new Unit_A;
-            unit->SetPosition(position);// 座標を渡す
-            UnitManager::Instance().Register(unit);
-            break;
-        }
-        case 1:
-        {
-            Unit_B* unit = new Unit_B;
-            unit->SetPosition(position);// 座標を渡す
-            UnitManager::Instance().Register(unit);
-            break;
-        }
-        case 2:
-        {
-            Unit_C* unit = new Unit_C;
-            unit->SetPosition(position);// 座標を渡す
-            UnitManager::Instance().Register(unit);
-            break;
-        }
-        case 3:
-        {
-            Unit_D* unit = new Unit_D;
-            unit->SetPosition(position);// 座標を渡す
-            UnitManager::Instance().Register(unit);
-            break;
-        }
-        case 4:
-        {
-            Unit_E* unit = new Unit_E;
-            unit->SetPosition(position);// 座標を渡す
-            UnitManager::Instance().Register(unit);
-            break;
-        }
-        case 5:
-        {
-            Unit_F* unit = new Unit_F;
-            unit->SetPosition(position);// 座標を渡す
-            UnitManager::Instance().Register(unit);
-            break;
-        }
-        }
-
-        death = true;// 種を消す
-    }
-#else
     if (born)
     {
         Unit* unit = nullptr;
@@ -115,7 +65,10 @@ void Seed::Update(float elapsedTime)
 
         death = true;// 種を消す
     }
-#endif
+
+    // 飛ばしたての種の位置決定
+    if (!decision_pos)DecisionPos();
+
     // スケール更新
     UpdateScale();
 
@@ -155,4 +108,101 @@ void Seed::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     debug_renderer->DrawCylinder(position, radius, height, { 1,0,0,1 });
+}
+
+void Seed::DecisionPos()
+{
+    SeedManager& seedManager = SeedManager::Instance();
+
+    // 全ての種と総当たりで衝突判定
+    int seedCount = seedManager.GetSeedCount();
+    for (int i = 0; i < seedCount; ++i)
+    {
+        Seed* seed = seedManager.GetSeed(i);
+        if (!seed->decision_pos)continue;
+
+        if (Collision::IntersectCircleVsCircle(
+            { position.x,position.z }, radius,
+            { seed->GetPosition().x, seed->GetPosition().z },
+            seed->GetRadius()
+        ))
+        {
+            if (overlap_num == 0)
+            {
+                outPosition.x = MoveInRandomDirection({ position.x,position.z }, 1.0f).x;
+                outPosition.y = MoveInRandomDirection({ position.x,position.z }, 1.0f).y;
+                overlap_num++;// 重なった回数を加算
+            }
+
+            // 押し出された地点にまた種があるか確認
+            for (int j = 0; j < seedCount; ++j)
+            {
+                if (j == i)continue;
+
+                Seed* seed2 = seedManager.GetSeed(j);
+                if (!seed2->decision_pos)continue;
+
+                if (Collision::IntersectCircleVsCircle(
+                    outPosition, radius,
+                    { seed2->GetPosition().x, seed2->GetPosition().z },
+                    seed2->GetRadius()
+                ))
+                {
+                    // 重なった回数を加算
+                    overlap_num++;
+                }
+            }
+
+        }
+    }
+    // 当たらなかったら
+    if (overlap_num == 0)
+    {
+        outPosition = {};
+        decision_pos = true;// 何もせず位置決定フラグをON
+    }
+    else if (overlap_num == 1)// 重なった回数が１回なら
+    {
+        // 押し出し位置にずらし
+        position.x = outPosition.x;
+        position.z = outPosition.y;
+        decision_pos = true;// 位置決定フラグをON
+        outPosition = {};
+    }
+    else if (overlap_num >= 2)// 重なった回数が２回以上なら
+    {
+        outPosition = {};
+        death = true;// 種を破壊
+    }
+}
+
+DirectX::XMFLOAT2 Seed::GenerateRandomDirection()
+{
+    // 乱数生成器の準備
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+
+    // ランダムな角度を計算
+    float angle = dis(gen) * DirectX::XM_2PI;
+
+    // ベクトルを生成
+    DirectX::XMFLOAT2 direction;
+    direction.x = cos(angle);
+    direction.y = sin(angle);
+
+    return direction;
+}
+
+DirectX::XMFLOAT2 Seed::MoveInRandomDirection(const DirectX::XMFLOAT2& position, float distance)
+{
+    // ランダムな方向ベクトルを生成
+    DirectX::XMFLOAT2 direction = GenerateRandomDirection();
+
+    // 距離を掛けて新しい座標を計算
+    DirectX::XMFLOAT2 newPosition;
+    newPosition.x = position.x + direction.x * distance;
+    newPosition.y = position.y + direction.y * distance;
+
+    return newPosition;
 }

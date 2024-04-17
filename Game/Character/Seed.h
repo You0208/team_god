@@ -19,6 +19,15 @@ public:
     // デバッグプリミティブ描画
     void DrawDebugPrimitive();
 
+    // 飛ばしたての種の位置決定
+    void DecisionPos();
+
+    // ランダムなベクトル
+    DirectX::XMFLOAT2 GenerateRandomDirection();
+
+    // 指定した距離分だけ移動する関数
+    DirectX::XMFLOAT2 MoveInRandomDirection(const DirectX::XMFLOAT2& position, float distance);
+
 
     float   GetTimer() { return timer; };
     int     GetNumber() { return number; };
@@ -33,11 +42,13 @@ public:
     void    DecNumber() { number--; }
 
 private:
-    float   timer;          // 種が配置されてからの時間
-    int     number;         // 種番号
-    int     category;       // 種の種類
-    bool    born;           // ユニットが生まれるかどうか
-    bool    decision_pos;   // ユニットの位置が決定されているか
+    float               timer;          // 種が配置されてからの時間
+    int                 number;         // 種番号
+    int                 category;       // 種の種類
+    bool                born;           // ユニットが生まれるかどうか
+    bool                decision_pos;   // ユニットの位置が決定されているか
+    int                 overlap_num;    // 何回重なったか
+    DirectX::XMFLOAT2   outPosition{};  // 押し出し位置
 };
 
 
