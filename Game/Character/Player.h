@@ -16,14 +16,14 @@ public:
     // Imgui
     void DrawDebugGUI();
 
-    // はじき処理
-    void Flick(float elapsedTime);
-
     // インスタンス取得
     static Player& Instance();
 private:
     // 入力処理
     void InputProcess();
+
+    // はじき処理
+    void Flick(float elapsedTime);
 
 private:
     enum Animation
@@ -46,9 +46,13 @@ private:
     float timer_s;// コントローラーがはじかれるのにかかった時間
     float s_l_max;//はじかれた右スティックY座標の最大 
     float f_d = 0;// 最終的に導き出されたはじき座標
-
+    
+    bool is_direction;
+    bool is_dis_direction;
 
     DirectX::XMFLOAT2 limit;
+
+
 };
 
 

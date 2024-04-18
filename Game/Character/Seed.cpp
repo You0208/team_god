@@ -14,6 +14,7 @@ Seed::Seed()
     scaleFactor = 0.1f;
     radius = 0.3f;
     height = 0.3f;
+    model->PlayAnimation(0, false);
 }
 
 Seed::~Seed()
@@ -22,61 +23,11 @@ Seed::~Seed()
 
 void Seed::Update(float elapsedTime)
 {
-    timer += elapsedTime;
-
-    if (born)
-    {
-        Unit* unit = nullptr;
-
-        switch (category)
-        {
-        case 0:
-            unit = new Unit_A;
-            break;
-        case 1:
-            unit = new Unit_B;
-            break;
-        case 2:
-            unit = new Unit_C;
-            break;
-        case 3:
-            unit = new Unit_D;
-            break;
-        case 4:
-            unit = new Unit_E;
-            break;
-        case 5:
-            unit = new Unit_F;
-            break;
-        }
-
-        if (unit != nullptr)
-        {
-            unit->SetPosition(position);
-            // 奥行は適当に設定
-            Rect square = {
-                {position.x - radius,position.z + 100.0f},
-                {position.x + radius,position.z - radius}
-            };
-            unit->SetSquare(square);
-            unit->SetCategory(category);
-            UnitManager::Instance().Register(unit);
-        }
-
-        death = true;// 種を消す
-    }
-
-    // 飛ばしたての種の位置決定
-    if (!decision_pos)DecisionPos();
-
     // スケール更新
     UpdateScale();
 
     // 速力処理更新
     UpdateVelocity(elapsedTime);
-
-    // 無的時間更新
-    UpdateInvincibleTimer(elapsedTime);
 
     // モデルアニメーション更新
     model->UpdateAnimation(elapsedTime);
@@ -86,6 +37,93 @@ void Seed::Update(float elapsedTime)
 
     // Imgui
     DrawDebugGUI();
+
+    if (is_direction)
+    {
+        throwDirection();
+    }
+    else if (is_dis_direction)
+    {
+        DisDirection();
+    }
+    else
+    {
+
+        timer += elapsedTime;
+
+        if (born)
+        {
+            Unit* unit = nullptr;
+
+            switch (category)
+            {
+            case 0:
+                unit = new Unit_A;
+                break;
+            case 1:
+                unit = new Unit_B;
+                break;
+            case 2:
+                unit = new Unit_C;
+                break;
+            case 3:
+                unit = new Unit_D;
+                break;
+            case 4:
+                unit = new Unit_E;
+                break;
+            case 5:
+                unit = new Unit_F;
+                break;
+            }
+
+            if (unit != nullptr)
+            {
+                unit->SetPosition(position);
+                // 奥行は適当に設定
+                Rect square = {
+                    {position.x - radius,position.z + 100.0f},
+                    {position.x + radius,position.z - radius}
+                };
+                unit->SetSquare(square);
+                unit->SetCategory(category);
+                unit->UpdateTransform();
+                UnitManager::Instance().Register(unit);
+
+                death = true;// 種を消す
+            }
+        }
+
+        // 飛ばしたての種の位置決定
+        if (!decision_pos)DecisionPos();
+    }
+}
+
+void Seed::throwDirection()
+{
+    if (position.z>= distination_position.z)
+    {
+        velocity.z = 0;
+        is_direction = false;
+    }
+    else
+    {
+        velocity.z = throw_speed;
+    }
+}
+
+void Seed::DisDirection()
+{
+    if (position.z >= distination_position.z)
+    {
+        velocity.z = 0;
+        death = true;
+        is_dis_direction = false;
+    }
+    else
+    {
+        velocity.z = throw_speed;
+    }
 }
 
 void Seed::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)

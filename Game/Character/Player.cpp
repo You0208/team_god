@@ -133,9 +133,15 @@ void Player::Flick(float elapsedTime)
     if (f_d >= 0.1f)
     {
         velocity.x = 0;
-        if (!CollisionManager::CollisionUnitBackVsSeed_Re({ position.x ,f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }))
+        Seed* seed = new Seed();
+        DirectX::XMFLOAT2 unit_pos;
+        if (!CollisionManager::CollisionUnitBackVsSeed_Re({ position.x ,f_d + sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }, unit_pos))
         {
             Seed* seed = new Seed();
+
+            // 座標を確定
+            seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, position.z);
+            seed->SetDistinationPosition({ position.x/*プレイヤーのX座標*/, 0, f_d + sub_pos_z });
 
             // ユニットがいないなら即座に発芽
             if (UnitManager::Instance().GetUnitCount() == 0)    seed->SetBorn(true);
@@ -143,18 +149,26 @@ void Player::Flick(float elapsedTime)
             // 種の種類を登録
             seed->SetCategory(unit_category);
 
-            // 座標を確定
-            seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, f_d + sub_pos_z);
+            seed->SetIsDirection(true);
 
             seed->UpdateTransform();
 
             // リストに追加
-            if (f_d >= 0.0f)SeedManager::Instance().Register(seed);
+            SeedManager::Instance().Register(seed);
             // はじき距離を初期化
             f_d = 0.0f;
         }
         else
         {
+            // 座標を確定
+            seed->SetPosition(position.x/*プレイヤーのX座標*/, 0, position.z);
+            seed->SetDistinationPosition({ position.x/*プレイヤーのX座標*/, 0, unit_pos.y });
+
+            seed->UpdateTransform();
+
+            seed->SetIsDisDirection(true);
+            // リストに追加
+            SeedManager::Instance().Register(seed);
             f_d = 0.0f;
         }
     }

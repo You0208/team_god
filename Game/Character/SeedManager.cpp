@@ -54,10 +54,6 @@ void SeedManager::Update(float elapsedTime)
     // 破棄リストをクリア
     removes.clear();
 
-    // 種VSユニット
-    SeedVsUnit();
-    // 種VS柵
-    SeedVsFence();
 }
 
 // 描画処理

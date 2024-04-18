@@ -11,6 +11,9 @@ public:
 
     void Update(float elapsedTime);
 
+    void throwDirection();
+    void DisDirection();
+
     // 描画処理
     void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
 
@@ -34,21 +37,29 @@ public:
     bool    GetBorn() { return born; };
     bool    GetDesitionPos() { return decision_pos; }
 
-    void    SetNumber(int number_) { number= number_; };
-    void    SetCategory(int category_) { category = category_; };
-    void    SetBorn(bool born_) { born = born_; };
+    void    SetDistinationPosition(DirectX::XMFLOAT3 distination_position_) { distination_position = distination_position_; }
+    void    SetNumber(int number_) { number= number_; }
+    void    SetCategory(int category_) { category = category_; }
+    void    SetBorn(bool born_) { born = born_; }
     void    SetDesitionPos(bool decision_pos_) { decision_pos = decision_pos_; }
+    void    SetIsDirection(bool is_direction_) { is_direction = is_direction_; }
+    void    SetIsDisDirection(bool is_dis_direction_) { is_dis_direction = is_dis_direction_; }
 
     void    DecNumber() { number--; }
 
 private:
-    float               timer;          // 種が配置されてからの時間
-    int                 number;         // 種番号
-    int                 category;       // 種の種類
-    bool                born;           // ユニットが生まれるかどうか
-    bool                decision_pos;   // ユニットの位置が決定されているか
-    int                 overlap_num;    // 何回重なったか
-    DirectX::XMFLOAT2   outPosition{};  // 押し出し位置
+    float               timer                   = 0.0f;            // 種が配置されてからの時間
+    int                 number                  = 0;               // 種番号
+    int                 category                = 0;               // 種の種類
+    bool                born                    = false;           // ユニットが生まれるかどうか
+    bool                decision_pos            = false;           // ユニットの位置が決定されているか
+    int                 overlap_num             = 0;               // 何回重なったか
+    DirectX::XMFLOAT2   outPosition             = {};              // 押し出し位置
+    DirectX::XMFLOAT3   distination_position    = {};              // 目的地
+
+    bool                is_direction            = false;           // 種の投げ演出
+    bool                is_dis_direction        = false;           // 種の消える演出
+    float               throw_speed = 20.0f;
 };
 
 

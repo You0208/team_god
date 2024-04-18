@@ -125,7 +125,6 @@ public:
     const int&  GetFrameIndex()const { return frame_index; }                                  // アニメーションフレーム
     const std::vector<Animation>* GetAnimation()const { return model->GetAnimation(); };      // アニメーションデータ
 
-
     //---------Setter--------------------------------------------------------------------------
     // 
     // モデルの数値
@@ -143,7 +142,7 @@ public:
 
 protected:
     //----------モデル関連------------------------------------------------
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    =nullptr;                      // ピクセルシェーダー
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    = nullptr;                     // ピクセルシェーダー
     std::shared_ptr<FbxModelManager> model          = nullptr;                     // モデル
     Animation::keyframe keyframe                    = {};                          // キーフレーム
 
