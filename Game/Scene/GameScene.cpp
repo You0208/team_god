@@ -129,7 +129,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// ライトの更新
-	LightUpdate();
+	//LightUpdate();
 
 	// デバッグ用
 	{

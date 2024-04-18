@@ -8,7 +8,7 @@
 Unit_D::Unit_D()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit_1and4.fbx");
 
     attack_times            = 5;    // UŒ‚‰ñ”
     attack_power            = 1;    // UŒ‚—Í
@@ -126,7 +126,7 @@ void Unit_D::DrawDebugGUI(int n)
 Unit_E::Unit_E()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit_5.fbx");
 
     attack_times = 5;    // UŒ‚‰ñ”
     attack_power = 1;    // UŒ‚—Í
@@ -267,7 +267,7 @@ void Unit_E::DrawDebugGUI(int n)
 Unit_F::Unit_F()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili_24_0305_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit_6.fbx");
 
     attack_times = 5;    // UŒ‚‰ñ”
     attack_power = 1;    // UŒ‚—Í

@@ -547,7 +547,7 @@ void Enemy_C::MoveToDestination(float elapsed_time, Move nextState)
 Enemy_D::Enemy_D()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
 
     attack_power    = 1;        // çUåÇóÕ
     attack_interval = 3.0f;     // çUåÇä‘äu

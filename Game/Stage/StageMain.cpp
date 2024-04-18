@@ -13,6 +13,11 @@ StageMain::StageMain()
         {position.x - stage_width.x,position.z + stage_width.y},
         {position.x + stage_width.x,position.z - stage_width.y}
     };
+    variable_stage_width =
+    {
+        stage_width.x,
+        stage_width.y
+    };
 }
 
 StageMain::~StageMain()
@@ -23,6 +28,17 @@ void StageMain::Update(float elapsedTime)
 {
     DrawDebugGui();
     scale.x = scale.y = scale.z = scale_facter;
+
+    // 可変のステージ幅をスケーリング
+    variable_stage_width.x = stage_width.x * scale_facter;
+    variable_stage_width.y = stage_width.y * scale_facter;
+
+    // ステージの四角をスケーリングに合わせる
+    stage_collision = {
+        {position.x - variable_stage_width.x,position.z + variable_stage_width.y},
+        {position.x + variable_stage_width.x,position.z - variable_stage_width.y}
+    };
+
     stage_model->GetTransform()->SetPosition(position);
     stage_model->GetTransform()->SetScale(scale);
 }

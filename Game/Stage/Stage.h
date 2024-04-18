@@ -20,13 +20,14 @@ public:
 
     Rect                GetStageCollision() { return stage_collision; }
     DirectX::XMFLOAT3   GetStagePos()       { return position; }
-    DirectX::XMFLOAT2   GetStageWidth()     { return stage_width; }
+    DirectX::XMFLOAT2   GetVariableStageWidth()     { return variable_stage_width; }
 
 protected:
-    Rect                                stage_collision     = {};        // ステージの当たり判定用
-    DirectX::XMFLOAT2                   stage_width         = {};        // ステージの幅
-    DirectX::XMFLOAT3                   position            = {};        // ステージの中心
-    DirectX::XMFLOAT3                   scale               = {};        // ステージのサイズ（調整用）
-    float                               scale_facter        = 0.0f;      // スケールファクター
-    std::shared_ptr<FbxModelManager>    stage_model         = nullptr;   // モデル
+    Rect                                stage_collision         = {};           // ステージの当たり判定用
+    DirectX::XMFLOAT2                   stage_width             = {};           // ステージの幅（元）
+    DirectX::XMFLOAT3                   position                = {};           // ステージの中心
+    DirectX::XMFLOAT3                   scale                   = {};           // ステージのサイズ（調整用）
+    float                               scale_facter            = 0.0f;         // スケールファクター
+    std::shared_ptr<FbxModelManager>    stage_model             = nullptr;      // モデル
+    DirectX::XMFLOAT2                   variable_stage_width    = {};           // 可変のステージ幅
 };

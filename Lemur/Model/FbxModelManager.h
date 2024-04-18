@@ -62,15 +62,14 @@ public:
     DirectX::XMFLOAT4 color = { 1,1,1,1 };
 
 private:
-    float       animation_speed = 1.0f;     // アニメーション再生速度
+    float       animation_speed           = 1.0f;     // アニメーション再生速度
     float       current_animation_seconds = 0.0f;     // 現在のアニメーション再生時間
 
-    float       animation_blend_time = 0.0f;     // 現在のブレンドタイマー
-    float       animation_blend_seconds = 0.0f;     // ブレンド時間
+    float       animation_blend_time      = 0.0f;     // 現在のブレンドタイマー
+    float       animation_blend_seconds   = 0.0f;     // ブレンド時間
 
-    int         current_animation_index = -1;	    // 現在のアニメーション番号
+    int         current_animation_index   = -1;	      // 現在のアニメーション番号
 
-    bool        animation_loop_flag = false;    // アニメーションをループ再生するか
-    bool        animation_end_flag = false;    // アニメーションが終了したか
-
+    bool        animation_loop_flag       = false;    // アニメーションをループ再生するか
+    bool        animation_end_flag        = false;    // アニメーションが終了したか
 };

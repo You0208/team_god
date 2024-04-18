@@ -10,8 +10,8 @@ void EnemySpawner::Initialize()
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().z
 	};
 	stage_width = {
-		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageWidth().x,
-		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageWidth().y
+		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().x,
+		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y
 	};
 
 	timer = 0.0f;
@@ -73,6 +73,14 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 
 void EnemySpawner::Update(float elapsed_time)
 {
+	stage_pos = {
+		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().x,
+		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().z
+	};
+	stage_width = {
+		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().x,
+		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y
+	};
 	// é≤à íuçXêV
 	shaft_pos =
 	{
@@ -114,7 +122,7 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 
 void EnemySpawner::InitializeLevel1()
 {
-	//level_1.emplace_back(SetEnemy(1.0f, EnemyType::D, Shaft::Vertical, 4.0f));
+	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::D, Shaft::Vertical, 4.0f));
 	//level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Vertical, 2.0f));
 	//level_1.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Side, 3.0f));
 	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::B, Shaft::Vertical, 4.0f));

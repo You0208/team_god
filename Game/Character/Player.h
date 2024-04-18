@@ -26,11 +26,20 @@ private:
     void InputProcess();
 
 private:
-
+    enum Animation
+    {
+        Pull,
+        Throw,
+        Right,
+        Left,
+        Idle
+    };
     float moveSpeed = 5.0f;// 横移動の速度
     float sub_pos_z = -5.0f;// 減算されるZ座標
 
     int unit_category = 0;// 選択されているユニットの種類
+
+    bool is_throw_animation;// 投げるアニメーション再生中か
 
     // コントローラー用
     float s_l;// コントローラーの右スティックY

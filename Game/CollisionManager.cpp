@@ -97,6 +97,7 @@ void CollisionManager::CollisionSeedVsUnit()
     }
 }
 
+
 // TODO 検討中
 DirectX::XMFLOAT2 CollisionManager::CollisionSeedVsSeed(DirectX::XMFLOAT2 position)
 {
@@ -135,6 +136,63 @@ DirectX::XMFLOAT2 CollisionManager::CollisionSeedVsSeed(DirectX::XMFLOAT2 positi
     }
 
     return position;
+}
+
+bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position)
+{
+    UnitManager& unitManager = UnitManager::Instance();
+
+    // 着地場所より奥、かつ一番距離の近いユニットを探す
+    int unitCount = unitManager.GetUnitCount();
+
+    Unit* unit = nullptr;
+    std::vector<int> index; // 着地点に入ってるユニット番号
+    int near_index = 0;     // 手前のユニット番号
+    float near_pos = 0.0f;  // 一番手前の座標
+
+    // ユニット総当たり
+    for (int i = 0; i < unitCount; ++i)
+    {
+        unit = unitManager.GetUnit(i);
+
+        // ユニットに直接当たっていたら
+        if (Collision::IntersectCircleVsPosition(position, { unit->GetPosition().x,unit->GetPosition().z }, unit->GetRadius()))
+        {
+            return true;
+        }
+        // 着地地点が四角に入っているとき
+        if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))
+        {
+            index.push_back(i);// 番号を記録
+        }
+    }
+
+    // 該当ユニットがなければ終了
+    if (index.size() == 0)  return false;
+
+    // 記録した番号のユニットを当たる
+    for (int j = 0; j < index.size(); ++j)
+    {
+        unit = unitManager.GetUnit(index.at(j));
+
+        if (j == 0)// 始めは比較なし
+        {
+            near_pos = unit->GetPosition().z;
+            break;
+        }
+        else if (unit->GetPosition().z < near_pos)
+        {
+            near_pos = unit->GetPosition().z;
+            near_index = j;
+        }
+    }
+
+    unit = unitManager.GetUnit(index.at(near_index));
+    if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))
+    {
+        return true;
+    }
+
 }
 
 DirectX::XMFLOAT2 CollisionManager::CollisionUnitBackVsSeed(DirectX::XMFLOAT2 position)
