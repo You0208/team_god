@@ -40,6 +40,7 @@ public:
     void    SetDistinationPosition(DirectX::XMFLOAT3 distination_position_) { distination_position = distination_position_; }
     void    SetNumber(int number_) { number= number_; }
     void    SetCategory(int category_) { category = category_; }
+    void    SetthrowSpeed(float throw_speed_) { throw_speed = throw_speed_; }
     void    SetBorn(bool born_) { born = born_; }
     void    SetDesitionPos(bool decision_pos_) { decision_pos = decision_pos_; }
     void    SetIsDirection(bool is_direction_) { is_direction = is_direction_; }
@@ -59,7 +60,7 @@ private:
 
     bool                is_direction            = false;           // í‚Ì“Š‚°‰‰o
     bool                is_dis_direction        = false;           // í‚ÌÁ‚¦‚é‰‰o
-    float               throw_speed = 20.0f;
+    float               throw_speed             = 20.0f;           // í‚Ì‘¬“x
 };
 
 

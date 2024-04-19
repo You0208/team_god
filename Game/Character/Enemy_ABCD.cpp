@@ -7,7 +7,7 @@
 Enemy_A::Enemy_A()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
 
     attack_power    = 1;        // UŒ‚—Í
     attack_interval = 3.0f;     // UŒ‚ŠÔŠu
@@ -95,7 +95,7 @@ void Enemy_A::UpdateMoveState(float elapsed_time)
 Enemy_B::Enemy_B()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
 
     attack_power    = 1;        // UŒ‚—Í
     attack_interval = 3.0f;     // UŒ‚ŠÔŠu
@@ -226,7 +226,7 @@ void Enemy_B::DrawDebugPrimitive()
 Enemy_C::Enemy_C()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\spider_v009.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
 
     attack_power    = 1;         // UŒ‚—Í@
     attack_interval = 3.0f;      // UŒ‚ŠÔŠu
@@ -553,7 +553,7 @@ Enemy_D::Enemy_D()
     attack_interval = 3.0f;     // UŒ‚ŠÔŠu
 
     radius          = 1.0f;     // ”¼Œa
-    height          = 1.0f;     //ƒfƒoƒbƒO—p
+    height          = 1.0f;     // ƒfƒoƒbƒO—p
 
     move_state      = 0;        // ˆÚ“®ó‘Ô
     speed_power     = -1.0f;    // ‰¡ˆÚ“®—Ê

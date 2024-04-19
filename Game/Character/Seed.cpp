@@ -23,38 +23,42 @@ Seed::~Seed()
 
 void Seed::Update(float elapsedTime)
 {
-    // スケール更新
-    UpdateScale();
+    // 常に実行されている
+    {
+        // スケール更新
+        UpdateScale();
 
-    // 速力処理更新
-    UpdateVelocity(elapsedTime);
+        // 速力処理更新
+        UpdateVelocity(elapsedTime);
 
-    // モデルアニメーション更新
-    model->UpdateAnimation(elapsedTime);
+        // モデルアニメーション更新
+        model->UpdateAnimation(elapsedTime);
 
-    // 行列更新処理
-    UpdateTransform();
+        // 行列更新処理
+        UpdateTransform();
 
-    // Imgui
-    DrawDebugGUI();
+        // Imgui
+        DrawDebugGUI();
+    }
 
-    if (is_direction)
+    if (is_direction)// 種の演出
     {
         throwDirection();
     }
-    else if (is_dis_direction)
+    else if (is_dis_direction)// ぶつかって消える種の演出
     {
         DisDirection();
     }
     else
     {
-
         timer += elapsedTime;
 
+        // 発芽フラグがたっていたら
         if (born)
         {
             Unit* unit = nullptr;
 
+            // ユニットの種類によって発芽先のユニットを変更
             switch (category)
             {
             case 0:
@@ -77,20 +81,25 @@ void Seed::Update(float elapsedTime)
                 break;
             }
 
+            // ユニットが生まれたら
             if (unit != nullptr)
             {
+                //発芽位置
                 unit->SetPosition(position);
-                // 奥行は適当に設定
+                // ユニット奥の四角（奥行は適当に設定）
                 Rect square = {
                     {position.x - radius,position.z + 100.0f},
                     {position.x + radius,position.z - radius}
                 };
                 unit->SetSquare(square);
+                // カテゴリーをセット
                 unit->SetCategory(category);
+                // 姿勢を更新しておく
                 unit->UpdateTransform();
+                // Managerにセット
                 UnitManager::Instance().Register(unit);
-
-                death = true;// 種を消す
+                // 種を消す
+                death = true;
             }
         }
 

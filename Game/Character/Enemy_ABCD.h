@@ -32,8 +32,8 @@ private:
     // 移動
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
-private:
     float   old_position   = 0.0f;      // 移動用の位置保存
+private:
     float   dis            = 1.0f;      // 進む距離
     float   attack_timer   = 1.0f;      // 攻撃間隔
     float   move_timer     = 0.0f;      // 移動タイマー
