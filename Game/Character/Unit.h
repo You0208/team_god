@@ -43,6 +43,13 @@ public:
         unit_back.left_up = square_.left_up;
         unit_back.right_down = square_.right_down;
     }
+    void SetTimerMax(float timer_max_) { timer_max = timer_max_; }
+    void SetStrengWidth(int streng_width_) { streng_width = streng_width_; }
+    void SetAttackTimes(int attack_times_) { attack_times = attack_times_; }
+    void SetAttackWidth(float attack_width_) { attack_width = attack_width_; }
+    void SetTHeight(float t_height_) { t_height = t_height_; }
+    void SetTBase(float t_base_) { t_base = t_base_; }
+
 
 protected:
     // 死亡ステートへ遷移
@@ -93,4 +100,7 @@ protected:
     Rect        attack_rect                 = {};               // ユニットの四角攻撃範囲
     Rect        unit_back                   = {};               // ユニットの後方範囲
 
+    float timer_max;
+    int   streng_width;
+    float attack_width;
 };

@@ -158,7 +158,6 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 void EnemySpawner::DebugImGui()
 {
 	ImGui::Begin(u8"“G");
-
 	if (ImGui::TreeNode("enemy1"))
 	{
 		EnemyImGui(enemy_A);

@@ -21,8 +21,6 @@ private:
     void DrawDebugGUI(int n)override;
 private:
     float attack_timer;
-    float timer_max;
-    int   streng_width;
 };
 
 class Unit_E :public Unit
@@ -46,7 +44,6 @@ private:
     void DrawDebugGUI(int n)override;
 private:
     float attack_timer;
-    float attack_width;
 };
 
 class Unit_F :public Unit
@@ -70,5 +67,4 @@ private:
     void DrawDebugGUI(int n)override;
 private:
     float attack_timer;
-    float attack_width;
 };

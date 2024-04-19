@@ -18,6 +18,8 @@ public:
         static UnitManager instance;
         return instance;
     }
+    // ‰Šú‰»
+    void Initialize();
 
     // XVˆ—
     void Update(float elapsedTime);
@@ -43,7 +45,58 @@ public:
     // ƒ†ƒjƒbƒgíœ
     void Remove(Unit* units);
 
+    // Imgui
+    void DebugImGui();
 private:
     std::vector<Unit*> units;
     std::set<Unit*>    removes;
+
+
+    //-----‚±‚Ì‰ºƒfƒoƒbƒO—p«--------------------------------------------
+    struct UnitStatus
+    {
+        int attack_power;//UŒ‚—Í
+        float attack_interval;//UŒ‚ŠÔŠu
+        int attack_times; // UŒ‚‰ñ”
+    };
+    void UnitImGui(UnitStatus& status) {
+        ImGui::SliderInt(u8"UŒ‚‰ñ”", &status.attack_times, 1, 10);
+        ImGui::SliderInt(u8"UŒ‚—Í", &status.attack_power, 0, 10);
+        ImGui::SliderFloat(u8"UŒ‚ŠÔŠu", &status.attack_interval, 0.0f, 10.0f);
+    }
+
+    // Unit_A
+    UnitStatus unit_A;
+    float radius_A;  // ”¼Œa
+
+    // Unit_B
+    UnitStatus unit_B;
+    float t_height_B;
+    float t_base_B;
+
+    // Unit_C
+    UnitStatus unit_C;
+    float t_height_C;
+    float t_base_C;
+
+    // Unit_D
+    float radius_D;  // ”¼Œa
+    float timer_max_D;
+    int streng_width_D;
+
+    // Unit_E
+    UnitStatus unit_E;
+    float attack_width_E;
+
+    // Unit_F
+    UnitStatus unit_F;
+    float attack_width_F;
+
+public:
+    void SetUpUnit_A(Unit* unit);
+    void SetUpUnit_B(Unit* unit);
+    void SetUpUnit_C(Unit* unit);
+    void SetUpUnit_D(Unit* unit);
+    void SetUpUnit_E(Unit* unit);
+    void SetUpUnit_F(Unit* unit);
 };

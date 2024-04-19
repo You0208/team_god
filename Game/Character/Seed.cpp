@@ -63,21 +63,27 @@ void Seed::Update(float elapsedTime)
             {
             case 0:
                 unit = new Unit_A;
+                UnitManager::Instance().SetUpUnit_A(unit);
                 break;
             case 1:
                 unit = new Unit_B;
+                UnitManager::Instance().SetUpUnit_B(unit);
                 break;
             case 2:
                 unit = new Unit_C;
+                UnitManager::Instance().SetUpUnit_C(unit);
                 break;
             case 3:
                 unit = new Unit_D;
+                UnitManager::Instance().SetUpUnit_D(unit);
                 break;
             case 4:
                 unit = new Unit_E;
+                UnitManager::Instance().SetUpUnit_E(unit);
                 break;
             case 5:
                 unit = new Unit_F;
+                UnitManager::Instance().SetUpUnit_F(unit);
                 break;
             }
 

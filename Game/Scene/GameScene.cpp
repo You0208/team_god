@@ -73,6 +73,8 @@ void GameScene::Initialize()
 
 		// 敵スポーン制御装置の初期化
 		EnemySpawner::Instance().Initialize();
+		// ユニットマネージャーの初期化
+		UnitManager::Instance().Initialize();
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 	}

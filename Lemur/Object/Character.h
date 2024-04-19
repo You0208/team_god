@@ -142,6 +142,7 @@ public:
     void SetAttackInterval(const int attack_interval_) { this->attack_interval = attack_interval_; }  // UŒ‚ŠÔŠu
     void SetHealth(const int health_) { this->health = health_; }                                     // HP
     void SetRadius(const float radius_) { this->radius = radius_; }                                   // ”¼Œa
+    void SetAttackRadius(const float attack_radius_) { this->attack_collision_range = attack_radius_; } // ”¼Œa
     void SetSpeedPower(const float speed_power_) { this->speed_power = speed_power_; }                // ‘¬“x
 
 protected:
