@@ -57,6 +57,10 @@ private:// ゲーム
 
     Fence* fence = nullptr;
 
+    float   timer = 0.0f;
+    float   time_limit;
+
+
     // コントローラー用
     float s_l;
     float timer_s;

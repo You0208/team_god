@@ -5,6 +5,7 @@
 #include "./high_resolution_timer.h"
 
 #include "TitleScene.h"
+#include "GameScene.h"
 void ResultScene::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -89,6 +90,11 @@ void ResultScene::Render(float elapsedTime)
 void ResultScene::DebugImgui()
 {
     ImGui::Begin("ImGUI");
+
+    if (ImGui::Button(u8"ÉQÅ[ÉÄÇ…ñﬂÇÈ"))
+    {
+        Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
+    }
 
     ImGui::SliderFloat("dissolve", &dissolve_value, 0.0f, 1.0f);
 

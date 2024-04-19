@@ -3,6 +3,7 @@
 #include "./Lemur/Graphics/Camera.h"
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
+#include "Game/Scene/ResultScene.h"
 #include "./high_resolution_timer.h"
 
 // Effect
@@ -60,6 +61,10 @@ void GameScene::Initialize()
 		Camera& camera = Camera::Instance();
 		// カメラ調整
 		camera_range = 30.0f;
+
+		//TODO もね 制限時間の初期化
+		time_limit = 60.0f;
+		timer = 0.0f;
 
 		// ステージ初期化
 		StageManager& stage_manager = StageManager::Instance();
@@ -135,6 +140,15 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// ゲーム
 	{
+		// タイマー
+		timer += elapsedTime;
+
+		if (timer >= time_limit)
+		{
+			Lemur::Scene::SceneManager::Instance().ChangeScene(new ResultScene);
+		}
+
+
 		// プレイヤーの更新
 		player->Update(elapsedTime);
 		// 柵の更新
@@ -269,7 +283,12 @@ void GameScene::Render(float elapsedTime)
 
 void GameScene::DebugImgui()
 {
+	ImGui::Begin(u8"ゲーム");
+	float t = time_limit - timer;
+	ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
+	ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
+	ImGui::End();
+
 	BaseScene::DebugImgui();
 
-	EnemySpawner::Instance().DebugImGui();
 }

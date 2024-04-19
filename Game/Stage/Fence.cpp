@@ -1,5 +1,7 @@
 #include "Fence.h"
 #include "StageManager.h"
+#include "Lemur/Scene/SceneManager.h"
+#include "Game/Scene/ResultScene.h"
 #include "Lemur/Graphics/DebugRenderer.h"
 static Fence* instance = nullptr;
 
@@ -47,6 +49,11 @@ Fence::~Fence()
 
 void Fence::Update(float elapsedTime)
 {
+    if (health <= 0)
+    {
+        Lemur::Scene::SceneManager::Instance().ChangeScene(new ResultScene);
+    }
+
     Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision();
 
     left_rect = {
@@ -85,6 +92,10 @@ void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 
 void Fence::DrawDebugGui()
 {
+    ImGui::Begin(u8"çÚ");
+    ImGui::SliderInt(u8"ëœãvíl", &health, 0, 100);
+    ImGui::End();
+
     std::string name = "Fence";
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))

@@ -69,6 +69,8 @@ void EnemySpawner::Initialize()
 
 void EnemySpawner::Update(float elapsed_time)
 {
+	DebugImGui();
+
 	stage_pos = {
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().x,
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().z
