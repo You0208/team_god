@@ -289,6 +289,6 @@ void GameScene::DebugImgui()
 	ImGui::SliderFloat(u8"§ŒÀŠÔ", &time_limit, 0.0f, 600.0f);
 	ImGui::End();
 
-	BaseScene::DebugImgui();
+	//BaseScene::DebugImgui();
 
 }
