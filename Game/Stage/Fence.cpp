@@ -38,8 +38,10 @@ Fence::Fence()
         { stage_size.right_down.x + rect_width,stage_size.right_down.y}
     };
 
-    health = 10;
-
+    //TODO ‚à‚Ë ‚±‚±‚Åò‚Ì‘Ï‹v’l‚ğ•Ï‚¦‚é
+    {
+        health = 10;
+    }
     instance = this;
 }
 

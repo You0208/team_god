@@ -14,11 +14,6 @@ Player::Player()
     // モデルの初期化
     model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\scarecrow_Re.fbx");
 
-    // 案山子の初期位置修正
-    sub_pos_z_puls = 1.0f;
-    sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
-    position.z = -sub_pos_z;
-
     // 左右端初期化
     limit = { StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().left_up.x + 0.5f,
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
@@ -26,12 +21,18 @@ Player::Player()
     // ユニットカテゴリーの初期化
     unit_category = 0;
 
-    // はじく強さ
-    flip_speed = 2.0f;
-
-    // 種の射出速度
-    seed_throw_speed = 20.0f;
-
+    //TODO もね
+    {
+        // はじく強さ
+        flip_speed = 2.0f;
+        // 種の射出速度
+        seed_throw_speed = 20.0f;
+        // 案山子が柵から離れる距離
+        sub_pos_z_puls = 1.0f;
+    }
+    // 案山子の初期位置修正
+    sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
+    position.z = -sub_pos_z;
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Idle, true);
 }

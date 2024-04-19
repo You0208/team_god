@@ -4,41 +4,44 @@
 
 void UnitManager::Initialize()
 {
-    //Unit_A
-    unit_A.attack_interval = 1.0f;// UŒ‚ŠÔŠu
-    unit_A.attack_power = 1;// UŒ‚—Í
-    unit_A.attack_times = 1;// UŒ‚‰ñ”
-    radius_A = 1.0f;
+    //TODO ‚à‚Ë
+    {
+        //Unit_A
+        unit_A.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
+        unit_A.attack_power = 1;        // UŒ‚—Í
+        unit_A.attack_times = 1;        // UŒ‚‰ñ”
+        radius_A = 1.0f;                // UŒ‚”¼Œa
 
-    //Unit_B
-    unit_B.attack_interval = 1.0f;// UŒ‚ŠÔŠu
-    unit_B.attack_power = 1;// UŒ‚—Í
-    unit_B.attack_times = 1;// UŒ‚‰ñ”
-    t_height_B = 1.0f;
-    t_base_B = 1.0f;
+        //Unit_B
+        unit_B.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
+        unit_B.attack_power = 1;        // UŒ‚—Í
+        unit_B.attack_times = 1;        // UŒ‚‰ñ”
+        t_height_B = 1.0f;              // OŠpŒ`‚Ì‚‚³
+        t_base_B = 1.0f;                // OŠpŒ`‚Ì’ê•Ó’·
 
-    //Unit_C
-    unit_C.attack_interval = 1.0f;// UŒ‚ŠÔŠu
-    unit_C.attack_power = 1;// UŒ‚—Í
-    unit_C.attack_times = 1;// UŒ‚‰ñ”
-    t_height_C = 1.0f;
-    t_base_C = 1.0f;
+        //Unit_C
+        unit_C.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
+        unit_C.attack_power = 1;        // UŒ‚—Í
+        unit_C.attack_times = 1;        // UŒ‚‰ñ”
+        t_height_C = 1.0f;              // OŠpŒ`‚Ì‚‚³
+        t_base_C = 1.0f;                // OŠpŒ`‚Ì’ê•Ó’·
 
-    //Unit_D
-    radius_D = 1.0f;
-    timer_max_D = 1.0f;
-    streng_width_D = 1;
+        //Unit_D
+        radius_D = 1.0f;                // UŒ‚”¼Œa
+        timer_max_D = 1.0f;             // oŒ»ŠÔ
+        streng_width_D = 1;             // UŒ‚—Í‚Ìã‚è•
 
-    //Unit_E
-    unit_E.attack_interval = 1.0f;// UŒ‚ŠÔŠu
-    unit_E.attack_power = 1;// UŒ‚—Í
-    unit_E.attack_times = 1;// UŒ‚‰ñ”
-    attack_width_E = 1.0f;
-    //Unit_F
-    unit_F.attack_interval = 1.0f;// UŒ‚ŠÔŠu
-    unit_F.attack_power = 1;// UŒ‚—Í
-    unit_F.attack_times = 1;// UŒ‚‰ñ”
-    attack_width_F = 1.0f;
+        //Unit_E
+        unit_E.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
+        unit_E.attack_power = 1;        // UŒ‚—Í
+        unit_E.attack_times = 1;        // UŒ‚‰ñ”
+        attack_width_E = 1.0f;          // UŒ‚”ÍˆÍ‚Ì•
+        //Unit_F
+        unit_F.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
+        unit_F.attack_power = 1;        // UŒ‚—Í
+        unit_F.attack_times = 1;        // UŒ‚‰ñ”
+        attack_width_F = 1.0f;          // UŒ‚”ÍˆÍ‚Ì•
+    }
 }
 
 // XVˆ—

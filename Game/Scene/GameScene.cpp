@@ -63,7 +63,7 @@ void GameScene::Initialize()
 		camera_range = 30.0f;
 
 		//TODO もね 制限時間の初期化
-		time_limit = 60.0f;
+		time_limit = 60.0f;// ここで制限時間を調整
 		timer = 0.0f;
 
 		// ステージ初期化

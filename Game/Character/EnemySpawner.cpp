@@ -28,43 +28,47 @@ void EnemySpawner::Initialize()
 	InitializeLevel1();
 
 	// Imgui—p
-	// Enemy_A
-	enemy_A.attack_power = 1;
-	enemy_A.attack_interval = 3.0f;
-	enemy_A.speed_power = -1.0f;
-	enemy_A.radius = 0.5f;
-	enemy_A.health = 5;
+	 
+	//TODO ‚à‚Ë
+	{
+		// Enemy_A
+		enemy_A.attack_power = 1;		// UŒ‚—Í
+		enemy_A.attack_interval = 3.0f; // UŒ‚ŠÔŠu
+		enemy_A.speed_power = -1.0f;    // ˆÚ“®‘¬“x
+		enemy_A.radius = 0.5f;			// ”¼Œa
+		enemy_A.health = 5;				// ‘Ì—Í
 
-	// Enemy_B
-	enemy_B.attack_power = 1;
-	enemy_B.attack_interval = 3.0f;
-	enemy_B.speed_power = -1.0f;
-	enemy_B.radius = 0.5f;
-	enemy_B.health = 5;
-	mover_timer_max_B = 1.0f;
-	dis_B = 3.0f;
+		// Enemy_B
+		enemy_B.attack_power = 1;		 // UŒ‚—Í
+		enemy_B.attack_interval = 3.0f;	 // UŒ‚ŠÔŠu
+		enemy_B.speed_power = -1.0f;	 // ˆÚ“®‘¬“x
+		enemy_B.radius = 0.5f;			 // ”¼Œa
+		enemy_B.health = 5;				 // ‘Ì—Í
+		mover_timer_max_B = 1.0f;		 // ‚Æ‚Ç‚Ü‚Á‚Ä‚¢‚éŠÔ
+		dis_B = 3.0f;					 // ˆê‹C‚Éi‚Ş‹——£
 
-	// Enemy_C
-	enemy_C.attack_power = 1;
-	enemy_C.attack_interval = 3.0f;
-	enemy_C.speed_power = -1.0f;
-	enemy_C.radius = 0.5f;
-	enemy_C.health = 5;
-	speed_power_Y_D = -1.0f;
+		// Enemy_C
+		enemy_C.attack_power = 1;			// UŒ‚—Í
+		enemy_C.attack_interval = 3.0f;		// UŒ‚ŠÔŠu
+		enemy_C.speed_power = -1.0f;		// ˆÚ“®‘¬“x
+		enemy_C.radius = 0.5f;				// ”¼Œa
+		enemy_C.health = 5;					// ‘Ì—Í
+		speed_power_Y_D = -1.0f;			// Î‚ßˆÚ“®‚Ì‚Ì‚à‚¤ˆêŒÂ‚Ì‘¬“x
 
-	// Enemy_D
-	enemy_D.attack_power = 1;
-	enemy_D.attack_interval = 3.0f;
-	enemy_D.speed_power = -1.0f;
-	enemy_D.radius = 0.5f;
-	enemy_D.health = 5;
-	dis_D = 1.0f;
+		// Enemy_D
+		enemy_D.attack_power = 1;			 // UŒ‚—Í
+		enemy_D.attack_interval = 3.0f;		 // UŒ‚ŠÔŠu
+		enemy_D.speed_power = -1.0f;		 // ˆÚ“®‘¬“x
+		enemy_D.radius = 0.5f;				 // ”¼Œa
+		enemy_D.health = 5;					 // ‘Ì—Í
+		dis_D = 1.0f;						 // ˆÚ“®‚·‚é‹——£
 
-	// ƒfƒoƒbƒO—p
-	script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
-	script_enemy_B = SetEnemy(4.0f, EnemyType::B, Shaft::Side, 4.0f);
-	script_enemy_C = SetEnemy(4.0f, EnemyType::C, Shaft::Side, 4.0f);
-	script_enemy_D = SetEnemy(4.0f, EnemyType::D, Shaft::Side, 4.0f);
+		// ƒfƒoƒbƒO—p
+		script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
+		script_enemy_B = SetEnemy(4.0f, EnemyType::B, Shaft::Side, 4.0f);
+		script_enemy_C = SetEnemy(4.0f, EnemyType::C, Shaft::Side, 4.0f);
+		script_enemy_D = SetEnemy(4.0f, EnemyType::D, Shaft::Side, 4.0f);
+	}
 }
 
 void EnemySpawner::Update(float elapsed_time)
@@ -249,6 +253,7 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 
 void EnemySpawner::InitializeLevel1()
 {
+	//TODO ‚à‚Ë
 	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::D, Shaft::Vertical, 4.0f));
 	//level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Vertical, 2.0f));
 	//level_1.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Side, 3.0f));
