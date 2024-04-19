@@ -2,6 +2,7 @@
 #include "EnemyManager.h"
 #include "Enemy_ABCD.h"
 #include "Game/Stage/StageManager.h"
+#include "Lemur/Input/Input.h"
 
 void EnemySpawner::Initialize()
 {
@@ -13,62 +14,57 @@ void EnemySpawner::Initialize()
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().x,
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y
 	};
-
-	timer = 0.0f;
+	// 軸の位置決定
 	stage_to_shaft = 1.0f;
 	shaft_pos =
 	{
 		{stage_pos.x + stage_width.x + stage_to_shaft},
 		{stage_pos.y + stage_width.y + stage_to_shaft}
 	};
+	// タイマーの初期化
+	timer = 0.0f;
 
+	// レベル１の初期化
 	InitializeLevel1();
-}
 
-void EnemySpawner::EnemySpawn(EnemyScript script)
-{
-	Enemy* enemy = nullptr;
-	switch (script.enemy_type)
-	{
-	case EnemyType::A:
-	{
-		enemy = new Enemy_A;
-		enemy->SetShaft(script.shaft);
-		enemy->SetPosition(script.pos);
-		enemy->UpdateTransform();
-		// リストに追加
-		EnemyManager::Instance().Register(enemy);
-		break;
-	}
-	case EnemyType::B:
-	{
-		enemy = new Enemy_B;
-		enemy->SetShaft(script.shaft);
-		enemy->SetPosition(script.pos);
-		enemy->UpdateTransform();
-		// リストに追加
-		EnemyManager::Instance().Register(enemy);
-		break;
-	}
-	case EnemyType::C:
-	{
-		enemy = new Enemy_C;
-		enemy->SetShaft(script.shaft);
-		enemy->SetPosition(script.pos);
-		enemy->UpdateTransform();
-		// リストに追加
-		EnemyManager::Instance().Register(enemy);
-	}
-	break;
-	case EnemyType::D:
-		enemy = new Enemy_D;
-		enemy->SetShaft(script.shaft);
-		enemy->SetPosition(script.pos);
-		enemy->UpdateTransform();
-		// リストに追加
-		EnemyManager::Instance().Register(enemy);
-		break;
-	}
+	// Imgui用
+	// Enemy_A
+	enemy_A.attack_power = 1;
+	enemy_A.attack_interval = 3.0f;
+	enemy_A.speed_power = -1.0f;
+	enemy_A.radius = 0.5f;
+	enemy_A.health = 5;
+
+	// Enemy_B
+	enemy_B.attack_power = 1;
+	enemy_B.attack_interval = 3.0f;
+	enemy_B.speed_power = -1.0f;
+	enemy_B.radius = 0.5f;
+	enemy_B.health = 5;
+	mover_timer_max_B = 1.0f;
+	dis_B = 3.0f;
+
+	// Enemy_C
+	enemy_C.attack_power = 1;
+	enemy_C.attack_interval = 3.0f;
+	enemy_C.speed_power = -1.0f;
+	enemy_C.radius = 0.5f;
+	enemy_C.health = 5;
+	speed_power_Y_D = -1.0f;
+
+	// Enemy_D
+	enemy_D.attack_power = 1;
+	enemy_D.attack_interval = 3.0f;
+	enemy_D.speed_power = -1.0f;
+	enemy_D.radius = 0.5f;
+	enemy_D.health = 5;
+	dis_D = 1.0f;
+
+	// デバッグ用
+	script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
+	script_enemy_B = SetEnemy(4.0f, EnemyType::B, Shaft::Side, 4.0f);
+	script_enemy_C = SetEnemy(4.0f, EnemyType::C, Shaft::Side, 4.0f);
+	script_enemy_D = SetEnemy(4.0f, EnemyType::D, Shaft::Side, 4.0f);
 }
 
 void EnemySpawner::Update(float elapsed_time)
@@ -99,6 +95,136 @@ void EnemySpawner::Update(float elapsed_time)
 			index++;
 		}
 	}
+}
+
+void EnemySpawner::EnemySpawn(EnemyScript script)
+{
+	Enemy* enemy = nullptr;
+	switch (script.enemy_type)
+	{
+	case EnemyType::A:
+	{
+		enemy = new Enemy_A;
+		SetBasicEnemyStatus(enemy, enemy_A);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+	case EnemyType::B:
+	{
+		enemy = new Enemy_B;
+		SetBasicEnemyStatus(enemy, enemy_B);
+		enemy->SetMoveTimerMax(mover_timer_max_B);
+		enemy->SetDis(dis_B);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+	case EnemyType::C:
+	{
+		enemy = new Enemy_C;
+		SetBasicEnemyStatus(enemy, enemy_C);
+		enemy->SetSpeedPowerY(speed_power_Y_D);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+	}
+	break;
+	case EnemyType::D:
+		enemy = new Enemy_D;
+		SetBasicEnemyStatus(enemy, enemy_D);
+		enemy->SetDis(dis_D);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+}
+
+void EnemySpawner::DebugImGui()
+{
+	ImGui::Begin(u8"敵");
+
+	if (ImGui::TreeNode("enemy1"))
+	{
+		EnemyImGui(enemy_A);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("enemy2"))
+	{
+		EnemyImGui(enemy_B);
+		ImGui::SliderFloat(u8"一気に進むまでの時間", &mover_timer_max_B, 0.0f, 5.0f);
+		ImGui::SliderFloat(u8"一気に進む距離", &dis_B, 0.0f, 10.0f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("enemy3"))
+	{
+		EnemyImGui(enemy_C);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("enemy4"))
+	{
+		EnemyImGui(enemy_D);
+		ImGui::SliderFloat(u8"斜めの時の追加速度", &speed_power_Y_D, 0.0f, 10.0f);
+		ImGui::SliderFloat(u8"進む距離", &dis_D, 0.0f, 10.0f);
+		ImGui::TreePop();
+	}
+
+
+	ImGui::End();
+
+	ImGui::Begin(u8"敵生成");
+
+	if (ImGui::Button("enemy1"))
+	{
+		EnemySpawn(script_enemy_A);
+	}
+	if (ImGui::Button("enemy2"))
+	{
+		EnemySpawn(script_enemy_B);
+	}
+
+	if (ImGui::Button("enemy3"))
+	{
+		EnemySpawn(script_enemy_C);
+	}
+	if (ImGui::Button("enemy4"))
+	{
+		EnemySpawn(script_enemy_D);
+	}
+	ImGui::End();
+}
+
+void EnemySpawner::SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status)
+{
+	enemy->SetAttackPower(status.attack_power);
+	enemy->SetHealth(status.health);
+	enemy->SetAttackInterval(status.attack_interval);
+	enemy->SetRadius(status.radius);
+	enemy->SetSpeedPower(status.speed_power);
+}
+
+void EnemySpawner::EnemyImGui(EnemyStatus& status)
+{
+	ImGui::SliderInt("HP", &status.health, 0, 10);
+	ImGui::SliderInt(u8"攻撃力", &status.attack_power, 0, 10);
+	ImGui::SliderFloat(u8"攻撃間隔", &status.attack_interval, 0.0f, 10.0f);
+	ImGui::SliderFloat(u8"速度", &status.speed_power, -10.0f, 0.0f);
+	ImGui::SliderFloat(u8"半径", &status.radius, 0.0f, 1.0f);
 }
 
 EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, float pos)

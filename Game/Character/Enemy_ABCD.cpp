@@ -17,7 +17,6 @@ Enemy_A::Enemy_A()
     height          = 1.0f;     // デバッグ用
     speed_power     = -1.0f;    // 速度
 
-
     // とりあえずアニメーション
     model->PlayAnimation(Animation::Move, true);
 }
@@ -88,7 +87,6 @@ void Enemy_A::UpdateMoveState(float elapsed_time)
         TransitionDeathState();
     }
 }
-
 
 //------ EnemyB----------------------------------------------------------------
 

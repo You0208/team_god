@@ -131,49 +131,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	// ライトの更新
 	//LightUpdate();
 
-	// デバッグ用
-	{
-#if 0// 三角形当たり判定ためし
-		DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-
-		debug_renderer->DrawSphere({ Try_T.A.x,1,Try_T.A.y }, 0.1f, { 1,0,1,1 });
-		debug_renderer->DrawSphere({ Try_T.B.x,1,Try_T.B.y }, 0.1f, { 1,0,1,1 });
-		debug_renderer->DrawSphere({ Try_T.C.x,1,Try_T.C.y }, 0.1f, { 1,0,1,1 });
-
-
-		if (Collision::IntersectTriangleVsCircle(Try_T, P0, r0))
-		{
-			debug_renderer->DrawSphere({ P0.x,1,P0.y }, r0, { 1,0,0,1 });
-		}
-		else
-		{
-			debug_renderer->DrawSphere({ P0.x,1,P0.y }, r0, { 0,0,1,1 });
-		}
-#endif
-		if (gamePad.GetButtonDown() & gamePad.BTN_A)
-		{
-			Enemy_D* enemy = new Enemy_D;
-			// リストに追加
-			EnemyManager::Instance().Register(enemy);
-		}
-	}
-
 	// ゲーム
 	{
-		s_l = gamePad.GetAxisLY() * -1.0f;
-
-		if (s_l > 0.1f)
-		{
-			timer_s += elapsedTime;
-			if (s_l_max <= s_l)s_l_max = s_l;
-		}
-		else
-		{
-			if (timer_s > 0)f_d = (s_l_max * 100.0f) / timer_s;
-			s_l_max = 0;
-			timer_s = 0;
-		}
-
 		// プレイヤーの更新
 		player->Update(elapsedTime);
 		// 柵の更新
@@ -310,18 +269,5 @@ void GameScene::DebugImgui()
 {
 	BaseScene::DebugImgui();
 
-	ImGui::Begin("ImGUI");
-	ImGui::SliderFloat2("TA", &Try_T.A.x, -10.0f, 10.0f);
-	ImGui::SliderFloat2("TB", &Try_T.B.x, -10.0f, 10.0f);
-	ImGui::SliderFloat2("TC", &Try_T.C.x, -10.0f, 10.0f);
-	ImGui::SliderFloat2("P0", &P0.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("r0", &r0, 0.0f, 10.0f);
-	// STATIC_BATCHING
-	if (ImGui::TreeNode("shadow"))
-	{
-		ImGui::Image(reinterpret_cast<void*>(double_speed_z->shader_resource_view.Get()), ImVec2(shadowmap_width / 5.0f, shadowmap_height / 5.0f));
-		ImGui::SliderFloat("shadow_depth_bias", &scene_constants.shadow_depth_bias, 0.1f, 0.01f);
-		ImGui::TreePop();
-	}
-	ImGui::End();
+	EnemySpawner::Instance().DebugImGui();
 }

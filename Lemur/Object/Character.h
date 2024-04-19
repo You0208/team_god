@@ -101,7 +101,7 @@ protected:
 
 public:
     //---------Getter--------------------------------------------------------------------------
-    //
+    
     // モデルの数値
     const DirectX::XMFLOAT3& GetPosition() const { return position; }                         // 位置
     const DirectX::XMFLOAT3& GetAngle() const { return rotation; }                            // 回転
@@ -126,19 +126,23 @@ public:
     const std::vector<Animation>* GetAnimation()const { return model->GetAnimation(); };      // アニメーションデータ
 
     //---------Setter--------------------------------------------------------------------------
-    // 
+     
     // モデルの数値
-    void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }      // 位置
+    void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }              // 位置
     void SetPosition(const float pos_x, const float pos_y, const float pos_z) { position.x = pos_x, position.y = pos_y, position.z = pos_z; }
-    void SetAngle(const DirectX::XMFLOAT3& rotation) { this->rotation = rotation; }         // 回転
-    void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }                  // スケール
-    void SetScaleFactor(const float scaleFactor) { this->scaleFactor = scaleFactor; }       // スケールファクター
-    void SetModel(std::shared_ptr<FbxModelManager> Model) { this->model = Model; }          // モデル
-    void SetAnimCalcRate(const float calc_rate_) { anim_calc_rate = calc_rate_; }           // アニメーションの再生速度倍率
+    void SetAngle(const DirectX::XMFLOAT3& rotation) { this->rotation = rotation; }                 // 回転
+    void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }                          // スケール
+    void SetScaleFactor(const float scaleFactor) { this->scaleFactor = scaleFactor; }               // スケールファクター
+    void SetModel(std::shared_ptr<FbxModelManager> Model) { this->model = Model; }                  // モデル
+    void SetAnimCalcRate(const float calc_rate_) { anim_calc_rate = calc_rate_; }                   // アニメーションの再生速度倍率
 
     // ステータス
-    void SetDead(bool death_) { death = death_; }                                            // 死亡
-    void SetAttackPower(const int attack_power_) { attack_power = attack_power_; }           // 攻撃力
+    void SetDead(bool death_) { this->death = death_; }                                               // 死亡
+    void SetAttackPower(const int attack_power_) { this->attack_power = attack_power_; }              // 攻撃力
+    void SetAttackInterval(const int attack_interval_) { this->attack_interval = attack_interval_; }  // 攻撃間隔
+    void SetHealth(const int health_) { this->health = health_; }                                     // HP
+    void SetRadius(const float radius_) { this->radius = radius_; }                                   // 半径
+    void SetSpeedPower(const float speed_power_) { this->speed_power = speed_power_; }                // 速度
 
 protected:
     //----------モデル関連------------------------------------------------

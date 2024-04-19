@@ -67,12 +67,17 @@ protected:
     // 移動ステート更新処理
     virtual void UpdateMoveState(float elapsed_time) = 0;
 
+public:
+    void SetMoveTimerMax(float move_timer_max_) { move_timer_max = move_timer_max_; }
+    void SetDis(float dis_) { dis = dis_; }
+    void SetSpeedPowerY(float speed_power_Y_) { speed_power_Y = speed_power_Y_; }
+
 protected:
     enum Animation
     {
-        Move = 0,
-        Attack = 1,
-        Out = 6
+        Move,
+        Out,
+        Attack
     };
     enum class State
     {
@@ -80,8 +85,12 @@ protected:
         Attack,
         Death
     };
-    State state         = State::Move; // ステート
 
-    int     shaft       = Shaft::Side; // 敵の出てくる軸
-    bool is_hit_unit    = false;       // プレイヤーに当たったか    
+    State   state               = State::Move;  // ステート
+
+    int     shaft               = Shaft::Side;  // 敵の出てくる軸
+    bool    is_hit_unit         = false;        // プレイヤーに当たったか    
+    float   move_timer_max      = 0.0f;         // 移動間隔
+    float   dis                 = 0.0f;         // 進む距離
+    float   speed_power_Y     = 0.0f;         // 斜めに進むときのスピード
 };
