@@ -4,7 +4,7 @@
 
 void UnitManager::Initialize()
 {
-    //TODO もね
+    //TODO もね　ユニットステータス
     {
         //Unit_A
         unit_A.attack_interval = 1.0f;  // 攻撃間隔
@@ -28,7 +28,7 @@ void UnitManager::Initialize()
 
         //Unit_D
         radius_D = 1.0f;                // 攻撃半径
-        timer_max_D = 1.0f;             // 出現時間
+        timer_max_D = 5.0f;             // 出現時間
         streng_width_D = 1;             // 攻撃力の上り幅
 
         //Unit_E
