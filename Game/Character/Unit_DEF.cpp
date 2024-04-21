@@ -8,7 +8,7 @@
 Unit_D::Unit_D()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit_1and4.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit4_RE.fbx");
 
     attack_times            = 5;    // UŒ‚‰ñ”
     attack_power            = 1;    // UŒ‚—Í
@@ -126,7 +126,7 @@ void Unit_D::DrawDebugGUI(int n)
 Unit_E::Unit_E()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit_1and4.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit5_RE.fbx");
 
     attack_times = 5;    // UŒ‚‰ñ”
     attack_power = 1;    // UŒ‚—Í
@@ -267,7 +267,7 @@ void Unit_E::DrawDebugGUI(int n)
 Unit_F::Unit_F()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit_1and4.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit6_RE.fbx");
 
     attack_times = 5;    // UŒ‚‰ñ”
     attack_power = 1;    // UŒ‚—Í
@@ -341,7 +341,7 @@ void Unit_F::UpdateIdleState(float elapsed_time)
         }
     }
     // UŒ‚‰ñ”‚ğÁ”ï‚µ‚«‚Á‚½‚çÁ–Å
-    if (attack_times <= 0)
+    if (attack_times <= 0 || death)
     {
         TransitionDeathState();
     }
@@ -399,4 +399,5 @@ void Unit_F::UpdateAttackState(float elapsed_time)
 
 void Unit_F::DrawDebugGUI(int n)
 {
+    Character::DrawDebugGUI("Unit_F", n);
 }

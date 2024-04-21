@@ -197,8 +197,8 @@ void Player::ChangeCategory()
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::B;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::C;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::E;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::F;
     else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::D;
 }
 

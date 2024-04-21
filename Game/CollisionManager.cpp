@@ -78,22 +78,17 @@ void CollisionManager::CollisionSeedVsUnit()
                     is_intersected = true;
                     break; // 一度でも重なればループを抜ける
                 }
-                // 種がユニットの攻撃範囲に入っているとき
-                if (Collision::IntersectRectVsCircle
-                (
-                    unit->GetAttackRect(),
-                    { seed->GetPosition().x,seed->GetPosition().z },
-                    seed->GetRadius()
-                ))
-                {
-                    is_intersected = true;
-                    break; // 一度でも重なればループを抜ける
-                }
             }
         }
 
         // 重なりがない場合、種を生まれた状態に設定
-        if (!is_intersected)seed->SetBorn(true);
+        if (!is_intersected)
+        {
+            seed->SetBorn(true);
+            break;
+        }
+        else seed->SetBorn(false);
+       
     }
 }
 
