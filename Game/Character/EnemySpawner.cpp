@@ -29,7 +29,7 @@ void EnemySpawner::Initialize()
 
 	// Imgui用
 	 
-	//TODO もね
+	//TODO もね　敵ステータス
 	{
 		// Enemy_A
 		enemy_A.attack_power = 1;		// 攻撃力
@@ -253,10 +253,10 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 
 void EnemySpawner::InitializeLevel1()
 {
-	//TODO もね
+	//TODO もね　敵出現1‐1
 	// 開始からの秒・エネミーのタイプ・軸（Side:横軸　Vertical:縦軸）・軸に対する長さ
+	level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Vertical, 2.0f));
 	level_1.emplace_back(SetEnemy(4.0f, EnemyType::D, Shaft::Vertical, 4.0f));
-	//level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Vertical, 2.0f));
 	//level_1.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Side, 3.0f));
 	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::B, Shaft::Vertical, 4.0f));
 	//level_1.emplace_back(SetEnemy(5.0f, EnemyType::B, Shaft::Side, 5.0f));

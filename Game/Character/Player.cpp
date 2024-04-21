@@ -19,9 +19,9 @@ Player::Player()
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
     // ユニットカテゴリーの初期化
-    unit_category = 0;
+    unit_category = 3;
 
-    //TODO もね
+    //TODO もね　ゲーム画面
     {
         // はじく強さ
         flip_speed = 2.0f;
@@ -195,11 +195,11 @@ void Player::Flick(float elapsedTime)
 void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-
+    // TODO もね　ユニットのボタン設定
     if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::E;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::F;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::D;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::B;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::E;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::F;
 }
 
 // 入力処理
