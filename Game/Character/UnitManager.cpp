@@ -188,7 +188,7 @@ void UnitManager::SetUpUnit_C(Unit* unit)
 
 void UnitManager::SetUpUnit_D(Unit* unit)
 {
-    unit->SetRadius(radius_D);
+    unit->SetAttackRadius(radius_D);
     unit->SetTimerMax(timer_max_D);
     unit->SetStrengWidth(streng_width_D);
 }

@@ -100,4 +100,8 @@ private:// シェーダー
     // 円
     DirectX::XMFLOAT2 P0;
     float r0;
+
+    // でバグ
+    std::unique_ptr<FbxModelManager> test_model;
+    std::unique_ptr<FbxModelManager> test_model_2;
 };

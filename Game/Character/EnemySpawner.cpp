@@ -261,3 +261,8 @@ void EnemySpawner::InitializeLevel1()
 	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::B, Shaft::Vertical, 4.0f));
 	//level_1.emplace_back(SetEnemy(5.0f, EnemyType::B, Shaft::Side, 5.0f));
 }
+
+void EnemySpawner::InitializeLevel2()
+{
+
+}

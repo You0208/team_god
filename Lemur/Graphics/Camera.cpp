@@ -83,7 +83,20 @@ void Camera::Update(float elapsedTime)
 
 void Camera::DrawDebug()
 {
+    ImGui::Begin("Camera");
 
+    DirectX::XMFLOAT3 angle_d = { DirectX::XMConvertToDegrees(angle.x),
+        DirectX::XMConvertToDegrees(angle.y),
+        DirectX::XMConvertToDegrees(angle.y)
+    };
+    ImGui::SliderFloat3(u8"Šp“x", &angle_d.x, 0.0f, 360.0f);
+    angle = { DirectX::XMConvertToRadians(angle_d.x),
+        DirectX::XMConvertToRadians(angle_d.y),
+        DirectX::XMConvertToRadians(angle_d.y)
+    };
+
+
+    ImGui::End();
 }
 
 void Camera::UpdateDebug()

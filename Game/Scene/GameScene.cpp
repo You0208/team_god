@@ -91,6 +91,9 @@ void GameScene::Initialize()
 		Try_T.C.y = 1.0;
 
 		r0 = 0.1f;
+
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
+		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 	}
 }
 
@@ -136,7 +139,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// ライトの更新
-	//LightUpdate();
+	LightUpdate();
 
 	// ゲーム
 	{
@@ -232,7 +235,7 @@ void GameScene::Render(float elapsedTime)
 			// 柵描画
 			fence->Render(scale, defefferd_model.GetAddressOf());
 			//ステージ描画
-			StageManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			StageManager::Instance().Render(1.0f, defefferd_model.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, defefferd_model.GetAddressOf());
 			// エネミー描画
@@ -243,17 +246,21 @@ void GameScene::Render(float elapsedTime)
 		else
 		{
 			// プレイヤー描画
-			player->Render(scale, stage_ps.GetAddressOf());
+			player->Render(scale, chara_ps.GetAddressOf());
 			// 柵描画
-			fence->Render(scale, stage_ps.GetAddressOf());
+			fence->Render(scale, chara_ps.GetAddressOf());
 			//ステージ描画
-			StageManager::Instance().Render(1.0f, stage_ps.GetAddressOf());
+			StageManager::Instance().Render(1.0f, chara_ps.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
 			// 種描画
 			SeedManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			//test_model->Render(0.01f, Try.Get());
+			//test_model_2->Render(0.1f, Try.Get());
+			//test_model->DrawDebug("Test");
+			//test_model_2->DrawDebug("Test");
 		}
 	}
 
@@ -290,5 +297,6 @@ void GameScene::DebugImgui()
 	ImGui::End();
 
 	BaseScene::DebugImgui();
+	Camera::Instance().DrawDebug();
 
 }

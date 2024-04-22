@@ -66,7 +66,7 @@ void DemoScene::Initialize()
 		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(),
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
-		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Try\\try_2.fbx");
+		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 	}
 
 	// ポイントライト・スポットライトの初期位置設定
@@ -102,7 +102,7 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 	//---------------------------------------------------------------------------------------
 	{
 		BaseScene::DebugImgui();
-
+		Camera::Instance().DrawDebug();
 		ImGui::Begin("ImGUI");
 
 		// STATIC_BATCHING
@@ -173,7 +173,9 @@ void DemoScene::Render(float elapsedTime)
 	else
 	{
 		test_model->Render(0.01f, Try.Get());
+		test_model_2->Render(0.1f, Try.Get());
 		test_model->DrawDebug("Test");
+		test_model_2->DrawDebug("Test");
 	}
 
 	// ステートの設定

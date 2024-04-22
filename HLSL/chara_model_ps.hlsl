@@ -33,7 +33,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     color.rgb = pow(color.rgb, GAMMA);
     float alpha = color.a;
-    
     // 金属度
     float metallic = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     
@@ -59,7 +58,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     {
         // 入射光のうち拡散反射になる割合
         float3 diffuseReflectance = lerp(color.rgb, 0.02f, metallic);
-       
         
         // 垂直反射時のフレネル反射率
         float3 F0 = lerp(Dielectric, color.rgb, metallic);
@@ -90,7 +88,6 @@ float4 main(VS_OUT pin) : SV_TARGET
 			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
-        
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
@@ -105,10 +102,9 @@ float4 main(VS_OUT pin) : SV_TARGET
         // スポットライトのPBR
         //-----------------------------------------  
         float3 spotDiffuse = 0, spotSpecular = 0;
-        SpotLight(pin, diffuseReflectance, F0, N, E, roughness, spotDiffuse, spotSpecular);
+        SpotLight(pin, diffuseReflectance, F0, N, V, roughness, spotDiffuse, spotSpecular);
         // 最終光に足し合わせる         
         finalLig += (spotDiffuse + spotSpecular);
-        
         //-----------------------------------------
         //　シャドウ
         //----------------------------------------- 
