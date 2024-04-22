@@ -39,9 +39,26 @@ Fence::Fence()
     };
 
     //TODO ‚à‚Ë ‚±‚±‚Åò‚Ì‘Ï‹v’l‚ğ•Ï‚¦‚é
+    switch (StageManager::Instance().GetStageLevel())
     {
+    case 0:// ƒŒƒxƒ‹‚P
         health = 200;
+        break;
+    case 1:// ƒŒƒxƒ‹‚Q
+        health = 100;
+        break;
+    case 2:// ƒŒƒxƒ‹‚R
+        health = 150;
+        break;
+    case 3:// ƒŒƒxƒ‹‚S
+        health = 200;
+        break;
+    case 4:// ƒŒƒxƒ‹‚T
+        health = 200;
+        break;
     }
+
+    
     instance = this;
 }
 

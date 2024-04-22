@@ -62,12 +62,34 @@ void GameScene::Initialize()
 		// カメラ調整
 		camera_range = 30.0f;
 
-		//TODO もね 制限時間の初期化
-		time_limit = 200.0f;// ここで制限時間を調整
-		timer = 0.0f;
-
-		// ステージ初期化
+		//TODO もね　ステージのレベル変更ここです
+		//　注意！　レベル１は0です。。。。
 		StageManager& stage_manager = StageManager::Instance();
+		stage_manager.SetStageLevel(1);
+
+
+		//TODO もね 制限時間の初期化
+		switch (StageManager::Instance().GetStageLevel())
+		{
+		case 0:// レベル１
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 1:// レベル２
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 2:// レベル３
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 3:// レベル４
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 4:// レベル５
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		}
+		timer = 0.0f;
+		
+		// ステージ初期化
 		StageMain* stage_main = new StageMain;
 		stage_manager.Register(stage_main);
 

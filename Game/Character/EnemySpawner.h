@@ -22,6 +22,10 @@ public:
 
     // レベル１の初期化
     void InitializeLevel1();
+    void InitializeLevel2();
+    void InitializeLevel3();
+    void InitializeLevel4();
+    void InitializeLevel5();
 
     // エネミーの登録
     void EnemySpawn(EnemyScript script);
@@ -30,6 +34,10 @@ public:
     void DebugImGui();
 private:
     std::vector<EnemyScript>    level_1         = {};    // レベル１
+    std::vector<EnemyScript>    level_2         = {};    // レベル１
+    std::vector<EnemyScript>    level_3         = {};    // レベル１
+    std::vector<EnemyScript>    level_4         = {};    // レベル１
+    std::vector<EnemyScript>    level_5         = {};    // レベル１
 
     int index;
     float                       timer          = 0.0f;  // タイマー
