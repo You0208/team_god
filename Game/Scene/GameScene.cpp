@@ -53,7 +53,8 @@ void GameScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/differd_model_ps.cso", defefferd_model.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
 	}
 	// ゲーム部分
 	{
@@ -231,17 +232,17 @@ void GameScene::Render(float elapsedTime)
 		if (enable_deferred)
 		{
 			// プレイヤー描画
-			player->Render(scale, defefferd_model.GetAddressOf());
+			player->Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			// 柵描画
-			fence->Render(scale, defefferd_model.GetAddressOf());
+			fence->Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			//ステージ描画
-			StageManager::Instance().Render(1.0f, defefferd_model.GetAddressOf());
+			StageManager::Instance().Render(1.0f, fbx_gbuffer_ps.GetAddressOf());
 			// ユニット描画
-			UnitManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			// エネミー描画
-			EnemyManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			EnemyManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			// 種描画
-			SeedManager::Instance().Render(scale, defefferd_model.GetAddressOf());
+			SeedManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
 		}
 		else
 		{

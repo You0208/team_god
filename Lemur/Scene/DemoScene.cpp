@@ -38,8 +38,10 @@ void DemoScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
 
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/differd_model_ps.cso", defefferd_model.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
 	}
 	// ゲーム部分
 	{
@@ -67,6 +69,9 @@ void DemoScene::Initialize()
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
+
+		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
+		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf");
 	}
 
 	// ポイントライト・スポットライトの初期位置設定
@@ -167,15 +172,24 @@ void DemoScene::Render(float elapsedTime)
 	//3D描画
 	if (enable_deferred)
 	{
-		test_model->Render(0.01f, defefferd_model.Get());
+		test_model->Render(0.01f, fbx_gbuffer_ps.Get());
+		test_model_2->Render(0.1f, fbx_gbuffer_ps.Get());
 		test_model->DrawDebug("Test");
+		test_model_2->DrawDebug("Test_2");
+
+		gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
+		gltf_test_model_2->Render(1.0f, gltf_gbuffer_ps.Get());
 	}
 	else
 	{
-		test_model->Render(0.01f, Try.Get());
-		test_model_2->Render(0.1f, Try.Get());
-		test_model->DrawDebug("Test");
-		test_model_2->DrawDebug("Test");
+		//test_model->Render(0.01f, Try.Get());
+		//test_model_2->Render(0.1f, Try.Get());
+		//test_model->DrawDebug("Test");
+		//test_model_2->DrawDebug("Test");
+
+
+		gltf_test_model->Render(1.0f, gltf_ps.Get());
+		gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 
 	// ステートの設定

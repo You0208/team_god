@@ -9,7 +9,8 @@ public:
     GltfModelManager(ID3D11Device* device, const std::string& filename);
     ~GltfModelManager() {}
 
-    void Render(float elapsed_time, const float& scale, ID3D11PixelShader* replaced_pixel_shader);
+    void Render( const float& scale, ID3D11PixelShader* replaced_pixel_shader);
+    void Render( const float& scale, ID3D11PixelShader** replaced_pixel_shader);
 
     void DrawDebug();
 

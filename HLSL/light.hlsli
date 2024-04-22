@@ -130,7 +130,7 @@ out float3 rimColor,
 out float3 hemiLight
 )
 {
-         // ライト方向ベクトル
+    // ライト方向ベクトル
     float3 Light = normalize(directional_light_direction.xyz);
      // 各ベクトルを正規化し、それらを行列の各列に割り当て
     float3x3 mat = { T, pin.binormal, N_ };

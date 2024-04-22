@@ -5,14 +5,24 @@ GltfModelManager::GltfModelManager(ID3D11Device* device, const std::string& file
     gltf_model= std::make_unique<GltfModel>(device, filename);
 }
 
-void GltfModelManager::Render(float elapsed_time, const float& scale, ID3D11PixelShader* replaced_pixel_shader)
+void GltfModelManager::Render(const float& scale, ID3D11PixelShader* replaced_pixel_shader)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // world行列更新
     DirectX::XMFLOAT4X4 world = {};
     DirectX::XMStoreFloat4x4(&world, GetTransform()->CalcWorldMatrix(scale));
-    gltf_model->Render(graphics.GetDeviceContext(), world, animated_nodes);
+    gltf_model->Render(graphics.GetDeviceContext(), world, animated_nodes, replaced_pixel_shader);
+}
+
+void GltfModelManager::Render(const float& scale, ID3D11PixelShader** replaced_pixel_shader)
+{
+    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+    // world行列更新
+    DirectX::XMFLOAT4X4 world = {};
+    DirectX::XMStoreFloat4x4(&world, GetTransform()->CalcWorldMatrix(scale));
+    gltf_model->Render(graphics.GetDeviceContext(), world, animated_nodes, replaced_pixel_shader);
 }
 
 

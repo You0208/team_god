@@ -198,6 +198,240 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
 
 }
 
+void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader* replaced_pixel_shader)
+{
+    using namespace DirectX;
+    immediate_context->PSSetShaderResources(0, 1, material_resource_view.GetAddressOf());
+    immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
+    if (replaced_pixel_shader)
+    {
+        immediate_context->PSSetShader(replaced_pixel_shader, nullptr, 0);
+    }
+    else
+    {
+        immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+    }
+    immediate_context->IASetInputLayout(input_layout.Get());
+    immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+    std::function<void(int)> traverse
+    { [&](int node_index)->void
+        {
+
+        const node& node{ nodes.at(node_index) };
+        if (node.mesh > -1)// メッシュが存在する場合
+        {
+            // メッシュ内の各プリミティブに対して、プリミティブの頂点データバッファインデックスバッファ（index_buffer) を設定
+            const mesh& mesh{ meshes.at(node.mesh) };
+            for (std::vector<mesh::primitive>::const_reference primitive : mesh.primitives)
+            {
+                ID3D11Buffer* vertex_buffers[]
+                {
+                     primitive.vertex_buffer_views.at("POSITION").buffer.Get(),
+                     primitive.vertex_buffer_views.at("NORMAL").buffer.Get(),
+                     primitive.vertex_buffer_views.at("TANGENT").buffer.Get(),
+                     primitive.vertex_buffer_views.at("TEXCOORD_0").buffer.Get(),
+                     primitive.vertex_buffer_views.at("JOINTS_0").buffer.Get(),
+                     primitive.vertex_buffer_views.at("WEIGHTS_0").buffer.Get(),
+                };
+                UINT strides[]
+                {
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("POSITION").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("NORMAL").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("TANGENT").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("TEXCOORD_0").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("JOINTS_0").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("WEIGHTS_0").stride_in_bytes),
+                };
+                UINT offsets[_countof(vertex_buffers)]{ 0 };
+                immediate_context->IASetVertexBuffers(0, _countof(vertex_buffers), vertex_buffers, strides, offsets);
+                immediate_context->IASetIndexBuffer(primitive.index_buffer_view.buffer.Get(),
+                    primitive.index_buffer_view.format, 0);
+
+                primitive_constants primitive_data{};
+                primitive_data.material = primitive.material;
+                primitive_data.has_tangent = primitive.vertex_buffer_views.at("TANGENT").buffer != NULL;
+                primitive_data.skin = node.skin;
+                DirectX::XMStoreFloat4x4(&primitive_data.world,
+                    XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));
+                immediate_context->UpdateSubresource(primitive_cbuffer.Get(), 0, 0, &primitive_data, 0, 0);
+                immediate_context->VSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());
+                immediate_context->PSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());
+
+
+                // texture
+                {
+                    const material& material{ materials.at(primitive.material) };
+                    const int textureIndices[]
+                    {
+                        material.data.pbr_metallic_roughness.basecolor_texture.index,
+                        material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
+                        material.data.normal_texture.index,
+                        material.data.emissive_texture.index,
+                        material.data.occlusion_texture.index,
+                    };
+                    ID3D11ShaderResourceView* nullShaderResourceView{};
+                    std::vector<ID3D11ShaderResourceView*> shaderResourceViews(_countof(textureIndices));
+                    for (int textureIndex = 0; textureIndex < shaderResourceViews.size(); ++textureIndex)
+                    {
+                        shaderResourceViews.at(textureIndex) = textureIndices[textureIndex] > -1 ?
+                            texture_resource_views.at(textures.at(textureIndices[textureIndex]).source).Get() :
+                            nullShaderResourceView;
+                    }
+                    immediate_context->PSSetShaderResources(1, static_cast<UINT>(shaderResourceViews.size()),
+                        shaderResourceViews.data());
+                }
+
+                // animation
+                {
+                    if (node.skin > -1)
+                    {
+                        const skin& skin{ skins.at(node.skin) };
+                        primitive_joint_constants primitive_joint_data{};
+                        for (size_t joint_index = 0; joint_index < skin.joints.size(); ++joint_index)
+                        {
+                            XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index],
+                                XMLoadFloat4x4(&skin.inverse_bind_matrices.at(joint_index)) *
+                                XMLoadFloat4x4(&animated_nodes.at(skin.joints.at(joint_index)).global_transform) *
+                                XMMatrixInverse(NULL, XMLoadFloat4x4(&node.global_transform))
+                            );
+                        }
+                        immediate_context->UpdateSubresource(primitive_joint_cbuffer.Get(), 0, 0, &primitive_joint_data, 0, 0);
+                        immediate_context->VSSetConstantBuffers(2, 1, primitive_joint_cbuffer.GetAddressOf());
+                    }
+                }
+                immediate_context->DrawIndexed(static_cast<UINT>(primitive.index_buffer_view.count()), 0, 0);
+            }
+        }
+        for (std::vector<int>::value_type child_index : node.children)
+        {
+            traverse(child_index);
+        }
+    } };
+    for (std::vector<int>::value_type node_index : scenes.at(0).nodes)
+    {
+        traverse(node_index);
+    }
+}
+
+void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader** replaced_pixel_shader)
+{
+    using namespace DirectX;
+    immediate_context->PSSetShaderResources(0, 1, material_resource_view.GetAddressOf());
+    immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
+    if (replaced_pixel_shader)
+    {
+        immediate_context->PSSetShader(*replaced_pixel_shader, nullptr, 0);
+    }
+    else
+    {
+        immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+    }
+    immediate_context->IASetInputLayout(input_layout.Get());
+    immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+    std::function<void(int)> traverse
+    { [&](int node_index)->void
+        {
+
+        const node& node{ nodes.at(node_index) };
+        if (node.mesh > -1)// メッシュが存在する場合
+        {
+            // メッシュ内の各プリミティブに対して、プリミティブの頂点データバッファインデックスバッファ（index_buffer) を設定
+            const mesh& mesh{ meshes.at(node.mesh) };
+            for (std::vector<mesh::primitive>::const_reference primitive : mesh.primitives)
+            {
+                ID3D11Buffer* vertex_buffers[]
+                {
+                     primitive.vertex_buffer_views.at("POSITION").buffer.Get(),
+                     primitive.vertex_buffer_views.at("NORMAL").buffer.Get(),
+                     primitive.vertex_buffer_views.at("TANGENT").buffer.Get(),
+                     primitive.vertex_buffer_views.at("TEXCOORD_0").buffer.Get(),
+                     primitive.vertex_buffer_views.at("JOINTS_0").buffer.Get(),
+                     primitive.vertex_buffer_views.at("WEIGHTS_0").buffer.Get(),
+                };
+                UINT strides[]
+                {
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("POSITION").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("NORMAL").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("TANGENT").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("TEXCOORD_0").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("JOINTS_0").stride_in_bytes),
+                     static_cast<UINT>(primitive.vertex_buffer_views.at("WEIGHTS_0").stride_in_bytes),
+                };
+                UINT offsets[_countof(vertex_buffers)]{ 0 };
+                immediate_context->IASetVertexBuffers(0, _countof(vertex_buffers), vertex_buffers, strides, offsets);
+                immediate_context->IASetIndexBuffer(primitive.index_buffer_view.buffer.Get(),
+                    primitive.index_buffer_view.format, 0);
+
+                primitive_constants primitive_data{};
+                primitive_data.material = primitive.material;
+                primitive_data.has_tangent = primitive.vertex_buffer_views.at("TANGENT").buffer != NULL;
+                primitive_data.skin = node.skin;
+                DirectX::XMStoreFloat4x4(&primitive_data.world,
+                    XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));
+                immediate_context->UpdateSubresource(primitive_cbuffer.Get(), 0, 0, &primitive_data, 0, 0);
+                immediate_context->VSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());
+                immediate_context->PSSetConstantBuffers(0, 1, primitive_cbuffer.GetAddressOf());
+
+
+                // texture
+                {
+                    const material& material{ materials.at(primitive.material) };
+                    const int textureIndices[]
+                    {
+                        material.data.pbr_metallic_roughness.basecolor_texture.index,
+                        material.data.pbr_metallic_roughness.metallic_roughness_texture.index,
+                        material.data.normal_texture.index,
+                        material.data.emissive_texture.index,
+                        material.data.occlusion_texture.index,
+                    };
+                    ID3D11ShaderResourceView* nullShaderResourceView{};
+                    std::vector<ID3D11ShaderResourceView*> shaderResourceViews(_countof(textureIndices));
+                    for (int textureIndex = 0; textureIndex < shaderResourceViews.size(); ++textureIndex)
+                    {
+                        shaderResourceViews.at(textureIndex) = textureIndices[textureIndex] > -1 ?
+                            texture_resource_views.at(textures.at(textureIndices[textureIndex]).source).Get() :
+                            nullShaderResourceView;
+                    }
+                    immediate_context->PSSetShaderResources(1, static_cast<UINT>(shaderResourceViews.size()),
+                        shaderResourceViews.data());
+                }
+
+                // animation
+                {
+                    if (node.skin > -1)
+                    {
+                        const skin& skin{ skins.at(node.skin) };
+                        primitive_joint_constants primitive_joint_data{};
+                        for (size_t joint_index = 0; joint_index < skin.joints.size(); ++joint_index)
+                        {
+                            XMStoreFloat4x4(&primitive_joint_data.matrices[joint_index],
+                                XMLoadFloat4x4(&skin.inverse_bind_matrices.at(joint_index)) *
+                                XMLoadFloat4x4(&animated_nodes.at(skin.joints.at(joint_index)).global_transform) *
+                                XMMatrixInverse(NULL, XMLoadFloat4x4(&node.global_transform))
+                            );
+                        }
+                        immediate_context->UpdateSubresource(primitive_joint_cbuffer.Get(), 0, 0, &primitive_joint_data, 0, 0);
+                        immediate_context->VSSetConstantBuffers(2, 1, primitive_joint_cbuffer.GetAddressOf());
+                    }
+                }
+                immediate_context->DrawIndexed(static_cast<UINT>(primitive.index_buffer_view.count()), 0, 0);
+            }
+        }
+        for (std::vector<int>::value_type child_index : node.children)
+        {
+            traverse(child_index);
+        }
+    } };
+    for (std::vector<int>::value_type node_index : scenes.at(0).nodes)
+    {
+        traverse(node_index);
+    }
+}
+
 void GltfModel::FetchAnimations(const tinygltf::Model & gltf_model)
  {
    using namespace std;

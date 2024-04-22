@@ -28,6 +28,7 @@
 #include <SpriteBatch.h>
 
 #include "./Lemur/Model/FbxModelManager.h"
+#include "./Lemur/Model/GltfModelManager.h"
 
 
 
@@ -54,6 +55,8 @@ private:
     std::unique_ptr<FbxModelManager> test_model;
     std::unique_ptr<FbxModelManager> test_model_2;
 
+    std::unique_ptr<GltfModelManager> gltf_test_model;
+    std::unique_ptr<GltfModelManager> gltf_test_model_2;
 
     //DemoPlayer
     DemoPlayer* player = nullptr;
@@ -75,7 +78,10 @@ private:
     std::unique_ptr<SpriteBatch> sprite_batches[8];
 
 
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> defefferd_model;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
+
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_ps;
 
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];

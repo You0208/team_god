@@ -29,7 +29,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     float4 color = material_textures[BASECOLOR_TEXTURE].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     float alpha = color.a;
     color.rgb = pow(color.rgb, GammaFactor);
-    
     // 金属度
     float metallic = material_textures[METALLIC_ROUGHNESS_TEXTURE].Sample(sampler_states[LINEAR], pin.texcoord).b;
     
@@ -93,14 +92,13 @@ float4 main(VS_OUT pin) : SV_TARGET
         float3 L = normalize(directional_light_direction.xyz);
         DirectBDRF(diffuseReflectance, F0, N, V, L,
 			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
-        return float4(directSpecular, 1);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
         float3 pointDiffuse = 0, pointSpecular = 0;
-        PointLight(pin, diffuseReflectance, F0, N, E, roughness, pointDiffuse, pointSpecular);
+        PointLight(pin, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
         // 最終光に足し合わせる 
         finalLig += (pointDiffuse + pointSpecular);
         
@@ -108,7 +106,7 @@ float4 main(VS_OUT pin) : SV_TARGET
         // スポットライトのPBR
         //-----------------------------------------  
         float3 spotDiffuse = 0, spotSpecular = 0;
-        SpotLight(pin, diffuseReflectance, F0, N, E, roughness, spotDiffuse, spotSpecular);
+        SpotLight(pin, diffuseReflectance, F0, N, V, roughness, spotDiffuse, spotSpecular);
         // 最終光に足し合わせる         
         finalLig += (spotDiffuse + spotSpecular);
         

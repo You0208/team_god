@@ -9,8 +9,13 @@ SamplerState sampler_states[5] : register(s0);
 Texture2D texture_maps[4] : register(t0);
 float4 main(VS_OUT pin) : SV_TARGET
 {
+	// ガンマ係数
+    static const float GammaFactor = 2.2f;
+    
     // color
     float4 color = texture_maps[0].Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord);
+    color.rgb = pow(color.rgb, GammaFactor);
+    
     // Normal
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord).rgb;
     // position
@@ -42,18 +47,36 @@ float4 main(VS_OUT pin) : SV_TARGET
         float3 N = normal;
         // カメラから頂点への方向ベクトル
         float3 E = normalize(camera_position.xyz - position.xyz);
-        
+	    // 視線ベクトル
+        float3 V = normalize(position.xyz - camera_position.xyz);
+	
         //-----------------------------------------
         // 直接光のPBR
         //-----------------------------------------   
         float3 directDiffuse = 0, directSpecular = 0;
-        DirectBDRF(diffuseReflectance, F0, N, E, directional_light_direction.xyz,
-         directional_light_color.rgb, roughness,
-         directDiffuse, directSpecular);
+        float3 L = normalize(directional_light_direction.xyz);
+        DirectBDRF(diffuseReflectance, F0, N, V, L,
+			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
         
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
-        //return float4(metallic,0,0, 1);
+        
+         //-----------------------------------------
+        // ポイントライトのPBR
+        //-----------------------------------------  
+        float3 pointDiffuse = 0, pointSpecular = 0;
+        PointLight(position, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
+        // 最終光に足し合わせる 
+        finalLig += (pointDiffuse + pointSpecular);
+        
+        //-----------------------------------------
+        // スポットライトのPBR
+        //-----------------------------------------  
+        float3 spotDiffuse = 0, spotSpecular = 0;
+        SpotLight(position, diffuseReflectance, F0, N, V, roughness, spotDiffuse, spotSpecular);
+        // 最終光に足し合わせる         
+        finalLig += (spotDiffuse + spotSpecular);
+        
     }
 #if 1
 	// Tone mapping : HDR -> SDR
@@ -61,6 +84,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     color.rgb = 1 - exp(-color.rgb * exposure);
 #endif
 
-
+    
+    finalLig.rgb = pow(finalLig.rgb, 1.0f / GammaFactor);
     return float4(finalLig, alpha);
 }

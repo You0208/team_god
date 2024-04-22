@@ -1,4 +1,4 @@
-#include "lim_try.hlsli"
+#include "light.hlsli"
 
 //ピクセルシェーダーの出力構造体
 struct PSOutPut

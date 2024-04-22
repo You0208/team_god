@@ -187,6 +187,8 @@ public:
    Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_joint_cbuffer;
 public:
     void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes);
+    void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader* replaced_pixel_shader);
+    void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader** replaced_pixel_shader);
     void Animate(size_t animation_index, float time, std::vector<node>& animated_nodes, bool loopback);
 private:
     void FetchAnimations(const tinygltf::Model& gltf_model);

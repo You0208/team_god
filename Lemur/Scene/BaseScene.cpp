@@ -749,7 +749,7 @@ void Lemur::Scene::BaseScene::InitializePS()
 	// SKYMAP
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[static_cast<size_t>(PS::SKY)].GetAddressOf());
 	// DEFERRED
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/defefferd_pbr_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
 }
 
 void Lemur::Scene::BaseScene::ExePostEffct()
