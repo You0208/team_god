@@ -40,7 +40,7 @@ Fence::Fence()
 
     //TODO ‚à‚Ë ‚±‚±‚Åò‚Ì‘Ï‹v’l‚ğ•Ï‚¦‚é
     {
-        health = 200;
+        health = 70;
     }
     instance = this;
 }

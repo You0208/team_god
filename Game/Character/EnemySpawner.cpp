@@ -257,13 +257,17 @@ void EnemySpawner::InitializeLevel1()
 	// 開始からの秒・エネミーのタイプ・軸（Side:縦軸　Vertical:横軸）・軸に対する長さ
 	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
 	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 17.5f));//A1
+
 	level_1.emplace_back(SetEnemy(15.0f, EnemyType::A, Shaft::Vertical, 1.0f));
 	level_1.emplace_back(SetEnemy(15.0f, EnemyType::A, Shaft::Vertical, 14.0f));//A2
+
 	level_1.emplace_back(SetEnemy(24.0f, EnemyType::A, Shaft::Side, 6.0f));
 	level_1.emplace_back(SetEnemy(24.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A3
+
 	level_1.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Side, 15.0f));
 	level_1.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Side, 17.0f));
 	level_1.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A4
+
 	level_1.emplace_back(SetEnemy(40.0f, EnemyType::A, Shaft::Side, 9.0f));
 	level_1.emplace_back(SetEnemy(40.0f, EnemyType::A, Shaft::Vertical, 9.0f));//A5
 
