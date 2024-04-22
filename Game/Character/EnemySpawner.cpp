@@ -32,14 +32,14 @@ void EnemySpawner::Initialize()
 	//TODO もね　敵ステータス
 	{
 		// Enemy_A
-		enemy_A.attack_power = 1;		// 攻撃力
+		enemy_A.attack_power = 3;		// 攻撃力
 		enemy_A.attack_interval = 3.0f; // 攻撃間隔
-		enemy_A.speed_power = -1.0f;    // 移動速度
+		enemy_A.speed_power = -0.75f;    // 移動速度
 		enemy_A.radius = 0.5f;			// 半径
-		enemy_A.health = 5;				// 体力
+		enemy_A.health = 3;				// 体力
 
 		// Enemy_B
-		enemy_B.attack_power = 1;		 // 攻撃力
+		enemy_B.attack_power = 6;		 // 攻撃力
 		enemy_B.attack_interval = 3.0f;	 // 攻撃間隔
 		enemy_B.speed_power = -1.0f;	 // 移動速度
 		enemy_B.radius = 0.5f;			 // 半径
@@ -255,9 +255,17 @@ void EnemySpawner::InitializeLevel1()
 {
 	//TODO もね　敵出現1‐1
 	// 開始からの秒・エネミーのタイプ・軸（Side:縦軸　Vertical:横軸）・軸に対する長さ
-	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 2.0f));
-	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 9.0f));
-	//level_1.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Side, 3.0f));
-	//level_1.emplace_back(SetEnemy(4.0f, EnemyType::B, Shaft::Vertical, 4.0f));
-	//level_1.emplace_back(SetEnemy(5.0f, EnemyType::B, Shaft::Side, 5.0f));
+	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
+	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 17.5f));//A1
+	level_1.emplace_back(SetEnemy(15.0f, EnemyType::A, Shaft::Vertical, 1.0f));
+	level_1.emplace_back(SetEnemy(15.0f, EnemyType::A, Shaft::Vertical, 14.0f));//A2
+	level_1.emplace_back(SetEnemy(24.0f, EnemyType::A, Shaft::Side, 6.0f));
+	level_1.emplace_back(SetEnemy(24.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A3
+	level_1.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Side, 15.0f));
+	level_1.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Side, 17.0f));
+	level_1.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A4
+	level_1.emplace_back(SetEnemy(40.0f, EnemyType::A, Shaft::Side, 9.0f));
+	level_1.emplace_back(SetEnemy(40.0f, EnemyType::A, Shaft::Vertical, 9.0f));//A5
+
+
 }

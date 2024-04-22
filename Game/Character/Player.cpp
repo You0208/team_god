@@ -196,9 +196,9 @@ void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     // TODO もね　ユニットのボタン設定
-    if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::B;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::E;
+    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::C;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::B;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::A;
     else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::F;
 }
 
