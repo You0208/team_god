@@ -22,7 +22,7 @@ struct VS_OUT
 };
 
 // 関数宣言
-void DirectBDRF(float3 diffuseReflectance,float3 F0,float3 normal,float3 eyeVector,float3 lightVector,float3 lightColor,float roughness,out float3 outDiffuse,out float3 outSpecular);
+void DirectBDRF(float3 diffuseReflectance, float3 F0, float3 normal, float3 eyeVector, float3 lightVector, float3 lightColor, float roughness, out float3 outDiffuse, out float3 outSpecular);
 
 
 // Lambert拡散反射光を計算する
@@ -70,8 +70,8 @@ float4 CalcFog(in float4 color, float4 fog_color, float2 fog_range, float eye_le
 
 //-----------------------シャドウ------------------------------------------------
 
-void Shadow(VS_OUT pin, float3 normal,float3 T,float3 B,
-Texture2D shadow_map, SamplerComparisonState comparison_sampler_state,out float3 shadow_factor)
+void Shadow(VS_OUT pin, float3 normal, float3 T, float3 B,
+Texture2D shadow_map, SamplerComparisonState comparison_sampler_state, out float3 shadow_factor)
 {
     float3 L = normalize(-directional_light_direction.xyz);
     float3 SN = normalize(pin.world_normal.xyz);
@@ -150,7 +150,7 @@ void PointLight(VS_OUT pin,
 float3 diffuseReflectance,
 float3 F0,
 float3 N,
-float3 E,
+float3 V,
 float roughness,
 out float3 outDiffuse,
 out float3 outSpecular)
@@ -162,28 +162,18 @@ out float3 outSpecular)
         float lightLength = length(lightVector);
         if (lightLength >= point_light[i].range)
             continue;
-        float attenuate = saturate(1.0f - lightLength / point_light[i].range);
+        
+        float attenuateLength = saturate(1.0f - lightLength / point_light[i].range);
+        float attenuation = attenuateLength * attenuateLength;
         lightVector = lightVector / lightLength;
         
-        // ポイントライトとの距離を計算する
-        float3 distance = length(pin.world_position.xyz - point_light[i].position.xyz);
-        // 影響率は距離に比例して小さくなっていく
-        float affect = 1.0f - 1.0f / point_light[i].range.x * distance;
-        // 影響力がマイナスにならないように補正をかける
-        if (affect < 0.0f)
-        {
-            affect = 0.0f;
-        }
-        //影響を指数関数的にする。今回のサンプルでは3乗している
-        affect = pow(affect, 3.0f);
-        
         float3 diffuse = 0, specular = 0;
-        DirectBDRF(diffuseReflectance, F0, N, E, lightVector,
+        DirectBDRF(diffuseReflectance, F0, N, V, lightVector,
             point_light[i].color.rgb, roughness,
             diffuse, specular);
         
-        outDiffuse = diffuse * attenuate;
-        outSpecular = specular * attenuate;
+        outDiffuse += diffuse * attenuation;
+        outSpecular += specular * attenuation;
     }
 }
 
@@ -198,7 +188,7 @@ out float3 outDiffuse,
 out float3 outSpecular
 )
 {
-    for (int j = 0; j < 1; ++j)
+    for (int j = 0; j < 2; ++j)
     {
         // サーフェイスに入射するスポットライトの光の向きを計算する
         float3 ligDir = pin.world_position.xyz - spot_light[j].position.xyz;
@@ -258,8 +248,8 @@ out float3 outSpecular
         diffSpotLight *= affect;
         specSpotLight *= affect;
         
-        outDiffuse = diffSpotLight;
-        outSpecular = specSpotLight;        
+        outDiffuse += diffSpotLight;
+        outSpecular += specSpotLight;
     }
 }
 
@@ -268,23 +258,28 @@ out float3 outSpecular
 // 誘電率(非金属でも最低4%(0.0f4)は鏡面反射する)
 static const float Dielectric = 0.04f;
 //--------------------------------------------
-// 拡散反射BRDF(正規化ランバートの拡散反射)
-//--------------------------------------------
-// diffuseReflectance : 入射光のうち拡散反射になる割合
-float3 DiffuseBRDF(float3 diffuseReflectance)
-{
-    return diffuseReflectance / PI;
-}
-
-//--------------------------------------------
 // フレネル項
 //--------------------------------------------
 // F0 : 垂直入射時の反射率
 // VdotH: 視線ベクトルとハーフベクトル（光源へのベクトルと視点へのベクトルの中間ベクトル
 float3 CalcFresnel(float3 F0, float VdotH)
 {
-    return F0 + (1.0f - F0) * pow(1.0f - VdotH, 5.0f);
+    return F0 + (1.0f - F0) * pow(clamp(1.0f - VdotH, 0.0f, 1.0f), 5.0f);
 }
+
+
+//--------------------------------------------
+// 拡散反射BRDF(正規化ランバートの拡散反射)
+//--------------------------------------------
+//VdotH : 視線へのベクトルとハーフベクトルとの内積
+//fresnelF0 : 垂直入射時のフレネル反射色
+//diffuseReflectance : 入射光のうち拡散反射になる割合
+float3 DiffuseBRDF(float VdotH, float3 fresnelF0, float3 diffuseReflectance)
+{
+    return (1.0f - CalcFresnel(fresnelF0, VdotH)) * (diffuseReflectance / PI);
+}
+
+
 //--------------------------------------------
 // 法線分布関数
 //--------------------------------------------
@@ -327,14 +322,15 @@ float CalcGeometryFunction(float NdotL, float NdotV, float roughness)
 // roughness : 粗さ
 float3 SpecularBRDF(float NdotV, float NdotL, float NdotH, float VdotH, float3 fresnelF0, float roughness)
 {
- // D項(法線分布)
+    // D項(法線分布)
     float D = CalcNormalDistributionFunction(NdotH, roughness);
- // G項(幾何減衰項)
+    // G項(幾何減衰項)
     float G = CalcGeometryFunction(NdotL, NdotV, roughness);
- // F項(フレネル反射)
+    // F項(フレネル反射)
     float3 F = CalcFresnel(fresnelF0, VdotH);
     return (D * F * G) / max(0.0001f, 4 * NdotL * NdotV);
 }
+
 
 //--------------------------------------------
 // 直接光の物理ベースライティング
@@ -358,17 +354,16 @@ out float3 outSpecular)
 {
     float3 N = normal;
     float3 L = -lightVector;
-    float3 V = eyeVector;
+    float3 V = -eyeVector;
     float3 H = normalize(L + V);
     float NdotV = max(0.0001f, dot(N, V));
     float NdotL = max(0.0001f, dot(N, L));
     float NdotH = max(0.0001f, dot(N, H));
     float VdotH = max(0.0001f, dot(V, H));
     float3 irradiance = lightColor * NdotL;
-// レガシーなライティングとの互換性を保つ場合はPIで乗算する
-    irradiance *= PI;
-// 拡散反射BRDF(正規化ランバートの拡散反射)
-    outDiffuse = DiffuseBRDF(diffuseReflectance) * irradiance;
-// 鏡面反射BRDF（クック・トランスのマイクロファセットモデル）
-    outSpecular = SpecularBRDF(NdotV, NdotL, NdotH, VdotH, F0, roughness) * irradiance;
+    
+    // 拡散反射BRDF
+    outDiffuse = DiffuseBRDF(VdotH, F0, diffuseReflectance) * irradiance;
+    // 鏡面反射BRDF
+    outSpecular = (SpecularBRDF(NdotV, NdotL, NdotH, VdotH, F0, roughness) * irradiance);
 }

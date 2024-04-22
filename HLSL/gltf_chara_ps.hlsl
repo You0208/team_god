@@ -19,12 +19,16 @@ Texture2D shadow_map : register(t8);
 
 float4 main(VS_OUT pin) : SV_TARGET
 {
+	// ガンマ係数
+    static const float GammaFactor = 2.2f;
+
 //-----------------------------------------
 // サンプリング
 //-----------------------------------------
     // 色
     float4 color = material_textures[BASECOLOR_TEXTURE].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     float alpha = color.a;
+    color.rgb = pow(color.rgb, GammaFactor);
     
     // 金属度
     float metallic = material_textures[METALLIC_ROUGHNESS_TEXTURE].Sample(sampler_states[LINEAR], pin.texcoord).b;
@@ -57,6 +61,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     {
         // 入射光のうち拡散反射になる割合
         float3 diffuseReflectance = lerp(color.rgb, 0.02f, metallic);
+       
         // 垂直反射時のフレネル反射率
         float3 F0 = lerp(0.04, color.rgb, metallic);
         // 法線
@@ -74,6 +79,9 @@ float4 main(VS_OUT pin) : SV_TARGET
         // カメラから頂点への方向ベクトル
         float3 E = normalize(camera_position.xyz - pin.w_position.xyz);
   
+	    // 視線ベクトル
+        float3 V = normalize(pin.w_position.xyz - camera_position.xyz);
+	
         
         float NdotV = max(0.0001f, dot(N, E));
         //return float4(NdotV, 0, 0, 1);
@@ -82,9 +90,10 @@ float4 main(VS_OUT pin) : SV_TARGET
         // 直接光のPBR
         //-----------------------------------------   
         float3 directDiffuse = 0, directSpecular = 0;
-        DirectBDRF(diffuseReflectance, F0, N, E, directional_light_direction.xyz,
-         directional_light_color.rgb, roughness,
-         directDiffuse, directSpecular);
+        float3 L = normalize(directional_light_direction.xyz);
+        DirectBDRF(diffuseReflectance, F0, N, V, L,
+			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
+        return float4(directSpecular, 1);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
         //-----------------------------------------
@@ -136,6 +145,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     //    clip(color.a - 0.01f);
     //}
     
-
+    
+    finalLig.rgb = pow(finalLig.rgb, 1.0f / GammaFactor);
     return float4(finalLig, color.a);
 };

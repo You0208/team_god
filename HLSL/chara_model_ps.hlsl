@@ -11,6 +11,10 @@ Texture2D texture_maps[8] : register(t0);
 
 Texture2D metalSmoothTex : register(t4);
 
+//Texture2D d_color : register(t20);
+//Texture2D d_normal : register(t21);
+//Texture2D d_MS : register(t22);
+
 Texture2D noise_map : register(t9); // 先生ノイズは3D
 
 // SHADOW
@@ -23,7 +27,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 //-----------------------------------------
 // サンプリング
 //-----------------------------------------
-    const float GAMMA = 2.2;
+    static const float GAMMA = 2.2;
 
     // 色
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
@@ -33,8 +37,10 @@ float4 main(VS_OUT pin) : SV_TARGET
     // 金属度
     float metallic = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     
+    
     // 滑らかさ
     float smoothness = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).a;
+    
     
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
@@ -53,6 +59,8 @@ float4 main(VS_OUT pin) : SV_TARGET
     {
         // 入射光のうち拡散反射になる割合
         float3 diffuseReflectance = lerp(color.rgb, 0.02f, metallic);
+       
+        
         // 垂直反射時のフレネル反射率
         float3 F0 = lerp(Dielectric, color.rgb, metallic);
         // 法線
@@ -70,24 +78,26 @@ float4 main(VS_OUT pin) : SV_TARGET
         float3 N = normalize(normal_.x * normalize(T) + normal_.y * normalize(B) + normal_.z * normalize(N_));
         // カメラから頂点への方向ベクトル
         float3 E = normalize(camera_position.xyz - pin.world_position.xyz);
-        
-        
+        // 視線ベクトル
+        float3 V = normalize(pin.world_position.xyz - camera_position.xyz);
+	
         //-----------------------------------------
         // 直接光のPBR
         //-----------------------------------------   
         float3 directDiffuse = 0, directSpecular = 0;
-        DirectBDRF(diffuseReflectance, F0, N, E, directional_light_direction.xyz,
-         directional_light_color.rgb, roughness,
-         directDiffuse, directSpecular);
-        
+        float3 L = normalize(directional_light_direction.xyz);
+        DirectBDRF(diffuseReflectance, F0, N, V, L,
+			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
         // 最終光に足し合わせる
-        finalLig += (directDiffuse + directSpecular);        
+        finalLig += (directDiffuse + directSpecular);
         
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
         float3 pointDiffuse = 0, pointSpecular = 0;
-        PointLight(pin, diffuseReflectance, F0, N, E, roughness, pointDiffuse, pointSpecular);
+        
+        PointLight(pin, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
+        
         // 最終光に足し合わせる 
         finalLig += (pointDiffuse + pointSpecular);
         
@@ -127,6 +137,7 @@ float4 main(VS_OUT pin) : SV_TARGET
         clip(color.a - 0.01f);
     }
     
-
+    
+    finalLig = pow(finalLig, 1.0f / GAMMA);
     return float4(finalLig, color.a);
 };

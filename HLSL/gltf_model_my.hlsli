@@ -51,7 +51,9 @@ struct material_constants
     int alpha_mode; // "OPAQUE" : 0, "MASK" : 1, "BLEND" : 2
     float alpha_cutoff;
     bool double_sided;
+    
     pbr_metallic_roughness pbr_metallic_roughness;
+    
     normal_texture_info normal_texture;
     occlusion_texture_info occlusion_texture;
     texture_info emissive_texture;
@@ -377,14 +379,6 @@ out float3 outSpecular
 
 // 誘電率(非金属でも最低4%(0.0f4)は鏡面反射する)
 static const float Dielectric = 0.04f;
-//--------------------------------------------
-// 拡散反射BRDF(正規化ランバートの拡散反射)
-//--------------------------------------------
-// diffuseReflectance : 入射光のうち拡散反射になる割合
-float3 DiffuseBRDF(float3 diffuseReflectance)
-{
-    return diffuseReflectance / PI;
-}
 
 //--------------------------------------------
 // フレネル項
@@ -393,8 +387,18 @@ float3 DiffuseBRDF(float3 diffuseReflectance)
 // VdotH: 視線ベクトルとハーフベクトル（光源へのベクトルと視点へのベクトルの中間ベクトル
 float3 CalcFresnel(float3 F0, float VdotH)
 {
-    return F0 + (1.0f - F0) * pow(1.0f - VdotH, 5.0f);
+    return F0 + (1.0f - F0) * pow(clamp(1.0f - VdotH, 0.0f, 1.0f), 5.0f);
 }
+
+//--------------------------------------------
+// 拡散反射BRDF(正規化ランバートの拡散反射)
+//--------------------------------------------
+// diffuseReflectance : 入射光のうち拡散反射になる割合
+float3 DiffuseBRDF(float VdotH, float3 fresnelF0, float3 diffuseReflectance)
+{
+    return (1.0f - CalcFresnel(fresnelF0, VdotH)) * (diffuseReflectance / PI);
+}
+
 //--------------------------------------------
 // 法線分布関数
 //--------------------------------------------
@@ -437,11 +441,11 @@ float CalcGeometryFunction(float NdotL, float NdotV, float roughness)
 // roughness : 粗さ
 float3 SpecularBRDF(float NdotV, float NdotL, float NdotH, float VdotH, float3 fresnelF0, float roughness)
 {
- // D項(法線分布)
+    // D項(法線分布)
     float D = CalcNormalDistributionFunction(NdotH, roughness);
- // G項(幾何減衰項)
+    // G項(幾何減衰項)
     float G = CalcGeometryFunction(NdotL, NdotV, roughness);
- // F項(フレネル反射)
+    // F項(フレネル反射)
     float3 F = CalcFresnel(fresnelF0, VdotH);
     return (D * F * G) / max(0.0001f, 4 * NdotL * NdotV);
 }
@@ -468,17 +472,15 @@ out float3 outSpecular)
 {
     float3 N = normal;
     float3 L = -lightVector;
-    float3 V = eyeVector;
+    float3 V = -eyeVector;
     float3 H = normalize(L + V);
     float NdotV = max(0.0001f, dot(N, V));
     float NdotL = max(0.0001f, dot(N, L));
     float NdotH = max(0.0001f, dot(N, H));
     float VdotH = max(0.0001f, dot(V, H));
     float3 irradiance = lightColor * NdotL;
-// レガシーなライティングとの互換性を保つ場合はPIで乗算する
-    irradiance *= PI;
-// 拡散反射BRDF(正規化ランバートの拡散反射)
-    outDiffuse = DiffuseBRDF(diffuseReflectance) * irradiance;
-// 鏡面反射BRDF（クック・トランスのマイクロファセットモデル）
+    // 拡散反射BRDF
+    outDiffuse = DiffuseBRDF(VdotH, F0, diffuseReflectance) * irradiance;
+    // 鏡面反射BRDF
     outSpecular = SpecularBRDF(NdotV, NdotL, NdotH, VdotH, F0, roughness) * irradiance;
 }
