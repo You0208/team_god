@@ -13,6 +13,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertex_buffer;
     
+    bool isLoadFile = true;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
     D3D11_TEXTURE2D_DESC texture2d_desc;
 
@@ -33,7 +34,8 @@ public:
 
     // コンストラクタ・デストラクタ
     Sprite(ID3D11Device* device, const wchar_t* filename);
-    ~Sprite() {}
+    Sprite(ID3D11Device* device, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view);
+    virtual ~Sprite();
 
     // メンバ関数
 
