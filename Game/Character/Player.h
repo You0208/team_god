@@ -25,6 +25,8 @@ private:
     // はじき処理
     void Flick(float elapsedTime);
 
+    //void FlickRe(float elapsedFrame);
+
     // カテゴリーの変更
     void ChangeCategory();
 private:
@@ -64,7 +66,16 @@ private:
     float               max_right_stick_y = 0.0f;   //はじかれた右スティックY座標の最大 
     float               flip_pos_z        = 0.0f;   // 最終的に導き出されたはじき座標
 
+    //std::vector<float> rightStickHistory;  // 過去5フレーム分のright_stick_yの履歴
+    //size_t historySize;  // 履歴のサイズ（ここでは5フレーム分）
 
+    //void UpdateHistory(float newValue) {
+    //    // 古いデータを削除し、新しいデータを追加する（古いデータは1つずつずれる）
+    //    for (size_t i = historySize - 1; i > 0; --i) {
+    //        rightStickHistory[i] = rightStickHistory[i - 1];
+    //    }
+    //    rightStickHistory[0] = newValue;  // 最新のデータを先頭に追加
+    //}
 };
 
 

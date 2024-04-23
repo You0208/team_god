@@ -17,7 +17,7 @@ ID3D11ShaderResourceView* CreateShaderResourceViewFromRenderTargetView(ID3D11Ren
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	device->CreateShaderResourceView(textureResource, &srvDesc, &shaderResourceView);
+	if(shaderResourceView)device->CreateShaderResourceView(textureResource, &srvDesc, &shaderResourceView);
 
 	// 不要になったリソースを解放
 	textureResource->Release();
@@ -658,6 +658,9 @@ void Lemur::Scene::BaseScene::RenderingDeffered()
 			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
 			ExePostEffct();
 		}
+
+		ID3D11ShaderResourceView* clear_shader_resource_view[BUFFER_COUNT ]{ nullptr, nullptr, nullptr,nullptr };
+		immediate_context->PSSetShaderResources(1, BUFFER_COUNT , clear_shader_resource_view);
 	}
 }
 

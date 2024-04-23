@@ -62,6 +62,9 @@ void Player::Update(float elapsedTime)
     // 入力処理
     InputProcess();
 
+    // 経過フレーム
+    float elapsed_frame = 60.0f * elapsedTime;
+   // FlickRe(elapsed_frame);
     // はじき処理
     Flick(elapsedTime);
 
@@ -136,10 +139,12 @@ void Player::Flick(float elapsedTime)
             velocity.x = 0;
 
             // はじき距離を算出
-            //flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
-            max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
-            flip_pos_z = std::pow(max_right_stick_y*18.0f, 2.2f);
-            flip_pos_z = std::pow(flip_pos_z, 1.0f/2.2f);
+            //max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
+            flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
+            //flip_pos_z = std::pow(flip_pos_z, 1.0f / 2.2f);
+            //max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
+            //flip_pos_z = std::pow(max_right_stick_y*18.0f, 2.2f);
+            //flip_pos_z = std::pow(flip_pos_z, 1.0f/2.2f);
             // 初期化
             max_right_stick_y = 0;
             right_stick_y = 0;
@@ -150,6 +155,8 @@ void Player::Flick(float elapsedTime)
             flip_pos_z = scaling * (flip_pos_z / scaling);
             // 最小値0、最大値scalingにクランプする
             flip_pos_z = std::clamp(flip_pos_z, 0.2f, scaling);
+            //flip_pos_z = (scaling+sub_pos_zt) - flip_pos_z;
+            //flip_pos_z = flip_pos_z * -1.0f;
         }
 
     }
@@ -205,6 +212,17 @@ void Player::Flick(float elapsedTime)
     }
 
 }
+//
+//void Player::FlickRe(float elapsedFrame)
+//{
+//    GamePad& gamePad = Input::Instance().GetGamePad();
+//
+//    // コントローラーの右スティックY成分
+//    float right_stick_y = gamePad.GetAxisRY() * -1.0f;
+//
+//    // 履歴を更新
+//    UpdateHistory(right_stick_y);
+//}
 
 // カテゴリーの変更
 void Player::ChangeCategory()

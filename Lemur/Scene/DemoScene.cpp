@@ -183,14 +183,13 @@ void DemoScene::Render(float elapsedTime)
 	}
 	else
 	{
-		//test_model->Render(0.01f, Try.Get());
-		//test_model_2->Render(0.1f, Try.Get());
-		//test_model->DrawDebug("Test");
-		//test_model_2->DrawDebug("Test");
+		test_model->Render(0.01f, Try.Get());
+		test_model_2->Render(0.1f, Try.Get());
+		test_model->DrawDebug("Test");
+		test_model_2->DrawDebug("Test");
 
-
-		gltf_test_model->Render(1.0f, gltf_ps.Get());
-		gltf_test_model_2->Render(1.0f, gltf_ps.Get());
+		//gltf_test_model->Render(1.0f, gltf_ps.Get());
+		//gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 
 	// ステートの設定
