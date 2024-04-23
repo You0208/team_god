@@ -103,17 +103,27 @@ void Player::Flick(float elapsedTime)
     right_stick_y = gamePad.GetAxisRY() * -1.0f;
 
     // 右スティックが動かされたとき（引っ張られた時）
-    if (right_stick_y > 0.1f)
+    if ( right_stick_y > 0.1f)
     {
         // 引っ張りモーションへ
         model->PlayAnimation(Animation::Pull, false);
         // 横移動できないように
         velocity.x = 0;
 
-        // タイマーを動かす
-        flip_timer += elapsedTime;
-        // 最大値を更新し続ける
-        if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
+        if (flip_timer > 0.5f)
+        {
+            // 投げアニメーションへ
+            model->PlayAnimation(Animation::Throw, false);
+            // 横移動できないように
+            velocity.x = 0;
+        }
+        else
+        {
+            //// タイマーを動かす
+            flip_timer += elapsedTime;
+            //// 最大値を更新し続ける
+            if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
+        }
     }
     else
     {
@@ -126,9 +136,13 @@ void Player::Flick(float elapsedTime)
             velocity.x = 0;
 
             // はじき距離を算出
-            flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
+            //flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
+            max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
+            flip_pos_z = std::pow(max_right_stick_y*18.0f, 2.2f);
+            flip_pos_z = std::pow(flip_pos_z, 1.0f/2.2f);
             // 初期化
             max_right_stick_y = 0;
+            right_stick_y = 0;
             flip_timer = 0;
 
             // スケーリング
@@ -137,6 +151,7 @@ void Player::Flick(float elapsedTime)
             // 最小値0、最大値scalingにクランプする
             flip_pos_z = std::clamp(flip_pos_z, 0.2f, scaling);
         }
+
     }
 
     //TODO この条件は暴発しかねないので要修正

@@ -148,7 +148,8 @@ void DemoScene::Render(float elapsedTime)
 	SetUpDeffered();
 
 	//ステートの設定
-	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	if(enable_deferred)immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	else immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
@@ -177,8 +178,8 @@ void DemoScene::Render(float elapsedTime)
 		test_model->DrawDebug("Test");
 		test_model_2->DrawDebug("Test_2");
 
-		gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
-		gltf_test_model_2->Render(1.0f, gltf_gbuffer_ps.Get());
+		//gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
+		//gltf_test_model_2->Render(1.0f, gltf_gbuffer_ps.Get());
 	}
 	else
 	{
@@ -197,7 +198,6 @@ void DemoScene::Render(float elapsedTime)
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
 
 	RenderingDeffered();
-
 
 	// ポストエフェクトの実行
 	if (enable_post_effect)
