@@ -26,6 +26,10 @@ void EnemySpawner::Initialize()
 
 	// ÉåÉxÉãÇPÇÃèâä˙âª
 	InitializeLevel1();
+	InitializeLevel2();
+	InitializeLevel3();
+	InitializeLevel4();
+	InitializeLevel5();
 
 	// Imguióp
 	 
@@ -90,17 +94,83 @@ void EnemySpawner::Update(float elapsed_time)
 		{stage_pos.y + stage_width.y + stage_to_shaft}
 	};
 
+
 	timer += elapsed_time;
-	int count = level_1.size();
-	if (index < count)
+
+	switch (StageManager::Instance().GetStageLevel())
 	{
-		EnemyScript& script = level_1.at(index);
-		if (timer >= script.second)
+	case 0:
+	{
+		int count = level_1.size();
+		if (index < count)
 		{
-			EnemySpawn(script);
-			index++;
+			EnemyScript& script = level_1.at(index);
+			if (timer >= script.second)
+			{
+				EnemySpawn(script);
+				index++;
+			}
 		}
+		break;
 	}
+	case 1:
+	{
+		int count = level_2.size();
+		if (index < count)
+		{
+			EnemyScript& script = level_2.at(index);
+			if (timer >= script.second)
+			{
+				EnemySpawn(script);
+				index++;
+			}
+		}
+		break;
+	}
+	case 2:
+	{
+		int count = level_3.size();
+		if (index < count)
+		{
+			EnemyScript& script = level_3.at(index);
+			if (timer >= script.second)
+			{
+				EnemySpawn(script);
+				index++;
+			}
+		}
+		break;
+	}
+	case 3:
+	{
+		int count = level_4.size();
+		if (index < count)
+		{
+			EnemyScript& script = level_4.at(index);
+			if (timer >= script.second)
+			{
+				EnemySpawn(script);
+				index++;
+			}
+		}
+		break;
+	}
+	case 4:
+	{
+		int count = level_5.size();
+		if (index < count)
+		{
+			EnemyScript& script = level_5.at(index);
+			if (timer >= script.second)
+			{
+				EnemySpawn(script);
+				index++;
+			}
+		}
+		break;
+	}
+	}
+
 }
 
 void EnemySpawner::EnemySpawn(EnemyScript script)
@@ -271,5 +341,64 @@ void EnemySpawner::InitializeLevel1()
 	level_1.emplace_back(SetEnemy(40.0f, EnemyType::A, Shaft::Side, 9.0f));
 	level_1.emplace_back(SetEnemy(40.0f, EnemyType::A, Shaft::Vertical, 9.0f));//A5
 
+	level_1.emplace_back(SetEnemy(46.0f, EnemyType::A, Shaft::Side, 1.0f));
+	level_1.emplace_back(SetEnemy(46.0f, EnemyType::A, Shaft::Side, 17.5f));//A1
 
+	level_1.emplace_back(SetEnemy(55.0f, EnemyType::A, Shaft::Vertical, 1.0f));
+	level_1.emplace_back(SetEnemy(55.0f, EnemyType::A, Shaft::Vertical, 14.0f));//A2
+
+	level_1.emplace_back(SetEnemy(61.0f, EnemyType::A, Shaft::Side, 6.0f));
+	level_1.emplace_back(SetEnemy(61.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A3
+
+	//level_1.emplace_back(SetEnemy(70.0f, EnemyType::A, Shaft::Side, 15.0f));
+	//level_1.emplace_back(SetEnemy(70.0f, EnemyType::A, Shaft::Side, 17.0f));
+	//level_1.emplace_back(SetEnemy(70.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A4
+
+	//level_1.emplace_back(SetEnemy(73.0f, EnemyType::A, Shaft::Side, 9.0f));
+	//level_1.emplace_back(SetEnemy(73.0f, EnemyType::A, Shaft::Vertical, 9.0f));//A5
+
+
+}
+
+void EnemySpawner::InitializeLevel2()
+{
+	// level_2Ç©íçà”
+	
+	level_2.emplace_back(SetEnemy(3.0f, EnemyType::A, Shaft::Side, 16.0f));
+	level_2.emplace_back(SetEnemy(3.0f, EnemyType::A, Shaft::Vertical, 15.0f));//A1
+
+	level_2.emplace_back(SetEnemy(10.0f, EnemyType::A, Shaft::Side, 3.0f));
+	level_2.emplace_back(SetEnemy(10.0f, EnemyType::A, Shaft::Vertical, 11.0f));//A2
+
+	level_2.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Side, 3.0f));
+	level_2.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Side, 4.0f));
+	level_2.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Vertical, 9.0f));//A3
+
+	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Side, 6.0f));
+	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Side, 12.0f));
+	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Vertical, 16.0f));//A4
+
+	level_2.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 17.0f));
+	level_2.emplace_back(SetEnemy(34.0f, EnemyType::B, Shaft::Vertical, 17.0f));//B5
+
+	level_2.emplace_back(SetEnemy(34.0f, EnemyType::B, Shaft::Side, 1.0f));
+	level_2.emplace_back(SetEnemy(34.0f, EnemyType::B, Shaft::Vertical, 1.0f));//B6
+}
+
+void EnemySpawner::InitializeLevel3()
+{
+	// level_3Ç©íçà”
+	level_3.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
+}
+
+void EnemySpawner::InitializeLevel4()
+{
+	// level_4Ç©íçà”
+	level_4.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
+}
+
+void EnemySpawner::InitializeLevel5()
+{
+	// level_5Ç©íçà”
+	level_5.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
 }
