@@ -14,6 +14,8 @@
 #include "../Input/Input.h"
 #include "../imgui/ImGuiCtrl.h"
 
+const int BUFFER_COUNT = 4;
+
 namespace Lemur::Scene
 {
     // ベースシーン
@@ -220,20 +222,9 @@ namespace Lemur::Scene
         float camera_range = 12.0f;
 
         // ディファードレンダリング
-	// G-Buffer
-        enum GBufferId
-        {
-            GB_BaseColor = 0,
-            GB_Emissive,
-            GB_Normal,
-            GB_Parameters,
-            GB_Depth,
-            // 必要なら追加(シェーダー側の対応も必須)
-            GB_Max,
-        };
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> g_buffer_shader_resource_view[GB_Max];
-        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> g_buffer_render_target_view[GB_Max];
-        std::unique_ptr<Sprite> deferred_rendering_sprite;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceViewArray[BUFFER_COUNT];
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetViewArray[BUFFER_COUNT];
+
 
         // bloom
         std::unique_ptr<Bloom> bloomer;

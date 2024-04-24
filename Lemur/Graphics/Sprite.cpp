@@ -55,53 +55,6 @@ Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
     load_texture_from_file(device, filename, shader_resource_view.GetAddressOf(), &texture2d_desc);
 }
 
-Sprite::Sprite(ID3D11Device* device, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view)
-{
-    HRESULT hr{ S_OK };
-
-    vertex vertices[]
-    {
-        { { -1.0, +1.0, 0 }, { 1, 1, 1, 1 }, { 0, 0 } },
-        { { +1.0, +1.0, 0 }, { 1, 1, 1, 1 }, { 1, 0 } },
-        { { -1.0, -1.0, 0 }, { 1, 1, 1, 1 }, { 0, 1 } },
-        { { +1.0, -1.0, 0 }, { 1, 1, 1, 1 }, { 1, 1 } },
-    };
-
-    D3D11_BUFFER_DESC buffer_desc{};
-    buffer_desc.ByteWidth = sizeof(vertices);
-    buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-    buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    buffer_desc.MiscFlags = 0;
-    buffer_desc.StructureByteStride = 0;
-    D3D11_SUBRESOURCE_DATA subresource_data{};
-    subresource_data.pSysMem = vertices;
-    subresource_data.SysMemPitch = 0;
-    subresource_data.SysMemSlicePitch = 0;
-    hr = device->CreateBuffer(&buffer_desc, &subresource_data, vertex_buffer.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-    if (shader_resource_view)
-    {
-        isLoadFile = false;
-        shader_resource_view.Get()->AddRef();
-        this->shader_resource_view = shader_resource_view;
-        // 
-        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
-        this->shader_resource_view->GetResource(resource.GetAddressOf());
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2d;
-        hr = resource.Get()->QueryInterface<ID3D11Texture2D>(texture2d.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-        texture2d->GetDesc(&texture2d_desc);
-    }
-}
-
-Sprite::~Sprite()
-{
-    if (!isLoadFile)
-        shader_resource_view->Release();
-}
-
 void Sprite::Render(ID3D11DeviceContext* immediate_context,
     float dx, float dy,// 矩形の左上の座標（スクリーン座標系）
     float dw, float dh, // 矩形のサイズ（スクリーン座標系）
@@ -109,7 +62,6 @@ void Sprite::Render(ID3D11DeviceContext* immediate_context,
     float angle/*degree*/)
 {
     Render(immediate_context, dx, dy, dw, dh, r, g, b, a, angle, 0.0f, 0.0f, static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
-
 }
 
 void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle, float sx, float sy, float sw, float sh)
@@ -208,12 +160,12 @@ void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
     // D3D11_PRIMITIVE(基本形)_TOPOLOGY(つなげ方)_TRIANGLESTRIP(STRIP＝つながっている線)
     immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-    //// 入力レイアウトオブジェクトのバインド
-    ////immediate_context->IASetInputLayout(input_layout.Get());
+    // 入力レイアウトオブジェクトのバインド
+    immediate_context->IASetInputLayout(input_layout.Get());
 
-    //// シェーダーのバインド
-    ////immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
-    ////immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+    // シェーダーのバインド
+    immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
+    immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 
     //シェーダー リソースのバインド
     immediate_context->PSSetShaderResources(0, 1, shader_resource_view.GetAddressOf());
@@ -226,8 +178,6 @@ void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 {
     Render(immediate_context, dx, dy, dw, dh, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
         0.0f, 0.0f, static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
-    ID3D11ShaderResourceView* srvs[] = { nullptr };
-    immediate_context->PSSetShaderResources(0, 1, srvs);
 }
 
 

@@ -1,30 +1,6 @@
 #include "BaseScene.h"
 #include "../Graphics/Camera.h"
 
-
-// レンダーターゲットビューからシェーダーリソースビューを作成する関数
-ID3D11ShaderResourceView* CreateShaderResourceViewFromRenderTargetView(ID3D11RenderTargetView* renderTargetView, ID3D11Device* device) {
-	ID3D11ShaderResourceView* shaderResourceView = nullptr;
-
-	// レンダーターゲットビューからテクスチャを取得
-	ID3D11Resource* textureResource = nullptr;
-	renderTargetView->GetResource(&textureResource);
-
-	// テクスチャを元にシェーダーリソースビューを作成
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = 1;
-
-	if(shaderResourceView)device->CreateShaderResourceView(textureResource, &srvDesc, &shaderResourceView);
-
-	// 不要になったリソースを解放
-	textureResource->Release();
-
-	return shaderResourceView;
-}
-
 void Lemur::Scene::BaseScene::DebugImgui()
 {
 	ImGui::Begin("Shader");
@@ -118,6 +94,23 @@ void Lemur::Scene::BaseScene::DebugImgui()
 			ImGui::SliderFloat(r.c_str(), &spot_light[i].range, 0.0f, +1000.0f);
 			std::string ic = std::string("angle") + std::to_string(i);
 			ImGui::SliderFloat(ic.c_str(), &sp_angle, 0.0f, +1000.0);
+		}
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("texture"))
+	{
+		// GBufferを確認する
+		static constexpr char* GBufferNames[]
+		{
+			"color",
+			"normal",
+			"position",
+			"metalSmooth"
+		};
+		for (int i = 0; i < BUFFER_COUNT; ++i)
+		{
+			ImGui::Text(GBufferNames[i]);
+			ImGui::Image(shaderResourceViewArray[i].Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1,1, 1 });
 		}
 		ImGui::TreePop();
 	}
@@ -229,28 +222,6 @@ void Lemur::Scene::BaseScene::InitializeState()
 		blend_desc.RenderTarget[3].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		blend_desc.RenderTarget[3].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[3].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		blend_desc.AlphaToCoverageEnable = FALSE;
-		blend_desc.IndependentBlendEnable = TRUE;
-		blend_desc.RenderTarget[4].BlendEnable = FALSE;
-		blend_desc.RenderTarget[4].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blend_desc.RenderTarget[4].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[4].BlendOp = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[4].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blend_desc.RenderTarget[4].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[4].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[4].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		blend_desc.AlphaToCoverageEnable = FALSE;
-		blend_desc.IndependentBlendEnable = TRUE;
-		blend_desc.RenderTarget[5].BlendEnable = FALSE;
-		blend_desc.RenderTarget[5].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blend_desc.RenderTarget[5].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[5].BlendOp = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[5].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blend_desc.RenderTarget[5].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[5].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[5].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 		hr = graphics.GetDevice()->CreateBlendState(&blend_desc, blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
@@ -553,108 +524,51 @@ void Lemur::Scene::BaseScene::SetUpRendering()
 
 void Lemur::Scene::BaseScene::InitializeDeffered(int textureWidth, int textureHeight)
 {
-	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 	HRESULT hr{ S_OK };
 
-	// テクスチャの情報（フレームバッファーでもやってる）
-	D3D11_TEXTURE2D_DESC texture2d_desc;
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
-	texture2d_desc.Width              = textureWidth;
-	texture2d_desc.Height             = textureHeight;
-	texture2d_desc.MipLevels          = 1;
-	texture2d_desc.ArraySize          = 1;
-	texture2d_desc.SampleDesc.Count   = 1;
-	texture2d_desc.SampleDesc.Quality = 0;
-	texture2d_desc.Usage              = D3D11_USAGE_DEFAULT;
-	texture2d_desc.BindFlags          = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	texture2d_desc.CPUAccessFlags     = 0;
-	texture2d_desc.MiscFlags          = 0;
-	DXGI_FORMAT formats[] =
+	// GBuffer生成
 	{
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R32_FLOAT,
-	};
-	for (int i = GB_BaseColor; i < GB_Max; ++i)
-	{
-		texture2d_desc.Format = formats[i];
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> color_buffer{};
-		hr = graphics.GetDevice()->CreateTexture2D(&texture2d_desc, NULL, color_buffer.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+		D3D11_TEXTURE2D_DESC texture2d_desc{};
+		texture2d_desc.Width = SCREEN_WIDTH;
+		texture2d_desc.Height = SCREEN_HEIGHT;
+		texture2d_desc.MipLevels = 1;
+		texture2d_desc.ArraySize = 1;
+		texture2d_desc.SampleDesc.Count = 1;
+		texture2d_desc.SampleDesc.Quality = 0;
+		texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
+		texture2d_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		texture2d_desc.CPUAccessFlags = 0;
+		texture2d_desc.MiscFlags = 0;
+		DXGI_FORMAT formats[] =
+		{
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+		};
+		for (int i = 0; i < BUFFER_COUNT; ++i)
+		{
+			texture2d_desc.Format = formats[i];
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> color_buffer{};
+			hr = graphics.GetDevice()->CreateTexture2D(&texture2d_desc, NULL, color_buffer.GetAddressOf());
+			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-		// レンダーターゲットビュー生成
-		hr = graphics.GetDevice()->CreateRenderTargetView(color_buffer.Get(), NULL,
-			g_buffer_render_target_view[i].GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+			// レンダーターゲットビュー生成
+			hr = graphics.GetDevice()->CreateRenderTargetView(color_buffer.Get(), NULL,
+				renderTargetViewArray[i].GetAddressOf());
+			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-		// シェーダーリソースビュー生成
-		hr = graphics.GetDevice()->CreateShaderResourceView(color_buffer.Get(), NULL,
-			g_buffer_shader_resource_view[i].GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+			// シェーダーリソースビュー生成
+			hr = graphics.GetDevice()->CreateShaderResourceView(color_buffer.Get(), NULL,
+				shaderResourceViewArray[i].GetAddressOf());
+			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+		}
 	}
 
-	// ディファードレンダリング用スプライト
-	deferred_rendering_sprite = std::make_unique<Sprite>(graphics.GetDevice(), g_buffer_shader_resource_view[GB_BaseColor]);
 
-
-	//// テクスチャの配列
-	//Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTargetTextureArray[BUFFER_COUNT];
-
-	//// バッファーの枚数分テクスチャを作成
-	//for (int i = 0; i < BUFFER_COUNT; i++)
-	//{
-	//	// textureDescの情報を持ったテクスチャを&renderTargetTextureArray[i]に入力
-	//	graphics.GetDevice()->CreateTexture2D(&textureDesc, NULL, &renderTargetTextureArray[i]);
-	//}
-
-	//// レンダーターゲットビューの設定を格納する変数
-	//D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc32;
-	//// 初期化
-	//ZeroMemory(&renderTargetViewDesc32, sizeof(renderTargetViewDesc32));
-	//// textureDescと同じフォーマットを使用
-	//renderTargetViewDesc32.Format = textureDesc.Format;
-	//// 二次元テクスチャを使用
-	//renderTargetViewDesc32.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	//// テクスチャの解像度レベルを設定
-	//renderTargetViewDesc32.Texture2D.MipSlice = 0;
-
-
-	//// レンダーターゲットビューの設定を格納する変数
-	//D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc8;
-	//ZeroMemory(&renderTargetViewDesc8, sizeof(renderTargetViewDesc8));
-	//renderTargetViewDesc8.Format = textureDesc.Format;
-	//renderTargetViewDesc8.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	//renderTargetViewDesc8.Texture2D.MipSlice = 0;
-
-
-	//// レンダーターゲットビューを作成
-	//graphics.GetDevice()->CreateRenderTargetView(renderTargetTextureArray[0].Get(), &renderTargetViewDesc32, &g_buffer_render_target_view[0]);
-	//graphics.GetDevice()->CreateRenderTargetView(renderTargetTextureArray[1].Get(), &renderTargetViewDesc32, &g_buffer_render_target_view[1]);
-	//graphics.GetDevice()->CreateRenderTargetView(renderTargetTextureArray[2].Get(), &renderTargetViewDesc8, &g_buffer_render_target_view[2]);
-	//graphics.GetDevice()->CreateRenderTargetView(renderTargetTextureArray[3].Get(), &renderTargetViewDesc32, &g_buffer_render_target_view[3]);
-
-
-	////シェーダリソースビューの説明
-	//D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-	//ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
-	//shaderResourceViewDesc.Format = textureDesc.Format;
-	//shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	//// 最も詳細なミップマップのインデックスを0に
-	//shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	//// テクスチャのミップマップの数を設定
-	//shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-	//for (int j = 0; j < BUFFER_COUNT; j++)
-	//{
-	//	graphics.GetDevice()->CreateShaderResourceView(
-	//		// TODO 無理やり
-	//		*renderTargetTextureArray[j].ReleaseAndGetAddressOf(),// シェーダーリソースビューで使用するテクスチャを指定
-	//		&shaderResourceViewDesc,	// ェーダーリソースビューの設定が格納された変数を指定
-	//		&g_buffer_shader_resource_view[j]	// 作成されたシェーダーリソースビューを格納する変数のアドレス
-	//	);
-	//}
 }
 
 void Lemur::Scene::BaseScene::SetUpDeffered()
@@ -666,22 +580,14 @@ void Lemur::Scene::BaseScene::SetUpDeffered()
 	FLOAT color[4] = { 0,0,0,1 };
 	if (enable_deferred)
 	{
-		ID3D11RenderTargetView* render_targets[GB_Max] =
+		// レンダーターゲットのビュー配列と深度ステンシルバッファを出力レンダーパイプラインにバインドする。
+		immediate_context->OMSetRenderTargets(BUFFER_COUNT, renderTargetViewArray->GetAddressOf(), depth_stencil_view);
+
+		// レンダーターゲットバッファーをクリア
+		for (int i = 0; i < BUFFER_COUNT; i++)
 		{
-		g_buffer_render_target_view[GB_BaseColor].Get(),
-		g_buffer_render_target_view[GB_Emissive].Get(),
-		g_buffer_render_target_view[GB_Normal].Get(),
-		g_buffer_render_target_view[GB_Parameters].Get(),
-		g_buffer_render_target_view[GB_Depth].Get(),
-		};
-		FLOAT clear_color[]{ 0.f, 0.f, 0.f, .0f };
-		for (int i = GB_BaseColor; i < GB_Max; ++i)
-		{
-			immediate_context->ClearRenderTargetView(render_targets[i], clear_color);
+			immediate_context->ClearRenderTargetView(renderTargetViewArray[i].Get(), color);
 		}
-		immediate_context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH |
-			D3D11_CLEAR_STENCIL, 1.0f, 0);
-		immediate_context->OMSetRenderTargets(GB_Max, render_targets, depth_stencil_view);
 	}
 }
 
@@ -692,39 +598,23 @@ void Lemur::Scene::BaseScene::RenderingDeffered()
 	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
 	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
-	if (enable_deferred && deferred_rendering_sprite)
+	if (enable_deferred)
 	{
 		// レンダーターゲットを一枚に
 		immediate_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
 
 		// シェーダー設定
-		immediate_context->IASetInputLayout(sprite_input_layout.Get());
-		immediate_context->VSSetShader(sprite_vertex_shader.Get(), nullptr, 0);
-		immediate_context->PSSetShader(pixel_shaders[static_cast<size_t>(PS::DEFFERED)].Get(), nullptr, 0);
-
-		// サンプラーステート設定
-		immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::POINT)].GetAddressOf());
-		immediate_context->PSSetSamplers(1, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
-		immediate_context->PSSetSamplers(2, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::ANISOTROPIC)].GetAddressOf());
-
 		// GBuffer設定
-		ID3D11ShaderResourceView* shader_resource_views[GB_Max - 1] =
+		ID3D11ShaderResourceView* shader_resource_views[BUFFER_COUNT] =
 		{
 			// GB_BaseColorはスプライト側で指定しているのでそれを考慮
-			g_buffer_shader_resource_view[GB_Emissive].Get(),
-			g_buffer_shader_resource_view[GB_Normal].Get(),
-			g_buffer_shader_resource_view[GB_Parameters].Get(),
-			g_buffer_shader_resource_view[GB_Depth].Get(),
+			shaderResourceViewArray[0].Get(),
+			shaderResourceViewArray[1].Get(),
+			shaderResourceViewArray[2].Get(),
+			shaderResourceViewArray[3].Get(),
 		};
-		immediate_context->PSSetShaderResources(1, GB_Max - 1, shader_resource_views);
 
-		// 描画
-		deferred_rendering_sprite->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-		//// レンダーターゲットビューからシェーダーリソースビューを作成して配列に代入
-		//for (int i = 0; i < BUFFER_COUNT; ++i) {
-		//	shaderResourceViewArray[i] = CreateShaderResourceViewFromRenderTargetView(renderTargetViewArray[i].Get(), graphics.GetDevice());
-		//}
+		immediate_context->PSSetShaderResources(1, BUFFER_COUNT, shader_resource_views);
 
 		// ポストエフェクト開始
 		if (enable_deferred_post)
@@ -733,7 +623,8 @@ void Lemur::Scene::BaseScene::RenderingDeffered()
 			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
 		}
 
-		//fullscreenQuad->Blit(immediate_context, shader_resource_views, 0, _countof(g_buffer_shader_resource_view), pixel_shaders[static_cast<size_t>(PS::DEFFERED)].Get());
+		// 描画
+		fullscreenQuad->Blit(immediate_context, shader_resource_views, 0, _countof(shader_resource_views), pixel_shaders[static_cast<size_t>(PS::DEFFERED)].Get());
 
 		if (enable_deferred_post)
 		{
@@ -741,8 +632,8 @@ void Lemur::Scene::BaseScene::RenderingDeffered()
 			ExePostEffct();
 		}
 
-		ID3D11ShaderResourceView* clear_shader_resource_view[GB_Max - 1]{ nullptr, nullptr, nullptr,nullptr };
-		immediate_context->PSSetShaderResources(1, GB_Max - 1, clear_shader_resource_view);
+		ID3D11ShaderResourceView* clear_shader_resource_view[BUFFER_COUNT]{ nullptr, nullptr, nullptr,nullptr };
+		immediate_context->PSSetShaderResources(1, BUFFER_COUNT , clear_shader_resource_view);
 	}
 }
 
@@ -834,7 +725,7 @@ void Lemur::Scene::BaseScene::InitializePS()
 	// SKYMAP
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[static_cast<size_t>(PS::SKY)].GetAddressOf());
 	// DEFERRED
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps_re.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
 }
 
 void Lemur::Scene::BaseScene::ExePostEffct()

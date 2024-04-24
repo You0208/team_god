@@ -54,6 +54,8 @@ public:
     DirectX::XMVECTOR GetEye() { return Eye; }   // projections—ñæ“¾
     DirectX::XMVECTOR GetFocus() { return Focus; }
 
+    DirectX::XMFLOAT3 GetAngle() { return angle; }
+
 private:
     // views—ñ
     DirectX::XMMATRIX V = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };

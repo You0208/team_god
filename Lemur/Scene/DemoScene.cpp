@@ -40,7 +40,7 @@ void DemoScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
 
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps_class.cso", fbx_gbuffer_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
 	}
 	// ゲーム部分
@@ -173,10 +173,10 @@ void DemoScene::Render(float elapsedTime)
 	//3D描画
 	if (enable_deferred)
 	{
-		//test_model->Render(0.01f, fbx_gbuffer_ps.Get());
-		//test_model_2->Render(0.1f, fbx_gbuffer_ps.Get());
-		//test_model->DrawDebug("Test");
-		//test_model_2->DrawDebug("Test_2");
+		test_model->Render(0.01f, fbx_gbuffer_ps.Get());
+		test_model_2->Render(0.1f, fbx_gbuffer_ps.Get());
+		test_model->DrawDebug("Test");
+		test_model_2->DrawDebug("Test_2");
 
 		//gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
 		//gltf_test_model_2->Render(1.0f, gltf_gbuffer_ps.Get());
@@ -193,7 +193,6 @@ void DemoScene::Render(float elapsedTime)
 	}
 
 	// ステートの設定
-	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
 

@@ -46,7 +46,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     
     // 粗さ
     float roughness = 1.0f - smoothness;
-    
     // マスク
     float mask = noise_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord).x;
     
@@ -78,12 +77,14 @@ float4 main(VS_OUT pin) : SV_TARGET
         float3 E = normalize(camera_position.xyz - pin.world_position.xyz);
         // 視線ベクトル
         float3 V = normalize(pin.world_position.xyz - camera_position.xyz);
-	
+        
+        
         //-----------------------------------------
         // 直接光のPBR
         //-----------------------------------------   
         float3 directDiffuse = 0, directSpecular = 0;
         float3 L = normalize(directional_light_direction.xyz);
+        
         DirectBDRF(diffuseReflectance, F0, N, V, L,
 			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
         // 最終光に足し合わせる
@@ -92,6 +93,8 @@ float4 main(VS_OUT pin) : SV_TARGET
         // ポイントライトのPBR
         //-----------------------------------------  
         float3 pointDiffuse = 0, pointSpecular = 0;
+        
+        
         
         PointLight(pin, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
         
