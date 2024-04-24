@@ -49,13 +49,6 @@ cbuffer light_constant : register(b6)
     float4 directional_light_color;
 };
 
-//cbuffer SCENE_CONSTANT_BUFFER : register(b1)
-//{
-//    row_major float4x4 view_projection;
-//    float4 light_direction;
-//    float4 camera_position;
-//};
-
 struct texture_info
 {
     int index;

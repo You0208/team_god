@@ -105,9 +105,11 @@ void Lemur::Scene::BaseScene::DebugImgui()
 			"color",
 			"normal",
 			"position",
-			"metalSmooth"
+			"metalSmooth",
+			"emissive",
+			"oculsion",
 		};
-		for (int i = 0; i < BUFFER_COUNT; ++i)
+		for (int i = 0; i < G_MAX; ++i)
 		{
 			ImGui::Text(GBufferNames[i]);
 			ImGui::Image(shaderResourceViewArray[i].Get(), { 256, 144 }, { 0, 0 }, { 1, 1 }, { 1, 1,1, 1 });
@@ -190,38 +192,19 @@ void Lemur::Scene::BaseScene::InitializeState()
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-		blend_desc.AlphaToCoverageEnable = FALSE;
-		blend_desc.IndependentBlendEnable = TRUE;
-		blend_desc.RenderTarget[1].BlendEnable = FALSE;
-		blend_desc.RenderTarget[1].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blend_desc.RenderTarget[1].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[1].BlendOp = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[1].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blend_desc.RenderTarget[1].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[1].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		blend_desc.AlphaToCoverageEnable = FALSE;
-		blend_desc.IndependentBlendEnable = TRUE;
-		blend_desc.RenderTarget[2].BlendEnable = FALSE;
-		blend_desc.RenderTarget[2].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blend_desc.RenderTarget[2].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[2].BlendOp = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[2].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blend_desc.RenderTarget[2].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[2].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[2].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		blend_desc.AlphaToCoverageEnable = FALSE;
-		blend_desc.IndependentBlendEnable = TRUE;
-		blend_desc.RenderTarget[3].BlendEnable = FALSE;
-		blend_desc.RenderTarget[3].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blend_desc.RenderTarget[3].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[3].BlendOp = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[3].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blend_desc.RenderTarget[3].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-		blend_desc.RenderTarget[3].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blend_desc.RenderTarget[3].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		for (int i = 1; i < G_MAX; i++)
+		{
+			blend_desc.AlphaToCoverageEnable = FALSE;
+			blend_desc.IndependentBlendEnable = TRUE;
+			blend_desc.RenderTarget[i].BlendEnable = FALSE;
+			blend_desc.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+			blend_desc.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+			blend_desc.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
+			blend_desc.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
+			blend_desc.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+			blend_desc.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+			blend_desc.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		}
 		hr = graphics.GetDevice()->CreateBlendState(&blend_desc, blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
@@ -541,15 +524,16 @@ void Lemur::Scene::BaseScene::InitializeDeffered(int textureWidth, int textureHe
 		texture2d_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 		texture2d_desc.CPUAccessFlags = 0;
 		texture2d_desc.MiscFlags = 0;
-		DXGI_FORMAT formats[] =
+		DXGI_FORMAT formats[G_MAX] =
 		{
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
 		};
-		for (int i = 0; i < BUFFER_COUNT; ++i)
+		for (int i = 0; i < G_MAX; ++i)
 		{
 			texture2d_desc.Format = formats[i];
 			Microsoft::WRL::ComPtr<ID3D11Texture2D> color_buffer{};
@@ -581,10 +565,10 @@ void Lemur::Scene::BaseScene::SetUpDeffered()
 	if (enable_deferred)
 	{
 		// レンダーターゲットのビュー配列と深度ステンシルバッファを出力レンダーパイプラインにバインドする。
-		immediate_context->OMSetRenderTargets(BUFFER_COUNT, renderTargetViewArray->GetAddressOf(), depth_stencil_view);
+		immediate_context->OMSetRenderTargets(G_MAX, renderTargetViewArray->GetAddressOf(), depth_stencil_view);
 
 		// レンダーターゲットバッファーをクリア
-		for (int i = 0; i < BUFFER_COUNT; i++)
+		for (int i = 0; i < G_MAX; i++)
 		{
 			immediate_context->ClearRenderTargetView(renderTargetViewArray[i].Get(), color);
 		}
@@ -605,16 +589,18 @@ void Lemur::Scene::BaseScene::RenderingDeffered()
 
 		// シェーダー設定
 		// GBuffer設定
-		ID3D11ShaderResourceView* shader_resource_views[BUFFER_COUNT] =
+		ID3D11ShaderResourceView* shader_resource_views[G_MAX] =
 		{
 			// GB_BaseColorはスプライト側で指定しているのでそれを考慮
-			shaderResourceViewArray[0].Get(),
-			shaderResourceViewArray[1].Get(),
-			shaderResourceViewArray[2].Get(),
-			shaderResourceViewArray[3].Get(),
+			shaderResourceViewArray[BASECOLOR].Get(),
+			shaderResourceViewArray[NORMAL].Get(),
+			shaderResourceViewArray[POSITION].Get(),
+			shaderResourceViewArray[MS].Get(),
+			shaderResourceViewArray[EMISSIVE].Get(),
+			shaderResourceViewArray[OCCLUSION].Get(),
 		};
 
-		immediate_context->PSSetShaderResources(1, BUFFER_COUNT, shader_resource_views);
+		immediate_context->PSSetShaderResources(1, G_MAX, shader_resource_views);
 
 		// ポストエフェクト開始
 		if (enable_deferred_post)
@@ -632,8 +618,8 @@ void Lemur::Scene::BaseScene::RenderingDeffered()
 			ExePostEffct();
 		}
 
-		ID3D11ShaderResourceView* clear_shader_resource_view[BUFFER_COUNT]{ nullptr, nullptr, nullptr,nullptr };
-		immediate_context->PSSetShaderResources(1, BUFFER_COUNT , clear_shader_resource_view);
+		ID3D11ShaderResourceView* clear_shader_resource_view[G_MAX]{ nullptr, nullptr, nullptr,nullptr,nullptr,nullptr };
+		immediate_context->PSSetShaderResources(1, G_MAX, clear_shader_resource_view);
 	}
 }
 
@@ -725,7 +711,7 @@ void Lemur::Scene::BaseScene::InitializePS()
 	// SKYMAP
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[static_cast<size_t>(PS::SKY)].GetAddressOf());
 	// DEFERRED
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps_re.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
 }
 
 void Lemur::Scene::BaseScene::ExePostEffct()

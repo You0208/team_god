@@ -14,8 +14,6 @@
 #include "../Input/Input.h"
 #include "../imgui/ImGuiCtrl.h"
 
-const int BUFFER_COUNT = 4;
-
 namespace Lemur::Scene
 {
     // ベースシーン
@@ -114,7 +112,6 @@ namespace Lemur::Scene
         struct scene_constants
         {
             DirectX::XMFLOAT4X4 view_projection;// ビュー行列
-            //DirectX::XMFLOAT4 light_direction;// ライト方向
             DirectX::XMFLOAT4 camera_position;// カメラの位置
             DirectX::XMFLOAT4X4 inverse_projection;// 逆行列
             float time;// 時間
@@ -222,8 +219,10 @@ namespace Lemur::Scene
         float camera_range = 12.0f;
 
         // ディファードレンダリング
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceViewArray[BUFFER_COUNT];
-        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetViewArray[BUFFER_COUNT];
+        enum GBUFFER { BASECOLOR, NORMAL, POSITION, MS, EMISSIVE, OCCLUSION, G_MAX };
+
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceViewArray[G_MAX];
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetViewArray[G_MAX];
 
 
         // bloom

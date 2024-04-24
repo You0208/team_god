@@ -92,10 +92,7 @@ float4 main(VS_OUT pin) : SV_TARGET
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
-        float3 pointDiffuse = 0, pointSpecular = 0;
-        
-        
-        
+        float3 pointDiffuse = 0, pointSpecular = 0;       
         PointLight(pin, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
         
         // 最終光に足し合わせる 

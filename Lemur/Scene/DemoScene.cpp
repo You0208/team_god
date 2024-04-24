@@ -173,23 +173,23 @@ void DemoScene::Render(float elapsedTime)
 	//3D描画
 	if (enable_deferred)
 	{
-		test_model->Render(0.01f, fbx_gbuffer_ps.Get());
-		test_model_2->Render(0.1f, fbx_gbuffer_ps.Get());
-		test_model->DrawDebug("Test");
-		test_model_2->DrawDebug("Test_2");
+		//test_model->Render(0.01f, fbx_gbuffer_ps.Get());
+		//test_model_2->Render(0.1f, fbx_gbuffer_ps.Get());
+		//test_model->DrawDebug("Test");
+		//test_model_2->DrawDebug("Test_2");
 
-		//gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
-		//gltf_test_model_2->Render(1.0f, gltf_gbuffer_ps.Get());
+		gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
+		gltf_test_model_2->Render(1.0f, gltf_gbuffer_ps.Get());
 	}
 	else
 	{
-		test_model->Render(0.01f, Try.Get());
-		test_model_2->Render(0.1f, Try.Get());
-		test_model->DrawDebug("Test");
-		test_model_2->DrawDebug("Test");
+		//test_model->Render(0.01f, Try.Get());
+		//test_model_2->Render(0.1f, Try.Get());
+		//test_model->DrawDebug("Test");
+		//test_model_2->DrawDebug("Test");
 
-		//gltf_test_model->Render(1.0f, gltf_ps.Get());
-		//gltf_test_model_2->Render(1.0f, gltf_ps.Get());
+		gltf_test_model->Render(1.0f, gltf_ps.Get());
+		gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 
 	// ステートの設定

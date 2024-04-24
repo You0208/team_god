@@ -75,16 +75,10 @@ float4 main(VS_OUT pin) : SV_TARGET
         float3 normal_ = normal * 2.0f - 1.0f;
         // ワールド空間での法線ベクトルを得る
         float3 N = normalize(normal_.x * normalize(T) + normal_.y * normalize(B) + normal_.z * normalize(N_));
-        // カメラから頂点への方向ベクトル
-        float3 E = normalize(camera_position.xyz - pin.w_position.xyz);
-  
+        
 	    // 視線ベクトル
         float3 V = normalize(pin.w_position.xyz - camera_position.xyz);
 	
-        
-        float NdotV = max(0.0001f, dot(N, E));
-        //return float4(NdotV, 0, 0, 1);
-        
         //-----------------------------------------
         // 直接光のPBR
         //-----------------------------------------   
