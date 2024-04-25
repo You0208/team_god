@@ -93,6 +93,7 @@ void Player::DrawDebugGUI()
     ImGui::SliderFloat(u8"種の射出速度", &seed_throw_speed, 0.0f, 100.0f);
     ImGui::SliderFloat(u8"はじく強さここで変えれます", &flip_speed, 0.1f, 10.0f);
     ImGui::SliderFloat(u8"コントローラー無い時のはじき", &flip_pos_z, 0.0f, 50.0f);
+    ImGui::SliderFloat(u8"溜めの最大時間", &max_charge_time, 0.0f, 3.0f);
     
     ImGui::End();
 }
