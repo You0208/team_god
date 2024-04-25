@@ -32,7 +32,6 @@ void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& fo
     this->front.x = world._31;
     this->front.y = world._32;
     this->front.z = world._33;
-
 }
 
 void Camera::SetPerspectiveFov(Microsoft::WRL::ComPtr<ID3D11DeviceContext> dc)

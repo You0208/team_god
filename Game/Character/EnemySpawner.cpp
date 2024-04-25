@@ -132,7 +132,8 @@ void EnemySpawner::Update(float elapsed_time)
 	};
 
 
-	timer += elapsed_time;
+	if (EnemyManager::Instance().GetEnemyCount() == 0)timer += elapsed_time * timer_speed;
+	else timer += elapsed_time;
 
 	switch (StageManager::Instance().GetStageLevel())
 	{
@@ -321,6 +322,11 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 void EnemySpawner::DebugImGui()
 {
 	ImGui::Begin(u8"ìG");
+
+	ImGui::DragFloat(u8"ìGèoåªópÇÃÉ^ÉCÉ}Å[", &timer, 0.0f, 5.0f);
+	ImGui::SliderFloat(u8"ìGÇ¢Ç»Ç¢éûÇÃî{ë¨", &timer_speed, 0.0f, 5.0f);
+
+
 	if (ImGui::TreeNode("enemy1"))
 	{
 		EnemyImGui(enemy_A);
@@ -516,7 +522,7 @@ void EnemySpawner::InitializeLevel2()
 void EnemySpawner::InitializeLevel3()
 {
 	// level_3Ç©íçà”
-	level_3.emplace_back(SetEnemy(2.0f, EnemyType::A_2, Shaft::Side, 1.0f));
+	level_3.emplace_back(SetEnemy(15.0f, EnemyType::A_2, Shaft::Side, 1.0f));
 }
 
 void EnemySpawner::InitializeLevel4()
