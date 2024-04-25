@@ -116,11 +116,21 @@ void GameScene::Initialize()
 
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
+
+		//hitEffect = new Effect(".\\resources\\Effect\\Unit_set.efk");
 	}
 }
 
 void GameScene::Finalize()
 {
+	// デバッグ
+	// エフェクト終了
+	if (hitEffect != nullptr)
+	{
+		delete hitEffect;
+		hitEffect = nullptr;
+	}
+
 	//ステージ終了
 	if (stage != nullptr)
 	{
@@ -293,6 +303,7 @@ void GameScene::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
+		EffectManager::Instance().Render(view, projection);
 	}
 
 	// ステートの再設定

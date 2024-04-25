@@ -105,4 +105,5 @@ private:// シェーダー
     // でバグ
     std::unique_ptr<FbxModelManager> test_model;
     std::unique_ptr<FbxModelManager> test_model_2;
+    Effect* hitEffect;
 };

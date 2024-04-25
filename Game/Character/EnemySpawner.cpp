@@ -67,11 +67,48 @@ void EnemySpawner::Initialize()
 		enemy_D.health = 5;					 // 体力
 		dis_D = 1.0f;						 // 移動する距離
 
+
+		// Enemy_A_2
+		enemy_A_2.attack_power = 1;		// 攻撃力
+		enemy_A_2.attack_interval = 3.0f; // 攻撃間隔
+		enemy_A_2.speed_power = -0.75f;    // 移動速度
+		enemy_A_2.radius = 0.5f;			// 半径
+		enemy_A_2.health = 3;				// 体力
+
+		// Enemy_B_2
+		enemy_B_2.attack_power = 6;		 // 攻撃力
+		enemy_B_2.attack_interval = 3.0f;	 // 攻撃間隔
+		enemy_B_2.speed_power = -1.0f;	 // 移動速度
+		enemy_B_2.radius = 0.5f;			 // 半径
+		enemy_B_2.health = 5;				 // 体力
+		mover_timer_max_B_2 = 1.0f;		 // とどまっている時間
+		dis_B_2 = 3.0f;					 // 一気に進む距離
+
+		// Enemy_C_2
+		enemy_C_2.attack_power = 1;			// 攻撃力
+		enemy_C_2.attack_interval = 3.0f;		// 攻撃間隔
+		enemy_C_2.speed_power = -1.0f;		// 移動速度
+		enemy_C_2.radius = 0.5f;				// 半径
+		enemy_C_2.health = 5;					// 体力
+		speed_power_Y_D_2 = -1.0f;			// 斜め移動の時のもう一個の速度
+
+		// Enemy_D
+		enemy_D_2.attack_power = 1;			 // 攻撃力
+		enemy_D_2.attack_interval = 3.0f;		 // 攻撃間隔
+		enemy_D_2.speed_power = -1.0f;		 // 移動速度
+		enemy_D_2.radius = 0.5f;				 // 半径
+		enemy_D_2.health = 5;					 // 体力
+		dis_D_2 = 1.0f;						 // 移動する距離
+
 		// デバッグ用
 		script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
 		script_enemy_B = SetEnemy(4.0f, EnemyType::B, Shaft::Side, 4.0f);
 		script_enemy_C = SetEnemy(4.0f, EnemyType::C, Shaft::Side, 4.0f);
 		script_enemy_D = SetEnemy(4.0f, EnemyType::D, Shaft::Side, 4.0f);
+		script_enemy_A_2 = SetEnemy(4.0f, EnemyType::A_2, Shaft::Side, 4.0f);
+		script_enemy_B_2 = SetEnemy(4.0f, EnemyType::B_2, Shaft::Side, 4.0f);
+		script_enemy_C_2 = SetEnemy(4.0f, EnemyType::C_2, Shaft::Side, 4.0f);
+		script_enemy_D_2 = SetEnemy(4.0f, EnemyType::D_2, Shaft::Side, 4.0f);
 	}
 }
 
@@ -228,6 +265,56 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		// リストに追加
 		EnemyManager::Instance().Register(enemy);
 		break;
+	case EnemyType::A_2:
+	{
+		enemy = new Enemy_A;
+		SetBasicEnemyStatus(enemy, enemy_A_2);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+	case EnemyType::B_2:
+	{
+		enemy = new Enemy_B;
+		SetBasicEnemyStatus(enemy, enemy_B_2);
+		enemy->SetMoveTimerMax(mover_timer_max_B_2);
+		enemy->SetDis(dis_B_2);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+	case EnemyType::C_2:
+	{
+		enemy = new Enemy_C;
+		SetBasicEnemyStatus(enemy, enemy_C_2);
+		enemy->SetSpeedPowerY(speed_power_Y_D_2);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+	}
+	break;
+	case EnemyType::D_2:
+		enemy = new Enemy_D;
+		SetBasicEnemyStatus(enemy, enemy_D_2);
+		enemy->SetDis(dis_D_2);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// リストに追加
+		EnemyManager::Instance().Register(enemy);
+		break;
 	}
 }
 
@@ -258,6 +345,30 @@ void EnemySpawner::DebugImGui()
 		ImGui::SliderFloat(u8"進む距離", &dis_D, 0.0f, 10.0f);
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("enemy1_2"))
+	{
+		EnemyImGui(enemy_A_2);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("enemy2_2"))
+	{
+		EnemyImGui(enemy_B_2);
+		ImGui::SliderFloat(u8"一気に進むまでの時間_2", &mover_timer_max_B, 0.0f, 5.0f);
+		ImGui::SliderFloat(u8"一気に進む距離_2", &dis_B, 0.0f, 10.0f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("enemy3_2"))
+	{
+		EnemyImGui(enemy_C_2);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("enemy4_2"))
+	{
+		EnemyImGui(enemy_D_2);
+		ImGui::SliderFloat(u8"斜めの時の追加速度_2", &speed_power_Y_D, 0.0f, 10.0f);
+		ImGui::SliderFloat(u8"進む距離_2", &dis_D, 0.0f, 10.0f);
+		ImGui::TreePop();
+	}
 
 
 	ImGui::End();
@@ -280,6 +391,23 @@ void EnemySpawner::DebugImGui()
 	if (ImGui::Button("enemy4"))
 	{
 		EnemySpawn(script_enemy_D);
+	}
+	if (ImGui::Button("enemy1_2"))
+	{
+		EnemySpawn(script_enemy_A_2);
+	}
+	if (ImGui::Button("enemy2_2"))
+	{
+		EnemySpawn(script_enemy_B_2);
+	}
+
+	if (ImGui::Button("enemy3_2"))
+	{
+		EnemySpawn(script_enemy_C_2);
+	}
+	if (ImGui::Button("enemy4_2"))
+	{
+		EnemySpawn(script_enemy_D_2);
 	}
 	ImGui::End();
 }
@@ -388,7 +516,7 @@ void EnemySpawner::InitializeLevel2()
 void EnemySpawner::InitializeLevel3()
 {
 	// level_3か注意
-	level_3.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
+	level_3.emplace_back(SetEnemy(2.0f, EnemyType::A_2, Shaft::Side, 1.0f));
 }
 
 void EnemySpawner::InitializeLevel4()

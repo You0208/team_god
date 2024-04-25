@@ -73,6 +73,23 @@ private:
     float speed_power_Y_D = -1.0f;
     float dis_D = 1.0f;
 
+    //Enemy_A
+    EnemyStatus enemy_A_2;
+
+    // Enemy_B
+    EnemyStatus enemy_B_2;
+    float mover_timer_max_B_2 = 1.0f; // 一気に進むまでの時間
+    float dis_B_2 = 3.0f;     // 一気に進む距離
+
+    // Enemy_C
+    EnemyStatus enemy_C_2;
+
+    // Enemy_D
+    EnemyStatus enemy_D_2;
+    float speed_power_Y_D_2 = -1.0f;
+    float dis_D_2 = 1.0f;
+
+    
     // セット
     void SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status);
     // Imgui
@@ -83,6 +100,10 @@ private:
     EnemyScript script_enemy_B;
     EnemyScript script_enemy_C;
     EnemyScript script_enemy_D;
+    EnemyScript script_enemy_A_2;
+    EnemyScript script_enemy_B_2;
+    EnemyScript script_enemy_C_2;
+    EnemyScript script_enemy_D_2;
 
     int count;
 };

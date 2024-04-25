@@ -8,7 +8,11 @@ enum EnemyType
     A,
     B,
     C,
-    D
+    D,
+    A_2,
+    B_2,
+    C_2,
+    D_2
 };
 
 enum Shaft
