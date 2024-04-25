@@ -374,9 +374,9 @@ void EnemySpawner::InitializeLevel2()
 	level_2.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Side, 4.0f));
 	level_2.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Vertical, 9.0f));//A3
 
-	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Side, 6.0f));
-	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Side, 12.0f));
-	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Vertical, 16.0f));//A4
+	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Vertical, 6.0f));
+	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Vertical, 12.0f));
+	level_2.emplace_back(SetEnemy(25.0f, EnemyType::A, Shaft::Side, 16.0f));//A4
 
 	level_2.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 17.0f));
 	level_2.emplace_back(SetEnemy(34.0f, EnemyType::B, Shaft::Vertical, 17.0f));//B5
