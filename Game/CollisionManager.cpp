@@ -173,7 +173,6 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position)
         if (j == 0)// Žn‚ß‚Í”äŠr‚È‚µ
         {
             near_pos = unit->GetPosition().z;
-            break;
         }
         else if (unit->GetPosition().z < near_pos)
         {

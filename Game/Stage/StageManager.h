@@ -31,9 +31,12 @@ public:
 
     Stage* GetStage(int j) { return stages.at(j); }
     int GetStageIndex() { return stage_index; }
+    int GetStageLevel() { return stage_level; }
     void SetStageIndex(int stage_index_) { stage_index= stage_index_; }
+    void SetStageLevel (int stage_level_) { stage_level = stage_level_; }
 private:
     std::vector<Stage*> stages;
     int stage_index;
+    int stage_level;
 };
 
