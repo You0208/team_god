@@ -109,22 +109,27 @@ void Player::Flick(float elapsedTime)
     if ( right_stick_y > 0.1f)
     {
         // 引っ張りモーションへ
-        model->PlayAnimation(Animation::Pull, false);
         // 横移動できないように
         velocity.x = 0;
+        model->PlayAnimation(Animation::Pull, false);
 
         if (flip_timer > 0.5f)
         {
-            // 投げアニメーションへ
+            //// 投げアニメーションへ
             model->PlayAnimation(Animation::Throw, false);
-            // 横移動できないように
-            velocity.x = 0;
+            //// 横移動できないように
+            //velocity.x = 0;
+
+            // タイマーを動かす
+            flip_timer += elapsedTime;
+            // 最大値を更新し続ける
+            if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
         }
         else
         {
-            //// タイマーを動かす
+            // タイマーを動かす
             flip_timer += elapsedTime;
-            //// 最大値を更新し続ける
+            // 最大値を更新し続ける
             if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
         }
     }
@@ -146,24 +151,33 @@ void Player::Flick(float elapsedTime)
             //flip_pos_z = std::pow(max_right_stick_y*18.0f, 2.2f);
             //flip_pos_z = std::pow(flip_pos_z, 1.0f/2.2f);
             // 初期化
+            if (flip_timer > max_charge_time)
+            {
+                flip_pos_z = sub_pos_z_puls;
+            }
+
+            // スケーリング
+            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
+            //flip_pos_z = scaling * (flip_pos_z / scaling);
+            // 最小値0、最大値scalingにクランプする
+            flip_pos_z = std::clamp(flip_pos_z, 0.0f, scaling);
+            flip_pos_z = (scaling + sub_pos_z_puls) - flip_pos_z;
+
             max_right_stick_y = 0;
             right_stick_y = 0;
             flip_timer = 0;
 
-            // スケーリング
-            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
-            flip_pos_z = scaling * (flip_pos_z / scaling);
-            // 最小値0、最大値scalingにクランプする
-            flip_pos_z = std::clamp(flip_pos_z, 0.2f, scaling);
+            is_throw = true;
             //flip_pos_z = (scaling+sub_pos_zt) - flip_pos_z;
             //flip_pos_z = flip_pos_z * -1.0f;
         }
-
     }
 
     //TODO この条件は暴発しかねないので要修正
-    if (flip_pos_z >= 0.1f)
+    if (is_throw)
     {
+        //
+        is_throw = false;
         // 横移動出来ないように
         velocity.x = 0;
         // 種の実体を生成

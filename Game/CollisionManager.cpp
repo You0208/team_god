@@ -217,7 +217,7 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position, Di
     // 該当ユニットがなければ終了
     if (index.size() == 0)  return false;
 
-    // 記録した番号のユニットを当たる
+    // 記録した番号のユニットを当たる（種が範囲に接触したユニットの総当たり）
     for (int j = 0; j < index.size(); ++j)
     {
         unit = unitManager.GetUnit(index.at(j));
@@ -225,7 +225,6 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position, Di
         if (j == 0)// 始めは比較なし
         {
             near_pos = unit->GetPosition().z;
-            break;
         }
         else if (unit->GetPosition().z < near_pos)
         {
