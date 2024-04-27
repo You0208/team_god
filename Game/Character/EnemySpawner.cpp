@@ -522,7 +522,10 @@ void EnemySpawner::InitializeLevel2()
 void EnemySpawner::InitializeLevel3()
 {
 	// level_3Ç©íçà”
-	level_3.emplace_back(SetEnemy(15.0f, EnemyType::A_2, Shaft::Side, 1.0f));
+	//level_3.emplace_back(SetEnemy(15.0f, EnemyType::A_2, Shaft::Side, 1.0f));
+	level_3.emplace_back(SetEnemy(15.0f, EnemyType::B, Shaft::Side, 1.0f));
+	level_3.emplace_back(SetEnemy(15.0f, EnemyType::C, Shaft::Side, 1.0f));
+	level_3.emplace_back(SetEnemy(15.0f, EnemyType::D, Shaft::Side, 1.0f));
 }
 
 void EnemySpawner::InitializeLevel4()

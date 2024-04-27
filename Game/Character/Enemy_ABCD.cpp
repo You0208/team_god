@@ -93,7 +93,7 @@ void Enemy_A::UpdateMoveState(float elapsed_time)
 Enemy_B::Enemy_B()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_02.fbx");
 
     attack_power    = 1;        // çUåÇóÕ
     attack_interval = 3.0f;     // çUåÇä‘äu
@@ -224,7 +224,7 @@ void Enemy_B::DrawDebugPrimitive()
 Enemy_C::Enemy_C()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_03.fbx");
 
     attack_power    = 1;         // çUåÇóÕÅ@
     attack_interval = 3.0f;      // çUåÇä‘äu
@@ -545,7 +545,7 @@ void Enemy_C::MoveToDestination(float elapsed_time, Move nextState)
 Enemy_D::Enemy_D()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
+    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_04.fbx");
 
     attack_power    = 1;        // çUåÇóÕ
     attack_interval = 3.0f;     // çUåÇä‘äu
