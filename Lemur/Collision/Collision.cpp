@@ -149,6 +149,72 @@ bool Collision::IntersectCircleVsPosition(const DirectX::XMFLOAT2& position, con
     return false;
 }
 
+bool Collision::IntersectRotateRectVsPoint(const Rect& rect, const DirectX::XMFLOAT2& position, const float angle)
+{
+    // 回転矩形の中心を原点としたときの各頂点座標
+    float left = rect.center.x - (rect.width.x * 0.5f);
+    float right = rect.center.x + (rect.width.x * 0.5f);
+    float top = rect.center.y + (rect.width.y * 0.5f);
+    float bottom = rect.center.y - (rect.width.y * 0.5f);
+
+    //矩形の中心と点の距離を計算
+    float l;
+    l = sqrt(((position.x - rect.center.x) * (position.x - rect.center.x)) + ((position.y - rect.center.y) * (position.y - rect.center.y)));
+
+    //矩形の中心を原点としてみた相対的な点Cの座標
+    DirectX::XMFLOAT2 p2;
+    p2.x = position.x - rect.center.x;
+    p2.y = position.y - rect.center.y;
+
+    DirectX::XMFLOAT2  p3;
+    // 相対座標に対して矩形の回転を打ち消す逆行列を掛ける
+    p3 = {
+        cosf(DirectX::XMConvertToRadians(-angle)) * p2.x + sinf(DirectX::XMConvertToRadians(-angle)) * p2.y,
+        -sinf(DirectX::XMConvertToRadians(-angle)) * p2.x + cosf(DirectX::XMConvertToRadians(-angle)) * p2.y
+    };
+
+    //普通の矩形と点の当たり判定
+    if (left <= p3.x && p3.x <= right && bottom <= p3.y && p3.y <= top)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Collision::IntersectRotateRectVsCircle(const Rect& rect, const DirectX::XMFLOAT2& position, const float radius,const float angle)
+{    
+    //回転矩形と点の当たり判定
+    if (IntersectRotateRectVsPoint(rect,position,angle))
+    {
+        return true;
+    }
+    else
+    {
+        // 左下
+        bool judge1 = IntersectCircleVsLine(rect.left_up, rect.left_down, position, radius);
+        bool judge2 = IntersectCircleVsLine(rect.left_down, rect.right_down, position, radius);
+        bool judge3 = IntersectCircleVsLine(rect.right_down, rect.right_up, position, radius);
+        bool judge4 = IntersectCircleVsLine(rect.right_up, rect.left_up, position, radius);
+        if (judge1 || judge2 || judge3 || judge4)return true;
+    }
+    return false;
+}
+
+bool Collision::IntersectDonutVsCircle(const DirectX::XMFLOAT2& donut_pos, const float radius_out, const float radius_in, const DirectX::XMFLOAT2& position, const float radius)
+{
+    if (IntersectCircleVsCircle(donut_pos, radius_in, position, radius))
+    {
+        return false;
+    }
+    else if (IntersectCircleVsCircle(donut_pos, radius_out, position, radius))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+
 
 
 //　球と球交差判定

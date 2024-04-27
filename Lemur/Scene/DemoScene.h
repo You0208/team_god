@@ -106,4 +106,5 @@ private:
 
 
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;    //スプライトバッチ
+
 };

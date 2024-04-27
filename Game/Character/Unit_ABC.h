@@ -19,8 +19,6 @@ private:
 
     // Imgui
     void DrawDebugGUI(int n)override;
-private:
-    float attack_timer;
 };
 
 class Unit_B :public Unit
@@ -42,9 +40,6 @@ private:
 
     // Imgui
     void DrawDebugGUI(int n)override;
-private:
-    float attack_timer;
-
 };
 
 class Unit_C :public Unit
@@ -66,6 +61,4 @@ private:
 
     // Imgui
     void DrawDebugGUI(int n)override;
-private:
-    float attack_timer;
 };

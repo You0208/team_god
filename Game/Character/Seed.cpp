@@ -4,6 +4,7 @@
 #include "SeedManager.h"
 #include "Unit_ABC.h"
 #include "Unit_DEF.h"
+#include "Unit_HIJ.h"
 
 #include <random>
 
@@ -85,6 +86,18 @@ void Seed::Update(float elapsedTime)
                 unit = new Unit_F;
                 UnitManager::Instance().SetUpUnit_F(unit);
                 break;
+            case 6:
+                unit = new Unit_H;
+                UnitManager::Instance().SetUpUnit_H(unit);
+                break;
+            case 7:
+                unit = new Unit_I;
+                UnitManager::Instance().SetUpUnit_I(unit);
+                break;
+            case 8:
+                unit = new Unit_J;
+                UnitManager::Instance().SetUpUnit_J(unit);
+                break;
             }
 
             // ユニットが生まれたら
@@ -95,7 +108,7 @@ void Seed::Update(float elapsedTime)
                 // ユニット奥の四角（奥行は適当に設定）
                 Rect square = {
                     {position.x - radius,position.z + 100.0f},
-                    {position.x + radius,position.z - radius}
+                    {position.x + radius,position.z - radius},
                 };
                 unit->SetSquare(square);
                 // カテゴリーをセット

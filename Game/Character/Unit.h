@@ -47,9 +47,11 @@ public:
     void SetStrengWidth(int streng_width_) { streng_width = streng_width_; }
     void SetAttackTimes(int attack_times_) { attack_times = attack_times_; }
     void SetAttackWidth(float attack_width_) { attack_width = attack_width_; }
+    void SetAttackWidth(DirectX::XMFLOAT2 attack_width_) { attack_rect.width = attack_width_; }
     void SetTHeight(float t_height_) { t_height = t_height_; }
     void SetTBase(float t_base_) { t_base = t_base_; }
-
+    void SetRectAngle(float rect_angle_) { rect_angle = rect_angle_; }
+    void SetAttackRadiusIn(float attack_radius_in_) { attack_radius_in = attack_radius_in_; }
 
 protected:
     // 死亡ステートへ遷移
@@ -99,8 +101,11 @@ protected:
     Triangle    triangle_2                  = {};               // 三角攻撃範囲２
     Rect        attack_rect                 = {};               // ユニットの四角攻撃範囲
     Rect        unit_back                   = {};               // ユニットの後方範囲
+    float       attack_timer                = 0.0f;             // 攻撃間隔タイマー
+    float       rect_angle                  = 0.0f;             // 回転矩形角度
 
-    float timer_max;
-    int   streng_width;
-    float attack_width;
+    float       timer_max                   = 0.0f;             // タイマーの最大
+    int         streng_width                = 0.0f;             // 強化幅
+    float       attack_width                = 0.0f;             // 四角の幅
+    float       attack_radius_in            = 0.0f;             // ドーナツ型用の中身円半径
 };

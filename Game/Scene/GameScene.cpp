@@ -65,7 +65,7 @@ void GameScene::Initialize()
 
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(1);
+		stage_manager.SetStageLevel(3);
 
 
 		//TODO もね 制限時間の初期化
@@ -111,12 +111,17 @@ void GameScene::Initialize()
 		Try_T.B.y = 2.0;
 		Try_T.C.x = 2.0;
 		Try_T.C.y = 1.0;
-
+		angle = 50.0f;
 		r0 = 0.1f;
 
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
+		//rect.center = { 0,0 };
+		//rect = CalcRotateRect(rect.center, { 2,2 }, angle);
+		//rect.width = { 2,2 };
+		//c_p = { 0.0f,0.0f };
+		//c_r = 0.5f;
 		//hitEffect = new Effect(".\\resources\\Effect\\Unit_set.efk");
 	}
 }
@@ -202,6 +207,11 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 		// スポーン
 		EnemySpawner::Instance().Update(elapsedTime);
+	}
+
+	// デバッグ
+	{
+		//rect = CalcRotateRect(rect.center, rect.width, angle);
 	}
 
 	// Imgui
@@ -304,6 +314,14 @@ void GameScene::Render(float elapsedTime)
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
 		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
 		EffectManager::Instance().Render(view, projection);
+
+		//DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+		//debug_renderer->DrawBox({ rect.center.x,0,rect.center.y }, { 0,DirectX::XMConvertToRadians(angle),0 }, { rect.width.x * 0.5f,0.5f,rect.width.y * 0.5f }, { 1,0,1,1 });
+		//debug_renderer->DrawSphere({ rect.right_down.x,0.5f, rect.right_down.y }, 0.1f, { 0,0,1,1 });
+		//debug_renderer->DrawSphere({ rect.left_up.x,0.5f, rect.left_up.y }, 0.1f, { 0,1,0,1 });
+
+		//if (Collision::IntersectRotateRectVsCircle(rect, c_p, c_r,angle))debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 1,1,0,1 });
+		//else debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 0,0,1,1 });
 	}
 
 	// ステートの再設定
@@ -327,6 +345,14 @@ void GameScene::DebugImgui()
 	float t = time_limit - timer;
 	ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
 	ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
+	ImGui::End();
+
+	ImGui::Begin("debug");
+	ImGui::SliderFloat2("rect_center", &rect.center.x, -10.0f, 10.0f);
+	ImGui::SliderFloat2("rect_width", &rect.width.x, 0.0f, 10.0f);
+	ImGui::SliderFloat("angle", &angle, 0.0f, 360.0f);
+	ImGui::SliderFloat2("c_p", &c_p.x, -10.0f, 10.0f);
+	ImGui::SliderFloat("c_r", &c_r, -10.0f, 10.0f);
 	ImGui::End();
 
 	BaseScene::DebugImgui();

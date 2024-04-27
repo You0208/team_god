@@ -92,6 +92,20 @@ private:
     UnitStatus unit_F;
     float attack_width_F;
 
+    // Unit_H
+    UnitStatus unit_H;
+    DirectX::XMFLOAT2 attack_width_H;
+    float rect_angle_H;
+
+    // Unit_I
+    UnitStatus unit_I;
+    DirectX::XMFLOAT2 attack_width_I;
+    float rect_angle_I;
+
+    // Unit_J
+    UnitStatus unit_J;
+    float radius_in_J;  // ”¼Œa
+    float radius_out_J;  // ”¼Œa
 public:
     void SetUpUnit_A(Unit* unit);
     void SetUpUnit_B(Unit* unit);
@@ -99,4 +113,7 @@ public:
     void SetUpUnit_D(Unit* unit);
     void SetUpUnit_E(Unit* unit);
     void SetUpUnit_F(Unit* unit);
+    void SetUpUnit_H(Unit* unit);
+    void SetUpUnit_I(Unit* unit);
+    void SetUpUnit_J(Unit* unit);
 };
