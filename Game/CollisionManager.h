@@ -33,4 +33,5 @@ public:
 
     // 種の着地場所の前にユニットが無いか確認（あれば帰ってきた値を着地場所にする）
     DirectX::XMFLOAT2 CollisionUnitBackVsSeed(DirectX::XMFLOAT2 position);
+
 };

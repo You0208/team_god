@@ -19,7 +19,7 @@ Player::Player()
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
     // ユニットカテゴリーの初期化
-    unit_category = 3;
+    unit_category = UnitCategory::J;
 
     //TODO もね　ゲーム画面
     {

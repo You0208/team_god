@@ -106,4 +106,10 @@ private:// シェーダー
     std::unique_ptr<FbxModelManager> test_model;
     std::unique_ptr<FbxModelManager> test_model_2;
     Effect* hitEffect;
+
+    // デバッグ
+    Rect rect;
+    DirectX::XMFLOAT2 c_p;
+    float c_r;
+    float angle;
 };

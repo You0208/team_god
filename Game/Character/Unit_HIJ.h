@@ -1,11 +1,11 @@
 #pragma once
 #include "Unit.h"
 
-class Unit_D :public Unit
+class Unit_J :public Unit
 {
 public:
-    Unit_D();
-    ~Unit_D()override {};
+    Unit_J();
+    ~Unit_J()override {};
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
@@ -21,11 +21,11 @@ private:
     void DrawDebugGUI(int n)override;
 };
 
-class Unit_E :public Unit
+class Unit_H :public Unit
 {
 public:
-    Unit_E();
-    ~Unit_E()override {};
+    Unit_H();
+    ~Unit_H()override {};
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
@@ -42,11 +42,11 @@ private:
     void DrawDebugGUI(int n)override;
 };
 
-class Unit_F :public Unit
+class Unit_I :public Unit
 {
 public:
-    Unit_F();
-    ~Unit_F()override {};
+    Unit_I();
+    ~Unit_I()override {};
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;

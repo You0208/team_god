@@ -74,6 +74,29 @@ public:
         const float radius
     );
 
+    // 回転矩形と点の当たり判定
+    static bool IntersectRotateRectVsPoint(
+        const Rect& rect,
+        const DirectX::XMFLOAT2& position,
+        const float angle
+    );
+
+    // 回転矩形と円の当たり判定
+    static bool IntersectRotateRectVsCircle(
+        const Rect& rect,
+        const DirectX::XMFLOAT2& position,
+        const float radius,
+        const float angle
+    );
+
+    // ドーナツ型と円の当たり判定
+    static bool IntersectDonutVsCircle(
+        const DirectX::XMFLOAT2& positionA,
+        const float radius_out,
+        const float radius_in,
+        const DirectX::XMFLOAT2& positionB,
+        const float radiusB
+    );
 
     // 3D
     // 球と球の交差判定

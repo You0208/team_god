@@ -41,10 +41,12 @@ private:
 
     int index;
     float                       timer          = 0.0f;  // タイマー
+    float                       timer_speed    = 3.0f;  // タイマーの早くする倍
     float                       stage_to_shaft = 1.0f;  // ステージと軸の離れ具合
     DirectX::XMFLOAT2           shaft_pos      = {};    // 各軸の位置
     DirectX::XMFLOAT2           stage_pos      = {0,0};    // ステージ位置の保存
     DirectX::XMFLOAT2           stage_width    = {5,5};    // ステージ幅の保存
+
 
 
 //-----この下デバッグ用↓--------------------------------------------

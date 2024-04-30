@@ -6,6 +6,10 @@ struct Rect
 {
     DirectX::XMFLOAT2 left_up;
     DirectX::XMFLOAT2 right_down;
+    DirectX::XMFLOAT2 left_down = {};
+    DirectX::XMFLOAT2 right_up = {};
+    DirectX::XMFLOAT2 width = {};
+    DirectX::XMFLOAT2 center = {};
 };
 
 struct Triangle
@@ -45,7 +49,6 @@ public:
     }
 
 };
-
 
 
 //(Left Hand Side 左辺, Right Hand Side 右辺)
@@ -194,6 +197,21 @@ inline float Length(const DirectX::XMFLOAT3& f1, const DirectX::XMFLOAT3& f2)
     return ret;
 }
 
+inline float Length(const DirectX::XMFLOAT2& f1, const DirectX::XMFLOAT2& f2)
+{
+    float ret{};
+    DirectX::XMStoreFloat(
+        &ret,
+        DirectX::XMVector3Length(
+            DirectX::XMVectorSubtract(
+                DirectX::XMLoadFloat2(&f1), DirectX::XMLoadFloat2(&f2)
+            )
+        )
+    );
+    return ret;
+}
+
+
 // 二つのベクトルの内積を計算して角度thetaより大きかったらtrue
 inline bool CalcAngle(DirectX::XMVECTOR Vec1, DirectX::XMVECTOR Vec2, float theta)
 {
@@ -259,3 +277,61 @@ inline bool Equal(const float x, const float y, const float epsilon = FLT_EPSILO
     return (fabsf(x - y) < epsilon);
 }
 
+
+// 座標を原点中心で回転
+inline DirectX::XMFLOAT2 RotatePoint(const DirectX::XMFLOAT2& point, const float angle)
+{
+    // 座標を時計回りに回転する
+    float s = sin(angle);
+    float c = cos(angle);
+    DirectX::XMFLOAT2 rotatedPoint;
+    rotatedPoint.x = point.x * c + point.y * s;
+    rotatedPoint.y = -point.x * s + point.y * c; // y 軸の符号が反転
+    return rotatedPoint;
+}
+
+// 回転矩形の中心座標、幅と角度からRectを求める
+inline Rect CalcRotateRect(const DirectX::XMFLOAT2& center, const DirectX::XMFLOAT2& width, const float degree)
+{
+    // 矩形の幅と高さ
+    float halfWidth = width.x * 0.5f;
+    float halfHeight = width.y * 0.5f;
+
+    // 矩形の左上の座標を計算
+    DirectX::XMFLOAT2 rectTopLeft(-halfWidth, halfHeight);
+
+    // 回転行列を作成して矩形の座標を回転
+    DirectX::XMFLOAT2 rotatedTopLeft = RotatePoint(rectTopLeft, DirectX::XMConvertToRadians(degree));
+    DirectX::XMFLOAT2 rotatedBottomRight = RotatePoint({ halfWidth, -halfHeight }, DirectX::XMConvertToRadians(degree));
+    DirectX::XMFLOAT2 rotatedTopRight = RotatePoint({ halfWidth, halfHeight }, DirectX::XMConvertToRadians(degree));
+    DirectX::XMFLOAT2 rotatedBottomLeft = RotatePoint({ -halfWidth, -halfHeight }, DirectX::XMConvertToRadians(degree));
+
+    // 中心座標を加算して回転後の座標を求める
+    Rect rect;
+    rect.left_up = {
+    center.x + rotatedTopLeft.x,
+    center.y + rotatedTopLeft.y
+    };
+    rect.right_down = {
+        center.x + rotatedBottomRight.x,
+        center.y + rotatedBottomRight.y
+    };
+    rect.right_up = {
+        center.x + rotatedTopRight.x,
+        center.y + rotatedTopRight.y
+    };
+    rect.left_down = {
+        center.x + rotatedBottomLeft.x,
+        center.y + rotatedBottomLeft.y
+    };
+    rect.width = {
+        width.x,
+        width.y
+    };
+    rect.center = {
+        center.x,
+        center.y
+    };
+
+    return rect;
+}

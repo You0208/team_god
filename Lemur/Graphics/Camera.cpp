@@ -32,7 +32,6 @@ void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& fo
     this->front.x = world._31;
     this->front.y = world._32;
     this->front.z = world._33;
-
     //TODO  ‚à‚Ë@ƒJƒƒ‰’²®
     angle.x = DirectX::XMConvertToRadians(45.0f);
     angle.y = DirectX::XMConvertToRadians(0.0f);
