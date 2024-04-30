@@ -28,7 +28,7 @@ Player::Player()
         // 種の射出速度
         seed_throw_speed = 20.0f;
         // 案山子が柵から離れる距離
-        sub_pos_z_puls = 1.0f;
+        sub_pos_z_puls = 0.55f;
     }
     // 案山子の初期位置修正
     sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
