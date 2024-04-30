@@ -27,12 +27,12 @@ void DemoScene::Initialize()
 		InitializePS();
 
 		// スカイマップテクスチャのロード
-		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
 		// SHADOW
 		double_speed_z = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
@@ -70,7 +70,8 @@ void DemoScene::Initialize()
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
-		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
+		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
+		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.glb");
 		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf");
 	}
 
@@ -79,6 +80,7 @@ void DemoScene::Initialize()
 
 	// デバッグ
 	{
+		gltf_test_model->PlayAnimation(0, true);
 	}
 }
 
@@ -101,6 +103,18 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		camera.Update(elapsedTime);
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
+	}
+
+	{
+		gltf_test_model->UpdateAnimation(elapsedTime);
+		if (gamePad.GetButtonDown() & gamePad.BTN_A)
+		{
+			gltf_test_model->PlayAnimation(0, true);
+		}
+		if (gamePad.GetButtonDown() & gamePad.BTN_B)
+		{
+			gltf_test_model->PlayAnimation(1, true);
+		}
 	}
 
 	// ライトの更新
@@ -187,16 +201,17 @@ void DemoScene::Render(float elapsedTime)
 	}
 	else
 	{
-		test_model->Render(0.01f, Try.Get());
-		test_model_2->Render(0.1f, Try.Get());
-		test_model->DrawDebug("Test");
-		test_model_2->DrawDebug("Test");
+		//test_model->Render(0.01f, Try.Get());
+		//test_model_2->Render(0.1f, Try.Get());
+		//test_model->DrawDebug("Test");
+		//test_model_2->DrawDebug("Test");
 
-		//gltf_test_model->Render(1.0f, gltf_ps.Get());
-		//gltf_test_model_2->Render(1.0f, gltf_ps.Get());
+		gltf_test_model->Render(1.0f, gltf_ps.Get());
+		gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 	// デバッグ
 	{
+
 	}
 
 	// ステートの設定

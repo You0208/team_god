@@ -19,7 +19,7 @@ using namespace std;
 
 static map<wstring, ComPtr<ID3D11ShaderResourceView>> resources;
 
-HRESULT load_texture_from_file(ID3D11Device* device, const wchar_t* filename, ID3D11ShaderResourceView** shader_resource_view, D3D11_TEXTURE2D_DESC* texture2d_desc)
+HRESULT LoadTextureFromFile(ID3D11Device* device, const wchar_t* filename, ID3D11ShaderResourceView** shader_resource_view, D3D11_TEXTURE2D_DESC* texture2d_desc)
 {
 	HRESULT hr{ S_OK };
 	ComPtr<ID3D11Resource> resource;
@@ -55,12 +55,12 @@ HRESULT load_texture_from_file(ID3D11Device* device, const wchar_t* filename, ID
 
 	return hr;
 }
-void release_all_textures()
+void ReleaseAllTextures()
 {
 	resources.clear();
 }
 
-HRESULT make_dummy_texture(ID3D11Device* device, ID3D11ShaderResourceView** shader_resource_view, DWORD value, UINT dimension)
+HRESULT MakeDummyTexture(ID3D11Device* device, ID3D11ShaderResourceView** shader_resource_view, DWORD value, UINT dimension)
 {
 	HRESULT hr{ S_OK };
 
@@ -115,7 +115,7 @@ HRESULT make_dummy_texture(ID3D11Device* device, ID3D11ShaderResourceView** shad
 	return hr;
 }
 
-HRESULT load_texture_from_memory(ID3D11Device* device, const void* data, size_t size,
+HRESULT LoadTextureFromMemory(ID3D11Device* device, const void* data, size_t size,
 	ID3D11ShaderResourceView** shader_resource_view)
 {
 	HRESULT hr{ S_OK };

@@ -44,7 +44,7 @@ SpriteBatch::SpriteBatch(ID3D11Device* device, const wchar_t* filename, size_t m
     create_vs_from_cso(device, "Shader/sprite_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
     create_ps_from_cso(device, "Shader/sprite_ps.cso", pixel_shader.GetAddressOf());
     
-    load_texture_from_file(device, filename, shader_resource_view.GetAddressOf(), &texture2d_desc);
+    LoadTextureFromFile(device, filename, shader_resource_view.GetAddressOf(), &texture2d_desc);
 }
 
 void SpriteBatch::Render(ID3D11DeviceContext* immediate_context,

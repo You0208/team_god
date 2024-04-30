@@ -8,7 +8,6 @@ GltfModelManager::GltfModelManager(ID3D11Device* device, const std::string& file
 void GltfModelManager::Render(const float& scale, ID3D11PixelShader* replaced_pixel_shader)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-
     // worlds—ñXV
     DirectX::XMFLOAT4X4 world = {};
     DirectX::XMStoreFloat4x4(&world, GetTransform()->CalcWorldMatrix(scale));
@@ -83,8 +82,6 @@ void GltfModelManager::UpdateAnimation(const float& elapsed_time)
 
     GltfModel::animation animation = GetAnimation()->at(current_animation_index);
 
-
-
     animated_nodes = gltf_model->nodes;
     gltf_model->Animate(current_animation_index, current_animation_seconds, animated_nodes, animation_loop_flag);
 }
@@ -101,5 +98,10 @@ void GltfModelManager::UpdateAnimation(const float& elapsed_time)
 
 bool GltfModelManager::IsPlayAnimation() const
 {
-    return false;
+    if (current_animation_index < 0) return false;
+
+    const int animationIndexEnd = static_cast<int>(gltf_model->animations.size());
+    if (current_animation_index >= animationIndexEnd) return false;
+
+    return true;
 }

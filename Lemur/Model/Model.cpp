@@ -307,33 +307,33 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[0]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[1]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
         }
         // Emissive
         if (iterator->second.texture_filenames[2].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[2]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
         }
 
         // ディレクトリパス取得
@@ -1314,33 +1314,33 @@ void StaticMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filename
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[0]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[1]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
         }
         // Emissive
         if (iterator->second.texture_filenames[2].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[2]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
         }
     }
 
@@ -1635,33 +1635,33 @@ void StaticMeshBatch::CreateComObjects(ID3D11Device* device, const char* fbx_fil
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[0]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[1]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
         }
         // Emissive
         if (iterator->second.texture_filenames[2].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[2]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
         }
     }
 
