@@ -14,14 +14,14 @@ void UnitManager::Initialize()
 
         //Unit_B
         unit_B.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
-        unit_B.attack_power = 3;        // UŒ‚—Í
+        unit_B.attack_power = 4;        // UŒ‚—Í
         unit_B.attack_times = 1;        // UŒ‚‰ñ”
         t_height_B = 1.59f;              // OŠpŒ`‚Ì‚‚³
         t_base_B = 1.59f;                // OŠpŒ`‚Ì’ê•Ó’·
 
         //Unit_C
         unit_C.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
-        unit_C.attack_power = 3;        // UŒ‚—Í
+        unit_C.attack_power = 4;        // UŒ‚—Í
         unit_C.attack_times = 1;        // UŒ‚‰ñ”
         t_height_C = 1.59f;              // OŠpŒ`‚Ì‚‚³
         t_base_C = 1.59f;                // OŠpŒ`‚Ì’ê•Ó’·
