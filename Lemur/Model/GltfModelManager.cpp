@@ -75,15 +75,18 @@ void GltfModelManager::UpdateAnimation(const float& elapsed_time)
         return;
     }
     if (current_animation_index < 0)return;
-
-
     // アニメーション再生時間経過
     current_animation_seconds += elapsed_time;
 
-    GltfModel::animation animation = GetAnimation()->at(current_animation_index);
+    GltfModel::animation& animation = GetAnimation()->at(current_animation_index);
 
     animated_nodes = gltf_model->nodes;
+
     gltf_model->Animate(current_animation_index, current_animation_seconds, animated_nodes, animation_loop_flag);
+
+    gltf_model->Animate(blend_current_animation_index, blend_current_animation_seconds, blend_animated_nodes, blend_animation_loop_flag);
+
+    //animated_nodes = animated_nodes * rate + blend_animated_nodes * (1 - rate);
 }
 #else
 void GltfModelManager::UpdateAnimation(const float& elapsed_time)

@@ -223,4 +223,7 @@ public:
     void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader** replaced_pixel_shader);
     void Animate(size_t animation_index, float time, std::vector<node>& animated_nodes, bool loopback);
 
+    size_t IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback);
+
+    void BlendAnimations(const node* keyframes[2], float factor, node& keyframe);
 };

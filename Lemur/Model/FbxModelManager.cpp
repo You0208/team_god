@@ -149,6 +149,7 @@ void FbxModelManager::UpdateAnimation(const float& elapsedTime)
         }
 
     }
+
     // 再生時間とキーフレームの時間かた補間率を算出する
     else if ((keyframe.nodes.size() > 0) && frameIndex < frameEnd)
     {

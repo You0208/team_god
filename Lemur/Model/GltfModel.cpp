@@ -195,6 +195,9 @@ void GltfModel::CumulateTransforms(std::vector<node>& nodes)
     }
 }
 
+void GltfModel::BlendAnimations(const node* nodes[2], float factor, node& node_)
+{
+}
 
 GltfModel::buffer_view GltfModel::MakeBufferView(const tinygltf::Accessor& accessor)
 {
@@ -1077,96 +1080,118 @@ void GltfModel::Animate(size_t animation_index, float time, std::vector<node>& a
     using namespace std;
     using namespace DirectX;
 
-    // タイムラインと時間から、最も近いキーフレームのインデックスを取得する関数オブジェクト
-    function<size_t(const vector<float>&, float, float&, bool)> indexof{
-   [](const vector<float>& timelines, float time, float& interpolation_factor, bool loopback)->size_t {
-
-            // タイムラインのキーフレーム数を取得
-            const size_t keyframe_count{ timelines.size() };
-
-            // 時間が最後のキーフレームを超えた場合の処理
-            if (time > timelines.at(keyframe_count - 1))
-            {
-                if (loopback)
-                {
-                    // ループする場合は時間をループさせる
-                    time = fmodf(time, timelines.at(keyframe_count - 1));
-                }
-                else
-                {
-                    // ループしない場合は最後のキーフレームの直前の位置を返す
-                    interpolation_factor = 1.0f;
-                    return keyframe_count - 2;  // 最後のキーフレームの直前のインデックスを返す
-                }
-            }
-            // 時間が最初のキーフレームよりも前の場合の処理
-            else if (time < timelines.at(0))
-            {
-                // 最初のキーフレームの位置を返す
-                interpolation_factor = 0.0f;
-                return 0;
-            }
-
-            // 最も近いキーフレームを探す
-            size_t keyframe_index{ 0 };
-            for (size_t time_index = 1; time_index < keyframe_count; ++time_index)
-            {
-                if (time < timelines.at(time_index))
-                {
-                    // 時間が現在のキーフレームよりも小さい場合、その直前のキーフレームを選択
-                    keyframe_index = max<size_t>(0LL, time_index - 1);
-                    break;
-                }
-            }
-
-            // 補間係数を計算
-             interpolation_factor = (time - timelines.at(keyframe_index + 0)) /
-                 (timelines.at(keyframe_index + 1) - timelines.at(keyframe_index + 0));
-
-             // 最も近いキーフレームのインデックスを返す
-            return keyframe_index;
-        } };
-
     if (animations.size() > 0)
     {
+        // 指定されたアニメーションインデックスに対応するアニメーションを取得
         const animation& animation{ animations.at(animation_index) };
+
+        // アニメーションの各チャンネルに対して処理を行う
         for (vector<animation::channel>::const_reference channel : animation.channels)
         {
+            // チャンネルに対応するサンプラーを取得
             const animation::sampler& sampler{ animation.samplers.at(channel.sampler) };
+
+            // サンプラーの入力となるタイムラインを取得
             const vector<float>& timeline{ animation.timelines.at(sampler.input) };
+
+            // タイムラインのサイズが0の場合はスキップ（不正なデータの可能性があるため）
             if (timeline.size() == 0)
             {
                 continue;
             }
+
+            // タイムラインから指定された時間に対応するキーフレームを取得
             float interpolation_factor{};
-            size_t keyframe_index{ indexof(timeline, time, interpolation_factor, loopback) };
+            size_t keyframe_index{ IndexOf(timeline, time, interpolation_factor, loopback) };
+
+            // チャンネルのターゲットパスに基づいてノードの変換を計算
             if (channel.target_path == "scale")
             {
+                // スケールに対応するキーフレームを取得
                 const vector<XMFLOAT3>& scales{ animation.scales.at(sampler.output) };
-                XMStoreFloat3(&animated_nodes.at(channel.target_node).scale,
+
+                // 補間を使ってスケールを計算し、アニメーションノードに設定
+                XMStoreFloat3(&animated_nodes.at(channel.target_node).scale, 
                     XMVectorLerp(XMLoadFloat3(&scales.at(keyframe_index + 0)),
                         XMLoadFloat3(&scales.at(keyframe_index + 1)), interpolation_factor));
             }
             else if (channel.target_path == "rotation")
             {
+                // 回転に対応するキーフレームを取得
                 const vector<XMFLOAT4>& rotations{ animation.rotations.at(sampler.output) };
+
+                // 補間を使って回転を計算し、アニメーションノードに設定
                 XMStoreFloat4(&animated_nodes.at(channel.target_node).rotation,
                     XMQuaternionNormalize(XMQuaternionSlerp(XMLoadFloat4(&rotations.at(keyframe_index + 0)),
                         XMLoadFloat4(&rotations.at(keyframe_index + 1)), interpolation_factor)));
             }
             else if (channel.target_path == "translation")
             {
+                // 位置に対応するキーフレームを取得
                 const vector<XMFLOAT3>& translations{ animation.translations.at(sampler.output) };
+
+                // 補間を使って位置を計算し、アニメーションノードに設定
                 XMStoreFloat3(&animated_nodes.at(channel.target_node).translation,
                     XMVectorLerp(XMLoadFloat3(&translations.at(keyframe_index + 0)),
                         XMLoadFloat3(&translations.at(keyframe_index + 1)), interpolation_factor));
             }
         }
+        // アニメーション後のノードの変換を累積する
         CumulateTransforms(animated_nodes);
     }
     else
     {
+        // アニメーションがない場合は、元のノードの状態をそのまま使う
         animated_nodes = nodes;
     }
+}
+
+
+size_t GltfModel::IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback)
+{  
+    // タイムラインのキーフレーム数を取得
+    const size_t keyframe_count{ timelines.size() };
+
+    // 時間が最後のキーフレームを超えた場合の処理
+    if (time > timelines.at(keyframe_count - 1))
+    {
+        if (loopback)
+        {
+            // ループする場合は時間をループさせる
+            time = fmodf(time, timelines.at(keyframe_count - 1));
+        }
+        else
+        {
+            // ループしない場合は最後のキーフレームの直前の位置を返す
+            interpolation_factor = 1.0f;
+            return keyframe_count - 2;  // 最後のキーフレームの直前のインデックスを返す
+        }
+    }
+    // 時間が最初のキーフレームよりも前の場合の処理
+    else if (time < timelines.at(0))
+    {
+        // 最初のキーフレームの位置を返す
+        interpolation_factor = 0.0f;
+        return 0;
+    }
+
+    // 最も近いキーフレームを探す
+    size_t keyframe_index{ 0 };
+    for (size_t time_index = 1; time_index < keyframe_count; ++time_index)
+    {
+        if (time < timelines.at(time_index))
+        {
+            // 時間が現在のキーフレームよりも小さい場合、その直前のキーフレームを選択
+            keyframe_index = std::max<size_t>(0LL, time_index - 1);
+            break;
+        }
+    }
+
+    // 補間係数を計算
+    interpolation_factor = (time - timelines.at(keyframe_index + 0)) /
+        (timelines.at(keyframe_index + 1) - timelines.at(keyframe_index + 0));
+
+    // 最も近いキーフレームのインデックスを返す
+    return keyframe_index;
 }
 
