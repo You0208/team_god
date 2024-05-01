@@ -159,8 +159,8 @@ public:
         // アニメーションのチャンネル情報
         struct channel
         {
-            int sampler{ -1 };// サンプラーのインデックス
-            int target_node{ -1 };// 対象ノードのインデックス
+            int sampler{ -1 };      // サンプラーのインデックス
+            int target_node{ -1 };  // 対象ノードのインデックス
             std::string target_path;// 対象のプロパティパス（例えば、"translation"、"rotation"、"scale" など）
         };
         std::vector<channel> channels;
@@ -223,7 +223,7 @@ public:
     void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader** replaced_pixel_shader);
     void Animate(size_t animation_index, float time, std::vector<node>& animated_nodes, bool loopback);
 
-    size_t IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback);
+    void BlendAnimations(const std::vector<node>* nodes[2], float factor, std::vector<GltfModel::node>* node);
 
-    void BlendAnimations(const node* keyframes[2], float factor, node& keyframe);
+    size_t IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback);
 };

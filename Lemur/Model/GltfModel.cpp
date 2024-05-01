@@ -195,9 +195,6 @@ void GltfModel::CumulateTransforms(std::vector<node>& nodes)
     }
 }
 
-void GltfModel::BlendAnimations(const node* nodes[2], float factor, node& node_)
-{
-}
 
 GltfModel::buffer_view GltfModel::MakeBufferView(const tinygltf::Accessor& accessor)
 {
@@ -1193,5 +1190,25 @@ size_t GltfModel::IndexOf(const std::vector<float>& timelines, float time, float
 
     // 最も近いキーフレームのインデックスを返す
     return keyframe_index;
+}
+
+void GltfModel::BlendAnimations(const std::vector<node>* keyframes[2], float factor, std::vector<GltfModel::node>* keyframe)
+{
+    using namespace DirectX;
+    _ASSERT_EXPR(keyframes[0]->size() == keyframes[1]->size(), "The size of the two node arrays must be the same.");
+
+    size_t node_count{ keyframes[0]->size() };
+    keyframe->resize(node_count);
+    for (size_t node_index = 0; node_index < node_count; ++node_index)
+    {
+        XMVECTOR S[2]{ XMLoadFloat3(&keyframes[0]->at(node_index).scale), XMLoadFloat3(&keyframes[1]->at(node_index).scale) };
+        XMStoreFloat3(&keyframe->at(node_index).scale, XMVectorLerp(S[0], S[1], factor));
+
+        XMVECTOR R[2]{ XMLoadFloat4(&keyframes[0]->at(node_index).rotation), XMLoadFloat4(&keyframes[1]->at(node_index).rotation) };
+        XMStoreFloat4(&keyframe->at(node_index).rotation, XMQuaternionSlerp(R[0], R[1], factor));
+
+        XMVECTOR T[2]{ XMLoadFloat3(&nodes.at(node_index).translation), XMLoadFloat3(&keyframes[1]->at(node_index).translation) };
+        XMStoreFloat3(&keyframe->at(node_index).translation, XMVectorLerp(T[0], T[1], factor));
+    }
 }
 

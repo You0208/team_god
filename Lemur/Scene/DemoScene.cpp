@@ -67,7 +67,8 @@ void DemoScene::Initialize()
 
 		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(),
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
+		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
@@ -81,6 +82,7 @@ void DemoScene::Initialize()
 	// デバッグ
 	{
 		gltf_test_model->PlayAnimation(0, true);
+		test_model->PlayAnimation(0, true);
 	}
 }
 
@@ -107,13 +109,16 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 
 	{
 		gltf_test_model->UpdateAnimation(elapsedTime);
+		test_model->UpdateAnimation(elapsedTime);
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
 			gltf_test_model->PlayAnimation(0, true);
+			test_model->PlayAnimation(0, true);
 		}
 		if (gamePad.GetButtonDown() & gamePad.BTN_B)
 		{
 			gltf_test_model->PlayAnimation(1, true);
+			test_model->PlayAnimation(1, true);
 		}
 	}
 
