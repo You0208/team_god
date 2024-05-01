@@ -159,7 +159,7 @@ void Player::Flick(float elapsedTime)
 
             // スケーリング
             float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
-            //flip_pos_z = scaling * (flip_pos_z / scaling);
+            flip_pos_z = scaling * (flip_pos_z / scaling);
             // 最小値0、最大値scalingにクランプする
             flip_pos_z = std::clamp(flip_pos_z, 0.0f, scaling);
             flip_pos_z = (scaling + sub_pos_z_puls) - flip_pos_z;
@@ -244,10 +244,10 @@ void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     // TODO もね　ユニットのボタン設定
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::D;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::B;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::F;
+    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::E;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::F;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::H;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::I;
 }
 
 // 入力処理
