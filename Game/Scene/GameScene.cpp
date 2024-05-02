@@ -65,24 +65,36 @@ void GameScene::Initialize()
 
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(1);
+		stage_manager.SetStageLevel(3);
 
 		//TODO もね 制限時間の初期化、ステージ
 		switch (StageManager::Instance().GetStageLevel())
 		{
 		case 0:// レベル１
-			time_limit = 80.0f;// ここで制限時間を調整
+			time_limit = 70.0f;// ここで制限時間を調整
 			break;
 		case 1:// レベル２
-			time_limit = 80.0f;// ここで制限時間を調整
+			time_limit = 85.0f;// ここで制限時間を調整
 			break;
 		case 2:// レベル３
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 92.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
 			time_limit = 200.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 5:// レベル6
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 6:// レベル7
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 7:// レベル8
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 8:// レベル9
 			time_limit = 200.0f;// ここで制限時間を調整
 			break;
 		}

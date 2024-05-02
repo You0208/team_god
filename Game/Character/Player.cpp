@@ -26,7 +26,7 @@ Player::Player()
         // はじく強さ
         flip_speed = 2.0f;
         // 種の射出速度
-        seed_throw_speed = 20.0f;
+        seed_throw_speed = 21.0f;
         // 案山子が柵から離れる距離
         sub_pos_z_puls = 0.55f;
     }
@@ -244,10 +244,10 @@ void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     // TODO もね　ユニットのボタン設定
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::E;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::F;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::H;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::I;
+    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::A;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::I;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::B;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::J;
 }
 
 // 入力処理
