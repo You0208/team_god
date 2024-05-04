@@ -18,6 +18,7 @@ void Enemy::TransitionDeathState()
 
 void Enemy::UpdateDeathState(float elapsed_time)
 {
+    radius = 0.0f;
     if(!model->IsPlayAnimation())EnemyManager::Instance().Remove(this);
 }
 

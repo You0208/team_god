@@ -29,6 +29,10 @@
 #include "./Lemur/Math/Vector.h"
 #include "./Lemur/Math/MathHelper.h"
 
+#include "./Lemur/Model/FbxModelManager.h"
+#include "./Lemur/Model/GltfModelManager.h"
+
+
 class FormationScene :public Lemur::Scene::BaseScene
 {
 public:
@@ -48,19 +52,32 @@ public:
     void Render(float elapsedTime)override;
 
     void DebugImgui()override;
+
 private:
-private:
-    std::shared_ptr<Sprite> formation;
+    std::shared_ptr<Sprite> back;
+    std::shared_ptr<Sprite> line_1;
+    std::shared_ptr<Sprite> line_2;
+    std::shared_ptr<Sprite> unit_1;
+    std::shared_ptr<Sprite> unit_2;
+    std::shared_ptr<Sprite> unit_3;
+    std::shared_ptr<Sprite> unit_4;
+    std::shared_ptr<Sprite> unit_5;
+    std::shared_ptr<Sprite> unit_6;
+    std::shared_ptr<Sprite> Button;
+    std::shared_ptr<Sprite> base;
+    std::shared_ptr<Sprite> Controller_UI_A;
+    std::shared_ptr<Sprite> Controller_UI_B;
+    std::shared_ptr<Sprite> Controller_UI_X;
+    std::shared_ptr<Sprite> Controller_UI_Y;
+    std::shared_ptr<Sprite> mark_1;
+    std::shared_ptr<Sprite> mark_1_1;
+    std::shared_ptr<Sprite> mark_2;
+    std::shared_ptr<Sprite> mark_2_2;
 
-    // MASK
-    struct option_constants {
-        DirectX::XMFLOAT4 parameters{ 1.0f,0.0f,0.0f,0.0f }; // x : ディゾルブ適応量、yzw : 空き
-    };
-    float dissolve_value{ 0.0f };
-    option_constants option_constant;
-    Microsoft::WRL::ComPtr<ID3D11Buffer> option_constant_buffer;
-
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
-
-
+    std::unique_ptr<GltfModelManager> gltf_unit_1;
+    std::unique_ptr<GltfModelManager> gltf_unit_2;
+    std::unique_ptr<GltfModelManager> gltf_unit_3;
+    std::unique_ptr<GltfModelManager> gltf_unit_4;
+    std::unique_ptr<GltfModelManager> gltf_unit_5;
+    std::unique_ptr<GltfModelManager> gltf_unit_6;
 };

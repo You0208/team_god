@@ -65,7 +65,7 @@ void GameScene::Initialize()
 
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(0);
+		stage_manager.SetStageLevel(4);
 
 		//TODO ‚à‚Ë §ŒÀŠÔ‚Ì‰Šú‰»
 		switch (StageManager::Instance().GetStageLevel())

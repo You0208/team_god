@@ -49,6 +49,8 @@ void Unit_A::UpdateIdleState(float elapsed_time)
             enemy->GetRadius()                                  // 敵の当たり判定
         ))
         {
+            // ユニットが死んでたらコンティニュー
+            if (enemy->IsDead())continue;
             // 攻撃ステートに切り替え
             TransitionAttackState();
         }
@@ -71,14 +73,7 @@ void Unit_A::UpdateAttackState(float elapsed_time)
     attack_timer += elapsed_time;// 攻撃間隔用タイマー
 
     // ２撃目以降はタイマーが規定時間を超えたら攻撃
-    if (!first_attack)
-    {
-        if (attack_timer >= attack_interval)is_attack = true;
-    }
-    else// １撃目はそのまま攻撃
-    {
-        is_attack = true;
-    }
+    if (attack_timer >= attack_interval)is_attack = true;
 
     if (attack_times > 0)// 攻撃回数が残っているとき
     {
@@ -86,6 +81,9 @@ void Unit_A::UpdateAttackState(float elapsed_time)
         for (int j = 0; j < enemyCount; ++j)
         {
             Enemy* enemy = enemyManager.GetEnemy(j);
+
+            // ユニットが死んでたらコンティニュー
+            if (enemy->IsDead())continue;
 
             // ユニットの攻撃範囲に入っている敵全員に攻撃
             if (Collision::IntersectCircleVsCircle
@@ -96,10 +94,10 @@ void Unit_A::UpdateAttackState(float elapsed_time)
                 enemy->GetRadius()                                  // 敵の当たり判定
             ))
             {
-                // アニメーションの切り替え
-                model->PlayAnimation(Animation::Attack, false);
                 // 敵とかぶったフラグをON
                 is_intersected = true;
+                // アニメーションの切り替え
+                if (is_attack)  model->PlayAnimation(Animation::Attack, false);
                 // 攻撃フラグがONならダメージ処理
                 if (is_attack)  enemy->ApplyDamage(ReturnDamage());
             }
@@ -211,6 +209,9 @@ void Unit_B::UpdateIdleState(float elapsed_time)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
 
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
+
         // 敵がユニットの攻撃範囲に入っているとき
         // 左三角
         if (Collision::IntersectTriangleVsCircle
@@ -256,6 +257,9 @@ void Unit_B::UpdateAttackState(float elapsed_time)
     for (int j = 0; j < enemyCount; ++j)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
+
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
 
         // 敵がユニットの攻撃範囲に入っているとき
         // 左三角
@@ -386,6 +390,9 @@ void Unit_C::UpdateIdleState(float elapsed_time)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
 
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
+
         // 敵がユニットの攻撃範囲に入っているとき
         // 奥三角
         if (Collision::IntersectTriangleVsCircle
@@ -431,6 +438,9 @@ void Unit_C::UpdateAttackState(float elapsed_time)
     for (int j = 0; j < enemyCount; ++j)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
+
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
 
         // 敵がユニットの攻撃範囲に入っているとき
         // 左三角

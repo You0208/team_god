@@ -40,11 +40,12 @@ int Unit::ReturnDamage()
 
 void Unit::Destroy()
 {
-    UnitManager::Instance().Remove(this);
+    if (!model->IsPlayAnimation())UnitManager::Instance().Remove(this);
 }
 
 void Unit::TransitionDeathState()
 {
+    death = true;
     // アニメーションの切り替え
     model->PlayAnimation(Animation::Out, false);
     // ステート切り替え
@@ -53,6 +54,8 @@ void Unit::TransitionDeathState()
 
 void Unit::UpdateDeathState(float elapsed_time)
 {
+    radius = 0.0f;
+    attack_collision_range = 0.0f;
     Destroy();
 }
 

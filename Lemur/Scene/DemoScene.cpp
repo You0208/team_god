@@ -77,6 +77,8 @@ void DemoScene::Initialize()
 		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit3_RE.glb",true);
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit1_RE.glb");
 		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf",false);	
+
+		result = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation_scene.png");
 	}
 
 	// ポイントライト・スポットライトの初期位置設定
@@ -214,12 +216,13 @@ void DemoScene::Render(float elapsedTime)
 	}
 	else
 	{
+
 		//test_model->Render(0.01f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
 		//test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
 
-		gltf_test_model->Render(1.0f, gltf_ps.Get());
+		//gltf_test_model->Render(1.0f, gltf_ps.Get());
 		//gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 	// デバッグ
@@ -228,16 +231,21 @@ void DemoScene::Render(float elapsedTime)
 	}
 
 	// ステートの設定
-	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-
+	result->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	
 	RenderingDeffered();
-
-
+	
+	
 	// ポストエフェクトの実行
 	if (enable_post_effect)
 	{
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
 		ExePostEffct();
 	}
+	//test_model->Render(0.01f, fbx_gbuffer_ps.Get());
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+	gltf_test_model->Render(1.0f, gltf_ps.Get());
 }

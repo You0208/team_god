@@ -23,6 +23,9 @@ void CollisionManager::CollisionSeedVsUnit()
         {
             Unit* unit = unitManager.GetUnit(i);
 
+            // ユニットが死んでたらコンティニュー
+            if (unit->IsDead())continue;
+
             // 攻撃範囲が円
             if (unit->GetCategory() == 0 || unit->GetCategory() == 3)
             {
@@ -150,6 +153,9 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position)
     {
         unit = unitManager.GetUnit(i);
 
+        // ユニットが死んでたらコンティニュー
+        if (unit->IsDead())continue;
+
         // ユニットに直接当たっていたら
         if (Collision::IntersectCircleVsPosition(position, { unit->GetPosition().x,unit->GetPosition().z }, unit->GetRadius()))
         {
@@ -205,6 +211,9 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position, Di
     for (int i = 0; i < unitCount; ++i)
     {
         unit = unitManager.GetUnit(i);
+
+        // ユニットが死んでたらコンティニュー
+        if (unit->IsDead())continue;
 
         // 着地地点が四角に入っているとき
         if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))

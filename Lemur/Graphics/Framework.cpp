@@ -5,6 +5,13 @@
 #include "..\Scene\SceneManager.h"
 #include "Lemur/Audio/AudioManager.h"
 
+#include "../Scene/BaseScene.h"
+#include "../Scene/DemoScene.h"
+#include "./Game/Scene/TitleScene.h"
+#include "./Game/Scene/GameScene.h"
+#include "./Game/Scene/FormationScene.h"
+
+
 // Effect
 #include "../Effekseer/EffekseerManager.h"
 

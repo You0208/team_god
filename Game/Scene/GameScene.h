@@ -72,9 +72,6 @@ private:// シェーダー
     std::unique_ptr<SpriteBatch> sprite_batches[8];
 
 
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
-
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];
 

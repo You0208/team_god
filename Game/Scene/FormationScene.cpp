@@ -5,40 +5,74 @@
 #include "./high_resolution_timer.h"
 
 #include "GameScene.h"
+
 void FormationScene::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
-    dissolve_value = 0.0f;
-
     // シェーダー関連
     {
+        // ステートの初期化
         InitializeState();
-        HRESULT hr{ S_OK };
-        // シーン定数バッファオブジェクトを生成
-        {
-            D3D11_BUFFER_DESC buffer_desc{};
-            buffer_desc.Usage = D3D11_USAGE_DEFAULT;// 読み取りおよび書き込みがどのように行われるか
-            buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;// バッファがパイプラインにどのようにバインド(結びつけ)されるかを特定
-            buffer_desc.CPUAccessFlags = 0;// CPU アクセス フラグ（CPU アクセスが必要ない場合は 0）
-            buffer_desc.MiscFlags = 0;// その他のフラグ（未使用に場合は0）
-            buffer_desc.StructureByteStride = 0;//バッファが構造化バッファを表す場合の、バッファ構造内の各要素のサイズ
-            {
-                // オプション
-                buffer_desc.ByteWidth = sizeof(option_constants);
-                hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, option_constant_buffer.GetAddressOf());
-                _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-            }
-        }
+        // ディファードレンダリングの初期化
+        InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
+        // フレームバッファーの初期化
+        InitializeFramebuffer();
+        // ピクセルシェーダーの初期化
+        InitializePS();
 
-        LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
 
+        // SHADOW
+        double_speed_z = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
+
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
+
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
     }
 
     // ゲーム関連
     {
-        formation = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation.png");
+        // カメラ
+        Camera& camera = Camera::Instance();
+
+        // 2D
+        back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene.png");
+        line_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_1.png");
+        line_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_2.png");
+        unit_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_1.png");
+        unit_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_2.png");
+        unit_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_3.png");
+        unit_4 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_4.png");
+        unit_5 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_5.png");
+        unit_6 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_6.png");
+        Button = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Button.png");
+        base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Base.png");
+        Controller_UI_A = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_A.png");
+        Controller_UI_B = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_B.png");
+        Controller_UI_X = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_X.png");
+        Controller_UI_Y = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_Y.png");
+        mark_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1.png");
+        mark_1_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1_1.png");
+        mark_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2.png");
+        mark_2_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2_2.png");
+
+        // 3D
+        gltf_unit_1 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit3_RE.glb", true);
+        gltf_unit_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
+        gltf_unit_3 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit3_RE.glb", true);
+        gltf_unit_4 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit4_RE.glb", true);
+        gltf_unit_5 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit5_RE.glb", true);
+        gltf_unit_6 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit6_RE.glb", true);
+
+        gltf_unit_1->PlayAnimation(0, true);
     }
+
+    // ポイントライト・スポットライトの初期位置設定
+    InitializeLight();
 }
 
 void FormationScene::Finalize()
@@ -47,14 +81,24 @@ void FormationScene::Finalize()
 
 void FormationScene::Update(HWND hwnd, float elapsedTime)
 {
-    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    // ゲームパッド
+    using namespace DirectX;
+    Camera& camera = Camera::Instance();
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    if (gamePad.GetButton() & gamePad.BTN_B)
     {
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
+        gltf_unit_1->UpdateAnimation(elapsedTime);
     }
+
+    // カメラ
+    {
+        camera.Update(elapsedTime);
+        camera.SetTarget(camera_target);
+        camera.SetRange(camera_range);
+    }
+    // ライトの更新
+    LightUpdate();
+
+    // DebugImgui
     DebugImgui();
 }
 
@@ -68,29 +112,88 @@ void FormationScene::Render(float elapsedTime)
     ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
     ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
+    camera.SetPerspectiveFov(immediate_context);
+    // 描画の設定
     SetUpRendering();
 
-    // ノイズ
-    immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
+    // ディファードレンダリングの設定
+    SetUpDeffered();
 
-    // オプション
-    option_constant.parameters.x = dissolve_value;
-    immediate_context->UpdateSubresource(option_constant_buffer.Get(), 0, 0, &option_constant, 0, 0);
-    immediate_context->VSSetConstantBuffers(3, 1, option_constant_buffer.GetAddressOf());
-    immediate_context->PSSetConstantBuffers(3, 1, option_constant_buffer.GetAddressOf());
 
-    immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-    immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-    immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+    // テクスチャをセット
+    {
+        // ノイズ
+        immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
+        // シャドウ
+        immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
+        //　深度値
+        immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
+    }
 
-    formation->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    // ポストエフェクトの開始
+    if (enable_post_effect)
+    {
+        framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context);
+        framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
+    }
+
+    // 2D描画
+    {
+        // ステートの設定
+        immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+        immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+        immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+
+        back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        for (int i = 0; i < 6; i++)
+        {
+            line_1->Render(immediate_context, (660 + 210 * i), 0, 210, SCREEN_HEIGHT);
+        }
+        line_2->Render(immediate_context, 660, 0, 210, SCREEN_HEIGHT);
+
+        unit_1->Render(immediate_context,(660 + 210 * 0), 0, 210, SCREEN_HEIGHT);
+        unit_2->Render(immediate_context,(660 + 210 * 1), 0, 210, SCREEN_HEIGHT);
+        unit_3->Render(immediate_context,(660 + 210 * 2), 0, 210, SCREEN_HEIGHT);
+        unit_4->Render(immediate_context,(660 + 210 * 3), 0, 210, SCREEN_HEIGHT);
+        unit_5->Render(immediate_context,(660 + 210 * 4), 0, 210, SCREEN_HEIGHT);
+        unit_6->Render(immediate_context,(660 + 210 * 5), 0, 210, SCREEN_HEIGHT);
+
+        for (int j = 0; j < 4; j++)
+        {
+            base->Render(immediate_context, (691.5f + 300 * j), 680, 300, 300);
+        }
+
+        Button->Render(immediate_context, 1060, 885, 500, 200);
+        //Controller_UI_A->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //Controller_UI_B->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //Controller_UI_X->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //Controller_UI_Y->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //mark_1->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //mark_1_1->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //mark_2->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        //mark_2_2->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
+    // 3D描画
+    {
+        immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+        immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+        gltf_unit_1->Render(1.0f, gltf_ps.Get());
+    }
+
+    RenderingDeffered();
+
+
+    // ポストエフェクトの実行
+    if (enable_post_effect)
+    {
+        framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
+        ExePostEffct();
+    }
 }
 
 void FormationScene::DebugImgui()
 {
-    ImGui::Begin("ImGUI");
-
-    ImGui::SliderFloat("dissolve", &dissolve_value, 0.0f, 1.0f);
-
-    ImGui::End();
+    BaseScene::DebugImgui();
+    Camera::Instance().DrawDebug();
 }

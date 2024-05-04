@@ -33,9 +33,9 @@ void Camera::SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& fo
     this->front.y = world._32;
     this->front.z = world._33;
     //TODO  Ç‡ÇÀÅ@ÉJÉÅÉâí≤êÆ
-    angle.x = DirectX::XMConvertToRadians(45.0f);
-    angle.y = DirectX::XMConvertToRadians(0.0f);
-    angle.z = DirectX::XMConvertToRadians(0.0f);
+    //angle.x = DirectX::XMConvertToRadians(45.0f);
+    //angle.y = DirectX::XMConvertToRadians(0.0f);
+    //angle.z = DirectX::XMConvertToRadians(0.0f);
 }
 
 void Camera::SetPerspectiveFov(Microsoft::WRL::ComPtr<ID3D11DeviceContext> dc)

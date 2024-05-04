@@ -35,9 +35,7 @@ float4 main(VS_OUT pin) : SV_TARGET
         float4 sampled = material_textures[BASECOLOR_TEXTURE].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
         sampled.rgb = pow(sampled.rgb, GAMMA);
         basecolor_factor *= sampled;
-       // return sampled;
     }
-    //return material_textures[BASECOLOR_TEXTURE].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     
     // 法線マップ
     float3 normal = material_textures[NORMAL_TEXTURE].Sample(sampler_states[LINEAR], pin.texcoord);
@@ -116,6 +114,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 			directional_light_color.rgb, roughness_factor, directDiffuse, directSpecular);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
+        
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  

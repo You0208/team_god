@@ -243,6 +243,22 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
 
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
+
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_ps;
+
+        // SHADOW
+        const uint32_t shadowmap_width = 2048;
+        const uint32_t shadowmap_height = 2048;
+        std::unique_ptr<ShadowMap> double_speed_z;
+        DirectX::XMFLOAT4 light_view_focus{ 0, 0, 0, 1 };
+        float light_view_distance{ 10.0f };
+        float light_view_size{ 12.0f };
+        float light_view_near_z{ 2.0f };
+        float light_view_far_z{ 18.0f };
+
+
         bool enable_shadow = true;
         bool enable_skymap = false;
         bool enable_bloom = false;

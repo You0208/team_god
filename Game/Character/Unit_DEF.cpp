@@ -44,6 +44,9 @@ void Unit_D::UpdateIdleState(float elapsed_time)
     {
         Unit* unit = unitManager.GetUnit(j);
 
+        // ユニットが死んでたらコンティニュー
+        if (unit->IsDead())continue;
+
         // 他のユニットがユニットの攻撃範囲に入っているとき
         if (Collision::IntersectCircleVsCircle
         (
@@ -80,6 +83,9 @@ void Unit_D::UpdateAttackState(float elapsed_time)
     for (int j = 0; j < unitCount; ++j)
     {
         Unit* unit = unitManager.GetUnit(j);
+
+        // ユニットが死んでたらコンティニュー
+        if (unit->IsDead())continue;
 
         // 他のユニットがユニットの攻撃範囲に入っているとき
         if (Collision::IntersectCircleVsCircle
@@ -187,6 +193,9 @@ void Unit_E::UpdateIdleState(float elapsed_time)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
 
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
+
         // 敵がユニットの攻撃範囲に入っているとき
         if (Collision::IntersectRectVsCircle
         (
@@ -221,6 +230,9 @@ void Unit_E::UpdateAttackState(float elapsed_time)
     for (int j = 0; j < enemyCount; ++j)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
+
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
 
         // ユニットの攻撃範囲に入っている敵全員に攻撃
         if (Collision::IntersectRectVsCircle
@@ -328,6 +340,9 @@ void Unit_F::UpdateIdleState(float elapsed_time)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
 
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
+
         // 敵がユニットの攻撃範囲に入っているとき
         if (Collision::IntersectRectVsCircle
         (
@@ -362,6 +377,9 @@ void Unit_F::UpdateAttackState(float elapsed_time)
     for (int j = 0; j < enemyCount; ++j)
     {
         Enemy* enemy = enemyManager.GetEnemy(j);
+
+        // ユニットが死んでたらコンティニュー
+        if (enemy->IsDead())continue;
 
         // ユニットの攻撃範囲に入っている敵全員に攻撃
         if (Collision::IntersectRectVsCircle

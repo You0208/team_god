@@ -17,10 +17,6 @@
 #include "..\Input/Input.h"
 
 
-#include "../Scene/BaseScene.h"
-#include "../Scene/DemoScene.h"
-#include "./Game/Scene/TitleScene.h"
-#include "./Game/Scene/GameScene.h"
 
 #include <d3d11.h>
 #include <wrl.h>

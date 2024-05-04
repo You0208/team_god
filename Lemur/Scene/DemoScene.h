@@ -77,11 +77,7 @@ private:
 private:
     std::unique_ptr<SpriteBatch> sprite_batches[8];
 
-
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
-
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_ps;
+    std::shared_ptr<Sprite> result;
 
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];
@@ -93,16 +89,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> skymap;
 
     std::unique_ptr<StaticMeshBatch>  static_meshes[8];
-
-    // SHADOW
-    const uint32_t shadowmap_width = 2048;
-    const uint32_t shadowmap_height = 2048;
-    std::unique_ptr<ShadowMap> double_speed_z;
-    DirectX::XMFLOAT4 light_view_focus{ 0, 0, 0, 1 };
-    float light_view_distance{ 10.0f };
-    float light_view_size{ 12.0f };
-    float light_view_near_z{ 2.0f };
-    float light_view_far_z{ 18.0f };
 
 
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;    //スプライトバッチ
