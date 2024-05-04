@@ -19,6 +19,9 @@ private:
 
     // Imgui
     void DrawDebugGUI(int n)override;
+
+private:
+    bool first_attack = true;
 };
 
 class Unit_B :public Unit

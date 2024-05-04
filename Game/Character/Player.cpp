@@ -227,17 +227,7 @@ void Player::Flick(float elapsedTime)
     }
 
 }
-//
-//void Player::FlickRe(float elapsedFrame)
-//{
-//    GamePad& gamePad = Input::Instance().GetGamePad();
-//
-//    // コントローラーの右スティックY成分
-//    float right_stick_y = gamePad.GetAxisRY() * -1.0f;
-//
-//    // 履歴を更新
-//    UpdateHistory(right_stick_y);
-//}
+
 
 // カテゴリーの変更
 void Player::ChangeCategory()

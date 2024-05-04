@@ -154,16 +154,12 @@ void FbxModelManager::UpdateAnimation(const float& elapsedTime)
     else if ((keyframe.nodes.size() > 0) && frameIndex < frameEnd)
     {
         // ブレンド率の計算
- /*       float blendRate = 0.1f;
-        UpdateBlendRate(blendRate, elapsedTime);*/
-
-        // ブレンド率の計算
         float blendRate = 1.0f;
 
         if (animation_blend_seconds > 0.0f)
         {
             //blendRate = 0.0f;
-            blendRate = animation_blend_time / 0.1f;
+            blendRate = animation_blend_time / animation_blend_seconds;
             blendRate *= blendRate;
             animation_blend_time += elapsedTime;
         }

@@ -1,8 +1,8 @@
 #include "GltfModelManager.h"
 
-GltfModelManager::GltfModelManager(ID3D11Device* device, const std::string& filename)
+GltfModelManager::GltfModelManager(ID3D11Device* device, const std::string& filename, bool external_texture)
 {
-    gltf_model= std::make_unique<GltfModel>(device, filename);
+    gltf_model = std::make_unique<GltfModel>(device, filename, external_texture);
 }
 
 void GltfModelManager::Render(const float& scale, ID3D11PixelShader* replaced_pixel_shader)
@@ -36,7 +36,7 @@ void GltfModelManager::PlayAnimation(const int& index, const bool& loop, const f
     if (current_animation_index == index) return;
 
     blend_current_animation_index = index;    // 再生するアニメーション番号を設定
-    current_animation_seconds = 0.0f;     // アニメーション再生時間リセット
+    //current_animation_seconds = 0.0f;     // アニメーション再生時間リセット
 
     animation_loop_flag = loop;     // ループさせるか
     animation_end_flag = false;    // 再生終了フラグをリセット
@@ -45,6 +45,7 @@ void GltfModelManager::PlayAnimation(const int& index, const bool& loop, const f
 
     animation_blend_time = 0.0f;
     animation_blend_seconds = blendSeconds;
+    blend_animated_nodes = gltf_model->nodes;
 }
 
 void GltfModelManager::UpdateBlendRate(float blendRate, const float& elapsedTime)
@@ -154,40 +155,53 @@ void GltfModelManager::UpdateAnimation(const float& elapsed_time)
         return;
     }
     if (current_animation_index < 0)return;
-    // アニメーション再生時間経過
-    current_animation_seconds += elapsed_time;
-
-    animated_nodes = gltf_model->nodes;
 
 
     // ブレンド率の計算
-    float blendRate = 1.0f;
+    blend_rate = 1.0f;
 
     if (animation_blend_seconds > 0.0f)
     {
         //blendRate = 0.0f;
-        blendRate = animation_blend_time / 0.1f;
-        blendRate *= blendRate;
-        animation_blend_time += elapsed_time;
+        blend_rate = animation_blend_time / animation_blend_seconds;
+        blend_rate *= blend_rate;
+        animation_blend_time += elapsed_time; 
     }
 
-    if (blendRate < 1.0f)
+    if (blend_rate < 1.0f)
     {
-        blend_animated_nodes = gltf_model->nodes;
-
-        gltf_model->Animate(blend_current_animation_index, animation_blend_time, blend_animated_nodes, blend_animation_loop_flag);
+        gltf_model->Animate(blend_current_animation_index, 0, blend_animated_nodes, blend_animation_loop_flag);
+        //gltf_model->Animate(blend_current_animation_index, 0.0f, blend_animated_nodes, blend_animation_loop_flag);
+        gltf_model->Animate(current_animation_index, current_animation_seconds, animated_nodes, animation_loop_flag);
 
         const std::vector<GltfModel::node>* nodes[2] = {
              &animated_nodes,
              &blend_animated_nodes
         };
 
-        gltf_model->BlendAnimations(nodes, blendRate, &animated_nodes);
+        gltf_model->BlendAnimation(nodes, blend_rate, &animated_nodes);
+
+        // 通常アニメーションの初期化フラグ
+        once = true;
     }
-    else
+    else// 通常アニメーション
     {
+        animated_nodes = gltf_model->nodes;
+        // 一度のみ初期化
+        if (once)
+        {
+            current_animation_index = blend_current_animation_index;
+            current_animation_seconds = 0;
+            once = false;
+        }
+
+        // アニメーション再生時間経過
+        current_animation_seconds += elapsed_time;
+
+
         gltf_model->Animate(current_animation_index, current_animation_seconds, animated_nodes, animation_loop_flag);
-        current_animation_index = blend_current_animation_index;
+
+
     }
 }
 #else

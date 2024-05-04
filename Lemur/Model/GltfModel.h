@@ -13,7 +13,7 @@ class GltfModel
 {
     std::string filename;    // ファイルパス
 public:
-    GltfModel(ID3D11Device* device, const std::string& filename);
+    GltfModel(ID3D11Device* device, const std::string& filename,bool external_texture/*モデル外からのテクスチャ読み込みをするか*/);
     virtual ~GltfModel() = default;
 
     // sceneの基本情報
@@ -115,7 +115,7 @@ public:
             PbrMetallicRoughness pbr_metallic_roughness; // PBRテクスチャ情報
             NormalTextureInfo normal_texture;            // 法線マップ情報
             OcclusionTextureInfo occlusion_texture;      // オクルージョンテクスチャ情報
-            TextureInfo emissive_texture;                 // エミッシブテクスチャ情報
+            TextureInfo emissive_texture;                // エミッシブテクスチャ情報
         };
         cbuffer data; // マテリアルの定数バッファーデータ
     };
@@ -203,6 +203,13 @@ private:
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;
 
+
+    // テクスチャ読み込み用
+    //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> base_color;
+    //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> normal;
+    //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness_smoothness;
+    //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness;
+    //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> roughness;
 private:
     // ノード取得
     void FetchNodes(const tinygltf::Model& gltf_model);
@@ -217,13 +224,25 @@ private:
     void FetchTextures(ID3D11Device* device, const tinygltf::Model& gltf_model);
     // アニメーション取得
     void FetchAnimations(const tinygltf::Model& gltf_model);
+
+    // 外部からのテクスチャ読み込み
+    void FetchExternalTextures(ID3D11Device* device, const tinygltf::Model& gltf_model, const std::string& filename);
+
+    void MaterialForGPU(ID3D11Device* device);
+
+    // テクスチャ読み込み
+    HRESULT LoadTextures(ID3D11Device* device, const char* filename, const char* suffix, bool dummy, ID3D11ShaderResourceView** srv, UINT dummy_color = 0xFFFFFFFF);
+
 public:
     void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes);
     void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader* replaced_pixel_shader);
     void Render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const std::vector<node>& animated_nodes, ID3D11PixelShader** replaced_pixel_shader);
     void Animate(size_t animation_index, float time, std::vector<node>& animated_nodes, bool loopback);
 
-    void BlendAnimations(const std::vector<node>* nodes[2], float factor, std::vector<GltfModel::node>* node);
+    void BlendAnimation(const std::vector<node>* nodes[2], float factor, std::vector<GltfModel::node>* node);
 
     size_t IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback);
+
+    // 試し
+    int index_count = 0;
 };

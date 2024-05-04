@@ -6,13 +6,20 @@
 #include "Lemur/Graphics/Texture.h"
 #include <stack>
 
+#include <filesystem>
+// テクスチャ外部読み込み
+#include <fstream>
+#include <WICTextureLoader.h>
+#include <stb_image.h>
+#include <string.h> 
+
 bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string*,
     int, int, const unsigned char*, int, void*)
 {
     return true;
 }
 
-GltfModel::GltfModel(ID3D11Device* device, const std::string& filename) : filename(filename)
+GltfModel::GltfModel(ID3D11Device* device, const std::string& filename, bool external_texture) : filename(filename)
 {
     tinygltf::TinyGLTF tiny_gltf;
     // 画像をロードするためのコールバックを設定
@@ -51,9 +58,13 @@ GltfModel::GltfModel(ID3D11Device* device, const std::string& filename) : filena
     // マテリアル取得
     FetchMaterials(device, gltf_model);
     // テクスチャ取得
-    FetchTextures(device, gltf_model);
+    if(!external_texture)FetchTextures(device, gltf_model);
+    // 外部からのテクスチャ読み込み
+    else FetchExternalTextures(device, gltf_model, filename);
     // アニメーション取得
     FetchAnimations(gltf_model);
+    // マテリアルをGPUに渡す
+    MaterialForGPU(device);
 
     // TODO これは強引なプログラミングであり、バグを引き起こす可能性がある。
     const std::map<std::string, buffer_view>& vertex_buffer_views{ meshes.at(0).primitives.at(0).vertex_buffer_views };
@@ -430,50 +441,12 @@ void GltfModel::FetchMaterials(ID3D11Device* device, const tinygltf::Model& gltf
         material.data.emissive_texture.texcoord = gltf_material.emissiveTexture.texCoord;
     }
 
-    // GPU上のシェーダー・リソース・ビューとしてマテリアル・データを作成する
-    std::vector<material::cbuffer> material_data;
-    for (std::vector<material>::const_reference material : materials)
-    {
-        material_data.emplace_back(material.data);
-    }
-
-    HRESULT hr;
-    // GPU 上でマテリアルデータを格納するためのバッファ
-    Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;
-
-    D3D11_BUFFER_DESC buffer_desc{};
-    // バッファのサイズをバイト単位
-    buffer_desc.ByteWidth = static_cast<UINT>(sizeof(material::cbuffer) * material_data.size());
-    // 要素の構造体サイズ
-    buffer_desc.StructureByteStride = sizeof(material::cbuffer);
-    // バッファの使用方法
-    buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-    // バッファのバインド方法
-    buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;// シェーダーリソースとしてバインド
-    buffer_desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-
-    D3D11_SUBRESOURCE_DATA subresource_data{};
-    subresource_data.pSysMem = material_data.data();
-    hr = device->CreateBuffer(&buffer_desc, &subresource_data, material_buffer.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-    // シェーダーリソースビューの設定を行うための構造体
-    D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc{};
-    // バッファのフォーマット
-    shader_resource_view_desc.Format = DXGI_FORMAT_UNKNOWN;
-    // ビューの次元
-    shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-    // バッファ内の要素数
-    shader_resource_view_desc.Buffer.NumElements = static_cast<UINT>(material_data.size());
-
-    hr = device->CreateShaderResourceView(material_buffer.Get(),
-        &shader_resource_view_desc, material_resource_view.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
 
 void GltfModel::FetchTextures(ID3D11Device* device, const tinygltf::Model& gltf_model)
 {
     HRESULT hr{ S_OK };
+
     // テクスチャ分ループ
     for (const tinygltf::Texture& gltf_texture : gltf_model.textures)
     {
@@ -732,6 +705,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
                primitive_data.has_tangent = primitive.vertex_buffer_views.at("TANGENT").buffer != NULL;
                primitive_data.skin = node.skin;
                XMStoreFloat4x4(&primitive_data.world, XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));
+
 
                // 定数バッファに primitive_data の内容をコピー
                immediate_context->UpdateSubresource(primitive_cbuffer.Get(), 0, 0, &primitive_data, 0, 0);
@@ -1144,6 +1118,107 @@ void GltfModel::Animate(size_t animation_index, float time, std::vector<node>& a
 }
 
 
+HRESULT GltfModel::LoadTextures(ID3D11Device* device, const char* filename, const char* suffix, bool dummy, ID3D11ShaderResourceView** srv, UINT dummy_color)
+{
+    // パスを分解
+    char drive[256], dirname[256], fname[256], ext[256];
+    ::_splitpath_s(filename, drive, sizeof(drive), dirname, sizeof(dirname), fname, sizeof(fname), ext, sizeof(ext));
+
+    // 末尾文字を追加
+    if (suffix != nullptr)
+    {
+        ::strcat_s(fname, sizeof(fname), suffix);
+    }
+    // パスを結合
+    char filepath[256];
+    ::_makepath_s(filepath, 256, drive, dirname, fname, ext);
+
+    // マルチバイト文字からワイド文字へ変換
+    wchar_t wfilepath[256];
+    ::MultiByteToWideChar(CP_ACP, 0, filepath, -1, wfilepath, 256);
+
+    // テクスチャ読み込み
+    Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+    HRESULT hr = DirectX::CreateWICTextureFromFile(device, wfilepath, resource.GetAddressOf(), srv);
+    if (FAILED(hr))
+    {
+        // WICでサポートされていないフォーマットの場合（TGAなど）は
+        // STBで画像読み込みをしてテクスチャを生成する
+        int width, height, bpp;
+        unsigned char* pixels = stbi_load(filepath, &width, &height, &bpp, STBI_rgb_alpha);
+        if (pixels != nullptr)
+        {
+            D3D11_TEXTURE2D_DESC desc = { 0 };
+            desc.Width = width;
+            desc.Height = height;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+            desc.CPUAccessFlags = 0;
+            desc.MiscFlags = 0;
+            D3D11_SUBRESOURCE_DATA data;
+            ::memset(&data, 0, sizeof(data));
+            data.pSysMem = pixels;
+            data.SysMemPitch = width * 4;
+
+            Microsoft::WRL::ComPtr<ID3D11Texture2D>	texture;
+            hr = device->CreateTexture2D(&desc, &data, texture.GetAddressOf());
+            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+            hr = device->CreateShaderResourceView(texture.Get(), nullptr, srv);
+            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+            // 後始末
+            stbi_image_free(pixels);
+        }
+        else if (dummy)
+        {
+            // 読み込み失敗したらダミーテクスチャを作る
+            //LOG("load failed : %s\n", filepath);
+
+            const int width = 8;
+            const int height = 8;
+            UINT pixels[width * height];
+            for (int yy = 0; yy < height; ++yy)
+            {
+                for (int xx = 0; xx < width; ++xx)
+                {
+                    pixels[yy * width + xx] = dummy_color;
+                }
+            }
+
+            D3D11_TEXTURE2D_DESC desc = { 0 };
+            desc.Width = width;
+            desc.Height = height;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+            desc.CPUAccessFlags = 0;
+            desc.MiscFlags = 0;
+            D3D11_SUBRESOURCE_DATA data;
+            ::memset(&data, 0, sizeof(data));
+            data.pSysMem = pixels;
+            data.SysMemPitch = width;
+
+            Microsoft::WRL::ComPtr<ID3D11Texture2D>	texture;
+            hr = device->CreateTexture2D(&desc, &data, texture.GetAddressOf());
+            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+            hr = device->CreateShaderResourceView(texture.Get(), nullptr, srv);
+            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+        }
+    }
+    return hr;
+}
+
 size_t GltfModel::IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback)
 {  
     // タイムラインのキーフレーム数を取得
@@ -1192,23 +1267,136 @@ size_t GltfModel::IndexOf(const std::vector<float>& timelines, float time, float
     return keyframe_index;
 }
 
-void GltfModel::BlendAnimations(const std::vector<node>* keyframes[2], float factor, std::vector<GltfModel::node>* keyframe)
+void GltfModel::FetchExternalTextures(ID3D11Device* device, const tinygltf::Model& gltf_model, const std::string& gltf_filename)
+{
+    for (auto& gltf_material : materials)
+    {
+        // ディレクトリパス取得
+        char drive[32], dir[256], dirname[256], fname[256];
+        ::_splitpath_s(gltf_filename.c_str(), drive, sizeof(drive), dir, sizeof(dir), fname, sizeof(fname), nullptr, 0);
+
+        // ファイル階層を追加
+        ::_makepath_s(dirname, sizeof(dirname), drive, dir, fname, nullptr);
+
+        // マテリアルの名前
+        char tname[256] = {};
+        // std::string（gltf_material.name）をchar配列（tname）にコピー
+        std::copy(gltf_material.name.begin(), gltf_material.name.end(), tname);
+
+        // 末尾文字を追加
+        ::strcat_s(tname, sizeof(tname), ".png");
+
+        // 相対パスの解決
+        char filename[256];
+        ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
+
+
+        // ベースカラー
+        char filename_base[256] = {};
+        strcpy_s(filename_base, filename);
+        ID3D11ShaderResourceView* base_color{};
+        LoadTextures(device, filename_base, "_BaseColor", true, &base_color, 0x00FFFF00);
+        texture_resource_views.emplace_back().Attach(base_color);
+        gltf_material.data.pbr_metallic_roughness.basecolor_texture.index = index_count;
+
+        texture& texture_b{ textures.emplace_back() };
+        texture_b.name = filename_base;
+        texture_b.source = index_count;
+        index_count++;
+
+        // ノーマル
+        char filename_normal[256] = {};
+        strcpy_s(filename_normal, filename);
+        ID3D11ShaderResourceView* normal{};
+        LoadTextures(device, filename_normal, "_Normal", true, &normal, 0x00FFFF00);
+        texture_resource_views.emplace_back().Attach(normal);
+        gltf_material.data.normal_texture.index = index_count;
+
+        texture& texture_n{ textures.emplace_back() };
+        texture_n.name = filename_normal;
+        texture_n.source = index_count;
+        index_count++;
+
+        //TODO 今回ラフネスのみなのでラフネス
+        // メタルネスいるときは書き換え
+        char filename_pbr[256] = {};
+        strcpy_s(filename_pbr, filename);
+        ID3D11ShaderResourceView* pbr{};
+        LoadTextures(device, filename_pbr, "_Roughness", true, &pbr, 0x00FFFF00);
+        texture_resource_views.emplace_back().Attach(pbr);
+        gltf_material.data.pbr_metallic_roughness.metallic_roughness_texture.index = index_count;
+
+        texture& texture_pbr{ textures.emplace_back() };
+        texture_pbr.name = filename_pbr;
+        texture_pbr.source = index_count;
+        index_count++;
+    }
+
+
+}
+
+void GltfModel::MaterialForGPU(ID3D11Device* device)
+{
+    // GPU上のシェーダー・リソース・ビューとしてマテリアル・データを作成する
+    std::vector<material::cbuffer> material_data;
+    for (std::vector<material>::const_reference material : materials)
+    {
+        material_data.emplace_back(material.data);
+    }
+
+    HRESULT hr;
+    // GPU 上でマテリアルデータを格納するためのバッファ
+    Microsoft::WRL::ComPtr<ID3D11Buffer> material_buffer;
+
+    D3D11_BUFFER_DESC buffer_desc{};
+    // バッファのサイズをバイト単位
+    buffer_desc.ByteWidth = static_cast<UINT>(sizeof(material::cbuffer) * material_data.size());
+    // 要素の構造体サイズ
+    buffer_desc.StructureByteStride = sizeof(material::cbuffer);
+    // バッファの使用方法
+    buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+    // バッファのバインド方法
+    buffer_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;// シェーダーリソースとしてバインド
+    buffer_desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+    D3D11_SUBRESOURCE_DATA subresource_data{};
+    subresource_data.pSysMem = material_data.data();
+    hr = device->CreateBuffer(&buffer_desc, &subresource_data, material_buffer.GetAddressOf());
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    // シェーダーリソースビューの設定を行うための構造体
+    D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc{};
+    // バッファのフォーマット
+    shader_resource_view_desc.Format = DXGI_FORMAT_UNKNOWN;
+    // ビューの次元
+    shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    // バッファ内の要素数
+    shader_resource_view_desc.Buffer.NumElements = static_cast<UINT>(material_data.size());
+
+    hr = device->CreateShaderResourceView(material_buffer.Get(),
+        &shader_resource_view_desc, material_resource_view.GetAddressOf());
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+}
+
+void GltfModel::BlendAnimation(const std::vector<node>* nodes_[2], float factor, std::vector<GltfModel::node>* node_)
 {
     using namespace DirectX;
-    _ASSERT_EXPR(keyframes[0]->size() == keyframes[1]->size(), "The size of the two node arrays must be the same.");
+    _ASSERT_EXPR(nodes_[0]->size() == nodes_[1]->size(), "The size of the two node arrays must be the same.");
 
-    size_t node_count{ keyframes[0]->size() };
-    keyframe->resize(node_count);
+    size_t node_count{ nodes_[0]->size() };
+    node_->resize(node_count);
     for (size_t node_index = 0; node_index < node_count; ++node_index)
     {
-        XMVECTOR S[2]{ XMLoadFloat3(&keyframes[0]->at(node_index).scale), XMLoadFloat3(&keyframes[1]->at(node_index).scale) };
-        XMStoreFloat3(&keyframe->at(node_index).scale, XMVectorLerp(S[0], S[1], factor));
+        XMVECTOR S[2]{ XMLoadFloat3(&nodes_[0]->at(node_index).scale), XMLoadFloat3(&nodes_[1]->at(node_index).scale) };
+        XMStoreFloat3(&node_->at(node_index).scale, XMVectorLerp(S[0], S[1], factor));
 
-        XMVECTOR R[2]{ XMLoadFloat4(&keyframes[0]->at(node_index).rotation), XMLoadFloat4(&keyframes[1]->at(node_index).rotation) };
-        XMStoreFloat4(&keyframe->at(node_index).rotation, XMQuaternionSlerp(R[0], R[1], factor));
+        XMVECTOR R[2]{ XMLoadFloat4(&nodes_[0]->at(node_index).rotation), XMLoadFloat4(&nodes_[1]->at(node_index).rotation) };
+        XMStoreFloat4(&node_->at(node_index).rotation, XMQuaternionSlerp(R[0], R[1], factor));
 
-        XMVECTOR T[2]{ XMLoadFloat3(&nodes.at(node_index).translation), XMLoadFloat3(&keyframes[1]->at(node_index).translation) };
-        XMStoreFloat3(&keyframe->at(node_index).translation, XMVectorLerp(T[0], T[1], factor));
+        XMVECTOR T[2]{ XMLoadFloat3(&nodes_[0]->at(node_index).translation), XMLoadFloat3(&nodes_[1]->at(node_index).translation) };
+        XMStoreFloat3(&node_->at(node_index).translation, XMVectorLerp(T[0], T[1], factor));
     }
+    // アニメーション後のノードの変換を累積する
+    CumulateTransforms(*node_);
 }
 

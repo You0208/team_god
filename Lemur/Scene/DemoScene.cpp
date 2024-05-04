@@ -71,9 +71,12 @@ void DemoScene::Initialize()
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
+		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\FlightHelmet\\glTF\\FlightHelmet.gltf");
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
-		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.glb");
-		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf");
+		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.glb", false);
+		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit3_RE.glb",true);
+		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit1_RE.glb");
+		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf",false);	
 	}
 
 	// ポイントライト・スポットライトの初期位置設定
@@ -132,6 +135,11 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		BaseScene::DebugImgui();
 		Camera::Instance().DrawDebug();
 		ImGui::Begin("ImGUI");
+
+		//ImGui::SliderFloat("fbx_animation_blend_time", &test_model->animation_blend_time, 0.0f, 1.00f);
+
+		ImGui::SliderFloat("animation_blend_time", &gltf_test_model->animation_blend_time, 0.0f, 10.00f);
+		ImGui::SliderFloat("blend_rate", &gltf_test_model->blend_rate, 0.0f, 1.00f);
 
 		// STATIC_BATCHING
 		if (ImGui::TreeNode("shadow"))
@@ -212,7 +220,7 @@ void DemoScene::Render(float elapsedTime)
 		//test_model_2->DrawDebug("Test");
 
 		gltf_test_model->Render(1.0f, gltf_ps.Get());
-		gltf_test_model_2->Render(1.0f, gltf_ps.Get());
+		//gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 	// デバッグ
 	{

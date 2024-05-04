@@ -18,7 +18,7 @@ void Enemy::TransitionDeathState()
 
 void Enemy::UpdateDeathState(float elapsed_time)
 {
-    EnemyManager::Instance().Remove(this);
+    if(!model->IsPlayAnimation())EnemyManager::Instance().Remove(this);
 }
 
 void Enemy::TransitionAttackState()

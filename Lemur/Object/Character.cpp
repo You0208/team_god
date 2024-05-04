@@ -10,7 +10,6 @@ bool Character::ApplyDamage(int damage)
     // 死亡している間は健康状態を変更しない
     if (health <= 0)return false;
 
-
     // ダメージ処理
     health -= damage;
 

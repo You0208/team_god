@@ -6,7 +6,7 @@
 class GltfModelManager
 {
 public:
-    GltfModelManager(ID3D11Device* device, const std::string& filename);
+    GltfModelManager(ID3D11Device* device, const std::string& filename, bool external_texture);
     ~GltfModelManager() {}
 
     void Render( const float& scale, ID3D11PixelShader* replaced_pixel_shader);
@@ -29,6 +29,7 @@ public: // 取得・設定関数関連
     // アニメーション再生速度設定（途中で再生速度を変えたいときなどに）
     void SetAnimationSpeed(const float& speed) { animation_speed = speed; }
 
+
 public: // アニメーション関数関連
     // アニメーション再生設定
     // (アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
@@ -36,7 +37,7 @@ public: // アニメーション関数関連
         const int& index,
         const bool& loop,
         const float& speed = 1.0f,
-        const float& blendSeconds = 1.0f
+        const float& blendSeconds = 0.3f
     );
 
     // ブレンド率の計算更新処理
@@ -59,12 +60,13 @@ public:
 
     std::vector<GltfModel::node> animated_nodes;
     float time{ 0 };
+    float       animation_blend_time = 0.0f;     // ブレンド時間 
+    float       blend_rate=0.0f;
 private:
     float       animation_speed = 1.0f;     // アニメーション再生速度
     float       current_animation_seconds = 0.0f;     // 現在のアニメーション再生時間
 
-    float       animation_blend_time = 0.0f;     // 現在のブレンドタイマー
-    float       animation_blend_seconds = 0.0f;     // ブレンド時間
+    float       animation_blend_seconds = 0.0f;    // 現在のブレンドタイマー
 
     int         current_animation_index = 0;	    // 現在のアニメーション番号
 
@@ -75,4 +77,6 @@ private:
     int blend_current_animation_index;
     float blend_current_animation_seconds;
     std::vector<GltfModel::node> blend_animated_nodes;
+
+    bool once = true;
 };

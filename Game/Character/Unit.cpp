@@ -66,8 +66,6 @@ void Unit::TransitionIdleState()
 
 void Unit::TransitionAttackState()
 {
-    // アニメーションの切り替え
-    model->PlayAnimation(Animation::Attack, false);
     // ステート切り替え
     state = State::Attack;
 }
