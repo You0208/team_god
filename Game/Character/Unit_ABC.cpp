@@ -9,7 +9,7 @@ Unit_A::Unit_A()
 
     attack_times           = 5;    // 攻撃回数
     attack_power           = 1;    // 攻撃力
-    attack_interval        = 0.5f; // 攻撃間隔
+    attack_interval        = 0.1f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
     radius                 = 0.3f; // 半径
     height                 = 0.5f; // デバッグ用
@@ -82,9 +82,8 @@ void Unit_A::UpdateAttackState(float elapsed_time)
         {
             Enemy* enemy = enemyManager.GetEnemy(j);
 
-            // ユニットが死んでたらコンティニュー
+            // 敵が死んでたらコンティニュー
             if (enemy->IsDead())continue;
-
             // ユニットの攻撃範囲に入っている敵全員に攻撃
             if (Collision::IntersectCircleVsCircle
             (
