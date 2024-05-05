@@ -55,7 +55,7 @@ namespace Lemur::Scene
         void RenderingDeffered();
 
         // ライトのセット
-        void InitializeLight();
+        virtual void InitializeLight();
 
         // バッファーの初期化
         void InitializeFramebuffer();
@@ -216,6 +216,7 @@ namespace Lemur::Scene
         // カメラ
         DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, 0.0f, 1.0f };
         DirectX::XMFLOAT3 camera_target{ 0.0f, 0.0f, 0.0f };
+        DirectX::XMFLOAT3 camera_angle{ 0.0f, 0.0f, 0.0f };
         float camera_range = 12.0f;
 
         // ディファードレンダリング

@@ -38,6 +38,8 @@ void FormationScene::Initialize()
     {
         // カメラ
         Camera& camera = Camera::Instance();
+        //camera_angle = { DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(180),DirectX::XMConvertToRadians(0) };
+        //directional_light_direction = { 0.0f,-0.3f,-1.0f,1.0f };
 
         // 2D
         back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene.png");
@@ -94,6 +96,8 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
         camera.Update(elapsedTime);
         camera.SetTarget(camera_target);
         camera.SetRange(camera_range);
+        camera.SetEyeYOffset(0);
+       // camera.SetAngle(camera_angle);
     }
     // ライトの更新
     LightUpdate();
@@ -178,6 +182,7 @@ void FormationScene::Render(float elapsedTime)
     {
         immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
         immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+
         gltf_unit_1->Render(1.0f, gltf_ps.Get());
     }
 
@@ -196,4 +201,64 @@ void FormationScene::DebugImgui()
 {
     BaseScene::DebugImgui();
     Camera::Instance().DrawDebug();
+}
+
+void FormationScene::InitializeLight()
+{
+
+    point_light[0].position.x = 10;
+    point_light[0].position.y = 1;
+    point_light[0].range = 10;
+    point_light[0].color = { 1, 0, 0, 1 };
+    point_light[1].position.x = -10;
+    point_light[1].position.y = 1;
+    point_light[1].range = 10;
+    point_light[1].color = { 0, 1, 0, 1 };
+    point_light[2].position.y = 1;
+    point_light[2].position.z = 10;
+    point_light[2].range = 10;
+    point_light[2].position.y = 1;
+    point_light[2].color = { 0, 0, 1, 1 };
+    point_light[3].position.y = 1;
+    point_light[3].position.z = -10;
+    point_light[3].range = 10;
+    point_light[3].color = { 1, 1, 1, 1 };
+    point_light[4].range = 10;
+    point_light[4].color = { 1, 1, 1, 1 };
+    ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
+
+    spot_light[0].position = { 0, 10, 0, 0 };
+    spot_light[0].direction = { -1, -1, 1, 0 };
+    Mathf::NormalizeDirectXVector(spot_light[0].direction);
+
+    spot_light[0].range = 300;
+    spot_light[0].angle = DirectX::XMConvertToRadians(25.0f);
+    spot_light[0].color = { 1, 0, 0, 1 };
+
+
+    spot_light[0].position = { 0, 50, 0, 0 };
+    spot_light[0].direction = { -0.79, -0.79, -1, 0 };
+    Mathf::NormalizeDirectXVector(spot_light[0].direction);
+    spDirection.Set(-0.79, -0.79, -1);
+    spDirection.Normalize();
+    spot_light[0].range = 300;
+    spot_light[0].angle = DirectX::XMConvertToRadians(25.0f);
+    spot_light[0].color = { 1, 0, 0, 1 };
+
+    spot_light[1].position = { -15, 3, 15, 0 };
+    spot_light[1].direction = { +1, -1, -1, 0 };
+    spot_light[1].range = 100;
+    spot_light[1].color = { 0, 1, 0, 1 };
+    spot_light[2].position = { 15, 3, -15, 0 };
+    spot_light[2].direction = { -1, -1, +1, 0 };
+    spot_light[2].range = 100;
+    spot_light[2].color = { 0, 0, 1, 1 };
+    spot_light[3].position = { -15, 3, -15, 0 };
+    spot_light[3].direction = { +1, -1, +1, 0 };
+    spot_light[3].range = 100;
+    spot_light[3].color = { 1, 1, 1, 1 };
+    ZeroMemory(&spot_light[4], sizeof(spotLights) * 4);
+
+    BaseScene::InitializeLight();
+
 }

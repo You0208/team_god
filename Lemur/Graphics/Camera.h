@@ -29,6 +29,9 @@ public:
     void SetLookAt(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& focus, const DirectX::XMFLOAT3& up);
     void SetTarget(DirectX::XMFLOAT3   target_) { target = target_; };
     void SetRange(float   range_) { range = range_; };
+    void SetAngle(DirectX::XMFLOAT3   angle_) { angle = angle_; };
+    void SetEyeYOffset(float   eye_y_offset_) { eye_y_offset = eye_y_offset_; };
+
 
     void Update(float elapsedTime);
 

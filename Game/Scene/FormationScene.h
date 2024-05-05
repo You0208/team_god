@@ -53,6 +53,7 @@ public:
 
     void DebugImgui()override;
 
+    void InitializeLight()override;
 private:
     std::shared_ptr<Sprite> back;
     std::shared_ptr<Sprite> line_1;
