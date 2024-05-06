@@ -39,5 +39,8 @@ namespace Lemur::Scene
         BaseScene* nextScene = nullptr;
 
         int stage_num;
+
+    public:
+        int set_unit_cont[4] = { 0,1,2,3 };
     };
 }

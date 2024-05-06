@@ -100,8 +100,9 @@ void Unit_D::UpdateAttackState(float elapsed_time)
             // 強化状態をtrueに
             unit->SetBuff(true);
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
+            if(!model->IsPlayAnimation())model->PlayAnimation(Animation::Attack, false);
         }
-        else// 範囲内にいない敵は
+        else// 範囲内にいない
         {
             // 強化状態を切る
             unit->SetBuff(true);
@@ -117,7 +118,7 @@ void Unit_D::UpdateAttackState(float elapsed_time)
     // 攻撃時間が過ぎたら消滅
     if (attack_timer >= timer_max)
     {
-        TransitionDeathState();
+       TransitionDeathState();
     }
 }
 
@@ -225,46 +226,48 @@ void Unit_E::UpdateAttackState(float elapsed_time)
     // タイマーが規定時間を超えたら攻撃
     if (attack_timer >= attack_interval)is_attack = true;
 
-    //TODO モーションが来たらまた変える
-    // 敵の総当たり
-    for (int j = 0; j < enemyCount; ++j)
+    if (attack_times > 0)// 攻撃回数が残っているとき
     {
-        Enemy* enemy = enemyManager.GetEnemy(j);
-
-        // ユニットが死んでたらコンティニュー
-        if (enemy->IsDead())continue;
-
-        // ユニットの攻撃範囲に入っている敵全員に攻撃
-        if (Collision::IntersectRectVsCircle
-        (
-            attack_rect,                                        // 攻撃範囲
-            { enemy->GetPosition().x,enemy->GetPosition().z },  // 敵の位置(XZ平面)
-            enemy->GetRadius()                                  // 敵の当たり判定
-        ))
+        // 敵の総当たり
+        for (int j = 0; j < enemyCount; ++j)
         {
-            int damage = ReturnDamage();
-            is_intersected = true;
-            if (is_attack)  enemy->ApplyDamage(damage);
+            Enemy* enemy = enemyManager.GetEnemy(j);
+
+            // 敵が死んでたらコンティニュー
+            if (enemy->IsDead())continue;
+
+            // 敵の攻撃範囲に入っている敵全員に攻撃
+            if (Collision::IntersectRectVsCircle
+            (
+                attack_rect,                                        // 攻撃範囲
+                { enemy->GetPosition().x,enemy->GetPosition().z },  // 敵の位置(XZ平面)
+                enemy->GetRadius()                                  // 敵の当たり判定
+            ))
+            {
+                is_intersected = true;
+                // アニメーションの切り替え
+                if (is_attack)  model->PlayAnimation(Animation::Attack, false);
+                if (is_attack)  enemy->ApplyDamage(ReturnDamage());
+            }
+        }
+
+        // 範囲内に敵が一体も居なければ待機
+        if (!is_intersected)    TransitionIdleState();
+        else// 誰か一体でも範囲内にいる場合
+        {
+            // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
+            if (is_attack)
+            {
+                is_attack = false;
+                attack_timer = 0.0f;
+                attack_times--;
+            }
         }
     }
-
-    // 範囲内に敵が一体も居なければ待機
-    if (!is_intersected)    TransitionIdleState();
-    else// 誰か一体でも範囲内にいる場合
+    else
     {
-        // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
-        if (is_attack)
-        {
-            is_attack = false;
-            attack_timer = 0.0f;
-            attack_times--;
-        }
-    }
-
-    // 攻撃回数を消費しきったら消滅
-    if (attack_times <= 0)
-    {
-        TransitionDeathState();
+        // 攻撃回数を消費しきったら消滅
+        if (!model->IsPlayAnimation()) TransitionDeathState();
     }
 }
 
@@ -372,46 +375,49 @@ void Unit_F::UpdateAttackState(float elapsed_time)
     // タイマーが規定時間を超えたら攻撃
     if (attack_timer >= attack_interval)is_attack = true;
 
-    //TODO モーションが来たらまた変える
-    // 敵の総当たり
-    for (int j = 0; j < enemyCount; ++j)
+    if (attack_times > 0)// 攻撃回数が残っているとき
     {
-        Enemy* enemy = enemyManager.GetEnemy(j);
-
-        // ユニットが死んでたらコンティニュー
-        if (enemy->IsDead())continue;
-
-        // ユニットの攻撃範囲に入っている敵全員に攻撃
-        if (Collision::IntersectRectVsCircle
-        (
-            attack_rect,                                        // 攻撃範囲
-            { enemy->GetPosition().x,enemy->GetPosition().z },  // 敵の位置(XZ平面)
-            enemy->GetRadius()                                  // 敵の当たり判定
-        ))
+        //TODO モーションが来たらまた変える
+        // 敵の総当たり
+        for (int j = 0; j < enemyCount; ++j)
         {
-            int damage = ReturnDamage();
-            is_intersected = true;
-            if (is_attack)  enemy->ApplyDamage(damage);
+            Enemy* enemy = enemyManager.GetEnemy(j);
+
+            // ユニットが死んでたらコンティニュー
+            if (enemy->IsDead())continue;
+
+            // ユニットの攻撃範囲に入っている敵全員に攻撃
+            if (Collision::IntersectRectVsCircle
+            (
+                attack_rect,                                        // 攻撃範囲
+                { enemy->GetPosition().x,enemy->GetPosition().z },  // 敵の位置(XZ平面)
+                enemy->GetRadius()                                  // 敵の当たり判定
+            ))
+            {
+                is_intersected = true;
+                // アニメーションの切り替え
+                if (is_attack)  model->PlayAnimation(Animation::Attack, false);
+                if (is_attack)  enemy->ApplyDamage(ReturnDamage());
+            }
+        }
+
+        // 範囲内に敵が一体も居なければ待機
+        if (!is_intersected)    TransitionIdleState();
+        else// 誰か一体でも範囲内にいる場合
+        {
+            // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
+            if (is_attack)
+            {
+                is_attack = false;
+                attack_timer = 0.0f;
+                attack_times--;
+            }
         }
     }
-
-    // 範囲内に敵が一体も居なければ待機
-    if (!is_intersected)    TransitionIdleState();
-    else// 誰か一体でも範囲内にいる場合
+    else 
     {
-        // 攻撃中なら残り攻撃回数を減らしタイマーを初期化
-        if (is_attack)
-        {
-            is_attack = false;
-            attack_timer = 0.0f;
-            attack_times--;
-        }
-    }
-
-    // 攻撃回数を消費しきったら消滅
-    if (attack_times <= 0)
-    {
-        TransitionDeathState();
+        // 攻撃回数を消費しきったら消滅
+        if (!model->IsPlayAnimation()) TransitionDeathState();
     }
 }
 

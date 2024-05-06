@@ -94,7 +94,7 @@ namespace Lemur::Scene
         enum class CONSTANT_BUFFER_R { NONE, SCENE, FOG, OPTION, PBR, D_FOG, LIGHT, HEMISPERE/*register—p*/ };
 
         std::unique_ptr<Framebuffer> framebuffers[8];
-        enum class FRAME_BUFFER { SCENE, FOG, DEPTH };
+        enum class FRAME_BUFFER { SCENE, FOG, DEPTH,TEX };
 
         // MASK
         struct option_constants {

@@ -130,7 +130,6 @@ float4 main(VS_OUT pin) : SV_TARGET
         SpotLight(pin, diffuseReflectance, F0, N, V, roughness_factor, spotDiffuse, spotSpecular);
         // 最終光に足し合わせる         
         finalLig += (spotDiffuse + spotSpecular);
-        
         //-----------------------------------------
         //　シャドウ
         //----------------------------------------- 

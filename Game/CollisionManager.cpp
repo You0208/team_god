@@ -82,6 +82,23 @@ void CollisionManager::CollisionSeedVsUnit()
                     break; // 一度でも重なればループを抜ける
                 }
             }
+            // 攻撃範囲がドーナツ
+            if (unit->GetCategory() == 8)
+            {
+                // 種がユニットの攻撃範囲に入っているとき
+                if (Collision::IntersectDonutVsCircle
+                (
+                    { unit->GetPosition().x,unit->GetPosition().z },
+                    unit->GetAttackCollisionRange(),
+                    unit->GetAttackRadiusIn(),
+                    { seed->GetPosition().x,seed->GetPosition().z },
+                    seed->GetRadius()
+                ))
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
+            }
         }
 
         // 重なりがない場合、種を生まれた状態に設定

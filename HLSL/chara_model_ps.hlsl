@@ -36,10 +36,8 @@ float4 main(VS_OUT pin) : SV_TARGET
     // 金属度
     float metallic = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     
-    
     // 滑らかさ
     float smoothness = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).a;
-    
     
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
@@ -108,7 +106,6 @@ float4 main(VS_OUT pin) : SV_TARGET
         //-----------------------------------------
         //　シャドウ
         //----------------------------------------- 
-    
         float3 shadow_factor = 1.0f;
         Shadow(pin, normal, T, B, shadow_map, comparison_sampler_state, shadow_factor);
         // 最終光に足し合わせる    

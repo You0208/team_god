@@ -1,6 +1,8 @@
 #include "Unit.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "UnitManager.h"
+#include "Lemur/Effekseer/EffekseerManager.h"
+
 void Unit::Update(float elapsed_time)
 {
     switch (state)
@@ -48,6 +50,8 @@ void Unit::TransitionDeathState()
     death = true;
     // アニメーションの切り替え
     model->PlayAnimation(Animation::Out, false);
+    // エフェクトの再生
+    death_effect->Play(position, death_effect_size);
     // ステート切り替え
     state = State::Death;
 }

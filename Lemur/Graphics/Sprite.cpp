@@ -174,6 +174,14 @@ void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
     immediate_context->Draw(4, 0);
 }
 
+void Sprite::RenderCenter(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh)
+{
+    float x = dx - dw * 0.5f;
+    float y = dy - dh * 0.5f;
+    Render(immediate_context, x, y, dw, dh, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
+}
+
 void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh)
 {
     Render(immediate_context, dx, dy, dw, dh, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,

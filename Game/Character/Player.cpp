@@ -4,6 +4,7 @@
 #include "SeedManager.h"
 #include "UnitManager.h"
 #include "Game/Stage/StageManager.h"
+#include "./Lemur/Scene/SceneManager.h"
 
 static Player* instance = nullptr;
 
@@ -234,10 +235,10 @@ void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     // TODO もね　ユニットのボタン設定
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::D;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::B;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::F;
+    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category =  Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category =  Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y];
 }
 
 // 入力処理

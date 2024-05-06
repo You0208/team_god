@@ -62,6 +62,7 @@ void GameScene::Initialize()
 		Camera& camera = Camera::Instance();
 		// カメラ調整
 		camera_range = 30.0f;
+		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 
 
 		StageManager& stage_manager = StageManager::Instance();
@@ -172,6 +173,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		camera.Update(elapsedTime);
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
+		camera.SetEyeYOffset(8.0f);
+		camera.SetAngle(camera_angle);
 	}
 
 	// ライトの更新

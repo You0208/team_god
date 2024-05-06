@@ -55,6 +55,40 @@ public:
 
     void InitializeLight()override;
 private:
+    int choose_num = 0;// 現在選ばれているユニット番号
+    int all_unit_num;// 選択されたユニットの数
+    int all_controllers_num;// 何番目に選ばれているのか
+
+    bool enable_units[6];
+    DirectX::XMFLOAT3 units_position[6];
+    float units_rotation[6];
+
+    float interval_timer = 0.0f;// コントローラ時間
+    float interval_timer_max = 0.15f;// コントローラー最大時間
+
+    bool enable_controllers[4];
+    DirectX::XMFLOAT2 controllers_position[4];
+    int controllers_num[4];// 何番目に選ばれたか
+    int cont_num[4];
+
+    bool is_down_scale_easing = false;
+    bool is_up_scale_easing = false;
+    float button_scale = 0.9f;// ボタンのスケール
+    float easing_timer = 0.0f;
+    float easing_time_max = 0.2f;
+    float easing_target_scale = 0.0f;
+    float easing_start_scale = 0.0f;
+
+    void DownScaleEasing();
+    void UpScaleEasing();
+    void CallScaleEasing(float target_scale, float start_scale,  float t = 0.2f)
+    {
+        easing_timer = 0.0f;
+        easing_time_max = t;
+        easing_target_scale = target_scale;
+        easing_start_scale = start_scale;
+    }
+
     std::shared_ptr<Sprite> back;
     std::shared_ptr<Sprite> line_1;
     std::shared_ptr<Sprite> line_2;
@@ -81,4 +115,24 @@ private:
     std::unique_ptr<GltfModelManager> gltf_unit_4;
     std::unique_ptr<GltfModelManager> gltf_unit_5;
     std::unique_ptr<GltfModelManager> gltf_unit_6;
+
+    // デバッグ用の床表示
+    std::unique_ptr<GltfModelManager> debug_;
+    std::unique_ptr<FbxModelManager> test_model_2;
+
+    // 各場所の位置と角度
+    DirectX::XMFLOAT3 position[4] = {
+        { 0.7f,-1.8f,0.0 },
+        { -1.1f,-1.8f,0.0 },
+        { -2.9f,-1.8f,0.0 },
+        { -4.7f,-1.8f,0.0 }
+    };
+    float rotation[4] = {
+        DirectX::XMConvertToRadians(-4.0f),
+        DirectX::XMConvertToRadians(5.0f),
+        DirectX::XMConvertToRadians(15.0f),
+        DirectX::XMConvertToRadians(22.0f)
+    };
+
+    bool select_button = false;
 };

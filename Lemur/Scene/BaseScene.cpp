@@ -692,6 +692,9 @@ void Lemur::Scene::BaseScene::InitializeFramebuffer()
 	// FOG
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
+	// TEX
+	framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
+
 	//BLOOM
 	bloomer = std::make_unique<Bloom>(graphics.GetDevice(), 1920, 1080);
 
@@ -730,6 +733,7 @@ void Lemur::Scene::BaseScene::ExePostEffct()
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->shader_resource_views[0].Get(),
 		bloomer->ShaderResourceView(),
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)]->shader_resource_views[0].Get(),
+		framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->shader_resource_views[0].Get(),
 	};
 	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0, _countof(final_pass_shader_resource_views), pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
 }
