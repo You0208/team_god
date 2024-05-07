@@ -76,30 +76,6 @@ void UnitManager::Initialize()
         );
         unit_status[UNIT_INDEX::Cauliflower].attack_width = 0.9f;                 // 攻撃範囲の幅
 
-        //Unit_H
-        InitializeBasic(unit_status[UNIT_INDEX::H],
-            0.1f,// 攻撃間隔
-            1,   // 攻撃力
-            1,   // 攻撃回数
-            0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
-        );             
-        unit_status[UNIT_INDEX::H].attack_width_2            = {1.0f,20.0f};         // 攻撃範囲の幅
-        unit_status[UNIT_INDEX::H].rect_angle              = 50.0f;                // 攻撃範囲の幅
-
-        //Unit_I
-        InitializeBasic(unit_status[UNIT_INDEX::I],
-            0.1f,// 攻撃間隔
-            1,   // 攻撃力
-            1,   // 攻撃回数
-            0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
-        );
-        unit_status[UNIT_INDEX::I].attack_width_2 = { 1.0f,20.0f };         // 攻撃範囲の幅
-        unit_status[UNIT_INDEX::I].rect_angle = 50.0f;                // 攻撃範囲の幅
-
         //Unit_J
         InitializeBasic(unit_status[UNIT_INDEX::J],
             0.1f,// 攻撃間隔
@@ -228,25 +204,11 @@ void UnitManager::DebugImGui()
         ImGui::SliderFloat(u8"攻撃幅", &unit_status[UNIT_INDEX::Cauliflower].attack_width, 0.1f, 10.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("Unit_H"))
-    {
-        UnitImGui(unit_status[UNIT_INDEX::H]);
-        ImGui::SliderFloat2(u8"攻撃幅", &unit_status[UNIT_INDEX::H].attack_width_2.x, 0.1f, 20.0f);
-        ImGui::SliderFloat(u8"攻撃角度", &unit_status[UNIT_INDEX::H].rect_angle, 0.0f, 360.0f);
-        ImGui::TreePop();
-    }
-    if (ImGui::TreeNode("Unit_I"))
-    {
-        UnitImGui(unit_status[UNIT_INDEX::I]);
-        ImGui::SliderFloat2(u8"攻撃幅", &unit_status[UNIT_INDEX::I].attack_width_2.x, 0.1f, 20.0f);
-        ImGui::SliderFloat(u8"攻撃角度", &unit_status[UNIT_INDEX::I].rect_angle, 0.0f, 360.0f);
-        ImGui::TreePop();
-    }
     if (ImGui::TreeNode("Unit_J"))
     {
         UnitImGui(unit_status[UNIT_INDEX::J]);
-        ImGui::SliderFloat(u8"ドーナツ中半径", &unit_status[UNIT_INDEX::I].radius_in, 0.0f, 5.0f);
-        ImGui::SliderFloat(u8"ドーナツ外半径", &unit_status[UNIT_INDEX::I].attack_radius, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"ドーナツ中半径", &unit_status[UNIT_INDEX::J].radius_in, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"ドーナツ外半径", &unit_status[UNIT_INDEX::J].attack_radius, 0.0f, 5.0f);
         ImGui::TreePop();
     }
     ImGui::End();
@@ -268,115 +230,5 @@ void UnitManager::SetUpUnit(Unit* unit, int unit_index)
     unit->SetTHeight(unit_status[unit_index].t_height);
     unit->SetTBase(unit_status[unit_index].t_base);
     unit->SetAttackWidth(unit_status[unit_index].attack_width);
-    unit->SetAttackWidth(unit_status[unit_index].attack_width_2);
-    unit->SetRectAngle(unit_status[unit_index].rect_angle);
     unit->SetAttackRadiusIn(unit_status[unit_index].radius_in);
 }
-
-//
-//void UnitManager::SetUpUnit_A(Unit* unit)
-//{
-//    unit->SetAttackTimes(chili.attack_times);
-//    unit->SetAttackPower(chili.attack_power);
-//    unit->SetAttackInterval(chili.attack_interval);
-//    unit->SetAttackEffectSize(chili.attack_effect_size);
-//    unit->SetDeathEffectSize(chili.death_effect_size);
-//    unit->SetSetEffectSize(chili.set_effect_size);
-//    unit->SetAttackInterval(chili.attack_interval);
-//    unit->SetAttackInterval(chili.attack_interval);
-//    unit->SetAttackRadius(radius_chili);
-//    unit->SetTimerMax(timer_max_shishito);
-//    unit->SetStrengWidth(streng_width_shishito);
-//}
-//
-//void UnitManager::SetUpUnit_B(Unit* unit)
-//{
-//    unit->SetAttackTimes(green_pumpkin.attack_times);
-//    unit->SetAttackPower(green_pumpkin.attack_power);
-//    unit->SetAttackInterval(green_pumpkin.attack_interval);
-//    unit->SetAttackEffectSize(green_pumpkin.attack_effect_size);
-//    unit->SetDeathEffectSize(green_pumpkin.death_effect_size);
-//    unit->SetSetEffectSize(green_pumpkin.set_effect_size);
-//    unit->SetTHeight(t_height_B);
-//    unit->SetTBase(t_base_B);
-//}
-//
-//void UnitManager::SetUpUnit_C(Unit* unit)
-//{
-//    unit->SetAttackTimes(orange_pumpkin.attack_times);
-//    unit->SetAttackPower(orange_pumpkin.attack_power);
-//    unit->SetAttackInterval(orange_pumpkin.attack_interval);
-//    unit->SetAttackEffectSize(orange_pumpkin.attack_effect_size);
-//    unit->SetDeathEffectSize(orange_pumpkin.death_effect_size);
-//    unit->SetSetEffectSize(orange_pumpkin.set_effect_size);
-//    unit->SetTHeight(t_height_C);
-//    unit->SetTBase(t_base_C);
-//}
-//
-//void UnitManager::SetUpUnit_D(Unit* unit)
-//{
-//    unit->SetAttackRadius(radius_shishito);
-//    unit->SetTimerMax(timer_max_shishito);
-//    unit->SetStrengWidth(streng_width_shishito);
-//    unit->SetAttackEffectSize(attack_effect_size_shishito);
-//    unit->SetDeathEffectSize(death_effect_size_shishito);
-//    unit->SetSetEffectSize(set_effect_size_shishito);
-//}
-//
-//void UnitManager::SetUpUnit_E(Unit* unit)
-//{
-//    unit->SetAttackTimes(unit_E.attack_times);
-//    unit->SetAttackPower(unit_E.attack_power);
-//    unit->SetAttackInterval(unit_E.attack_interval);
-//    unit->SetAttackEffectSize(unit_E.attack_effect_size);
-//    unit->SetDeathEffectSize(unit_E.death_effect_size);
-//    unit->SetSetEffectSize(unit_E.set_effect_size);
-//    unit->SetAttackWidth(attack_width_E);
-//}
-//
-//void UnitManager::SetUpUnit_F(Unit* unit)
-//{
-//    unit->SetAttackTimes(unit_F.attack_times);
-//    unit->SetAttackPower(unit_F.attack_power);
-//    unit->SetAttackInterval(unit_F.attack_interval);
-//    unit->SetAttackEffectSize(unit_F.attack_effect_size);
-//    unit->SetDeathEffectSize(unit_F.death_effect_size);
-//    unit->SetSetEffectSize(unit_F.set_effect_size);
-//    unit->SetAttackWidth(attack_width_F);
-//}
-//
-//void UnitManager::SetUpUnit_H(Unit* unit)
-//{
-//    unit->SetAttackTimes(unit_H.attack_times);
-//    unit->SetAttackPower(unit_H.attack_power);
-//    unit->SetAttackInterval(unit_H.attack_interval);
-//    unit->SetAttackEffectSize(unit_H.attack_effect_size);
-//    unit->SetDeathEffectSize(unit_H.death_effect_size);
-//    unit->SetSetEffectSize(unit_H.set_effect_size);
-//    unit->SetAttackWidth(attack_width_H);
-//    unit->SetRectAngle(rect_angle_H);
-//}
-//
-//void UnitManager::SetUpUnit_I(Unit* unit)
-//{
-//    unit->SetAttackTimes(unit_I.attack_times);
-//    unit->SetAttackPower(unit_I.attack_power);
-//    unit->SetAttackInterval(unit_I.attack_interval);
-//    unit->SetAttackEffectSize(unit_I.attack_effect_size);
-//    unit->SetDeathEffectSize(unit_I.death_effect_size);
-//    unit->SetSetEffectSize(unit_I.set_effect_size);
-//    unit->SetAttackWidth(attack_width_I);
-//    unit->SetRectAngle(rect_angle_I);
-//}
-//
-//void UnitManager::SetUpUnit_J(Unit* unit)
-//{
-//    unit->SetAttackTimes(unit_J.attack_times);
-//    unit->SetAttackPower(unit_J.attack_power);
-//    unit->SetAttackInterval(unit_J.attack_interval);
-//    unit->SetAttackEffectSize(unit_J.attack_effect_size);
-//    unit->SetDeathEffectSize(unit_J.death_effect_size);
-//    unit->SetSetEffectSize(unit_J.set_effect_size);
-//    unit->SetAttackRadius(radius_in_J);
-//    unit->SetAttackRadius(radius_out_J);
-//}

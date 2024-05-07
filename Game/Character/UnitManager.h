@@ -58,8 +58,6 @@ public:
         GreenPumpkin,
         Broccoli,
         Cauliflower,
-        H,
-        I,
         J
     };
 
@@ -90,8 +88,6 @@ private:
         float               t_height;           // 三角形高さ
         float               t_base;             // 三角形底辺長
         float               attack_width;       //　攻撃幅
-        DirectX::XMFLOAT2   attack_width_2;     //　攻撃幅（斜め用）
-        float               rect_angle;         // 長方形角度
         float               radius_in;         // ドーナツ内側半径
     };
 
@@ -123,62 +119,8 @@ private:
         unit.basic.set_effect_size = set_effect_size;
     }
 
-    UnitStatus unit_status[9];
+    UnitStatus unit_status[7];
   
-    //// Chili
-    //UnitStatus  chili;
-    //float       radius_chili;  // 半径
-
-    //// Shishito
-    //float       radius_shishito;  // 半径
-    //float       timer_max_shishito;
-    //int         streng_width_shishito;
-    //float       attack_effect_size_shishito; // 攻撃エフェクトのサイズ
-    //float       death_effect_size_shishito;  // 死亡エフェクトのサイズ
-    //float       set_effect_size_shishito;    // 設置エフェクトのサイズ
-
-    //// OrangePumpkin
-    //UnitStatus  orange_pumpkin;
-    //float       t_height_C;
-    //float       t_base_C;
-
-    //// GreenPumpkin
-    //UnitStatus green_pumpkin;
-    //float       t_height_B;
-    //float       t_base_B;
-
-    //// Broccoli
-    //UnitStatus unit_E;
-    //float attack_width_E;
-
-    //// Cauliflower
-    //UnitStatus unit_F;
-    //float attack_width_F;
-
-    //// Unit_H
-    //UnitStatus unit_H;
-    //DirectX::XMFLOAT2 attack_width_H;
-    //float rect_angle_H;
-
-    //// Unit_I
-    //UnitStatus unit_I;
-    //DirectX::XMFLOAT2 attack_width_I;
-    //float rect_angle_I;
-
-    //// Unit_J
-    //UnitStatus unit_J;
-    //float radius_in_J;  // 半径
-    //float radius_out_J;  // 半径
 public:
     void SetUpUnit(Unit* unit, int unit_index);
-
-    //void SetUpUnit_A(Unit* unit);
-    //void SetUpUnit_B(Unit* unit);
-    //void SetUpUnit_C(Unit* unit);
-    //void SetUpUnit_D(Unit* unit);
-    //void SetUpUnit_E(Unit* unit);
-    //void SetUpUnit_F(Unit* unit);
-    //void SetUpUnit_H(Unit* unit);
-    //void SetUpUnit_I(Unit* unit);
-    //void SetUpUnit_J(Unit* unit);
 };

@@ -152,7 +152,8 @@ void Chili::DrawDebugGUI(int n)
 Shishito::Shishito()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb",true);
+    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb",true);
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Shishito.fbx");
 
     attack_times = 5;    // çUåÇâÒêî
     attack_power = 1;    // çUåÇóÕ
@@ -277,7 +278,8 @@ void Shishito::DrawDebugGUI(int n)
 OrangePumpkin::OrangePumpkin()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb",true);
+    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb",true);
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\OrangePumpkin.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");

@@ -36,12 +36,10 @@ public: // アニメーション関数関連
     void PlayAnimation(
         const int& index,
         const bool& loop,
+        const bool& is_blend = false,
         const float& speed = 1.0f,
         const float& blendSeconds = 0.1f
     );
-
-    // ブレンド率の計算更新処理
-    void UpdateBlendRate(float blendRate, const float& elapsedTime);
 
     // アニメーション更新処理
     void UpdateAnimation(const float& elapsedTime);
@@ -79,4 +77,6 @@ private:
     std::vector<GltfModel::node> blend_animated_nodes;
 
     bool once = true;
+
+    bool is_blend = false;
 };

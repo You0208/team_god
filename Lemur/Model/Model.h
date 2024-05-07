@@ -199,6 +199,7 @@ struct Material
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness_smoothness;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> roughness;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> opacity;
 
     // UNIT.30
     template<class T>

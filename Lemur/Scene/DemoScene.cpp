@@ -35,7 +35,7 @@ void DemoScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 
@@ -70,8 +70,8 @@ void DemoScene::Initialize()
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit4_RE.fbx");
-		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
+		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\FlightHelmet\\glTF\\FlightHelmet.gltf");
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf");
@@ -346,12 +346,12 @@ void DemoScene::Render(float elapsedTime)
 	else
 	{
 
-		//test_model->Render(0.01f, Try.Get());
+		test_model->Render(0.01f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
-		//test_model->DrawDebug("Test");
+		test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
 
-		gltf_test_model->Render(1.0f, gltf_ps.Get());
+		//gltf_test_model->Render(1.0f, gltf_ps.Get());
 		//gltf_test_model_2->Render(1.0f, gltf_ps.Get());
 	}
 	// デバッグ

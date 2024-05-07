@@ -81,12 +81,6 @@ void Seed::Update(float elapsedTime)
             case UnitManager::UNIT_INDEX::Cauliflower:
                 unit = new Cauliflower;
                 break;
-            case UnitManager::UNIT_INDEX::H:
-                unit = new Unit_H;
-                break;
-            case UnitManager::UNIT_INDEX::I:
-                unit = new Unit_I;
-                break;
             case UnitManager::UNIT_INDEX::J:
                 unit = new Unit_J;
                 break;

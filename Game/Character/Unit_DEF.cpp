@@ -7,7 +7,8 @@
 GreenPumpkin::GreenPumpkin()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
+    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\GreenPumpkin.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\UNIT2_ATK\\UNIT2_ATK.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
@@ -207,7 +208,8 @@ void GreenPumpkin::DrawDebugGUI(int n)
 Broccoli::Broccoli()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb",true);
+    // LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb",true);
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
 
     attack_times = 5;    // çUåÇâÒêî
     attack_power = 1;    // çUåÇóÕ
@@ -359,7 +361,8 @@ void Broccoli::DrawDebugGUI(int n)
 Cauliflower::Cauliflower()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb",true);
+    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb",true);
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
 
     attack_times = 5;    // çUåÇâÒêî
     attack_power = 1;    // çUåÇóÕ
