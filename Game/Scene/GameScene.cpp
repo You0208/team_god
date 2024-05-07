@@ -80,13 +80,13 @@ void GameScene::Initialize()
 			time_limit = 92.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 95.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 100.0f;// ここで制限時間を調整
 			break;
 		case 5:// レベル6
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 100.0f;// ここで制限時間を調整
 			break;
 		case 6:// レベル7
 			time_limit = 200.0f;// ここで制限時間を調整
