@@ -14,6 +14,8 @@
 #include "../Input/Input.h"
 #include "../imgui/ImGuiCtrl.h"
 
+#include "../Graphics/ParticleSystem.h"
+
 namespace Lemur::Scene
 {
     // ベースシーン
@@ -114,8 +116,10 @@ namespace Lemur::Scene
             DirectX::XMFLOAT4X4 view_projection;// ビュー行列
             DirectX::XMFLOAT4 camera_position;// カメラの位置
             DirectX::XMFLOAT4X4 inverse_projection;// 逆行列
+
             float time;// 時間
             float pads[3];
+
             //TODO ここら辺ちゃんと調べる        
             DirectX::XMFLOAT4X4 inv_view_projection;// 逆ビュー行列
 
@@ -123,8 +127,12 @@ namespace Lemur::Scene
             DirectX::XMFLOAT4X4 light_view_projection;// 光のビュー行列
             float shadow_depth_bias;
             float pads2[3];
+
+            // ジオメトリシェーダーにてビルボード計算するため
+            DirectX::XMFLOAT4X4 view_matrix;
+            DirectX::XMFLOAT4X4 projection_matrix;
         };
-        scene_constants scene_constants;
+        scene_constants scene_constant;
 
         // FOG
         struct fog_constants
@@ -224,6 +232,12 @@ namespace Lemur::Scene
 
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceViewArray[G_MAX];
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetViewArray[G_MAX];
+
+
+        // パーティクルシステム
+        std::unique_ptr<ParticleSystem> particle_system;
+        // 爆発アニメーション付きパーティクルシステム
+        std::unique_ptr<ParticleSystem> particle_bomb;
 
 
         // bloom

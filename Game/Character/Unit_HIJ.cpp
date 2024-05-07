@@ -5,7 +5,7 @@
 Unit_H::Unit_H()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit3_RE.fbx");
+    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb",true);
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力
@@ -21,7 +21,7 @@ Unit_H::Unit_H()
     attack_rect = CalcRotateRect(attack_rect.center, attack_rect.width, rect_angle);
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Idle, true);
+    PlayAnimation(Animation::Idle, true);
 }
 
 void Unit_H::DrawDebugPrimitive()
@@ -105,10 +105,13 @@ void Unit_H::UpdateAttackState(float elapsed_time)
             {
                 // 敵とかぶったフラグをON
                 is_intersected = true;
-                // アニメーションの切り替え
-                if (is_attack)  model->PlayAnimation(Animation::Attack, false);
-                // 攻撃フラグがONならダメージ処理
-                if (is_attack)  enemy->ApplyDamage(ReturnDamage());
+                if (is_attack)
+                {
+                    // アニメーションの切り替え
+                    PlayAnimation(Animation::Attack, false);
+                    // 攻撃フラグがONならダメージ処理
+                    enemy->ApplyDamage(ReturnDamage());
+                }
             }
         }
 
@@ -128,7 +131,7 @@ void Unit_H::UpdateAttackState(float elapsed_time)
     else
     {
         // 攻撃回数を消費しきったら消滅
-        if (!model->IsPlayAnimation()) TransitionDeathState();
+        if (!IsPlayAnimation()) TransitionDeathState();
     }
 }
 
@@ -140,7 +143,7 @@ void Unit_H::DrawDebugGUI(int n)
 Unit_I::Unit_I()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit3_RE.fbx");
+    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb",true);
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力
@@ -156,7 +159,7 @@ Unit_I::Unit_I()
     attack_rect = CalcRotateRect(attack_rect.center, attack_rect.width, rect_angle);
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Idle, true);
+    PlayAnimation(Animation::Idle, true);
 }
 
 void Unit_I::DrawDebugPrimitive()
@@ -241,7 +244,7 @@ void Unit_I::UpdateAttackState(float elapsed_time)
                 // 敵とかぶったフラグをON
                 is_intersected = true;
                 // アニメーションの切り替え
-                if (is_attack)  model->PlayAnimation(Animation::Attack, false);
+                if (is_attack)  PlayAnimation(Animation::Attack, false);
                 // 攻撃フラグがONならダメージ処理
                 if (is_attack)  enemy->ApplyDamage(ReturnDamage());
             }
@@ -263,7 +266,7 @@ void Unit_I::UpdateAttackState(float elapsed_time)
     else 
     {
         // 攻撃回数を消費しきったら消滅
-        if (!model->IsPlayAnimation()) TransitionDeathState();
+        if (!IsPlayAnimation()) TransitionDeathState();
     }
 }
 
@@ -276,7 +279,7 @@ void Unit_I::DrawDebugGUI(int n)
 Unit_J::Unit_J()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\unit1_RE.fbx");
+    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb",true);
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力
@@ -290,7 +293,7 @@ Unit_J::Unit_J()
     UpdateTransform();
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Idle, true);
+    PlayAnimation(Animation::Idle, true);
 }
 
 void Unit_J::DrawDebugPrimitive()
@@ -369,10 +372,14 @@ void Unit_J::UpdateAttackState(float elapsed_time)
             {
                 // 敵とかぶったフラグをON
                 is_intersected = true;
-                // アニメーションの切り替え
-                if (is_attack)  model->PlayAnimation(Animation::Attack, false);
-                // 攻撃フラグがONならダメージ処理
-                if (is_attack)  enemy->ApplyDamage(ReturnDamage());
+             
+                if (is_attack)
+                {
+                    // アニメーションの切り替え
+                    PlayAnimation(Animation::Attack, false);
+                    // 攻撃フラグがONならダメージ処理
+                    enemy->ApplyDamage(ReturnDamage());
+                }
             }
         }
 
@@ -392,7 +399,7 @@ void Unit_J::UpdateAttackState(float elapsed_time)
     else
     {
         // 攻撃回数を消費しきったら消滅
-        if (!model->IsPlayAnimation()) TransitionDeathState();
+        if (!IsPlayAnimation()) TransitionDeathState();
     }
 }
 

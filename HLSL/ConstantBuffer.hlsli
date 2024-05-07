@@ -36,16 +36,21 @@ cbuffer OBJECT_CONSTANT_BUFFER : register(b0)
 cbuffer SCENE_CONSTANT_BUFFER : register(b1)
 {
     row_major float4x4 view_projection;
-    //float4 light_direction;
+    
     float4 camera_position;
     row_major float4x4 inverse_projection;
     float time;
     float3 pad;
     row_major float4x4 inv_view_projection;
+    
     // SHADOW
     row_major float4x4 light_view_projection;
     float shadow_depth_bias;
-    float pads2[3];
+    float3 pads2;
+    
+    // particle
+    row_major float4x4 view_matrix;
+    row_major float4x4 projection_matrix;
 };
 
 cbuffer FOG_CONSTANT_BUFFER : register(b2)

@@ -38,18 +38,6 @@ private:
         Left,
         Idle
     };
-    enum UnitCategory
-    {
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        H,
-        I,
-        J
-    };
 
     float               sub_pos_z           = 0.0f;     // Œ¸Z‚³‚ê‚éZÀ•W
     float               sub_pos_z_puls      = 0.0f;     // Œ¸Z‚³‚ê‚éZÀ•W‚Ì’Ç‰Á•ª

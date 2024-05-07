@@ -55,6 +55,7 @@ public:
     Rect        GetAttackRect() { return attack_rect; }
     float       GetAttackRadiusIn() { return attack_radius_in; }
     Effect*     GetSetEffect() { return set_effect; };
+    float       GetSetEffectSize() { return set_effect_size; }
 
     // Setter
     void SetCategory(int category_) { category = category_; }
@@ -74,6 +75,9 @@ public:
     void SetRectAngle(float rect_angle_) { rect_angle = rect_angle_; }
     void SetAttackRadiusIn(float attack_radius_in_) { attack_radius_in = attack_radius_in_; }
 
+    void SetAttackEffectSize(float attack_effect_size_) { attack_effect_size = attack_effect_size_; }
+    void SetDeathEffectSize(float death_effect_size_) { death_effect_size = death_effect_size_; }
+    void SetSetEffectSize(float set_effect_size_) { set_effect_size = set_effect_size_; }
 
 
 protected:

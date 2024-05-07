@@ -199,10 +199,10 @@ private:
         int material{ -1 };
         int has_tangent{ 0 };
         int skin{ -1 };
-        int pad;
+        float threshold = 1.0f;
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;
-
+    float threshold = 1.0f;
 
     // テクスチャ読み込み用
     //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> base_color;
@@ -242,6 +242,11 @@ public:
     void BlendAnimation(const std::vector<node>* nodes[2], float factor, std::vector<GltfModel::node>* node);
 
     size_t IndexOf(const std::vector<float>& timelines, float time, float& interpolation_factor, bool loopback);
+
+    float GetThreshold() { return threshold; }
+    float SetThreshold(float threshold_) {  threshold= threshold_; }
+
+    void DebugThreshold();
 
     // 試し
     int index_count = 0;

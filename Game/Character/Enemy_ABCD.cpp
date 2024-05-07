@@ -7,7 +7,8 @@
 Enemy_A::Enemy_A()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
+    is_gltf = false;
 
     attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
@@ -18,7 +19,7 @@ Enemy_A::Enemy_A()
     speed_power     = -1.0f;    // 速度
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Move, true);
+    PlayAnimation(Animation::Move, true);
 }
 
 void Enemy_A::DrawDebugPrimitive()
@@ -44,16 +45,16 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
         if (Fence::Instance().ApplyDamage(attack_power))
         {
             //TODO これはアニメーションがきたら要変更
-            model->PlayAnimation(Animation::Attack, false);
+            PlayAnimation(Animation::Attack, false);
             // タイマーをに
             timer = 0.0f;
         }
     }
 
     //TODO これはアニメーションがきたら要変更
-    if (!model->IsPlayAnimation())
+    if (!IsPlayAnimation())
     {
-        model->PlayAnimation(7, true);
+        PlayAnimation(7, true);
     }
 
     // 死亡時は死亡ステートへ切り替え
@@ -93,7 +94,8 @@ void Enemy_A::UpdateMoveState(float elapsed_time)
 Enemy_B::Enemy_B()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_02.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_02.fbx");
+    is_gltf = false;
 
     attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
@@ -109,7 +111,7 @@ Enemy_B::Enemy_B()
     health          = 10;       // HP
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Move, true);
+    PlayAnimation(Animation::Move, true);
 }
 
 void Enemy_B::DrawDebugGUI(int n)
@@ -129,16 +131,16 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
         if (Fence::Instance().ApplyDamage(attack_power))
         {
             //TODO これはアニメーションがきたら要変更
-            model->PlayAnimation(Animation::Attack, false);
+            PlayAnimation(Animation::Attack, false);
             // タイマーをに
             attack_timer = 0.0f;
         }
     }
 
     //TODO これはアニメーションがきたら要変更
-    if (!model->IsPlayAnimation())
+    if (!IsPlayAnimation())
     {
-        model->PlayAnimation(7, true);
+       PlayAnimation(7, true);
     }
 
     // 死亡時は死亡ステートへ切り替え
@@ -224,7 +226,7 @@ void Enemy_B::DrawDebugPrimitive()
 Enemy_C::Enemy_C()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_03.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_03.fbx");
 
     attack_power    = 1;         // 攻撃力　
     attack_interval = 3.0f;      // 攻撃間隔
@@ -237,7 +239,7 @@ Enemy_C::Enemy_C()
     health          = 10;        // HP
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Move, true);
+    PlayAnimation(Animation::Move, true);
 }
 
 void Enemy_C::DrawDebugPrimitive()
@@ -263,16 +265,16 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
         if (Fence::Instance().ApplyDamage(attack_power))
         {
             //TODO これはアニメーションがきたら要変更
-            model->PlayAnimation(Animation::Attack, false);
+            PlayAnimation(Animation::Attack, false);
             // タイマーをに
             timer = 0.0f;
         }
     }
 
     //TODO これはアニメーションがきたら要変更
-    if (!model->IsPlayAnimation())
+    if (!IsPlayAnimation())
     {
-        model->PlayAnimation(7, true);
+        PlayAnimation(7, true);
     }
 
     // 死亡時は死亡ステートへ切り替え
@@ -545,7 +547,7 @@ void Enemy_C::MoveToDestination(float elapsed_time, Move nextState)
 Enemy_D::Enemy_D()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_04.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_04.fbx");
 
     attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
@@ -563,7 +565,7 @@ Enemy_D::Enemy_D()
     health          = 10;       // HP
 
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Move, true);
+    PlayAnimation(Animation::Move, true);
 }
 
 void Enemy_D::DrawDebugPrimitive()
@@ -588,16 +590,16 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
         if (Fence::Instance().ApplyDamage(attack_power))
         {
             //TODO これはアニメーションがきたら要変更
-            model->PlayAnimation(Animation::Attack, false);
+            PlayAnimation(Animation::Attack, false);
             // タイマーを0に
             attack_timer = 0.0f;
         }
     }
 
     //TODO これはアニメーションがきたら要変更
-    if (!model->IsPlayAnimation())
+    if (!IsPlayAnimation())
     {
-        model->PlayAnimation(7, true);
+       PlayAnimation(7, true);
     }
 
     // 死亡時は死亡ステートへ切り替え

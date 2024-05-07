@@ -6,63 +6,111 @@ void UnitManager::Initialize()
 {
     //TODO ‚à‚Ë@ƒ†ƒjƒbƒgƒXƒe[ƒ^ƒX
     {
-        //Unit_A
-        unit_A.attack_interval = 1.0f;              // UŒ‚ŠÔŠu
-        unit_A.attack_power    = 3;                 // UŒ‚—Í
-        unit_A.attack_times    = 1;                 // UŒ‚‰ñ”
-        radius_A               = 1.5f;              // UŒ‚”¼Œa
+        //Chili
+        InitializeBasic(unit_status[UNIT_INDEX::Chili],
+            0.1f,// UŒ‚ŠÔŠu
+            3,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );
+        unit_status[UNIT_INDEX::Chili].attack_radius                  = 1.5f;                 // UŒ‚”¼Œa
 
-        //Unit_B
-        unit_B.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
-        unit_B.attack_power = 4;        // UŒ‚—Í
-        unit_B.attack_times = 1;        // UŒ‚‰ñ”
-        t_height_B = 1.59f;              // OŠpŒ`‚Ì‚‚³
-        t_base_B = 1.59f;                // OŠpŒ`‚Ì’ê•Ó’·
+        //OrangePumpkin
+        InitializeBasic(unit_status[UNIT_INDEX::OrangePumpkin],
+            0.1f,// UŒ‚ŠÔŠu
+            4,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );
+        unit_status[UNIT_INDEX::OrangePumpkin].t_height = 1.59f;             // OŠpŒ`‚Ì‚‚³
+        unit_status[UNIT_INDEX::OrangePumpkin].t_base = 1.59f;             // OŠpŒ`‚Ì’ê•Ó’·
 
-        //Unit_C
-        unit_C.attack_interval = 1.0f;  // UŒ‚ŠÔŠu
-        unit_C.attack_power = 4;        // UŒ‚—Í
-        unit_C.attack_times = 1;        // UŒ‚‰ñ”
-        t_height_C = 1.59f;              // OŠpŒ`‚Ì‚‚³
-        t_base_C = 1.59f;                // OŠpŒ`‚Ì’ê•Ó’·
+        //GreenPumpkin
+        InitializeBasic(unit_status[UNIT_INDEX::GreenPumpkin],
+            0.1f,// UŒ‚ŠÔŠu
+            4,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );
+        unit_status[UNIT_INDEX::GreenPumpkin].t_height = 1.59f;                // OŠpŒ`‚Ì‚‚³
+        unit_status[UNIT_INDEX::GreenPumpkin].t_base   = 1.59f;                // OŠpŒ`‚Ì’ê•Ó’·
 
-        //Unit_D
-        radius_D               = 3.0f;              // UŒ‚”¼Œa
-        timer_max_D            = 5.0f;              // oŒ»ŠÔ
-        streng_width_D         = 2;                 // UŒ‚—Í‚Ìã‚è•
+        //Shishito
+         InitializeBasic(unit_status[UNIT_INDEX::Shishito],
+             0.0f,// UŒ‚ŠÔŠu
+             0,   // UŒ‚—Í
+             0,   // UŒ‚‰ñ”
+             0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+             0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+             0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+         );
+         unit_status[UNIT_INDEX::Shishito].attack_radius   = 3.0f;                 // UŒ‚”¼Œa
+         unit_status[UNIT_INDEX::Shishito].timer_max              = 5.0f;                 // oŒ»ŠÔ
+         unit_status[UNIT_INDEX::Shishito].streng_width           = 2;                    // UŒ‚—Í‚Ìã‚è•
 
-        //Unit_E
-        unit_E.attack_interval = 1.0f;              // UŒ‚ŠÔŠu
-        unit_E.attack_power    = 1;                 // UŒ‚—Í
-        unit_E.attack_times    = 1;                 // UŒ‚‰ñ”
-        attack_width_E         = 0.9f;              // UŒ‚”ÍˆÍ‚Ì•
+        //Broccoli
+        InitializeBasic(unit_status[UNIT_INDEX::Broccoli],
+            0.1f,// UŒ‚ŠÔŠu
+            1,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );
+        unit_status[UNIT_INDEX::Broccoli].attack_width            = 0.9f;                 // UŒ‚”ÍˆÍ‚Ì•
 
-        //Unit_F
-        unit_F.attack_interval = 1.0f;              // UŒ‚ŠÔŠu
-        unit_F.attack_power    = 1;                 // UŒ‚—Í
-        unit_F.attack_times    = 1;                 // UŒ‚‰ñ”
-        attack_width_F         = 0.9f;              // UŒ‚”ÍˆÍ‚Ì•
+        //Cauliflower
+        InitializeBasic(unit_status[UNIT_INDEX::Cauliflower],
+            0.1f,// UŒ‚ŠÔŠu
+            1,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );
+        unit_status[UNIT_INDEX::Cauliflower].attack_width = 0.9f;                 // UŒ‚”ÍˆÍ‚Ì•
 
         //Unit_H
-        unit_H.attack_interval = 1.0f;              // UŒ‚ŠÔŠu
-        unit_H.attack_power    = 1;                 // UŒ‚—Í
-        unit_H.attack_times    = 1;                 // UŒ‚‰ñ”
-        attack_width_H         = {1.0f,20.0f};      // UŒ‚”ÍˆÍ‚Ì•
-        rect_angle_H           = 50.0f;             // UŒ‚”ÍˆÍ‚Ì•
+        InitializeBasic(unit_status[UNIT_INDEX::H],
+            0.1f,// UŒ‚ŠÔŠu
+            1,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );             
+        unit_status[UNIT_INDEX::H].attack_width_2            = {1.0f,20.0f};         // UŒ‚”ÍˆÍ‚Ì•
+        unit_status[UNIT_INDEX::H].rect_angle              = 50.0f;                // UŒ‚”ÍˆÍ‚Ì•
 
         //Unit_I
-        unit_I.attack_interval = 1.0f;              // UŒ‚ŠÔŠu
-        unit_I.attack_power    = 1;                 // UŒ‚—Í
-        unit_I.attack_times    = 1;                 // UŒ‚‰ñ”
-        attack_width_I         = { 1.0f,20.0f };    // UŒ‚”ÍˆÍ‚Ì•
-        rect_angle_I           = -50.0f;            // UŒ‚”ÍˆÍ‚Ì•
+        InitializeBasic(unit_status[UNIT_INDEX::I],
+            0.1f,// UŒ‚ŠÔŠu
+            1,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );
+        unit_status[UNIT_INDEX::I].attack_width_2 = { 1.0f,20.0f };         // UŒ‚”ÍˆÍ‚Ì•
+        unit_status[UNIT_INDEX::I].rect_angle = 50.0f;                // UŒ‚”ÍˆÍ‚Ì•
 
         //Unit_J
-        unit_J.attack_interval = 1.0f;              // UŒ‚ŠÔŠu
-        unit_J.attack_power    = 1;                 // UŒ‚—Í
-        unit_J.attack_times    = 1;                 // UŒ‚‰ñ”
-        radius_in_J            =1.0f;               // ”¼Œa
-        radius_out_J           =2.0f;               // ”¼Œa
+        InitializeBasic(unit_status[UNIT_INDEX::J],
+            0.1f,// UŒ‚ŠÔŠu
+            1,   // UŒ‚—Í
+            1,   // UŒ‚‰ñ”
+            0.5f,// UŒ‚ƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f,// €–SƒGƒtƒFƒNƒgƒTƒCƒY
+            0.5f // İ’uƒGƒtƒFƒNƒgƒTƒCƒY
+        );               
+        unit_status[UNIT_INDEX::J].radius_in =1.0f;                  // ”¼Œa
+        unit_status[UNIT_INDEX::J].attack_radius =2.0f;                  // ”¼Œa
 
     }
 }
@@ -101,7 +149,7 @@ void UnitManager::Update(float elapsedTime)
 }
 
 // •`‰æˆ—
-void UnitManager::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
+void UnitManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
     DrawDebugPrimitive();
     for (Unit* unit : units)
@@ -141,141 +189,194 @@ void UnitManager::Remove(Unit* unit)
 void UnitManager::DebugImGui()
 {
     ImGui::Begin(u8"ƒ†ƒjƒbƒg");
-    if (ImGui::TreeNode("unit1"))
+    if (ImGui::TreeNode("chili"))
     {
-        UnitImGui(unit_A);
-        ImGui::SliderFloat(u8"UŒ‚”¼Œa", &radius_A, 0.0f, 5.0f);
+        UnitImGui(unit_status[UNIT_INDEX::Chili]);
+        ImGui::SliderFloat(u8"UŒ‚”¼Œa", &unit_status[UNIT_INDEX::Chili].attack_radius, 0.0f, 5.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit2"))
+    if (ImGui::TreeNode("shishito"))
     {
-        UnitImGui(unit_B);
-        ImGui::SliderFloat(u8"OŠpŒ`‚Ì‚‚³", &t_height_B, 0.0f, 5.0f);
-        ImGui::SliderFloat(u8"OŠpŒ`‚Ì’ê•Ó’·", &t_base_B, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"UŒ‚”¼Œa", &unit_status[UNIT_INDEX::Shishito].attack_radius, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"oŒ»ŠÔ", &unit_status[UNIT_INDEX::Shishito].timer_max, 0.0f, 10.0f);
+        ImGui::SliderInt(u8"ƒoƒt‚·‚éUŒ‚—Íiƒvƒ‰ƒX‚Ì•ªj", &unit_status[UNIT_INDEX::Shishito].streng_width, 1, 5);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit3"))
+    if (ImGui::TreeNode("green_pumpkin"))
     {
-        UnitImGui(unit_C);
-        ImGui::SliderFloat(u8"OŠpŒ`‚Ì‚‚³", &t_height_C, 0.0f, 5.0f);
-        ImGui::SliderFloat(u8"OŠpŒ`‚Ì’ê•Ó’·", &t_base_C, 0.0f, 5.0f);
+        UnitImGui(unit_status[UNIT_INDEX::GreenPumpkin]);
+        ImGui::SliderFloat(u8"OŠpŒ`‚Ì‚‚³", &unit_status[UNIT_INDEX::GreenPumpkin].t_height, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"OŠpŒ`‚Ì’ê•Ó’·", &unit_status[UNIT_INDEX::GreenPumpkin].t_base, 0.0f, 5.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit4"))
+    if (ImGui::TreeNode("orange_pumpkin"))
     {
-        ImGui::SliderFloat(u8"UŒ‚”¼Œa", &radius_D, 0.0f, 5.0f);
-        ImGui::SliderFloat(u8"oŒ»ŠÔ", &timer_max_D, 0.0f, 10.0f);
-        ImGui::SliderInt(u8"ƒoƒt‚·‚éUŒ‚—Íiƒvƒ‰ƒX‚Ì•ªj", &streng_width_D, 1, 5);
+        UnitImGui(unit_status[UNIT_INDEX::OrangePumpkin]);
+        ImGui::SliderFloat(u8"OŠpŒ`‚Ì‚‚³", &unit_status[UNIT_INDEX::OrangePumpkin].t_height, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"OŠpŒ`‚Ì’ê•Ó’·", &unit_status[UNIT_INDEX::OrangePumpkin].t_base, 0.0f, 5.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit5"))
+    if (ImGui::TreeNode("Broccoli"))
     {
-        UnitImGui(unit_E);
-        ImGui::SliderFloat(u8"UŒ‚•", &attack_width_E, 0.1f, 10.0f);
+        UnitImGui(unit_status[UNIT_INDEX::Broccoli]);
+        ImGui::SliderFloat(u8"UŒ‚•", &unit_status[UNIT_INDEX::Broccoli].attack_width, 0.1f, 10.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit6"))
+    if (ImGui::TreeNode("Cauliflower"))
     {
-        UnitImGui(unit_F);
-        ImGui::SliderFloat(u8"UŒ‚•", &attack_width_F, 0.1f, 10.0f);
+        UnitImGui(unit_status[UNIT_INDEX::Cauliflower]);
+        ImGui::SliderFloat(u8"UŒ‚•", &unit_status[UNIT_INDEX::Cauliflower].attack_width, 0.1f, 10.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit7"))
+    if (ImGui::TreeNode("Unit_H"))
     {
-        UnitImGui(unit_H);
-        ImGui::SliderFloat2(u8"UŒ‚•", &attack_width_H.x, 0.1f, 20.0f);
-        ImGui::SliderFloat(u8"UŒ‚Šp“x", &rect_angle_H, 0.0f, 360.0f);
+        UnitImGui(unit_status[UNIT_INDEX::H]);
+        ImGui::SliderFloat2(u8"UŒ‚•", &unit_status[UNIT_INDEX::H].attack_width_2.x, 0.1f, 20.0f);
+        ImGui::SliderFloat(u8"UŒ‚Šp“x", &unit_status[UNIT_INDEX::H].rect_angle, 0.0f, 360.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit8"))
+    if (ImGui::TreeNode("Unit_I"))
     {
-        UnitImGui(unit_I);
-        ImGui::SliderFloat2(u8"UŒ‚•", &attack_width_I.x, 0.1f, 20.0f);
-        ImGui::SliderFloat(u8"UŒ‚Šp“x", &rect_angle_I, 0.0f, 360.0f);
+        UnitImGui(unit_status[UNIT_INDEX::I]);
+        ImGui::SliderFloat2(u8"UŒ‚•", &unit_status[UNIT_INDEX::I].attack_width_2.x, 0.1f, 20.0f);
+        ImGui::SliderFloat(u8"UŒ‚Šp“x", &unit_status[UNIT_INDEX::I].rect_angle, 0.0f, 360.0f);
         ImGui::TreePop();
     }
-    if (ImGui::TreeNode("unit9"))
+    if (ImGui::TreeNode("Unit_J"))
     {
-        UnitImGui(unit_J);
-        ImGui::SliderFloat(u8"ƒh[ƒiƒc’†”¼Œa", &radius_in_J, 0.0f, 5.0f);
-        ImGui::SliderFloat(u8"ƒh[ƒiƒcŠO”¼Œa", &radius_out_J, 0.0f, 5.0f);
+        UnitImGui(unit_status[UNIT_INDEX::J]);
+        ImGui::SliderFloat(u8"ƒh[ƒiƒc’†”¼Œa", &unit_status[UNIT_INDEX::I].radius_in, 0.0f, 5.0f);
+        ImGui::SliderFloat(u8"ƒh[ƒiƒcŠO”¼Œa", &unit_status[UNIT_INDEX::I].attack_radius, 0.0f, 5.0f);
         ImGui::TreePop();
     }
     ImGui::End();
 }
 
-void UnitManager::SetUpUnit_A(Unit* unit)
+void UnitManager::SetUpUnit(Unit* unit, int unit_index)
 {
-    unit->SetAttackTimes(unit_A.attack_times);
-    unit->SetAttackPower(unit_A.attack_power);
-    unit->SetAttackInterval(unit_A.attack_interval);
-    unit->SetAttackRadius(radius_A);
+    unit->SetAttackTimes(unit_status[unit_index].basic.attack_times);
+    unit->SetAttackPower(unit_status[unit_index].basic.attack_power);
+    unit->SetAttackInterval(unit_status[unit_index].basic.attack_interval);
+    unit->SetAttackEffectSize(unit_status[unit_index].basic.attack_effect_size);
+    unit->SetDeathEffectSize(unit_status[unit_index].basic.death_effect_size);
+    unit->SetSetEffectSize(unit_status[unit_index].basic.set_effect_size);
+    unit->SetAttackInterval(unit_status[unit_index].basic.attack_interval);
+    unit->SetAttackInterval(unit_status[unit_index].basic.attack_interval);
+    unit->SetAttackRadius(unit_status[unit_index].attack_radius);
+    unit->SetTimerMax(unit_status[unit_index].timer_max);
+    unit->SetStrengWidth(unit_status[unit_index].streng_width);
+    unit->SetTHeight(unit_status[unit_index].t_height);
+    unit->SetTBase(unit_status[unit_index].t_base);
+    unit->SetAttackWidth(unit_status[unit_index].attack_width);
+    unit->SetAttackWidth(unit_status[unit_index].attack_width_2);
+    unit->SetRectAngle(unit_status[unit_index].rect_angle);
+    unit->SetAttackRadiusIn(unit_status[unit_index].radius_in);
 }
 
-void UnitManager::SetUpUnit_B(Unit* unit)
-{
-    unit->SetAttackTimes(unit_B.attack_times);
-    unit->SetAttackPower(unit_B.attack_power);
-    unit->SetAttackInterval(unit_B.attack_interval);
-    unit->SetTHeight(t_height_B);
-    unit->SetTBase(t_base_B);
-}
-
-void UnitManager::SetUpUnit_C(Unit* unit)
-{
-    unit->SetAttackTimes(unit_C.attack_times);
-    unit->SetAttackPower(unit_C.attack_power);
-    unit->SetAttackInterval(unit_C.attack_interval);
-    unit->SetTHeight(t_height_C);
-    unit->SetTBase(t_base_C);
-}
-
-void UnitManager::SetUpUnit_D(Unit* unit)
-{
-    unit->SetAttackRadius(radius_D);
-    unit->SetTimerMax(timer_max_D);
-    unit->SetStrengWidth(streng_width_D);
-}
-
-void UnitManager::SetUpUnit_E(Unit* unit)
-{
-    unit->SetAttackTimes(unit_E.attack_times);
-    unit->SetAttackPower(unit_E.attack_power);
-    unit->SetAttackInterval(unit_E.attack_interval);
-    unit->SetAttackWidth(attack_width_E);
-}
-
-void UnitManager::SetUpUnit_F(Unit* unit)
-{
-    unit->SetAttackTimes(unit_F.attack_times);
-    unit->SetAttackPower(unit_F.attack_power);
-    unit->SetAttackInterval(unit_F.attack_interval);
-    unit->SetAttackWidth(attack_width_F);
-}
-
-void UnitManager::SetUpUnit_H(Unit* unit)
-{
-    unit->SetAttackTimes(unit_H.attack_times);
-    unit->SetAttackPower(unit_H.attack_power);
-    unit->SetAttackInterval(unit_H.attack_interval);
-    unit->SetAttackWidth(attack_width_H);
-    unit->SetRectAngle(rect_angle_H);
-}
-
-void UnitManager::SetUpUnit_I(Unit* unit)
-{
-    unit->SetAttackTimes(unit_I.attack_times);
-    unit->SetAttackPower(unit_I.attack_power);
-    unit->SetAttackInterval(unit_I.attack_interval);
-    unit->SetAttackWidth(attack_width_I);
-    unit->SetRectAngle(rect_angle_I);
-}
-
-void UnitManager::SetUpUnit_J(Unit* unit)
-{
-    unit->SetAttackTimes(unit_J.attack_times);
-    unit->SetAttackPower(unit_J.attack_power);
-    unit->SetAttackInterval(unit_J.attack_interval);
-    unit->SetAttackRadius(radius_in_J);
-    unit->SetAttackRadius(radius_out_J);
-}
+//
+//void UnitManager::SetUpUnit_A(Unit* unit)
+//{
+//    unit->SetAttackTimes(chili.attack_times);
+//    unit->SetAttackPower(chili.attack_power);
+//    unit->SetAttackInterval(chili.attack_interval);
+//    unit->SetAttackEffectSize(chili.attack_effect_size);
+//    unit->SetDeathEffectSize(chili.death_effect_size);
+//    unit->SetSetEffectSize(chili.set_effect_size);
+//    unit->SetAttackInterval(chili.attack_interval);
+//    unit->SetAttackInterval(chili.attack_interval);
+//    unit->SetAttackRadius(radius_chili);
+//    unit->SetTimerMax(timer_max_shishito);
+//    unit->SetStrengWidth(streng_width_shishito);
+//}
+//
+//void UnitManager::SetUpUnit_B(Unit* unit)
+//{
+//    unit->SetAttackTimes(green_pumpkin.attack_times);
+//    unit->SetAttackPower(green_pumpkin.attack_power);
+//    unit->SetAttackInterval(green_pumpkin.attack_interval);
+//    unit->SetAttackEffectSize(green_pumpkin.attack_effect_size);
+//    unit->SetDeathEffectSize(green_pumpkin.death_effect_size);
+//    unit->SetSetEffectSize(green_pumpkin.set_effect_size);
+//    unit->SetTHeight(t_height_B);
+//    unit->SetTBase(t_base_B);
+//}
+//
+//void UnitManager::SetUpUnit_C(Unit* unit)
+//{
+//    unit->SetAttackTimes(orange_pumpkin.attack_times);
+//    unit->SetAttackPower(orange_pumpkin.attack_power);
+//    unit->SetAttackInterval(orange_pumpkin.attack_interval);
+//    unit->SetAttackEffectSize(orange_pumpkin.attack_effect_size);
+//    unit->SetDeathEffectSize(orange_pumpkin.death_effect_size);
+//    unit->SetSetEffectSize(orange_pumpkin.set_effect_size);
+//    unit->SetTHeight(t_height_C);
+//    unit->SetTBase(t_base_C);
+//}
+//
+//void UnitManager::SetUpUnit_D(Unit* unit)
+//{
+//    unit->SetAttackRadius(radius_shishito);
+//    unit->SetTimerMax(timer_max_shishito);
+//    unit->SetStrengWidth(streng_width_shishito);
+//    unit->SetAttackEffectSize(attack_effect_size_shishito);
+//    unit->SetDeathEffectSize(death_effect_size_shishito);
+//    unit->SetSetEffectSize(set_effect_size_shishito);
+//}
+//
+//void UnitManager::SetUpUnit_E(Unit* unit)
+//{
+//    unit->SetAttackTimes(unit_E.attack_times);
+//    unit->SetAttackPower(unit_E.attack_power);
+//    unit->SetAttackInterval(unit_E.attack_interval);
+//    unit->SetAttackEffectSize(unit_E.attack_effect_size);
+//    unit->SetDeathEffectSize(unit_E.death_effect_size);
+//    unit->SetSetEffectSize(unit_E.set_effect_size);
+//    unit->SetAttackWidth(attack_width_E);
+//}
+//
+//void UnitManager::SetUpUnit_F(Unit* unit)
+//{
+//    unit->SetAttackTimes(unit_F.attack_times);
+//    unit->SetAttackPower(unit_F.attack_power);
+//    unit->SetAttackInterval(unit_F.attack_interval);
+//    unit->SetAttackEffectSize(unit_F.attack_effect_size);
+//    unit->SetDeathEffectSize(unit_F.death_effect_size);
+//    unit->SetSetEffectSize(unit_F.set_effect_size);
+//    unit->SetAttackWidth(attack_width_F);
+//}
+//
+//void UnitManager::SetUpUnit_H(Unit* unit)
+//{
+//    unit->SetAttackTimes(unit_H.attack_times);
+//    unit->SetAttackPower(unit_H.attack_power);
+//    unit->SetAttackInterval(unit_H.attack_interval);
+//    unit->SetAttackEffectSize(unit_H.attack_effect_size);
+//    unit->SetDeathEffectSize(unit_H.death_effect_size);
+//    unit->SetSetEffectSize(unit_H.set_effect_size);
+//    unit->SetAttackWidth(attack_width_H);
+//    unit->SetRectAngle(rect_angle_H);
+//}
+//
+//void UnitManager::SetUpUnit_I(Unit* unit)
+//{
+//    unit->SetAttackTimes(unit_I.attack_times);
+//    unit->SetAttackPower(unit_I.attack_power);
+//    unit->SetAttackInterval(unit_I.attack_interval);
+//    unit->SetAttackEffectSize(unit_I.attack_effect_size);
+//    unit->SetDeathEffectSize(unit_I.death_effect_size);
+//    unit->SetSetEffectSize(unit_I.set_effect_size);
+//    unit->SetAttackWidth(attack_width_I);
+//    unit->SetRectAngle(rect_angle_I);
+//}
+//
+//void UnitManager::SetUpUnit_J(Unit* unit)
+//{
+//    unit->SetAttackTimes(unit_J.attack_times);
+//    unit->SetAttackPower(unit_J.attack_power);
+//    unit->SetAttackInterval(unit_J.attack_interval);
+//    unit->SetAttackEffectSize(unit_J.attack_effect_size);
+//    unit->SetDeathEffectSize(unit_J.death_effect_size);
+//    unit->SetSetEffectSize(unit_J.set_effect_size);
+//    unit->SetAttackRadius(radius_in_J);
+//    unit->SetAttackRadius(radius_out_J);
+//}

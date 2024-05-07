@@ -73,7 +73,7 @@ private:
     bool        animation_loop_flag = true;    // アニメーションをループ再生するか
     bool        animation_end_flag = false;    // アニメーションが終了したか
 
-    bool        blend_animation_loop_flag = true;    // アニメーションをループ再生するか
+    bool        blend_animation_loop_flag = false;    // アニメーションをループ再生するか
     int blend_current_animation_index;
     float blend_current_animation_seconds;
     std::vector<GltfModel::node> blend_animated_nodes;

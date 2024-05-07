@@ -29,7 +29,7 @@ void Unit::Update(float elapsed_time)
     UpdateTransform();
 
     // モデルアニメーション更新
-    model->UpdateAnimation(elapsed_time);
+    UpdateAnimation(elapsed_time);
 
     DrawDebugPrimitive();
 }
@@ -42,14 +42,14 @@ int Unit::ReturnDamage()
 
 void Unit::Destroy()
 {
-    if (!model->IsPlayAnimation())UnitManager::Instance().Remove(this);
+    if (!IsPlayAnimation())UnitManager::Instance().Remove(this);
 }
 
 void Unit::TransitionDeathState()
 {
     death = true;
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Out, false);
+    PlayAnimation(Animation::Out, false);
     // エフェクトの再生
     death_effect->Play(position, death_effect_size);
     // ステート切り替え
@@ -60,13 +60,16 @@ void Unit::UpdateDeathState(float elapsed_time)
 {
     radius = 0.0f;
     attack_collision_range = 0.0f;
+
+
+
     Destroy();
 }
 
 void Unit::TransitionIdleState()
 {
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Idle, true);
+   PlayAnimation(Animation::Idle, true);
     // ステート切り替え
     state = State::Idle;
 }

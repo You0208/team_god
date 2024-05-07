@@ -50,6 +50,8 @@ public:
     // •`‰æˆ—
     void Render(float elapsedTime)override;
 
+    // ŒõŒ¹‚Ì‰Šú‰»
+    void InitializeLight()override;
 private:
     // Model test
     std::unique_ptr<FbxModelManager> test_model;
@@ -61,6 +63,8 @@ private:
     //DemoPlayer
     DemoPlayer* player = nullptr;
     DemoEnemy* enemy = nullptr;
+
+
 
     float second;
 

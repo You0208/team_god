@@ -53,6 +53,8 @@ void GameScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
+
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
 	}
@@ -104,6 +106,7 @@ void GameScene::Initialize()
 		UnitManager::Instance().Initialize();
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
+	
 	}
 
 	// デバッグ
@@ -213,7 +216,6 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// デバッグ
 	{
-		//rect = CalcRotateRect(rect.center, rect.width, angle);
 	}
 
 	// Imgui
@@ -281,7 +283,7 @@ void GameScene::Render(float elapsedTime)
 			//ステージ描画
 			StageManager::Instance().Render(1.0f, fbx_gbuffer_ps.GetAddressOf());
 			// ユニット描画
-			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
+			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			// 種描画
@@ -293,10 +295,11 @@ void GameScene::Render(float elapsedTime)
 			player->Render(scale, chara_ps.GetAddressOf());
 			// 柵描画
 			fence->Render(scale, chara_ps.GetAddressOf());
-			//ステージ描画
+
+			// ステージ描画
 			StageManager::Instance().Render(1.0f, chara_ps.GetAddressOf());
 			// ユニット描画
-			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			UnitManager::Instance().Render(1.0f, gltf_ps.Get());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
 			// 種描画
@@ -360,4 +363,10 @@ void GameScene::DebugImgui()
 	BaseScene::DebugImgui();
 	Camera::Instance().DrawDebug();
 
+}
+
+void GameScene::InitializeLight()
+{
+	ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
+	ZeroMemory(&spot_light[4], sizeof(spotLights) * 4);
 }

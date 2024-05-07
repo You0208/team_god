@@ -4,6 +4,7 @@
 #include "SeedManager.h"
 #include "UnitManager.h"
 #include "Game/Stage/StageManager.h"
+#include "Game/Character/UnitManager.h"
 #include "./Lemur/Scene/SceneManager.h"
 
 static Player* instance = nullptr;
@@ -13,14 +14,14 @@ Player::Player()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // モデルの初期化
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\scarecrow_Re.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\scarecrow_Re.fbx");
 
     // 左右端初期化
     limit = { StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().left_up.x + 0.5f,
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
     // ユニットカテゴリーの初期化
-    unit_category = UnitCategory::A;
+    unit_category = UnitManager::UNIT_INDEX::Chili;
 
     //TODO もね　ゲーム画面
     {
@@ -35,7 +36,7 @@ Player::Player()
     sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
     position.z = -sub_pos_z;
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Idle, true);
+    PlayAnimation(Animation::Idle, true);
 }
 
 Player::~Player()
@@ -51,7 +52,7 @@ void Player::Update(float elapsedTime)
         UpdateVelocity(elapsedTime);
 
         // モデルアニメーション更新
-        model->UpdateAnimation(elapsedTime);
+        UpdateAnimation(elapsedTime);
 
         // 行列更新処理
         UpdateTransform();
@@ -113,12 +114,12 @@ void Player::Flick(float elapsedTime)
         // 引っ張りモーションへ
         // 横移動できないように
         velocity.x = 0;
-        model->PlayAnimation(Animation::Pull, false);
+        PlayAnimation(Animation::Pull, false);
 
         if (flip_timer > 0.5f)
         {
             //// 投げアニメーションへ
-            model->PlayAnimation(Animation::Throw, false);
+            PlayAnimation(Animation::Throw, false);
             //// 横移動できないように
             //velocity.x = 0;
 
@@ -141,7 +142,7 @@ void Player::Flick(float elapsedTime)
         if (flip_timer > 0)
         {
             // 投げアニメーションへ
-            model->PlayAnimation(Animation::Throw, false);
+            PlayAnimation(Animation::Throw, false);
             // 横移動できないように
             velocity.x = 0;
 
@@ -245,7 +246,7 @@ void Player::ChangeCategory()
 void Player::InputProcess()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-    if ((model->GetCurrentAnimationIndex() == Animation::Throw|| model->GetCurrentAnimationIndex() == Animation::Pull) && model->IsPlayAnimation())
+    if ((GetCurrentAnimationIndex() == Animation::Throw|| GetCurrentAnimationIndex() == Animation::Pull) && IsPlayAnimation())
     {
         velocity.x = 0;
     }
@@ -253,9 +254,9 @@ void Player::InputProcess()
     {
         // 左スティックX成分をスピードに変換
         velocity.x = gamePad.GetAxisLX() * moveSpeed;
-        if (velocity.x < 0)  model->PlayAnimation(Animation::Left, false);
-        else if (velocity.x > 0)  model->PlayAnimation(Animation::Right, false);
-        else if (velocity.x == 0)  model->PlayAnimation(Animation::Idle, false);
+        if (velocity.x < 0)  PlayAnimation(Animation::Left, false);
+        else if (velocity.x > 0)  PlayAnimation(Animation::Right, false);
+        else if (velocity.x == 0)  PlayAnimation(Animation::Idle, false);
     }
 }
 

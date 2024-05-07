@@ -1,11 +1,12 @@
 #pragma once
 #include "Unit.h"
 
-class Unit_A :public Unit
+// 唐辛子
+class Chili :public Unit
 {
 public:
-    Unit_A();
-    ~Unit_A()override {};
+    Chili();
+    ~Chili()override {};
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
@@ -24,16 +25,15 @@ private:
     bool first_attack = true;
 };
 
-class Unit_B :public Unit
+class Shishito :public Unit
 {
 public:
-    Unit_B();
-    ~Unit_B()override {};
+    Shishito();
+    ~Shishito()override {};
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
 
-    void Update(float elapsed_time)override;
 private:
     // 待機ステート更新処理
     void UpdateIdleState(float elapsed_time)override;
@@ -45,11 +45,11 @@ private:
     void DrawDebugGUI(int n)override;
 };
 
-class Unit_C :public Unit
+class OrangePumpkin :public Unit
 {
 public:
-    Unit_C();
-    ~Unit_C()override {};
+    OrangePumpkin();
+    ~OrangePumpkin()override {};
 
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;

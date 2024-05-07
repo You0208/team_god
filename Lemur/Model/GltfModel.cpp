@@ -13,6 +13,8 @@
 #include <stb_image.h>
 #include <string.h> 
 
+#include "./ImGuiCtrl.h"
+
 bool null_load_image_data(tinygltf::Image*, const int, std::string*, std::string*,
     int, int, const unsigned char*, int, void*)
 {
@@ -704,6 +706,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
                primitive_data.material = primitive.material;
                primitive_data.has_tangent = primitive.vertex_buffer_views.at("TANGENT").buffer != NULL;
                primitive_data.skin = node.skin;
+               primitive_data.threshold = threshold;
                XMStoreFloat4x4(&primitive_data.world, XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));
 
 
@@ -850,6 +853,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
                primitive_data.material = primitive.material;
                primitive_data.has_tangent = primitive.vertex_buffer_views.at("TANGENT").buffer != NULL;
                primitive_data.skin = node.skin;
+               primitive_data.threshold = threshold;
                XMStoreFloat4x4(&primitive_data.world, XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));
 
                // 定数バッファに primitive_data の内容をコピー
@@ -995,6 +999,7 @@ void GltfModel::Render(ID3D11DeviceContext* immediate_context, const DirectX::XM
                primitive_data.material = primitive.material;
                primitive_data.has_tangent = primitive.vertex_buffer_views.at("TANGENT").buffer != NULL;
                primitive_data.skin = node.skin;
+               primitive_data.threshold = threshold;
                XMStoreFloat4x4(&primitive_data.world, XMLoadFloat4x4(&node.global_transform) * XMLoadFloat4x4(&world));
 
                // 定数バッファに primitive_data の内容をコピー
@@ -1376,6 +1381,13 @@ void GltfModel::MaterialForGPU(ID3D11Device* device)
     hr = device->CreateShaderResourceView(material_buffer.Get(),
         &shader_resource_view_desc, material_resource_view.GetAddressOf());
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+}
+
+void GltfModel::DebugThreshold()
+{
+    ImGui::Begin("mask");
+    ImGui::SliderFloat("threshold", &threshold, 0.0f, 1.0f);
+    ImGui::End();
 }
 
 void GltfModel::BlendAnimation(const std::vector<node>* nodes_[2], float factor, std::vector<GltfModel::node>* node_)

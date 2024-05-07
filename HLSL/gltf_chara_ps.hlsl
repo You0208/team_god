@@ -156,13 +156,14 @@ float4 main(VS_OUT pin) : SV_TARGET
 //-----------------------------------------
 //　ディゾルブ
 //----------------------------------------- 
-    //{
-    //    float dissolve = step(mask, threshold);
-    //    color.a *= dissolve;
-    //    // アルファが0以下ならそもそも描画しないようにする
-    //    clip(color.a - 0.01f);
-    //}
-    
+    {
+        float dissolve = step(mask, threshold);
+        basecolor_factor.a *= dissolve;
+        // アルファが0以下ならそもそも描画しないようにする
+        clip(basecolor_factor.a - 0.01f);
+        
+        //return float4(threshold, 0, 0, 1);
+    }
     
     finalLig.rgb = pow(finalLig.rgb, 1.0f / GAMMA);
     return float4(finalLig, basecolor_factor.a);

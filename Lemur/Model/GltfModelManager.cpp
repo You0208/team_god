@@ -200,8 +200,6 @@ void GltfModelManager::UpdateAnimation(const float& elapsed_time)
 
 
         gltf_model->Animate(current_animation_index, current_animation_seconds, animated_nodes, animation_loop_flag);
-
-
     }
 }
 #else
@@ -220,7 +218,9 @@ bool GltfModelManager::IsPlayAnimation() const
     if (current_animation_index < 0) return false;
 
     const int animationIndexEnd = static_cast<int>(gltf_model->animations.size());
-    if (current_animation_index >= animationIndexEnd) return false;
-
+    if (current_animation_index >= animationIndexEnd)
+    {
+        return false;
+    }
     return true;
 }

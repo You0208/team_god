@@ -11,7 +11,7 @@ void Enemy::TransitionDeathState()
     // 速度を０に
     velocity.x = velocity.y = velocity.z = 0.0f;
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Out, false);
+    PlayAnimation(Animation::Out, false);
     // ステート切り替え
     state = State::Death;
 }
@@ -19,7 +19,7 @@ void Enemy::TransitionDeathState()
 void Enemy::UpdateDeathState(float elapsed_time)
 {
    // radius = 0.0f;
-    if(!model->IsPlayAnimation())EnemyManager::Instance().Remove(this);
+    if(!IsPlayAnimation())EnemyManager::Instance().Remove(this);
 }
 
 void Enemy::TransitionAttackState()
@@ -27,7 +27,7 @@ void Enemy::TransitionAttackState()
     // 速度を０に
     velocity.x = velocity.y = velocity.z = 0.0f;
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Attack, false);
+    PlayAnimation(Animation::Attack, false);
     // ステート切り替え
     state = State::Attack;
 }
@@ -58,7 +58,7 @@ void Enemy::Update(float elapsed_time)
     UpdateTransform();
 
     // モデルアニメーション更新
-    model->UpdateAnimation(elapsed_time);
+    UpdateAnimation(elapsed_time);
 
     DrawDebugPrimitive();
 }

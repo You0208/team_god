@@ -101,7 +101,7 @@ cbuffer HEMISPHERE_LIGHT_CONSTANT_BUFFER : register(b7)
 cbuffer SCENE_CONSTANT_BUFFER : register(b1)
 {
     row_major float4x4 view_projection;
-    //float4 light_direction;
+
     float4 camera_position;
     row_major float4x4 inverse_projection;
     float time;
@@ -110,7 +110,10 @@ cbuffer SCENE_CONSTANT_BUFFER : register(b1)
     // SHADOW
     row_major float4x4 light_view_projection;
     float shadow_depth_bias;
-    float pads2[3];
+    float3 pads2;
+    
+    row_major float4x4 view_matrix;
+    row_major float4x4 projection_matrix;
 };
 
 ////TODO GLTF用見直し
@@ -120,7 +123,7 @@ cbuffer PRIMITIVE_CONSTANT_BUFFER : register(b0)
     int material;
     bool has_tangent;
     int skin;
-    int pad3;
+    float threshold;
 };
 
 // ライトデータにアクセスするための定数バッファーを用意する
