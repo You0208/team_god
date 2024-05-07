@@ -1241,6 +1241,7 @@ size_t GltfModel::IndexOf(const std::vector<float>& timelines, float time, float
         {
             // ループしない場合は最後のキーフレームの直前の位置を返す
             interpolation_factor = 1.0f;
+            end_flag = true;
             return keyframe_count - 2;  // 最後のキーフレームの直前のインデックスを返す
         }
     }

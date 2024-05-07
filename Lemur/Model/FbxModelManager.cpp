@@ -202,7 +202,10 @@ bool FbxModelManager::IsPlayAnimation() const
     if (current_animation_index < 0) return false;
 
     const int animationIndexEnd = static_cast<int>(fbx_model->animation_clips.size());
-    if (current_animation_index >= animationIndexEnd) return false;
+    if (current_animation_index >= animationIndexEnd)
+    {
+        return false;
+    }
 
     return true;
 }

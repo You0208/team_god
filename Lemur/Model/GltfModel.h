@@ -250,4 +250,5 @@ public:
 
     // ŽŽ‚µ
     int index_count = 0;
+    bool end_flag = false;
 };

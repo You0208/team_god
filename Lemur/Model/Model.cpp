@@ -345,6 +345,30 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         char filename[256];
         ::_makepath_s(filename, 256, nullptr, dirname, iterator->second.texture_filenames[0].c_str(), nullptr);
 
+        //// ディレクトリパス取得
+        //char drive[32], dir[256], dirname[256], fname[256];
+        //::_splitpath_s(fbx_filename, drive, sizeof(drive), dir, sizeof(dir), fname, sizeof(fname), nullptr, 0);
+
+        //// ファイル階層を追加
+        //::_makepath_s(dirname, sizeof(dirname), drive, dir, fname, nullptr);
+
+        //// マテリアルの名前
+        //char tname[256] = {};
+        //// std::string（gltf_material.name）をchar配列（tname）にコピー
+        //std::copy(iterator->second.texture_filenames[0].begin(), iterator->second.texture_filenames[0].end(), tname);
+
+        //// 末尾文字を追加
+        //::strcat_s(tname, sizeof(tname), ".png");
+
+        //// 相対パスの解決
+        //char filename[256];
+        //::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
+
+
+        //// ベースカラー
+        //char filename_base[256] = {};
+        //strcpy_s(filename_base, filename);
+
         //TODO materil実験
         LoadTexture(device, filename, "_MS", true, iterator->second.metalness_smoothness.GetAddressOf(), 0x00FFFF00);
         LoadTexture(device, filename, "_M", true, iterator->second.metalness.GetAddressOf(), 0x00FFFF00);

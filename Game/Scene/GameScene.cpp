@@ -66,7 +66,6 @@ void GameScene::Initialize()
 		camera_range = 30.0f;
 		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 
-
 		StageManager& stage_manager = StageManager::Instance();
 		stage_manager.SetStageLevel(4);
 
@@ -299,7 +298,8 @@ void GameScene::Render(float elapsedTime)
 			// ステージ描画
 			StageManager::Instance().Render(1.0f, chara_ps.GetAddressOf());
 			// ユニット描画
-			UnitManager::Instance().Render(1.0f, gltf_ps.Get());
+			//UnitManager::Instance().Render(1.0f, gltf_ps.Get());
+			UnitManager::Instance().Render(scale, chara_ps.Get());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
 			// 種描画

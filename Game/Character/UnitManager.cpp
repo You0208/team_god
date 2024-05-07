@@ -8,7 +8,7 @@ void UnitManager::Initialize()
     {
         //Chili
         InitializeBasic(unit_status[UNIT_INDEX::Chili],
-            0.1f,// 攻撃間隔
+            0.0f,// 攻撃間隔
             3,   // 攻撃力
             1,   // 攻撃回数
             0.5f,// 攻撃エフェクトサイズ

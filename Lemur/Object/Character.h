@@ -114,7 +114,7 @@ protected:
         const int& index,
         const bool& loop,
         const float& speed = 1.0f,
-        const float& blendSeconds = 1.0f)
+        const float& blendSeconds = 0.05f)
     {
         if (is_gltf)gltf_model->PlayAnimation(index, loop, speed, blendSeconds);
         else model->PlayAnimation(index, loop, speed, blendSeconds);

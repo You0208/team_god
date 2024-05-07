@@ -113,7 +113,7 @@ void DemoScene::Initialize()
 	// デバッグ
 	{
 		gltf_test_model->PlayAnimation(0, false);
-		test_model->PlayAnimation(0, true);
+		test_model->PlayAnimation(0, false);
 	}
 }
 
@@ -145,12 +145,14 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		test_model->UpdateAnimation(elapsedTime);
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
+			gltf_test_model->PlayAnimation(0, false);
 			//gltf_test_model->PlayAnimation(0, true);
-			//test_model->PlayAnimation(0, true);
+			test_model->PlayAnimation(0, false);
 			//debugEffect->Play(test_model->GetTransform()->GetPosition(),0.1);
 		}
 		if (gamePad.GetButtonDown() & gamePad.BTN_B)
 		{
+			gltf_test_model->PlayAnimation(1, false);
 			//gltf_test_model->PlayAnimation(1, true);
 			//test_model->PlayAnimation(1, true);
 		}

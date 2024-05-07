@@ -6,7 +6,8 @@
 Chili::Chili()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb",true);
+    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb",true);
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\UNIT1\\UNIT1.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");

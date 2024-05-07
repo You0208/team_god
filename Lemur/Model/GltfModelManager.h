@@ -37,7 +37,7 @@ public: // アニメーション関数関連
         const int& index,
         const bool& loop,
         const float& speed = 1.0f,
-        const float& blendSeconds = 0.3f
+        const float& blendSeconds = 0.1f
     );
 
     // ブレンド率の計算更新処理
@@ -62,16 +62,16 @@ public:
     float time{ 0 };
     float       animation_blend_time = 0.0f;     // ブレンド時間 
     float       blend_rate=0.0f;
+    bool        animation_end_flag = false;    // アニメーションが終了したか
 private:
     float       animation_speed = 1.0f;     // アニメーション再生速度
     float       current_animation_seconds = 0.0f;     // 現在のアニメーション再生時間
 
     float       animation_blend_seconds = 0.0f;    // 現在のブレンドタイマー
 
-    int         current_animation_index = 0;	    // 現在のアニメーション番号
+    int         current_animation_index = -1;	    // 現在のアニメーション番号
 
-    bool        animation_loop_flag = true;    // アニメーションをループ再生するか
-    bool        animation_end_flag = false;    // アニメーションが終了したか
+    bool        animation_loop_flag = false;    // アニメーションをループ再生するか
 
     bool        blend_animation_loop_flag = false;    // アニメーションをループ再生するか
     int blend_current_animation_index;
