@@ -65,7 +65,7 @@ void GameScene::Initialize()
 
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(3);
+		stage_manager.SetStageLevel(4);
 
 		//TODO もね 制限時間の初期化、ステージ
 		switch (StageManager::Instance().GetStageLevel())

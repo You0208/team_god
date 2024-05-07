@@ -296,7 +296,7 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
     {
         // ˆÚ“®
         HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
-            speed_power, Move::Straight, Move::Avoid, velocity.y, is_touched_unit, elapsed_time);
+            speed_power, Move::Straight, Move::Avoid, velocity.z, is_touched_unit, elapsed_time);
         //
         JudgeUnit(false);
     }

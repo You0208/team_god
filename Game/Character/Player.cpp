@@ -29,6 +29,8 @@ Player::Player()
         seed_throw_speed = 21.0f;
         // 案山子が柵から離れる距離
         sub_pos_z_puls = 0.55f;
+        // 案山子の移動速度
+        moveSpeed = 5.1f;
     }
     // 案山子の初期位置修正
     sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
@@ -245,9 +247,9 @@ void Player::ChangeCategory()
     GamePad& gamePad = Input::Instance().GetGamePad();
     // TODO もね　ユニットのボタン設定
     if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::I;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::F;
     else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::B;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::J;
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::C;
 }
 
 // 入力処理

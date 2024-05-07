@@ -11,7 +11,7 @@ Unit_A::Unit_A()
     attack_power           = 1;    // UŒ‚—Í
     attack_interval        = 0.5f; // UŒ‚ŠÔŠu
     attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
-    radius                 = 0.3f; // ”¼Œa
+    radius                 = 0.4f; // ”¼Œa
     height                 = 0.5f; // ƒfƒoƒbƒO—p
     dec_pos                = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½í‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
 
@@ -127,7 +127,7 @@ Unit_B::Unit_B()
     attack_power           = 1;    // UŒ‚—Í
     attack_interval        = 0.5f; // UŒ‚ŠÔŠu
     attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
-    radius                 = 0.3f; // ”¼Œa
+    radius                 = 0.4f; // ”¼Œa
     height                 = 0.5f; // ƒfƒoƒbƒO—p
     dec_pos                = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½í‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
 
@@ -301,7 +301,7 @@ Unit_C::Unit_C()
     attack_power           = 1;    // UŒ‚—Í
     attack_interval        = 0.5f; // UŒ‚ŠÔŠu
     attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
-    radius                 = 0.3f; // ”¼Œa
+    radius                 = 0.4f; // ”¼Œa
     height                 = 0.5f; // ƒfƒoƒbƒO—p
     dec_pos                = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½í‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
 
