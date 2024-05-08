@@ -70,7 +70,7 @@ void DemoScene::Initialize()
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear.fbx");
 		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\FlightHelmet\\glTF\\FlightHelmet.gltf");
@@ -82,7 +82,7 @@ void DemoScene::Initialize()
 
 		result = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation_scene.png");
 
-		debugEffect = new Effect(".\\resources\\Effect\\UNIT4_BUFF\\UNIT4_BUFF.efk");
+		debugEffect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
 	}
 
 	// ポイントライト・スポットライトの初期位置設定
@@ -145,10 +145,10 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		test_model->UpdateAnimation(elapsedTime);
 		if (gamePad.GetButtonDown() & gamePad.BTN_A)
 		{
-			gltf_test_model->PlayAnimation(0, false);
+			//gltf_test_model->PlayAnimation(0, false);
 			//gltf_test_model->PlayAnimation(0, true);
-			test_model->PlayAnimation(0, false);
-			//debugEffect->Play(test_model->GetTransform()->GetPosition(),0.1);
+			//test_model->PlayAnimation(0, false);
+			debugEffect->Play_R(test_model->GetTransform()->GetPosition(),0.1f,DirectX::XMConvertToRadians(90.0f));
 		}
 		if (gamePad.GetButtonDown() & gamePad.BTN_B)
 		{

@@ -209,3 +209,12 @@ bool FbxModelManager::IsPlayAnimation() const
 
     return true;
 }
+
+void FbxModelManager::Dissolve(const float& elapsedTime)
+{
+    if (fbx_model->dissolve >= 0)
+    {
+        fbx_model->dissolve -= elapsedTime;
+    }
+    else  is_dissolve = false;
+}

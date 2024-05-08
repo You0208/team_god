@@ -67,27 +67,27 @@ void Character::DrawDebugGUI(std::string name, int i)
     }
 }
 
-void Character::Render(float scale, ID3D11PixelShader* replaced_pixel_shader)
+void Character::Render(float scale_, ID3D11PixelShader* replaced_pixel_shader)
 {
     if (is_gltf)
     {
-       gltf_model->Render(scale, replaced_pixel_shader);
+       gltf_model->Render(scale_* model_scale, replaced_pixel_shader);
     }
     else
     {
-        model->Render(scale, replaced_pixel_shader);
+        model->Render(scale_* model_scale, replaced_pixel_shader);
     }
 }
 
-void Character::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void Character::Render(float scale_, ID3D11PixelShader** replaced_pixel_shader)
 {
     if (is_gltf)
     {
-        gltf_model->Render(scale,replaced_pixel_shader);
+        gltf_model->Render(scale_* model_scale,replaced_pixel_shader);
     }
     else
     {
-        model->Render(scale, replaced_pixel_shader);
+        model->Render(scale_* model_scale, replaced_pixel_shader);
     }
 }
 

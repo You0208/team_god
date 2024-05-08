@@ -21,7 +21,7 @@ Player::Player()
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
     // ユニットカテゴリーの初期化
-    unit_category = UnitManager::UNIT_INDEX::Chili;
+    unit_category = UnitManager::UNIT_INDEX::GreenPumpkin;
 
     //TODO もね　ゲーム画面
     {
@@ -31,6 +31,8 @@ Player::Player()
         seed_throw_speed = 20.0f;
         // 案山子が柵から離れる距離
         sub_pos_z_puls = 0.55f;
+        // 案山子から種の最短距離
+        dis_scarecrow = 1.0f;
     }
     // 案山子の初期位置修正
     sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
@@ -96,6 +98,7 @@ void Player::DrawDebugGUI()
     ImGui::SliderFloat(u8"はじく強さここで変えれます", &flip_speed, 0.1f, 10.0f);
     ImGui::SliderFloat(u8"コントローラー無い時のはじき", &flip_pos_z, 0.0f, 50.0f);
     ImGui::SliderFloat(u8"溜めの最大時間", &max_charge_time, 0.0f, 3.0f);
+    ImGui::SliderFloat(u8"種が落ちる一番手前", &dis_scarecrow, 0.0f, 3.0f);
     
     ImGui::End();
 }
@@ -147,24 +150,19 @@ void Player::Flick(float elapsedTime)
             velocity.x = 0;
 
             // はじき距離を算出
-            //max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
             flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
-            //flip_pos_z = std::pow(flip_pos_z, 1.0f / 2.2f);
-            //max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
-            //flip_pos_z = std::pow(max_right_stick_y*18.0f, 2.2f);
-            //flip_pos_z = std::pow(flip_pos_z, 1.0f/2.2f);
             // 初期化
             if (flip_timer > max_charge_time)
             {
-                flip_pos_z = sub_pos_z_puls;
+                flip_pos_z = sub_pos_z_puls-dis_scarecrow;
             }
 
             // スケーリング
-            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
+            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2- dis_scarecrow;
             //flip_pos_z = scaling * (flip_pos_z / scaling);
             // 最小値0、最大値scalingにクランプする
             flip_pos_z = std::clamp(flip_pos_z, 0.0f, scaling);
-            flip_pos_z = (scaling + sub_pos_z_puls) - flip_pos_z;
+            flip_pos_z = (scaling + sub_pos_z_puls + dis_scarecrow) - flip_pos_z;
 
             max_right_stick_y = 0;
             right_stick_y = 0;

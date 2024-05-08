@@ -23,7 +23,7 @@ public:
 public: // 取得・設定関数関連
     // アニメーションデータ取得
     std::vector<Animation>* GetAnimation() { return &fbx_model->animation_clips; };
-
+    const bool GetIsDissolve()& { return is_dissolve; }
     // 現在のアニメーション番号の取得・設定
     const int GetCurrentAnimationIndex()& { return current_animation_index; }
     const int GetCurrentAnimationSecond()& { return current_animation_seconds; }
@@ -51,6 +51,7 @@ public: // アニメーション関数関連
     // アニメーションが再生中かどうか
     bool IsPlayAnimation() const;
 
+    void Dissolve(const float& elapsedTime);
 public: // デバッグ確認用
     bool is_blend_animation = true;     // アニメーションブレンドオンオフ
 
@@ -72,4 +73,6 @@ private:
 
     bool        animation_loop_flag       = false;    // アニメーションをループ再生するか
     bool        animation_end_flag        = false;    // アニメーションが終了したか
+
+    bool        is_dissolve               = true;     // 消えてる最中か
 };

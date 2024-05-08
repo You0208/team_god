@@ -27,7 +27,7 @@ void CollisionManager::CollisionSeedVsUnit()
             if (unit->IsDead())continue;
 
             // 攻撃範囲が円
-            if (unit->GetCategory() == 0 || unit->GetCategory() == 3)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::Chili || unit->GetCategory() == UnitManager::UNIT_INDEX::Shishito)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectCircleVsCircle
@@ -42,7 +42,7 @@ void CollisionManager::CollisionSeedVsUnit()
                 }
             }
             // 攻撃範囲が三角
-            if (unit->GetCategory() == 1 || unit->GetCategory() == 2)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::GreenPumpkin || unit->GetCategory() == UnitManager::UNIT_INDEX::OrangePumpkin)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectTriangleVsCircle
@@ -68,7 +68,7 @@ void CollisionManager::CollisionSeedVsUnit()
                 }
             }
             // 攻撃範囲が四角
-            if (unit->GetCategory() == 4 || unit->GetCategory() == 5)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::Broccoli || unit->GetCategory() == UnitManager::UNIT_INDEX::Cauliflower)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectRectVsCircle
@@ -83,7 +83,7 @@ void CollisionManager::CollisionSeedVsUnit()
                 }
             }
             // 攻撃範囲がドーナツ
-            if (unit->GetCategory() == 8)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::J)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectDonutVsCircle

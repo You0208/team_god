@@ -11,9 +11,9 @@ void UnitManager::Initialize()
             0.0f,// 攻撃間隔
             3,   // 攻撃力
             1,   // 攻撃回数
-            0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
+            0.3f,// 攻撃エフェクトサイズ
+            0.3f,// 死亡エフェクトサイズ
+            0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::Chili].attack_radius                  = 1.5f;                 // 攻撃半径
 
@@ -22,9 +22,9 @@ void UnitManager::Initialize()
             0.1f,// 攻撃間隔
             4,   // 攻撃力
             1,   // 攻撃回数
-            0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
+            0.1f,// 攻撃エフェクトサイズ
+            0.3f,// 死亡エフェクトサイズ
+            0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::OrangePumpkin].t_height = 1.59f;             // 三角形の高さ
         unit_status[UNIT_INDEX::OrangePumpkin].t_base = 1.59f;             // 三角形の底辺長
@@ -34,9 +34,9 @@ void UnitManager::Initialize()
             0.1f,// 攻撃間隔
             4,   // 攻撃力
             1,   // 攻撃回数
-            0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
+            0.1f,// 攻撃エフェクトサイズ
+            0.3f,// 死亡エフェクトサイズ
+            0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::GreenPumpkin].t_height = 1.59f;                // 三角形の高さ
         unit_status[UNIT_INDEX::GreenPumpkin].t_base   = 1.59f;                // 三角形の底辺長
@@ -46,13 +46,13 @@ void UnitManager::Initialize()
              0.0f,// 攻撃間隔
              0,   // 攻撃力
              0,   // 攻撃回数
-             0.5f,// 攻撃エフェクトサイズ
-             0.5f,// 死亡エフェクトサイズ
-             0.5f // 設置エフェクトサイズ
+             0.3f,// 攻撃エフェクトサイズ
+             0.3f,// 死亡エフェクトサイズ
+             0.3f // 設置エフェクトサイズ
          );
          unit_status[UNIT_INDEX::Shishito].attack_radius   = 3.0f;                 // 攻撃半径
-         unit_status[UNIT_INDEX::Shishito].timer_max              = 5.0f;                 // 出現時間
-         unit_status[UNIT_INDEX::Shishito].streng_width           = 2;                    // 攻撃力の上り幅
+         unit_status[UNIT_INDEX::Shishito].timer_max       = 5.0f;                 // 出現時間
+         unit_status[UNIT_INDEX::Shishito].streng_width    = 2;                    // 攻撃力の上り幅
 
         //Broccoli
         InitializeBasic(unit_status[UNIT_INDEX::Broccoli],
@@ -60,8 +60,8 @@ void UnitManager::Initialize()
             1,   // 攻撃力
             1,   // 攻撃回数
             0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
+            0.3f,// 死亡エフェクトサイズ
+            0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::Broccoli].attack_width            = 0.9f;                 // 攻撃範囲の幅
 
@@ -71,8 +71,8 @@ void UnitManager::Initialize()
             1,   // 攻撃力
             1,   // 攻撃回数
             0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
+            0.3f,// 死亡エフェクトサイズ
+            0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::Cauliflower].attack_width = 0.9f;                 // 攻撃範囲の幅
 
@@ -82,8 +82,8 @@ void UnitManager::Initialize()
             1,   // 攻撃力
             1,   // 攻撃回数
             0.5f,// 攻撃エフェクトサイズ
-            0.5f,// 死亡エフェクトサイズ
-            0.5f // 設置エフェクトサイズ
+            0.3f,// 死亡エフェクトサイズ
+            0.3f // 設置エフェクトサイズ
         );               
         unit_status[UNIT_INDEX::J].radius_in =1.0f;                  // 半径
         unit_status[UNIT_INDEX::J].attack_radius =2.0f;                  // 半径

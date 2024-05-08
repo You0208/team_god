@@ -166,3 +166,12 @@ bool GltfModelManager::IsPlayAnimation() const
 
     return true;
 }
+
+void GltfModelManager::Dissolve(const float& elapsedTime)
+{
+    if (gltf_model->threshold >= 0)
+    {
+        gltf_model->threshold -= elapsedTime;
+    }
+    else  is_dissolve = false;
+}

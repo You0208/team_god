@@ -1,6 +1,7 @@
 #include "EnemySpawner.h"
 #include "EnemyManager.h"
 #include "Enemy_ABCD.h"
+#include "UniqueEnemy.h"
 #include "Game/Stage/StageManager.h"
 #include "Lemur/Input/Input.h"
 
@@ -41,6 +42,9 @@ void EnemySpawner::Initialize()
 		enemy_A.speed_power = -0.75f;    // à⁄ìÆë¨ìx
 		enemy_A.radius = 0.5f;			// îºåa
 		enemy_A.health = 3;				// ëÃóÕ
+		enemy_A.attack_effect_size = 0.3f;			
+		enemy_A.death_effect_size = 0.3f;
+		enemy_A.hit_effect_size = 0.3f;
 
 		// Enemy_B
 		enemy_B.attack_power = 3;		 // çUåÇóÕ
@@ -48,6 +52,9 @@ void EnemySpawner::Initialize()
 		enemy_B.speed_power = -1.75f;	 // à⁄ìÆë¨ìx
 		enemy_B.radius = 0.5f;			 // îºåa
 		enemy_B.health = 5;				 // ëÃóÕ
+		enemy_B.attack_effect_size = 0.3f;
+		enemy_B.death_effect_size = 0.3f;
+		enemy_B.hit_effect_size = 0.3f;
 		mover_timer_max_B = 1.3f;		 // Ç∆Ç«Ç‹Ç¡ÇƒÇ¢ÇÈéûä‘
 		dis_B = 3.0f;					 // àÍãCÇ…êiÇﬁãóó£
 
@@ -57,6 +64,9 @@ void EnemySpawner::Initialize()
 		enemy_C.speed_power = -1.0f;		// à⁄ìÆë¨ìx
 		enemy_C.radius = 0.5f;				// îºåa
 		enemy_C.health = 5;					// ëÃóÕ
+		enemy_C.attack_effect_size = 0.3f;
+		enemy_C.death_effect_size = 0.3f;
+		enemy_C.hit_effect_size = 0.3f;
 		speed_power_Y_D = -1.0f;			// éŒÇﬂà⁄ìÆÇÃéûÇÃÇ‡Ç§àÍå¬ÇÃë¨ìx
 
 		// Enemy_D
@@ -65,6 +75,9 @@ void EnemySpawner::Initialize()
 		enemy_D.speed_power = -1.0f;		 // à⁄ìÆë¨ìx
 		enemy_D.radius = 0.5f;				 // îºåa
 		enemy_D.health = 5;					 // ëÃóÕ
+		enemy_D.attack_effect_size = 0.3f;
+		enemy_D.death_effect_size = 0.3f;
+		enemy_D.hit_effect_size = 0.3f;
 		dis_D = 1.0f;						 // à⁄ìÆÇ∑ÇÈãóó£
 
 
@@ -74,6 +87,9 @@ void EnemySpawner::Initialize()
 		enemy_A_2.speed_power = -0.75f;    // à⁄ìÆë¨ìx
 		enemy_A_2.radius = 0.5f;			// îºåa
 		enemy_A_2.health = 3;				// ëÃóÕ
+		enemy_A_2.attack_effect_size = 0.3f;
+		enemy_A_2.death_effect_size = 0.3f;
+		enemy_A_2.hit_effect_size = 0.3f;
 
 		// Enemy_B_2
 		enemy_B_2.attack_power = 6;		 // çUåÇóÕ
@@ -81,6 +97,9 @@ void EnemySpawner::Initialize()
 		enemy_B_2.speed_power = -1.0f;	 // à⁄ìÆë¨ìx
 		enemy_B_2.radius = 0.5f;			 // îºåa
 		enemy_B_2.health = 5;				 // ëÃóÕ
+		enemy_B_2.attack_effect_size = 0.3f;
+		enemy_B_2.death_effect_size = 0.3f;
+		enemy_B_2.hit_effect_size = 0.3f;
 		mover_timer_max_B_2 = 1.0f;		 // Ç∆Ç«Ç‹Ç¡ÇƒÇ¢ÇÈéûä‘
 		dis_B_2 = 3.0f;					 // àÍãCÇ…êiÇﬁãóó£
 
@@ -90,6 +109,9 @@ void EnemySpawner::Initialize()
 		enemy_C_2.speed_power = -1.0f;		// à⁄ìÆë¨ìx
 		enemy_C_2.radius = 0.5f;				// îºåa
 		enemy_C_2.health = 5;					// ëÃóÕ
+		enemy_C_2.attack_effect_size = 0.3f;
+		enemy_C_2.death_effect_size = 0.3f;
+		enemy_C_2.hit_effect_size = 0.3f;
 		speed_power_Y_D_2 = -1.0f;			// éŒÇﬂà⁄ìÆÇÃéûÇÃÇ‡Ç§àÍå¬ÇÃë¨ìx
 
 		// Enemy_D
@@ -98,7 +120,30 @@ void EnemySpawner::Initialize()
 		enemy_D_2.speed_power = -1.0f;		 // à⁄ìÆë¨ìx
 		enemy_D_2.radius = 0.5f;				 // îºåa
 		enemy_D_2.health = 5;					 // ëÃóÕ
+		enemy_D_2.attack_effect_size = 0.3f;
+		enemy_D_2.death_effect_size = 0.3f;
+		enemy_D_2.hit_effect_size = 0.3f;
 		dis_D_2 = 1.0f;						 // à⁄ìÆÇ∑ÇÈãóó£
+
+		// Summon_Enemy
+		summon_enemy.attack_power = 0;			 // çUåÇóÕ
+		summon_enemy.attack_interval = 3.0f;		 // çUåÇä‘äu
+		summon_enemy.speed_power = 0.0f;		 // à⁄ìÆë¨ìx
+		summon_enemy.radius = 0.5f;				 // îºåa
+		summon_enemy.health = 5;					 // ëÃóÕ
+		summon_enemy.attack_effect_size = 0.3f;
+		summon_enemy.death_effect_size = 0.3f;
+		summon_enemy.hit_effect_size = 0.3f;
+
+		// Summon_Enemy
+		boss_enemy.attack_power = 3;		// çUåÇóÕ
+		boss_enemy.attack_interval = 3.0f; // çUåÇä‘äu
+		boss_enemy.speed_power = -0.75f;    // à⁄ìÆë¨ìx
+		boss_enemy.radius = 0.5f;			// îºåa
+		boss_enemy.health = 3;				// ëÃóÕ
+		boss_enemy.attack_effect_size = 0.3f;
+		boss_enemy.death_effect_size = 0.3f;
+		boss_enemy.hit_effect_size = 0.3f;
 
 		// ÉfÉoÉbÉOóp
 		script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
@@ -109,6 +154,8 @@ void EnemySpawner::Initialize()
 		script_enemy_B_2 = SetEnemy(4.0f, EnemyType::B_2, Shaft::Side, 4.0f);
 		script_enemy_C_2 = SetEnemy(4.0f, EnemyType::C_2, Shaft::Side, 4.0f);
 		script_enemy_D_2 = SetEnemy(4.0f, EnemyType::D_2, Shaft::Side, 4.0f);
+		script_summon_enemy = SetEnemy(4.0f, EnemyType::Summon, Shaft::Side, 4.0f);
+		script_boss_enemy = SetEnemy(4.0f, EnemyType::Boss, Shaft::Side, 4.0f);
 	}
 }
 
@@ -218,7 +265,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 	case EnemyType::A:
 	{
-		enemy = new Enemy_A;
+		enemy = new Enemy_A(false);
 		SetBasicEnemyStatus(enemy, enemy_A);
 
 		enemy->SetShaft(script.shaft);
@@ -230,7 +277,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	case EnemyType::B:
 	{
-		enemy = new Enemy_B;
+		enemy = new Enemy_B(false);
 		SetBasicEnemyStatus(enemy, enemy_B);
 		enemy->SetMoveTimerMax(mover_timer_max_B);
 		enemy->SetDis(dis_B);
@@ -244,7 +291,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	case EnemyType::C:
 	{
-		enemy = new Enemy_C;
+		enemy = new Enemy_C(false);
 		SetBasicEnemyStatus(enemy, enemy_C);
 		enemy->SetSpeedPowerY(speed_power_Y_D);
 
@@ -256,8 +303,9 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	break;
 	case EnemyType::D:
-		enemy = new Enemy_D;
+		enemy = new Enemy_D(false);
 		SetBasicEnemyStatus(enemy, enemy_D);
+		enemy->SetSpeedPowerY(speed_power_Y_D);
 		enemy->SetDis(dis_D);
 
 		enemy->SetShaft(script.shaft);
@@ -268,7 +316,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		break;
 	case EnemyType::A_2:
 	{
-		enemy = new Enemy_A;
+		enemy = new Enemy_A(true);
 		SetBasicEnemyStatus(enemy, enemy_A_2);
 
 		enemy->SetShaft(script.shaft);
@@ -280,7 +328,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	case EnemyType::B_2:
 	{
-		enemy = new Enemy_B;
+		enemy = new Enemy_B(true);
 		SetBasicEnemyStatus(enemy, enemy_B_2);
 		enemy->SetMoveTimerMax(mover_timer_max_B_2);
 		enemy->SetDis(dis_B_2);
@@ -294,7 +342,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	case EnemyType::C_2:
 	{
-		enemy = new Enemy_C;
+		enemy = new Enemy_C(true);
 		SetBasicEnemyStatus(enemy, enemy_C_2);
 		enemy->SetSpeedPowerY(speed_power_Y_D_2);
 
@@ -306,7 +354,8 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	}
 	break;
 	case EnemyType::D_2:
-		enemy = new Enemy_D;
+	{
+		enemy = new Enemy_D(true);
 		SetBasicEnemyStatus(enemy, enemy_D_2);
 		enemy->SetDis(dis_D_2);
 
@@ -317,6 +366,33 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		EnemyManager::Instance().Register(enemy);
 		break;
 	}
+	case EnemyType::Summon:
+	{
+		enemy = new SummonEnemy(false);
+		SetBasicEnemyStatus(enemy, summon_enemy);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+
+		// ÉäÉXÉgÇ…í«â¡
+		EnemyManager::Instance().Register(enemy);
+
+		break;
+	}
+	case EnemyType::Boss:
+	{
+		enemy = new BossEnemy(false);
+		SetBasicEnemyStatus(enemy, boss_enemy);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// ÉäÉXÉgÇ…í«â¡
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+	};
 }
 
 void EnemySpawner::DebugImGui()
@@ -375,6 +451,17 @@ void EnemySpawner::DebugImGui()
 		ImGui::SliderFloat(u8"êiÇﬁãóó£_2", &dis_D, 0.0f, 10.0f);
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("summon"))
+	{
+		EnemyImGui(summon_enemy);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("boss"))
+	{
+		EnemyImGui(boss_enemy);
+		ImGui::TreePop();
+	}
+
 
 
 	ImGui::End();
@@ -415,6 +502,14 @@ void EnemySpawner::DebugImGui()
 	{
 		EnemySpawn(script_enemy_D_2);
 	}
+	if (ImGui::Button("summon"))
+	{
+		EnemySpawn(script_summon_enemy);
+	}
+	if (ImGui::Button("boss"))
+	{
+		EnemySpawn(script_boss_enemy);
+	}
 	ImGui::End();
 }
 
@@ -425,6 +520,9 @@ void EnemySpawner::SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status)
 	enemy->SetAttackInterval(status.attack_interval);
 	enemy->SetRadius(status.radius);
 	enemy->SetSpeedPower(status.speed_power);
+	enemy->SetAttackEffectSize(status.attack_effect_size);
+	enemy->SetDeathEffectSize(status.death_effect_size);
+	enemy->SetHitEffectSize(status.hit_effect_size);
 }
 
 void EnemySpawner::EnemyImGui(EnemyStatus& status)
@@ -453,6 +551,15 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 	}
 
 	return { second ,enemy_type,shaft,pos,spawn_pos };
+}
+
+EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, DirectX::XMFLOAT2 pos)
+{
+	// ê∂ê¨à íu
+	DirectX::XMFLOAT3 spawn_pos = {};
+	spawn_pos = { pos.x,0.0f,pos.y };
+
+	return { second ,enemy_type,0,0.0f,spawn_pos };
 }
 
 void EnemySpawner::InitializeLevel1()
@@ -578,8 +685,8 @@ void EnemySpawner::InitializeLevel4()
 void EnemySpawner::InitializeLevel5()
 {
 	// level_5Ç©íçà”
-	level_5.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Vertical, 1.0f));
-	//level_5.emplace_back(SetEnemy(4.0f, EnemyType::A, Shaft::Vertical, 2.0f));
+	//level_5.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { 2.0f,2.0f }));
+	level_5.emplace_back(SetEnemy(4.0f, EnemyType::Boss, Shaft::Vertical, 2.0f));
 	//level_5.emplace_back(SetEnemy(6.0f, EnemyType::A, Shaft::Side, 3.0f));
 	//level_5.emplace_back(SetEnemy(8.0f, EnemyType::A, Shaft::Vertical, 2.0f));
 	//level_5.emplace_back(SetEnemy(10.0f, EnemyType::A, Shaft::Side, 4.0f));

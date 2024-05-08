@@ -188,6 +188,7 @@ public:
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_joint_cbuffer;
 
+    float threshold = 1.0f;
 private:
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;
@@ -202,7 +203,6 @@ private:
         float threshold = 1.0f;
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> primitive_cbuffer;
-    float threshold = 1.0f;
 
     // テクスチャ読み込み用
     //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> base_color;

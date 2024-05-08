@@ -10,7 +10,7 @@ GreenPumpkin::GreenPumpkin()
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\GreenPumpkin.fbx");
 
-    attack_effect = new Effect(".\\resources\\Effect\\UNIT2_ATK\\UNIT2_ATK.efk");
+    attack_effect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
@@ -155,6 +155,8 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_effect->Play_R(position, attack_effect_size,DirectX::XMConvertToRadians(90.0f));
                 }
             }
             // 右三角
@@ -166,13 +168,15 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
             ))
             {
                 is_intersected = true;
-               
+
                 if (is_attack)
                 {
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_effect->Play_R(position, attack_effect_size, DirectX::XMConvertToRadians(90.0f));
                 }
             }
         }
@@ -210,6 +214,8 @@ Broccoli::Broccoli()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
+    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力
@@ -363,6 +369,8 @@ Cauliflower::Cauliflower()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
+    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力

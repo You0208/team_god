@@ -61,9 +61,10 @@ void Unit::UpdateDeathState(float elapsed_time)
     radius = 0.0f;
     attack_collision_range = 0.0f;
 
+    //Dissolve(elapsed_time);
 
-
-    Destroy();
+    //if(!GetIsDissolve())Destroy();
+    if(!IsPlayAnimation())Destroy();
 }
 
 void Unit::TransitionIdleState()

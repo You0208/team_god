@@ -47,6 +47,7 @@ public: // アニメーション関数関連
     // アニメーションが再生中かどうか
     bool IsPlayAnimation() const;
 
+    void Dissolve(const float& elapsedTime);
 public: // デバッグ確認用
     bool is_blend_animation = true;     // アニメーションブレンドオンオフ
 
@@ -79,4 +80,5 @@ private:
     bool once = true;
 
     bool is_blend = false;
+    bool is_dissolve = true;
 };

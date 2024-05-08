@@ -26,6 +26,10 @@ public:
     // 行列の更新処理
     void UpdateTransform();
 
+    void Dissolve(float elapsedTime) {
+        if (is_gltf) gltf_model->Dissolve(elapsedTime);
+        else model->Dissolve(elapsedTime);
+    }
 protected:
     //----------モデル関連------------------------------------------------
     // サイズ更新
@@ -126,6 +130,11 @@ protected:
         else return  model->GetCurrentAnimationIndex();
     }
 
+    //TODO ここ修正
+    const bool GetIsDissolve()&
+    {
+        return model->GetIsDissolve();
+    }
 public:
     //---------Getter--------------------------------------------------------------------------
     
@@ -189,6 +198,7 @@ protected:
     DirectX::XMFLOAT3   rotation                    = { 0, 0, 0 };                 //　回転
     DirectX::XMFLOAT4   material_color              = { 1, 1, 1, 1 };              // 色
     DirectX::XMFLOAT3   direction                   = { 0,0,1 };                   // 方向
+    float               model_scale                 = 1.0f;
 
     //----------ゲーム関連------------------------------------------------
     float   radius                 = 1.0f;          // 半径

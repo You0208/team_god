@@ -316,7 +316,7 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
             char filename[256];
             ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
 
-            LoadTexture(device, filename, "_BaseColor", true, iterator->second.shader_resource_views[0].GetAddressOf(), 0x00FFFF00);
+            LoadTexture(device, filename, "_BaseColor", true, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
@@ -399,7 +399,6 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         // ‘Š‘ÎƒpƒX‚Ì‰ðŒˆ
         char filename[256];
         ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
-
 
         //TODO materilŽÀŒ±
         LoadTexture(device, filename, "_MS", true, iterator->second.metalness_smoothness.GetAddressOf(), 0x00FFFF00);

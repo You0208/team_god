@@ -73,8 +73,8 @@ private:// ゲーム
 
     std::unique_ptr<GltfModelManager> gltf_test_model;
 private:// シェーダー
-    std::unique_ptr<SpriteBatch> sprite_batches[8];
-
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> unit_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> enemy_ps;
 
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];

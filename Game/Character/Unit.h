@@ -136,7 +136,7 @@ protected:
     float       attack_width                = 0.0f;             // 四角の幅
     float       attack_radius_in            = 0.0f;             // ドーナツ型用の中身円半径
 
-
+    Effekseer::Handle attack_effect_handle  = 0;
     Effect*     attack_effect               = nullptr;          // 攻撃エフェクト
     Effect*     death_effect                = nullptr;          // 死亡エフェクト
     Effect*     set_effect                  = nullptr;          // 設置エフェクト

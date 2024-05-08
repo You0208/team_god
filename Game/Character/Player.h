@@ -43,6 +43,7 @@ private:
     float               sub_pos_z_puls      = 0.0f;     // 減算されるZ座標の追加分
     float               moveSpeed           = 5.0f;     // 横移動の速度
     DirectX::XMFLOAT2   limit               = {};       // 案山子の左右端
+    float               dis_scarecrow       = 0.0f;     // 案山子から種の最短距離
     
     bool                is_direction        = false;    // 種の演出フラグ
     bool                is_dis_direction    = false;    // 種の衝突演出フラグ

@@ -12,10 +12,13 @@ Seed::Seed()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\seed.fbx");
+    error_effect = new Effect(".\\resources\\Effect\\SEED_ERROR\\SEED_ERROR.efk");
 
     scaleFactor = 0.1f;
     radius = 0.3f;
     height = 0.3f;
+    //TODO もね　種エフェクトのサイズ
+    effect_size = 0.1f;
     PlayAnimation(0, false);
 }
 
@@ -69,10 +72,10 @@ void Seed::Update(float elapsedTime)
             case UnitManager::UNIT_INDEX::Shishito:
                 unit = new Shishito;
                 break;
-            case UnitManager::UNIT_INDEX::OrangePumpkin:
+            case UnitManager::UNIT_INDEX::GreenPumpkin:
                 unit = new GreenPumpkin;
                 break;
-            case UnitManager::UNIT_INDEX::GreenPumpkin:
+            case UnitManager::UNIT_INDEX::OrangePumpkin:
                 unit = new OrangePumpkin;
                 break;
             case UnitManager::UNIT_INDEX::Broccoli:
@@ -138,6 +141,7 @@ void Seed::DisDirection()
 {
     if (position.z >= distination_position.z)
     {
+        error_effect->Play(position, effect_size);
         velocity.z = 0;
         death = true;
         is_dis_direction = false;

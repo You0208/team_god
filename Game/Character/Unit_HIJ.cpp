@@ -98,13 +98,15 @@ void Unit_J::UpdateAttackState(float elapsed_time)
             {
                 // 敵とかぶったフラグをON
                 is_intersected = true;
-             
+
                 if (is_attack)
                 {
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_effect->Play(position, attack_effect_size);
                 }
             }
         }

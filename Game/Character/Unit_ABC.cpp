@@ -13,7 +13,6 @@ Chili::Chili()
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
-
     attack_times           = 5;    // 攻撃回数
     attack_power           = 1;    // 攻撃力
     attack_interval        = 0.1f; // 攻撃間隔
@@ -154,6 +153,9 @@ Shishito::Shishito()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Shishito.fbx");
+    attack_effect = new Effect(".\\resources\\Effect\\UNIT4_BUFF\\UNIT4_BUFF.efk");
+    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力
@@ -163,7 +165,7 @@ Shishito::Shishito()
     radius = 0.3f; // 半径
     height = 0.5f; // デバッグ用
     dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-    timer_max = 1.0f; // バフの秒数
+    timer_max = 3.0f; // バフの秒数
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
@@ -188,7 +190,7 @@ void Shishito::UpdateIdleState(float elapsed_time)
     for (int j = 0; j < unitCount; ++j)
     {
         Unit* unit = unitManager.GetUnit(j);
-
+        if (unit->GetCategory() == UnitManager::UNIT_INDEX::Shishito)continue;
         // ユニットが死んでたらコンティニュー
         if (unit->IsDead())continue;
 
@@ -205,11 +207,13 @@ void Shishito::UpdateIdleState(float elapsed_time)
             unit->SetBuff(true);
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
             // 攻撃ステートに切り替え
+            PlayAnimation(Animation::Attack, false);
+            attack_effect->Play(position, attack_effect_size);
             TransitionAttackState();
         }
     }
     // 攻撃回数を消費しきったら消滅
-    if (attack_times <= 0)
+    if (attack_timer >= timer_max)
     {
         TransitionDeathState();
     }
@@ -229,6 +233,7 @@ void Shishito::UpdateAttackState(float elapsed_time)
     {
         Unit* unit = unitManager.GetUnit(j);
 
+        if (unit->GetCategory() == UnitManager::UNIT_INDEX::Shishito)continue;
         // ユニットが死んでたらコンティニュー
         if (unit->IsDead())continue;
 
@@ -245,7 +250,11 @@ void Shishito::UpdateAttackState(float elapsed_time)
             // 強化状態をtrueに
             unit->SetBuff(true);
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
-            if (!IsPlayAnimation())PlayAnimation(Animation::Attack, false);
+            if (!IsPlayAnimation())
+            {
+                PlayAnimation(Animation::Attack, false);
+                attack_effect_handle = attack_effect->Play(position, attack_effect_size);
+            }
         }
         else// 範囲内にいない
         {
@@ -263,6 +272,7 @@ void Shishito::UpdateAttackState(float elapsed_time)
     // 攻撃時間が過ぎたら消滅
     if (attack_timer >= timer_max)
     {
+        attack_effect->Stop(attack_effect_handle);
         TransitionDeathState();
     }
 }
@@ -281,7 +291,7 @@ OrangePumpkin::OrangePumpkin()
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\OrangePumpkin.fbx");
 
-    attack_effect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
+    attack_effect = new Effect(".\\resources\\Effect\\UNIT2_ATK\\UNIT2_ATK.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
@@ -422,10 +432,15 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
             {
                 // 敵とかぶったフラグをON
                 is_intersected = true;
-                // アニメーションの切り替え
-                if (is_attack) PlayAnimation(Animation::Attack, false);
-                // 攻撃フラグがONならダメージ処理
-                if (is_attack)  enemy->ApplyDamage(ReturnDamage());
+                if (is_attack)
+                {
+                    // アニメーションの切り替え
+                    PlayAnimation(Animation::Attack, false);
+                    // 攻撃フラグがONならダメージ処理
+                    enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_effect->Play(position, attack_effect_size);
+                }
             }
             // 右三角
             if (Collision::IntersectTriangleVsCircle
@@ -437,10 +452,15 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
             {
                 // 敵とかぶったフラグをON
                 is_intersected = true;
-                // アニメーションの切り替え
-                if (is_attack)  PlayAnimation(Animation::Attack, false);
-                // 攻撃フラグがONならダメージ処理
-                if (is_attack)  enemy->ApplyDamage(ReturnDamage());
+                if (is_attack)
+                {
+                    // アニメーションの切り替え
+                    PlayAnimation(Animation::Attack, false);
+                    // 攻撃フラグがONならダメージ処理
+                    enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_effect->Play(position, attack_effect_size);
+                }
             }
         }
 

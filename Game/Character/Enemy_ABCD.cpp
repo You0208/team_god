@@ -4,11 +4,15 @@
 
 //------EnemyA-----------------------------------------------------------------
 
-Enemy_A::Enemy_A()
+Enemy_A::Enemy_A(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_01.fbx");
-    is_gltf = false;
+    if(!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear2.fbx");
+
+    attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
+    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
     attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
@@ -46,6 +50,7 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
         {
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
+            attack_effect->Play(position,attack_effect_size);
             // タイマーをに
             timer = 0.0f;
         }
@@ -91,11 +96,15 @@ void Enemy_A::UpdateMoveState(float elapsed_time)
 
 //------ EnemyB----------------------------------------------------------------
 
-Enemy_B::Enemy_B()
+Enemy_B::Enemy_B(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_02.fbx");
-    is_gltf = false;
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar2.fbx");
+
+    attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
+    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
     attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
@@ -130,6 +139,7 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーをに
@@ -223,10 +233,15 @@ void Enemy_B::DrawDebugPrimitive()
 
 //------EnemyC-----------------------------------------------------------------
 
-Enemy_C::Enemy_C()
+Enemy_C::Enemy_C(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_03.fbx");
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit2.fbx");
+
+    attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
+    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
     attack_power    = 1;         // 攻撃力　
     attack_interval = 3.0f;      // 攻撃間隔
@@ -264,6 +279,7 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーをに
@@ -544,10 +560,15 @@ void Enemy_C::MoveToDestination(float elapsed_time, Move nextState)
 
 //-------EnemyD---------------------------------------------------------------
 
-Enemy_D::Enemy_D()
+Enemy_D::Enemy_D(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\enemy_04.fbx");
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+
+    attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
+    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
     attack_power    = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
@@ -589,6 +610,7 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーを0に
