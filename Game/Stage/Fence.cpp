@@ -49,15 +49,27 @@ Fence::Fence()
         health = 30;
         break;
     case 2:// レベル３
-        health = 150;
+        health = 30;
         break;
     case 3:// レベル４
-        health = 200;
+        health = 40;
         break;
     case 4:// レベル５
-        health = 200;
+        health = 45;
         break;
 
+    case 5:// レベル6
+        health = 45;
+        break;
+    case 6:// レベル7
+        health = 200;
+        break;
+    case 7:// レベル8
+        health = 200;
+        break;
+    case 8:// レベル9
+        health = 200;
+        break;
     }
 
     

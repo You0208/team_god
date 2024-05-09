@@ -17,9 +17,10 @@ Chili::Chili()
     attack_power           = 1;    // 攻撃力
     attack_interval        = 0.1f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius                 = 0.3f; // 半径
     height                 = 0.5f; // デバッグ用
     dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+
+    radius                 = 0.4f; // 半径
 
     attack_effect_size = 0.5f;
     set_effect_size = 0.5f;
@@ -162,10 +163,10 @@ Shishito::Shishito()
     streng_width = 2;    // 強化幅
     attack_interval = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius = 0.3f; // 半径
     height = 0.5f; // デバッグ用
     dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
     timer_max = 3.0f; // バフの秒数
+    radius = 0.4f; // 半径
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
@@ -299,9 +300,10 @@ OrangePumpkin::OrangePumpkin()
     attack_power           = 1;    // 攻撃力
     attack_interval        = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius                 = 0.3f; // 半径
     height                 = 0.5f; // デバッグ用
     dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+
+    radius = 0.4f; // 半径
 
     // 三角
     t_height               = 1.0f;// 高さ

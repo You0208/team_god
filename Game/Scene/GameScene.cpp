@@ -65,7 +65,7 @@ void GameScene::Initialize()
 	{
 		// カメラ
 		Camera& camera = Camera::Instance();
-		// カメラ調整
+		//TODO もね カメラ調整
 		camera_range = 30.0f;
 		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 
@@ -76,18 +76,30 @@ void GameScene::Initialize()
 		switch (StageManager::Instance().GetStageLevel())
 		{
 		case 0:// レベル１
-			time_limit = 60.0f;// ここで制限時間を調整
+			time_limit = 70.0f;// ここで制限時間を調整
 			break;
 		case 1:// レベル２
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 85.0f;// ここで制限時間を調整
 			break;
 		case 2:// レベル３
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 92.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 95.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
+			time_limit = 100.0f;// ここで制限時間を調整
+			break;
+		case 5:// レベル6
+			time_limit = 100.0f;// ここで制限時間を調整
+			break;
+		case 6:// レベル7
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 7:// レベル8
+			time_limit = 200.0f;// ここで制限時間を調整
+			break;
+		case 8:// レベル9
 			time_limit = 200.0f;// ここで制限時間を調整
 			break;
 		}

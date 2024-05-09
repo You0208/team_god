@@ -18,7 +18,7 @@ GreenPumpkin::GreenPumpkin()
     attack_power = 1;    // UŒ‚—Í
     attack_interval = 0.5f; // UŒ‚ŠÔŠu
     attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
-    radius = 0.3f; // ”¼Œa
+    radius = 0.4f; // ”¼Œa
     height = 0.5f; // ƒfƒoƒbƒO—p
     dec_pos = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½Ží‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
 
@@ -222,7 +222,7 @@ Broccoli::Broccoli()
     attack_width = 1.0f;    // UŒ‚•
     attack_interval = 0.5f; // UŒ‚ŠÔŠu
     attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
-    radius = 0.3f; // ”¼Œa
+    radius = 0.4f; // ”¼Œa
     height = 0.5f; // ƒfƒoƒbƒO—p
     dec_pos = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½Ží‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
     Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
@@ -377,7 +377,7 @@ Cauliflower::Cauliflower()
     attack_width = 1.0f;    // UŒ‚•
     attack_interval = 0.5f; // UŒ‚ŠÔŠu
     attack_collision_range = 1.0f; // UŒ‚”ÍˆÍ
-    radius = 0.3f; // ”¼Œa
+    radius = 0.4f; // ”¼Œa
     height = 0.5f; // ƒfƒoƒbƒO—p
     dec_pos = 1.0f; // ƒ†ƒjƒbƒg‚ÉÚG‚µ‚½Ží‚ª‚Ç‚Ì‚­‚ç‚¢’µ‚Ë•Ô‚³‚ê‚é‚©
     Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();

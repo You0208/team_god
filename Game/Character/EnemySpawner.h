@@ -22,11 +22,15 @@ public:
     EnemyScript SetEnemy(float second, int enemy_type, DirectX::XMFLOAT2 pos);
 
     // レベル１の初期化
-    void InitializeLevel1();
-    void InitializeLevel2();
-    void InitializeLevel3();
-    void InitializeLevel4();
-    void InitializeLevel5();
+    void InitializeLevel1();//1-1
+    void InitializeLevel2();//1-2
+    void InitializeLevel3();//1-3
+    void InitializeLevel4();//2-1
+    void InitializeLevel5();//2-2
+    void InitializeLevel6();//2-3
+    void InitializeLevel7();//3-1
+    void InitializeLevel8();//3-2
+    void InitializeLevel9();//3-3
 
     // エネミーの登録
     void EnemySpawn(EnemyScript script);
@@ -34,11 +38,15 @@ public:
     // Imgui
     void DebugImGui();
 private:
-    std::vector<EnemyScript>    level_1         = {};    // レベル１
-    std::vector<EnemyScript>    level_2         = {};    // レベル１
-    std::vector<EnemyScript>    level_3         = {};    // レベル１
-    std::vector<EnemyScript>    level_4         = {};    // レベル１
-    std::vector<EnemyScript>    level_5         = {};    // レベル１
+    std::vector<EnemyScript>    level_1 = {};    // レベル１
+    std::vector<EnemyScript>    level_2 = {};    // レベル１
+    std::vector<EnemyScript>    level_3 = {};    // レベル１
+    std::vector<EnemyScript>    level_4 = {};    // レベル１
+    std::vector<EnemyScript>    level_5 = {};    // レベル１
+    std::vector<EnemyScript>    level_6 = {};    // レベル１
+    std::vector<EnemyScript>    level_7 = {};    // レベル１
+    std::vector<EnemyScript>    level_8 = {};    // レベル１
+    std::vector<EnemyScript>    level_9 = {};    // レベル１
 
     int index;
     float                       timer          = 0.0f;  // タイマー
