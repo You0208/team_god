@@ -101,7 +101,7 @@ cbuffer HEMISPHERE_LIGHT_CONSTANT_BUFFER : register(b7)
 cbuffer SCENE_CONSTANT_BUFFER : register(b1)
 {
     row_major float4x4 view_projection;
-    //float4 light_direction;
+
     float4 camera_position;
     row_major float4x4 inverse_projection;
     float time;
@@ -110,7 +110,10 @@ cbuffer SCENE_CONSTANT_BUFFER : register(b1)
     // SHADOW
     row_major float4x4 light_view_projection;
     float shadow_depth_bias;
-    float pads2[3];
+    float3 pads2;
+    
+    row_major float4x4 view_matrix;
+    row_major float4x4 projection_matrix;
 };
 
 ////TODO GLTF用見直し
@@ -120,7 +123,7 @@ cbuffer PRIMITIVE_CONSTANT_BUFFER : register(b0)
     int material;
     bool has_tangent;
     int skin;
-    int pad3;
+    float threshold;
 };
 
 // ライトデータにアクセスするための定数バッファーを用意する
@@ -274,28 +277,18 @@ out float3 outSpecular)
         float lightLength = length(lightVector);
         if (lightLength >= point_light[i].range)
             continue;
-        float attenuate = saturate(1.0f - lightLength / point_light[i].range);
-        lightVector = lightVector / lightLength;
         
-        // ポイントライトとの距離を計算する
-        float3 distance = length(pin.w_position.xyz - point_light[i].position.xyz);
-        // 影響率は距離に比例して小さくなっていく
-        float affect = 1.0f - 1.0f / point_light[i].range.x * distance;
-        // 影響力がマイナスにならないように補正をかける
-        if (affect < 0.0f)
-        {
-            affect = 0.0f;
-        }
-        //影響を指数関数的にする。今回のサンプルでは3乗している
-        affect = pow(affect, 3.0f);
+        float attenuateLength = saturate(1.0f - lightLength / point_light[i].range);
+        float attenuation = attenuateLength * attenuateLength;
+        lightVector = lightVector / lightLength;
         
         float3 diffuse = 0, specular = 0;
         DirectBDRF(diffuseReflectance, F0, N, E, lightVector,
             point_light[i].color.rgb, roughness,
             diffuse, specular);
         
-        outDiffuse = diffuse * attenuate;
-        outSpecular = specular * attenuate;
+        outDiffuse += diffuse * attenuation;
+        outSpecular += specular * attenuation;
     }
 }
 

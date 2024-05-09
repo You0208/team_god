@@ -48,6 +48,7 @@ public:
 
     void    DecNumber() { number--; }
 
+    Effect* error_effect = nullptr;
 private:
     float               timer                   = 0.0f;            // 種が配置されてからの時間
     int                 number                  = 0;               // 種番号
@@ -61,6 +62,7 @@ private:
     bool                is_direction            = false;           // 種の投げ演出
     bool                is_dis_direction        = false;           // 種の消える演出
     float               throw_speed             = 20.0f;           // 種の速度
+    float               effect_size             = 0.0f;            // エフェクトのサイズ
 };
 
 

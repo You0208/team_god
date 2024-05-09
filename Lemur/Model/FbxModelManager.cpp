@@ -149,15 +149,23 @@ void FbxModelManager::UpdateAnimation(const float& elapsedTime)
         }
 
     }
+
     // 再生時間とキーフレームの時間かた補間率を算出する
     else if ((keyframe.nodes.size() > 0) && frameIndex < frameEnd)
     {
         // ブレンド率の計算
-        float blendRate = 0.1f;
-        UpdateBlendRate(blendRate, elapsedTime);
+        float blendRate = 1.0f;
 
+        if (animation_blend_seconds > 0.0f)
+        {
+            //blendRate = 0.0f;
+            blendRate = animation_blend_time / animation_blend_seconds;
+            blendRate *= blendRate;
+            animation_blend_time += elapsedTime;
+        }
         // キーフレーム取得
         const std::vector<Animation::keyframe>& keyframes = animation.sequence;
+
 
         // 現在の時間がどのキーフレームの間にいるのか判定する
         const Animation::keyframe* keyframe_[2] = {
@@ -165,11 +173,23 @@ void FbxModelManager::UpdateAnimation(const float& elapsedTime)
             &keyframes.at(frameIndex + 1)
         };
 
-        // 再生時間とキーフレームの時間から補間率を計算する
-        fbx_model->BlendAnimations(keyframe_, blendRate, keyframe);
+        if (blendRate < 1.0f)
+        {
+            // 再生時間とキーフレームの時間から補間率を計算する
+            fbx_model->BlendAnimations(keyframe_, blendRate, keyframe);
 
-        // トランスフォーム更新
-        fbx_model->UpdateAnimation(keyframe);
+            // トランスフォーム更新
+            fbx_model->UpdateAnimation(keyframe);
+        }
+        else
+        {
+            // 再生時間とキーフレームの時間から補間率を計算する
+            fbx_model->BlendAnimations(keyframe_, 0.2f, keyframe);
+
+            // トランスフォーム更新
+            fbx_model->UpdateAnimation(keyframe);
+
+        }
     }
     else
     {
@@ -182,7 +202,19 @@ bool FbxModelManager::IsPlayAnimation() const
     if (current_animation_index < 0) return false;
 
     const int animationIndexEnd = static_cast<int>(fbx_model->animation_clips.size());
-    if (current_animation_index >= animationIndexEnd) return false;
+    if (current_animation_index >= animationIndexEnd)
+    {
+        return false;
+    }
 
     return true;
+}
+
+void FbxModelManager::Dissolve(const float& elapsedTime)
+{
+    if (fbx_model->dissolve >= 0)
+    {
+        fbx_model->dissolve -= elapsedTime;
+    }
+    else  is_dissolve = false;
 }

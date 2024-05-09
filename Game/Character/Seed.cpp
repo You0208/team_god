@@ -11,11 +11,15 @@
 Seed::Seed()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\seed.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\seed.fbx");
+    error_effect = new Effect(".\\resources\\Effect\\SEED_ERROR\\SEED_ERROR.efk");
+
     scaleFactor = 0.1f;
     radius = 0.3f;
     height = 0.3f;
-    model->PlayAnimation(0, false);
+    //TODO もね　種エフェクトのサイズ
+    effect_size = 0.1f;
+    PlayAnimation(0, false);
 }
 
 Seed::~Seed()
@@ -33,7 +37,7 @@ void Seed::Update(float elapsedTime)
         UpdateVelocity(elapsedTime);
 
         // モデルアニメーション更新
-        model->UpdateAnimation(elapsedTime);
+        UpdateAnimation(elapsedTime);
 
         // 行列更新処理
         UpdateTransform();
@@ -62,43 +66,32 @@ void Seed::Update(float elapsedTime)
             // ユニットの種類によって発芽先のユニットを変更
             switch (category)
             {
-            case 0:
-                unit = new Unit_A;
-                UnitManager::Instance().SetUpUnit_A(unit);
+            case UnitManager::UNIT_INDEX::Chili:
+                unit = new Chili;
                 break;
-            case 1:
-                unit = new Unit_B;
-                UnitManager::Instance().SetUpUnit_B(unit);
+            case UnitManager::UNIT_INDEX::Shishito:
+                unit = new Shishito;
                 break;
-            case 2:
-                unit = new Unit_C;
-                UnitManager::Instance().SetUpUnit_C(unit);
+            case UnitManager::UNIT_INDEX::GreenPumpkin:
+                unit = new GreenPumpkin;
                 break;
-            case 3:
-                unit = new Unit_D;
-                UnitManager::Instance().SetUpUnit_D(unit);
+            case UnitManager::UNIT_INDEX::OrangePumpkin:
+                unit = new OrangePumpkin;
                 break;
-            case 4:
-                unit = new Unit_E;
-                UnitManager::Instance().SetUpUnit_E(unit);
+            case UnitManager::UNIT_INDEX::Broccoli:
+                unit = new Broccoli;
                 break;
-            case 5:
-                unit = new Unit_F;
-                UnitManager::Instance().SetUpUnit_F(unit);
+            case UnitManager::UNIT_INDEX::Cauliflower:
+                unit = new Cauliflower;
                 break;
-            case 6:
-                unit = new Unit_H;
-                UnitManager::Instance().SetUpUnit_H(unit);
-                break;
-            case 7:
-                unit = new Unit_I;
-                UnitManager::Instance().SetUpUnit_I(unit);
-                break;
-            case 8:
+            case UnitManager::UNIT_INDEX::J:
                 unit = new Unit_J;
-                UnitManager::Instance().SetUpUnit_J(unit);
+                break;
+            default:
+                unit = new Chili;
                 break;
             }
+            UnitManager::Instance().SetUpUnit(unit, category);
 
             // ユニットが生まれたら
             if (unit != nullptr)
@@ -113,8 +106,12 @@ void Seed::Update(float elapsedTime)
                 unit->SetSquare(square);
                 // カテゴリーをセット
                 unit->SetCategory(category);
+                // 設置エフェクトを再生
+                unit->GetSetEffect()->Play(unit->GetPosition(), unit->GetSetEffectSize());
+
                 // 姿勢を更新しておく
-                unit->UpdateTransform();
+                unit->Update(elapsedTime);
+
                 // Managerにセット
                 UnitManager::Instance().Register(unit);
                 // 種を消す
@@ -144,6 +141,7 @@ void Seed::DisDirection()
 {
     if (position.z >= distination_position.z)
     {
+        error_effect->Play(position, effect_size);
         velocity.z = 0;
         death = true;
         is_dis_direction = false;
@@ -156,7 +154,7 @@ void Seed::DisDirection()
 
 void Seed::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
-    model->Render(scale, replaced_pixel_shader);
+    Character::Render(scale, replaced_pixel_shader);
 }
 
 void Seed::DrawDebugGUI()

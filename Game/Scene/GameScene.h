@@ -50,6 +50,9 @@ public:
 
     // Imgui
     void DebugImgui()override;
+
+    // 光源の初期化
+    void InitializeLight()override;
 private:// ゲーム
     Stage* stage = nullptr;
 
@@ -68,12 +71,10 @@ private:// ゲーム
     float f_d = 0;
     std::shared_ptr<Sprite> ohajiki;
 
+    std::unique_ptr<GltfModelManager> gltf_test_model;
 private:// シェーダー
-    std::unique_ptr<SpriteBatch> sprite_batches[8];
-
-
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> unit_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> enemy_ps;
 
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];

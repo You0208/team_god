@@ -16,7 +16,7 @@ using namespace DirectX;
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
+#include <DDSTextureLoader.h>
 
 inline XMFLOAT4X4  to_xmfloat4x4(const FbxAMatrix& fbxamatrix)
 {
@@ -233,19 +233,6 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* device, const char* fbx_filename, std::ve
 
 void SkinnedMesh::UpdateAnimation(Animation::keyframe& keyframe)
 {
-    //const size_t node_count{ keyframe.nodes.size() };
-    //for (size_t node_index = 0; node_index < node_count; ++node_index)
-    //{
-    //    Animation::keyframe::node& node{ keyframe.nodes.at(node_index) };
-    //    XMMATRIX S{ XMMatrixScaling(node.scaling.x, node.scaling.y, node.scaling.z) };
-    //    XMMATRIX R{ XMMatrixRotationQuaternion(XMLoadFloat4(&node.rotation)) };
-    //    XMMATRIX T{ XMMatrixTranslation(node.translation.x, node.translation.y, node.translation.z) };
-
-    //    const int64_t parent_index{ scene_view.nodes.at(node_index).parent_index };
-    //    XMMATRIX P{ parent_index < 0 ? XMMatrixIdentity() : XMLoadFloat4x4(&keyframe.nodes.at(parent_index).global_transform) };
-
-    //    XMStoreFloat4x4(&node.global_transform, S * R * T * P);
-    //}
     size_t node_count{ keyframe.nodes.size() };
     for (size_t node_index = 0; node_index < node_count; ++node_index)
     {
@@ -261,7 +248,6 @@ void SkinnedMesh::UpdateAnimation(Animation::keyframe& keyframe)
         DirectX::XMStoreFloat4x4(&node.global_transform, S * R * T * P);
     }
 }
-
 
 void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filename, bool used_as_collider/*RAYCAST*/)
 {
@@ -307,48 +293,118 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[0]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
+            // ディレクトリパス取得
+            char drive[32], dir[256], dirname[256], fname[256];
+            ::_splitpath_s(fbx_filename, drive, sizeof(drive), dir, sizeof(dir), fname, sizeof(fname), nullptr, 0);
+
+            // ファイル階層を追加
+            ::_makepath_s(dirname, sizeof(dirname), drive, dir, fname, nullptr);
+
+            // マテリアルの名前
+            char tname[256] = {};
+            // std::string（gltf_material.name）をchar配列（tname）にコピー
+            std::copy(iterator->second.name.begin(), iterator->second.name.end(), tname);
+
+            // 末尾文字を追加
+            ::strcat_s(tname, sizeof(tname), ".DDS");
+
+            // 相対パスの解決
+            char filename[256];
+            ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
+
+            LoadTexture(device, filename, "_BaseColor", true, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[1]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
+            // ディレクトリパス取得
+            char drive[32], dir[256], dirname[256], fname[256];
+            ::_splitpath_s(fbx_filename, drive, sizeof(drive), dir, sizeof(dir), fname, sizeof(fname), nullptr, 0);
+
+            // ファイル階層を追加
+            ::_makepath_s(dirname, sizeof(dirname), drive, dir, fname, nullptr);
+
+            // マテリアルの名前
+            char tname[256] = {};
+            // std::string（gltf_material.name）をchar配列（tname）にコピー
+            std::copy(iterator->second.name.begin(), iterator->second.name.end(), tname);
+
+            // 末尾文字を追加
+            ::strcat_s(tname, sizeof(tname), ".DDS");
+
+            // 相対パスの解決
+            char filename[256];
+            ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
+
+            LoadTexture(device, filename, "_Normal", true, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F);
+
         }
         // Emissive
         if (iterator->second.texture_filenames[2].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[2]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
+            // ディレクトリパス取得
+            char drive[32], dir[256], dirname[256], fname[256];
+            ::_splitpath_s(fbx_filename, drive, sizeof(drive), dir, sizeof(dir), fname, sizeof(fname), nullptr, 0);
+
+            // ファイル階層を追加
+            ::_makepath_s(dirname, sizeof(dirname), drive, dir, fname, nullptr);
+
+            // マテリアルの名前
+            char tname[256] = {};
+            // std::string（gltf_material.name）をchar配列（tname）にコピー
+            std::copy(iterator->second.name.begin(), iterator->second.name.end(), tname);
+
+            // 末尾文字を追加
+            ::strcat_s(tname, sizeof(tname), ".DDS");
+
+            // 相対パスの解決
+            char filename[256];
+            ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
+
+            LoadTexture(device, filename, "_Emissive", true, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000);
         }
 
+
         // ディレクトリパス取得
-        char drive[32], dir[256], dirname[256];
-        ::_splitpath_s(fbx_filename, drive, sizeof(drive), dir, sizeof(dir), nullptr, 0, nullptr, 0);
-        ::_makepath_s(dirname, sizeof(dirname), drive, dir, nullptr, nullptr);
+        char drive[32], dir[256], dirname[256], fname[256];
+        ::_splitpath_s(fbx_filename, drive, sizeof(drive), dir, sizeof(dir), fname, sizeof(fname), nullptr, 0);
+
+        // ファイル階層を追加
+        ::_makepath_s(dirname, sizeof(dirname), drive, dir, fname, nullptr);
+
+        // マテリアルの名前
+        char tname[256] = {};
+        // std::string（gltf_material.name）をchar配列（tname）にコピー
+        std::copy(iterator->second.name.begin(), iterator->second.name.end(), tname);
+
+        // 末尾文字を追加
+        ::strcat_s(tname, sizeof(tname), ".DDS");
 
         // 相対パスの解決
         char filename[256];
-        ::_makepath_s(filename, 256, nullptr, dirname, iterator->second.texture_filenames[0].c_str(), nullptr);
+        ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
 
         //TODO materil実験
         LoadTexture(device, filename, "_MS", true, iterator->second.metalness_smoothness.GetAddressOf(), 0x00FFFF00);
-        LoadTexture(device, filename, "_M", true, iterator->second.metalness.GetAddressOf(), 0x00FFFF00);
-        LoadTexture(device, filename, "_R", true, iterator->second.roughness.GetAddressOf(), 0x00FFFF00);
+        LoadTexture(device, filename, "_Metalness", true, iterator->second.metalness.GetAddressOf(), 0x00FFFF00);
+        LoadTexture(device, filename, "_Roughness", true, iterator->second.roughness.GetAddressOf(), 0x00FFFF00);
+        LoadTexture(device, filename, "_Opacity", true, iterator->second.opacity.GetAddressOf(), 0xFFFFFFFF);
     }
 
     HRESULT hr = S_OK;
@@ -451,6 +507,7 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const XMFLOAT4X
             immediate_context->PSSetShaderResources(3, 1, material.metalness_smoothness.GetAddressOf());
             immediate_context->PSSetShaderResources(4, 1, material.metalness.GetAddressOf());
             immediate_context->PSSetShaderResources(5, 1, material.roughness.GetAddressOf());
+            immediate_context->PSSetShaderResources(6, 1, material.opacity.GetAddressOf());
 
 
             // 使用するインデックスバッファの範囲を指定して描画する
@@ -567,7 +624,7 @@ HRESULT SkinnedMesh::LoadTexture(ID3D11Device* device, const char* filename, con
 
     // テクスチャ読み込み
     Microsoft::WRL::ComPtr<ID3D11Resource> resource;
-    HRESULT hr = DirectX::CreateWICTextureFromFile(device, wfilepath, resource.GetAddressOf(), srv);
+    HRESULT hr = DirectX::CreateDDSTextureFromFile(device, wfilepath, resource.GetAddressOf(), srv);
     if (FAILED(hr))
     {
         // WICでサポートされていないフォーマットの場合（TGAなど）は
@@ -1314,33 +1371,33 @@ void StaticMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filename
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[0]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[1]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
         }
         // Emissive
         if (iterator->second.texture_filenames[2].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[2]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
         }
     }
 
@@ -1635,33 +1692,33 @@ void StaticMeshBatch::CreateComObjects(ID3D11Device* device, const char* fbx_fil
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[0]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[0].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[0].GetAddressOf(), 0xFFFFFFFF, 4);
         }
         // Normal
         if (iterator->second.texture_filenames[1].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[1]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[1].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[1].GetAddressOf(), 0xFFFF7F7F, 4);
         }
         // Emissive
         if (iterator->second.texture_filenames[2].size() > 0)
         {
             std::filesystem::path path(fbx_filename);
             path.replace_filename(iterator->second.texture_filenames[2]);
-            load_texture_from_file(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
+            LoadTextureFromFile(device, path.c_str(), iterator->second.shader_resource_views[2].GetAddressOf(), &texture2d_desc);
         }
         else
         {
-            make_dummy_texture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
+            MakeDummyTexture(device, iterator->second.shader_resource_views[2].GetAddressOf(), 0xFF000000, 4);
         }
     }
 

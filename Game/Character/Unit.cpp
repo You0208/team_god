@@ -1,6 +1,8 @@
 #include "Unit.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "UnitManager.h"
+#include "Lemur/Effekseer/EffekseerManager.h"
+
 void Unit::Update(float elapsed_time)
 {
     switch (state)
@@ -27,7 +29,7 @@ void Unit::Update(float elapsed_time)
     UpdateTransform();
 
     // モデルアニメーション更新
-    model->UpdateAnimation(elapsed_time);
+    UpdateAnimation(elapsed_time);
 
     DrawDebugPrimitive();
 }
@@ -40,34 +42,41 @@ int Unit::ReturnDamage()
 
 void Unit::Destroy()
 {
-    UnitManager::Instance().Remove(this);
+    if (!IsPlayAnimation())UnitManager::Instance().Remove(this);
 }
 
 void Unit::TransitionDeathState()
 {
+    death = true;
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Out, false);
+    PlayAnimation(Animation::Out, false);
+    // エフェクトの再生
+    death_effect->Play(position, death_effect_size);
     // ステート切り替え
     state = State::Death;
 }
 
 void Unit::UpdateDeathState(float elapsed_time)
 {
-    Destroy();
+    radius = 0.0f;
+    attack_collision_range = 0.0f;
+
+    //Dissolve(elapsed_time);
+
+    //if(!GetIsDissolve())Destroy();
+    if(!IsPlayAnimation())Destroy();
 }
 
 void Unit::TransitionIdleState()
 {
     // アニメーションの切り替え
-    model->PlayAnimation(Animation::Idle, true);
+   PlayAnimation(Animation::Idle, true);
     // ステート切り替え
     state = State::Idle;
 }
 
 void Unit::TransitionAttackState()
 {
-    // アニメーションの切り替え
-    model->PlayAnimation(Animation::Attack, false);
     // ステート切り替え
     state = State::Attack;
 }

@@ -10,7 +10,6 @@ bool Character::ApplyDamage(int damage)
     // 死亡している間は健康状態を変更しない
     if (health <= 0)return false;
 
-
     // ダメージ処理
     health -= damage;
 
@@ -68,27 +67,27 @@ void Character::DrawDebugGUI(std::string name, int i)
     }
 }
 
-void Character::Render(float scale, ID3D11PixelShader* replaced_pixel_shader)
+void Character::Render(float scale_, ID3D11PixelShader* replaced_pixel_shader)
 {
-    if (model->GetAnimation()->size() > 0)
+    if (is_gltf)
     {
-        model->Render(scale, replaced_pixel_shader);
+       gltf_model->Render(scale_* model_scale, replaced_pixel_shader);
     }
     else
     {
-        model->Render(scale, replaced_pixel_shader);
+        model->Render(scale_* model_scale, replaced_pixel_shader);
     }
 }
 
-void Character::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void Character::Render(float scale_, ID3D11PixelShader** replaced_pixel_shader)
 {
-    if (model->GetAnimation()->size() > 0)
+    if (is_gltf)
     {
-        model->Render(scale,replaced_pixel_shader);
+        gltf_model->Render(scale_* model_scale,replaced_pixel_shader);
     }
     else
     {
-        model->Render(scale, replaced_pixel_shader);
+        model->Render(scale_* model_scale, replaced_pixel_shader);
     }
 }
 
@@ -446,9 +445,20 @@ void Character::UpdateTransform()
     // 計算したワールド行列を取り出す。
     DirectX::XMStoreFloat4x4(&transform, W);
 #else
-    model->GetTransform()->SetPosition(position);
-    model->GetTransform()->SetScale(scale);
-    model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+    if (!is_gltf)
+    {
+        model->GetTransform()->SetPosition(position);
+        model->GetTransform()->SetScale(scale);
+        model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+    }
+    else 
+    {
+        gltf_model->GetTransform()->SetPosition(position);
+        gltf_model->GetTransform()->SetScale(scale);
+        gltf_model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+    }
+
+
 #endif
 }
 
@@ -458,96 +468,4 @@ void Character::UpdateInvincibleTimer(float elapsedTime)
     {
         invincibleTimer -= elapsedTime;
     }
-}
-
-void Character::UpdateAnimation(float elapsedTime)
-{
-    // 再生中でないなら処理しない
-    if (!IsPlayAnimation()) return;
-
-    // 最終フレーム処理
-    if (end_animation)
-    {
-        end_animation = false; // 終了フラグをリセット
-        animation_index = -1;    // アニメーション番号リセット
-        return;
-    }
-    // アニメーション再生時間経過
-    animation_tick += elapsedTime;
-
-    // 指定のアニメーションデータを取得
-    const Animation& animation = GetAnimation()->at(animation_index);
-
-    // 現在の時間がどのキーフレームの間にいるのか判定する
-    const float  frameIndex_float = (animation_tick * animation.sampling_rate) * anim_calc_rate * hit_stop_rate;
-    const size_t frameIndex = static_cast<const size_t>(frameIndex_float);
-
-    // 最終フレーム
-    const size_t frameEnd = (animation.sequence.size() - 1);
-
-    // 再生時間が終端時間を超えたら
-    if (frameIndex > frameEnd)
-    {
-        // ループ再生する場合
-        if (animation_loop_flag)
-        {
-            animation_tick = 0.0f;
-            return;
-        }
-        // ループ再生しない場合
-        else
-        {
-            end_animation = true;
-            return;
-        }
-
-    }
-    // 再生時間とキーフレームの時間かた補間率を算出する
-    else if ((keyframe.nodes.size() > 0) && frameIndex < frameEnd)
-    {
-        // ブレンド率の計算
-        float blendRate = 0.2f;
-        UpdateBlendRate(blendRate, elapsedTime);
-
-        // キーフレーム取得
-        const std::vector<Animation::keyframe>& keyframes = animation.sequence;
-
-        // 現在の時間がどのキーフレームの間にいるのか判定する
-        const Animation::keyframe* keyframe_[2] = {
-            &keyframe,
-            &keyframes.at(frameIndex + 1)
-        };
-
-        // 再生時間とキーフレームの時間から補間率を計算する
-        model->fbx_model->BlendAnimations(keyframe_, blendRate, keyframe);
-
-        // トランスフォーム更新
-        model->fbx_model->UpdateAnimation(keyframe);
-    }
-    else
-    {
-        keyframe = animation.sequence.at(frameIndex);
-    }
-}
-
-void Character::UpdateBlendRate(float blendRate, const float& elapsedTime)
-{
-    if (animation_blend_time < animation_blend_seconds)
-    {
-        animation_blend_time += elapsedTime;
-        if (animation_blend_time >= animation_blend_seconds)
-        {
-            animation_blend_time = animation_blend_seconds;
-        }
-        blendRate = animation_blend_time / animation_blend_seconds;
-        blendRate *= blendRate;
-    }
-}
-
-bool Character::IsPlayAnimation() const
-{
-    if (animation_index < 0)return false;
-    if (animation_index >= model->GetAnimation()->size()) return false;
-
-    return true;
 }

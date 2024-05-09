@@ -2,6 +2,7 @@
 #include "../Model/Model.h"
 #include "../Graphics/Graphics.h"
 #include "../Model/FbxModelManager.h"
+#include "../Model/GltfModelManager.h"
 #include "../Resource/ResourceManager.h"
 
 class Character
@@ -25,6 +26,10 @@ public:
     // 行列の更新処理
     void UpdateTransform();
 
+    void Dissolve(float elapsedTime) {
+        if (is_gltf) gltf_model->Dissolve(elapsedTime);
+        else model->Dissolve(elapsedTime);
+    }
 protected:
     //----------モデル関連------------------------------------------------
     // サイズ更新
@@ -32,6 +37,22 @@ protected:
         scale.x = scale.y = scale.z = scaleFactor;
     }
 
+    void LoadFBXModel(ID3D11Device* device, const char* fbx_filename, bool triangulate = true, float sampling_rate = 0)
+    {
+        model = std::make_unique<FbxModelManager>(device, fbx_filename, triangulate, sampling_rate);
+        is_gltf = false;
+    }
+    void LoadFBXModel(ID3D11Device* device, const char* fbx_filename, std::vector<std::string>& animation_filenames, bool triangulate = true, float sampling_rate = 0)
+    {
+        model = std::make_unique<FbxModelManager>(device, fbx_filename, animation_filenames, triangulate, sampling_rate);
+        is_gltf = false;
+    }
+
+    void LoadGltfModel(ID3D11Device* device, const std::string& filename, bool external_texture)
+    {
+        gltf_model = std::make_unique<GltfModelManager>(device, filename, external_texture);
+        is_gltf = true;
+    }
     //----------移動関連------------------------------------------------
     // 速力更新
     void UpdateVelocity(float elapsed_fime);
@@ -71,19 +92,7 @@ protected:
     virtual void OnDead() {}
 
     //----------アニメーション関連------------------------------------------------
-    // アニメーションの切り替え
-    void SetAnimationIndex(int index, const bool& loop = false)
-    {
-        frame_index = 0;
-        animation_tick = 0;
-        animation_index = index;
-        end_animation = false;
-        animation_loop_flag = loop;
-
-        animation_blend_time = 0.0f;
-        animation_blend_seconds = 1.0f;
-    }
-
+    // 
     // ヒットストップの計算
     void HitStopCalc();
 
@@ -91,14 +100,41 @@ protected:
     void HitStopON(float hit_stop_time_);
 
     // アニメーションの更新
-    void UpdateAnimation(float elapsedTIme);
-
-    // ブレンドレート計算
-    void UpdateBlendRate(float blendRate, const float& elapsedTime);
+    void UpdateAnimation(float elapsedTime)
+    {
+        if (is_gltf)gltf_model->UpdateAnimation(elapsedTime);
+        else model->UpdateAnimation(elapsedTime);
+    }
 
     // アニメーション再生中か
-    bool IsPlayAnimation()const;
+    bool IsPlayAnimation()const
+    {
+        if (is_gltf)return gltf_model->IsPlayAnimation();
+        else return  model->IsPlayAnimation();
+        return false;
+    }
 
+    void PlayAnimation(
+        const int& index,
+        const bool& loop,
+        const float& speed = 1.0f,
+        const float& blendSeconds = 0.05f)
+    {
+        if (is_gltf)gltf_model->PlayAnimation(index, loop, speed, blendSeconds);
+        else model->PlayAnimation(index, loop, speed, blendSeconds);
+    }
+
+    const int GetCurrentAnimationIndex()&
+    {
+        if (is_gltf)return gltf_model->GetCurrentAnimationIndex();
+        else return  model->GetCurrentAnimationIndex();
+    }
+
+    //TODO ここ修正
+    const bool GetIsDissolve()&
+    {
+        return model->GetIsDissolve();
+    }
 public:
     //---------Getter--------------------------------------------------------------------------
     
@@ -145,11 +181,15 @@ public:
     void SetAttackRadius(const float attack_radius_) { this->attack_collision_range = attack_radius_; } // 半径
     void SetSpeedPower(const float speed_power_) { this->speed_power = speed_power_; }                // 速度
 
+private:
+    std::shared_ptr<FbxModelManager> model = nullptr;                           // FBXモデル
+    std::shared_ptr<GltfModelManager> gltf_model = nullptr;                     // Gltfモデル
+
 protected:
     //----------モデル関連------------------------------------------------
     Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    = nullptr;                     // ピクセルシェーダー
-    std::shared_ptr<FbxModelManager> model          = nullptr;                     // モデル
     Animation::keyframe keyframe                    = {};                          // キーフレーム
+    bool                is_gltf                     = false;                       // 使用するモデルがGLTFか
 
     DirectX::XMFLOAT3   velocity                    = { 0, 0, 0 };                 // 速度
     DirectX::XMFLOAT3   position                    = { 0, 0, 0 };                 // 位置
@@ -158,6 +198,7 @@ protected:
     DirectX::XMFLOAT3   rotation                    = { 0, 0, 0 };                 //　回転
     DirectX::XMFLOAT4   material_color              = { 1, 1, 1, 1 };              // 色
     DirectX::XMFLOAT3   direction                   = { 0,0,1 };                   // 方向
+    float               model_scale                 = 1.0f;
 
     //----------ゲーム関連------------------------------------------------
     float   radius                 = 1.0f;          // 半径

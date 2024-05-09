@@ -49,6 +49,9 @@ public:
         float r, float g, float b, float a,
         float angle/*degree*/,
         float sx, float sy, float sw, float sh);
+
+
+    void RenderCenter(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh);
     void Render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh);
     void Textout(ID3D11DeviceContext* immediate_context, std::string s, float x, float y, float w, float h, float r, float g, float b, float a);
     void Textout(ID3D11DeviceContext* immediate_context, int n, float x, float y, float w, float h, float r, float g, float b, float a);

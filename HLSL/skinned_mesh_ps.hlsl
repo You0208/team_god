@@ -19,6 +19,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     // ダミーテクスチャ
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     float alpha = color.a;
+    
 #if 0
     // Inverse gamma process
     const float GAMMA = 2.2;

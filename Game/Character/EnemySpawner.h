@@ -19,6 +19,7 @@ public:
     void Update(float elapsed_time);
 
     EnemyScript SetEnemy(float second, int enemy_type, int shaft, float pos);
+    EnemyScript SetEnemy(float second, int enemy_type, DirectX::XMFLOAT2 pos);
 
     // レベル１の初期化
     void InitializeLevel1();//1-1
@@ -37,15 +38,15 @@ public:
     // Imgui
     void DebugImGui();
 private:
-    std::vector<EnemyScript>    level_1         = {};    // レベル１
-    std::vector<EnemyScript>    level_2         = {};    // レベル１
-    std::vector<EnemyScript>    level_3         = {};    // レベル１
-    std::vector<EnemyScript>    level_4         = {};    // レベル１
-    std::vector<EnemyScript>    level_5         = {};    // レベル１
-    std::vector<EnemyScript>    level_6         = {};    // レベル１
-    std::vector<EnemyScript>    level_7         = {};    // レベル１
-    std::vector<EnemyScript>    level_8         = {};    // レベル１
-    std::vector<EnemyScript>    level_9         = {};    // レベル１
+    std::vector<EnemyScript>    level_1 = {};    // レベル１
+    std::vector<EnemyScript>    level_2 = {};    // レベル１
+    std::vector<EnemyScript>    level_3 = {};    // レベル１
+    std::vector<EnemyScript>    level_4 = {};    // レベル１
+    std::vector<EnemyScript>    level_5 = {};    // レベル１
+    std::vector<EnemyScript>    level_6 = {};    // レベル１
+    std::vector<EnemyScript>    level_7 = {};    // レベル１
+    std::vector<EnemyScript>    level_8 = {};    // レベル１
+    std::vector<EnemyScript>    level_9 = {};    // レベル１
 
     int index;
     float                       timer          = 0.0f;  // タイマー
@@ -58,15 +59,23 @@ private:
 
 
 //-----この下デバッグ用↓--------------------------------------------
+public:
     struct EnemyStatus
     {
-        int attack_power;//攻撃力
-        float attack_interval;//攻撃間隔
-        int health; // HP
-        float speed_power;// 速度
-        float radius;  // 半径
+        int attack_power;         //攻撃力
+        float attack_interval;    //攻撃間隔
+        int health;               // HP
+        float speed_power;        // 速度
+        float radius;             // 半径
+        float attack_effect_size; // 攻撃エフェクトのサイズ
+        float death_effect_size;  // 死亡エフェクトのサイズ
+        float hit_effect_size;    // 設置エフェクトのサイズ
     };
 
+    // セット
+    static void SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status);
+
+private:
     //Enemy_A
     EnemyStatus enemy_A;
 
@@ -99,9 +108,12 @@ private:
     float speed_power_Y_D_2 = -1.0f;
     float dis_D_2 = 1.0f;
 
-    
-    // セット
-    void SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status);
+    // SummonEnemy
+    EnemyStatus summon_enemy;
+
+    // BossEnemy
+    EnemyStatus boss_enemy;
+
     // Imgui
     void EnemyImGui(EnemyStatus& status);
 
@@ -114,6 +126,9 @@ private:
     EnemyScript script_enemy_B_2;
     EnemyScript script_enemy_C_2;
     EnemyScript script_enemy_D_2;
+
+    EnemyScript script_summon_enemy;
+    EnemyScript script_boss_enemy;
 
     int count;
 };

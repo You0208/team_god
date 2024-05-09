@@ -48,7 +48,6 @@ public:
 
     void DebugImgui()override;
 private:
-private:
     std::shared_ptr<Sprite> result;
 
     // MASK

@@ -10,7 +10,7 @@ Fence::Fence()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // ÉÇÉfÉãÇÃèâä˙âª
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\Fence.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Stage\\Fence.fbx");
 
     rotation.y = DirectX::XMConvertToRadians(270.0f);
     scale.x = scale.y = scale.z = 50.0f;

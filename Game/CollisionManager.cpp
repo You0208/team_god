@@ -23,8 +23,11 @@ void CollisionManager::CollisionSeedVsUnit()
         {
             Unit* unit = unitManager.GetUnit(i);
 
+            // ユニットが死んでたらコンティニュー
+            if (unit->IsDead())continue;
+
             // 攻撃範囲が円
-            if (unit->GetCategory() == 0 || unit->GetCategory() == 3)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::Chili || unit->GetCategory() == UnitManager::UNIT_INDEX::Shishito)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectCircleVsCircle
@@ -39,7 +42,7 @@ void CollisionManager::CollisionSeedVsUnit()
                 }
             }
             // 攻撃範囲が三角
-            if (unit->GetCategory() == 1 || unit->GetCategory() == 2)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::GreenPumpkin || unit->GetCategory() == UnitManager::UNIT_INDEX::OrangePumpkin)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectTriangleVsCircle
@@ -65,12 +68,29 @@ void CollisionManager::CollisionSeedVsUnit()
                 }
             }
             // 攻撃範囲が四角
-            if (unit->GetCategory() == 4 || unit->GetCategory() == 5)
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::Broccoli || unit->GetCategory() == UnitManager::UNIT_INDEX::Cauliflower)
             {
                 // 種がユニットの攻撃範囲に入っているとき
                 if (Collision::IntersectRectVsCircle
                 (
                     unit->GetAttackRect(),
+                    { seed->GetPosition().x,seed->GetPosition().z },
+                    seed->GetRadius()
+                ))
+                {
+                    is_intersected = true;
+                    break; // 一度でも重なればループを抜ける
+                }
+            }
+            // 攻撃範囲がドーナツ
+            if (unit->GetCategory() == UnitManager::UNIT_INDEX::J)
+            {
+                // 種がユニットの攻撃範囲に入っているとき
+                if (Collision::IntersectDonutVsCircle
+                (
+                    { unit->GetPosition().x,unit->GetPosition().z },
+                    unit->GetAttackCollisionRange(),
+                    unit->GetAttackRadiusIn(),
                     { seed->GetPosition().x,seed->GetPosition().z },
                     seed->GetRadius()
                 ))
@@ -150,6 +170,9 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position)
     {
         unit = unitManager.GetUnit(i);
 
+        // ユニットが死んでたらコンティニュー
+        if (unit->IsDead())continue;
+
         // ユニットに直接当たっていたら
         if (Collision::IntersectCircleVsPosition(position, { unit->GetPosition().x,unit->GetPosition().z }, unit->GetRadius()))
         {
@@ -205,6 +228,9 @@ bool CollisionManager::CollisionUnitBackVsSeed_Re(DirectX::XMFLOAT2 position, Di
     for (int i = 0; i < unitCount; ++i)
     {
         unit = unitManager.GetUnit(i);
+
+        // ユニットが死んでたらコンティニュー
+        if (unit->IsDead())continue;
 
         // 着地地点が四角に入っているとき
         if (Collision::IntersectSquareVsPoint(unit->GetRect().left_up, unit->GetRect().right_down, position))

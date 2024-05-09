@@ -120,6 +120,7 @@ void Lemur::Scene::BaseScene::DebugImgui()
 	ImGui::End();
 }
 
+
 void Lemur::Scene::BaseScene::InitializeState()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -349,7 +350,7 @@ void Lemur::Scene::BaseScene::InitializeState()
 			buffer_desc.MiscFlags = 0;// その他のフラグ（未使用に場合は0）
 			buffer_desc.StructureByteStride = 0;//バッファが構造化バッファを表す場合の、バッファ構造内の各要素のサイズ
 			{
-				buffer_desc.ByteWidth = sizeof(scene_constants);// バッファのサイズ 
+				buffer_desc.ByteWidth = sizeof(scene_constant);// バッファのサイズ 
 				hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
 				_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 			}
@@ -385,123 +386,6 @@ void Lemur::Scene::BaseScene::InitializeState()
 				_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 			}
 		}
-	}
-}
-
-void Lemur::Scene::BaseScene::SetUpRendering()
-{
-	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-
-	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
-	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
-	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
-
-	ID3D11RenderTargetView* null_render_target_views[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT]{};
-	immediate_context->OMSetRenderTargets(_countof(null_render_target_views), null_render_target_views, 0);
-	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT]{};
-	immediate_context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
-	immediate_context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
-
-	// レンダーターゲット等の設定とクリア
-	FLOAT color[]{ 0.2f, 0.2f, 0.2f, 1.0f };
-	// キャンバス全体を指定した色に塗りつぶす
-	immediate_context->ClearRenderTargetView(render_target_view, color);
-
-	if (!enable_fog)immediate_context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	// これから描くキャンバスを指定する
-	immediate_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
-
-	immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::POINT)].GetAddressOf());
-	immediate_context->PSSetSamplers(1, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
-	immediate_context->PSSetSamplers(2, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::ANISOTROPIC)].GetAddressOf());
-	immediate_context->PSSetSamplers(3, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_BORDER_BLACK)].GetAddressOf());
-	immediate_context->PSSetSamplers(4, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_BORDER_WHITE)].GetAddressOf());
-	// SHADOW
-	immediate_context->PSSetSamplers(5, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::COMPARISON_LINEAR_BORDER_WHITE)].GetAddressOf());
-	//FOG
-	immediate_context->PSSetSamplers(6, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_CLAMP)].GetAddressOf());
-
-
-
-	Camera& camera = Camera::Instance();
-
-	// 計算
-	{
-		D3D11_VIEWPORT viewport;
-		UINT num_viewports{ 1 };
-		immediate_context->RSGetViewports(&num_viewports, &viewport);
-
-		float aspect_ratio{ viewport.Width / viewport.Height };
-		DirectX::XMMATRIX P{ DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30), aspect_ratio, 0.1f, 1000.0f) };
-
-		DirectX::XMVECTOR eye = camera.GetEye();
-		DirectX::XMVECTOR focus = camera.GetFocus();
-		DirectX::XMVECTOR up{ DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
-		DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye, focus, up) };
-
-		DirectX::XMStoreFloat4x4(&scene_constants.view_projection, V * P);
-		lights.directional_light_direction = directional_light_direction;
-		// UNIT.16
-		DirectX::XMStoreFloat4(&camera_position, camera.GetEye());
-		scene_constants.camera_position = camera_position;
-
-
-		// FOG
-		DirectX::XMStoreFloat4x4(&scene_constants.inverse_projection, DirectX::XMMatrixInverse(NULL, P));
-		DirectX::XMStoreFloat4x4(&scene_constants.inv_view_projection, DirectX::XMMatrixInverse(NULL, V * P));
-		scene_constants.time = high_resolution_timer::Instance().time_stamp();
-	}
-
-
-
-	// 定数バッファの更新
-	{
-		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].Get(), 0, 0, &scene_constants, 0, 0);
-		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::SCENE), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::SCENE), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
-
-		// FOG
-		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].Get(), 0, 0, &fog_constants, 0, 0);
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].GetAddressOf());
-
-		// オプション
-		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].Get(), 0, 0, &option_constant, 0, 0);
-		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::OPTION), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::OPTION), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
-
-		// PBR
-		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].Get(), 0, 0, &pbr, 0, 0);
-		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::PBR), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].GetAddressOf());
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::PBR), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].GetAddressOf());
-
-		// 距離フォグ
-		dis_fog_constants fogs{};
-		fogs.fog_color = fog_color;
-		fogs.fog_range = fog_range;
-		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].Get(), 0, 0, &fogs, 0, 0);
-		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::D_FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].GetAddressOf());
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::D_FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].GetAddressOf());
-
-		// ライト
-		lights.ambient_color = ambient_color;
-		lights.directional_light_direction = directional_light_direction;
-		lights.directional_light_color = directional_light_color;
-		memcpy_s(lights.point_light, sizeof(lights.point_light), point_light, sizeof(point_light));
-		memcpy_s(lights.spot_light, sizeof(lights.spot_light), spot_light, sizeof(spot_light));
-		immediate_context->UpdateSubresource(light_constant_buffer.Get(), 0, 0, &lights, 0, 0);
-		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::LIGHT), 1, light_constant_buffer.GetAddressOf());
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::LIGHT), 1, light_constant_buffer.GetAddressOf());
-
-		// 半球ライト
-		hemisphere_light_constants hemisphere_lights{};
-		hemisphere_lights.sky_color = sky_color;
-		hemisphere_lights.ground_color = ground_color;
-		hemisphere_lights.hemisphere_weight.x = hemisphere_weight;
-		immediate_context->UpdateSubresource(hemisphere_light_constant_buffer.Get(), 0, 0, &hemisphere_lights, 0, 0);
-		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::HEMISPERE), 1, hemisphere_light_constant_buffer.GetAddressOf());
-		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::HEMISPERE), 1, hemisphere_light_constant_buffer.GetAddressOf());
-
 	}
 }
 
@@ -553,74 +437,6 @@ void Lemur::Scene::BaseScene::InitializeDeffered(int textureWidth, int textureHe
 	}
 
 
-}
-
-void Lemur::Scene::BaseScene::SetUpDeffered()
-{
-	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
-	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
-
-	FLOAT color[4] = { 0,0,0,1 };
-	if (enable_deferred)
-	{
-		// レンダーターゲットのビュー配列と深度ステンシルバッファを出力レンダーパイプラインにバインドする。
-		immediate_context->OMSetRenderTargets(G_MAX, renderTargetViewArray->GetAddressOf(), depth_stencil_view);
-
-		// レンダーターゲットバッファーをクリア
-		for (int i = 0; i < G_MAX; i++)
-		{
-			immediate_context->ClearRenderTargetView(renderTargetViewArray[i].Get(), color);
-		}
-	}
-}
-
-void Lemur::Scene::BaseScene::RenderingDeffered()
-{
-	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
-	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
-	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
-
-	if (enable_deferred)
-	{
-		// レンダーターゲットを一枚に
-		immediate_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
-
-		// シェーダー設定
-		// GBuffer設定
-		ID3D11ShaderResourceView* shader_resource_views[G_MAX] =
-		{
-			// GB_BaseColorはスプライト側で指定しているのでそれを考慮
-			shaderResourceViewArray[BASECOLOR].Get(),
-			shaderResourceViewArray[NORMAL].Get(),
-			shaderResourceViewArray[POSITION].Get(),
-			shaderResourceViewArray[MS].Get(),
-			shaderResourceViewArray[EMISSIVE].Get(),
-			shaderResourceViewArray[OCCLUSION].Get(),
-		};
-
-		immediate_context->PSSetShaderResources(1, G_MAX, shader_resource_views);
-
-		// ポストエフェクト開始
-		if (enable_deferred_post)
-		{
-			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context);
-			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
-		}
-
-		// 描画
-		fullscreenQuad->Blit(immediate_context, shader_resource_views, 0, _countof(shader_resource_views), pixel_shaders[static_cast<size_t>(PS::DEFFERED)].Get());
-
-		if (enable_deferred_post)
-		{
-			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
-			ExePostEffct();
-		}
-
-		ID3D11ShaderResourceView* clear_shader_resource_view[G_MAX]{ nullptr, nullptr, nullptr,nullptr,nullptr,nullptr };
-		immediate_context->PSSetShaderResources(1, G_MAX, clear_shader_resource_view);
-	}
 }
 
 void Lemur::Scene::BaseScene::InitializeLight()
@@ -692,6 +508,9 @@ void Lemur::Scene::BaseScene::InitializeFramebuffer()
 	// FOG
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
+	// TEX
+	framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
+
 	//BLOOM
 	bloomer = std::make_unique<Bloom>(graphics.GetDevice(), 1920, 1080);
 
@@ -714,6 +533,198 @@ void Lemur::Scene::BaseScene::InitializePS()
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
 }
 
+
+void Lemur::Scene::BaseScene::SetUpRendering()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+
+	ID3D11RenderTargetView* null_render_target_views[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT]{};
+	immediate_context->OMSetRenderTargets(_countof(null_render_target_views), null_render_target_views, 0);
+	ID3D11ShaderResourceView* null_shader_resource_views[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT]{};
+	immediate_context->VSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
+	immediate_context->PSSetShaderResources(0, _countof(null_shader_resource_views), null_shader_resource_views);
+
+	// レンダーターゲット等の設定とクリア
+	FLOAT color[]{ 0.2f, 0.2f, 0.2f, 1.0f };
+	// キャンバス全体を指定した色に塗りつぶす
+	immediate_context->ClearRenderTargetView(render_target_view, color);
+
+	if (!enable_fog)immediate_context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	// これから描くキャンバスを指定する
+	immediate_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
+
+	immediate_context->PSSetSamplers(0, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::POINT)].GetAddressOf());
+	immediate_context->PSSetSamplers(1, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR)].GetAddressOf());
+	immediate_context->PSSetSamplers(2, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::ANISOTROPIC)].GetAddressOf());
+	immediate_context->PSSetSamplers(3, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_BORDER_BLACK)].GetAddressOf());
+	immediate_context->PSSetSamplers(4, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_BORDER_WHITE)].GetAddressOf());
+	// SHADOW
+	immediate_context->PSSetSamplers(5, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::COMPARISON_LINEAR_BORDER_WHITE)].GetAddressOf());
+	//FOG
+	immediate_context->PSSetSamplers(6, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_CLAMP)].GetAddressOf());
+
+
+	Camera& camera = Camera::Instance();
+
+	// 計算
+	{
+		D3D11_VIEWPORT viewport;
+		UINT num_viewports{ 1 };
+		immediate_context->RSGetViewports(&num_viewports, &viewport);
+
+		float aspect_ratio{ viewport.Width / viewport.Height };
+		DirectX::XMMATRIX P{ DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30), aspect_ratio, 0.1f, 1000.0f) };
+
+		DirectX::XMVECTOR eye = camera.GetEye();
+		DirectX::XMVECTOR focus = camera.GetFocus();
+		DirectX::XMVECTOR up{ DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+		DirectX::XMMATRIX V{ DirectX::XMMatrixLookAtLH(eye, focus, up) };
+
+		DirectX::XMStoreFloat4x4(&scene_constant.view_projection, V * P);
+		lights.directional_light_direction = directional_light_direction;
+		// UNIT.16
+		DirectX::XMStoreFloat4(&camera_position, camera.GetEye());
+		scene_constant.camera_position = camera_position;
+
+		// FOG
+		DirectX::XMStoreFloat4x4(&scene_constant.inverse_projection, DirectX::XMMatrixInverse(NULL, P));
+		DirectX::XMStoreFloat4x4(&scene_constant.inv_view_projection, DirectX::XMMatrixInverse(NULL, V * P));
+		scene_constant.time = high_resolution_timer::Instance().time_stamp();
+
+		// ジオメトリシェーダーにてビルボード計算するため各行列を納入
+		DirectX::XMStoreFloat4x4(&scene_constant.view_matrix, V);
+		DirectX::XMStoreFloat4x4(&scene_constant.projection_matrix, P);
+	}
+
+
+	// 定数バッファの更新
+	{
+		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].Get(), 0, 0, &scene_constant, 0, 0);
+		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::SCENE), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::SCENE), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
+		immediate_context->GSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::SCENE), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
+
+		// FOG
+		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].Get(), 0, 0, &fog_constants, 0, 0);
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::FOG)].GetAddressOf());
+
+		// オプション
+		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].Get(), 0, 0, &option_constant, 0, 0);
+		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::OPTION), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::OPTION), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
+		immediate_context->GSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::OPTION), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::OPTION)].GetAddressOf());
+
+		// PBR
+		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].Get(), 0, 0, &pbr, 0, 0);
+		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::PBR), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].GetAddressOf());
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::PBR), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].GetAddressOf());
+		immediate_context->GSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::PBR), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::PBR)].GetAddressOf());
+
+		// 距離フォグ
+		dis_fog_constants fogs{};
+		fogs.fog_color = fog_color;
+		fogs.fog_range = fog_range;
+		immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].Get(), 0, 0, &fogs, 0, 0);
+		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::D_FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].GetAddressOf());
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::D_FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].GetAddressOf());
+		immediate_context->GSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::D_FOG), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::D_FOG)].GetAddressOf());
+
+		// ライト
+		lights.ambient_color = ambient_color;
+		lights.directional_light_direction = directional_light_direction;
+		lights.directional_light_color = directional_light_color;
+		memcpy_s(lights.point_light, sizeof(lights.point_light), point_light, sizeof(point_light));
+		memcpy_s(lights.spot_light, sizeof(lights.spot_light), spot_light, sizeof(spot_light));
+		immediate_context->UpdateSubresource(light_constant_buffer.Get(), 0, 0, &lights, 0, 0);
+		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::LIGHT), 1, light_constant_buffer.GetAddressOf());
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::LIGHT), 1, light_constant_buffer.GetAddressOf());
+		immediate_context->GSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::LIGHT), 1, light_constant_buffer.GetAddressOf());
+
+		// 半球ライト
+		hemisphere_light_constants hemisphere_lights{};
+		hemisphere_lights.sky_color = sky_color;
+		hemisphere_lights.ground_color = ground_color;
+		hemisphere_lights.hemisphere_weight.x = hemisphere_weight;
+		immediate_context->UpdateSubresource(hemisphere_light_constant_buffer.Get(), 0, 0, &hemisphere_lights, 0, 0);
+		immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::HEMISPERE), 1, hemisphere_light_constant_buffer.GetAddressOf());
+		immediate_context->PSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::HEMISPERE), 1, hemisphere_light_constant_buffer.GetAddressOf());
+		immediate_context->GSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::HEMISPERE), 1, hemisphere_light_constant_buffer.GetAddressOf());
+	}
+}
+
+void Lemur::Scene::BaseScene::SetUpDeffered()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+
+	FLOAT color[4] = { 0,0,0,1 };
+	if (enable_deferred)
+	{
+		// レンダーターゲットのビュー配列と深度ステンシルバッファを出力レンダーパイプラインにバインドする。
+		immediate_context->OMSetRenderTargets(G_MAX, renderTargetViewArray->GetAddressOf(), depth_stencil_view);
+
+		// レンダーターゲットバッファーをクリア
+		for (int i = 0; i < G_MAX; i++)
+		{
+			immediate_context->ClearRenderTargetView(renderTargetViewArray[i].Get(), color);
+		}
+	}
+}
+
+void Lemur::Scene::BaseScene::RenderingDeffered()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+
+	if (enable_deferred)
+	{
+		// レンダーターゲットを一枚に
+		immediate_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
+
+		// シェーダー設定
+		// GBuffer設定
+		ID3D11ShaderResourceView* shader_resource_views[G_MAX] =
+		{
+			// GB_BaseColorはスプライト側で指定しているのでそれを考慮
+			shaderResourceViewArray[BASECOLOR].Get(),
+			shaderResourceViewArray[NORMAL].Get(),
+			shaderResourceViewArray[POSITION].Get(),
+			shaderResourceViewArray[MS].Get(),
+			shaderResourceViewArray[EMISSIVE].Get(),
+			shaderResourceViewArray[OCCLUSION].Get(),
+		};
+
+		immediate_context->PSSetShaderResources(1, G_MAX, shader_resource_views);
+
+		// ポストエフェクト開始
+		if (enable_deferred_post)
+		{
+			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context);
+			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
+		}
+
+		// 描画
+		fullscreenQuad->Blit(immediate_context, shader_resource_views, 0, _countof(shader_resource_views), pixel_shaders[static_cast<size_t>(PS::DEFFERED)].Get());
+
+		if (enable_deferred_post)
+		{
+			framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
+			ExePostEffct();
+		}
+
+		ID3D11ShaderResourceView* clear_shader_resource_view[G_MAX]{ nullptr, nullptr, nullptr,nullptr,nullptr,nullptr };
+		immediate_context->PSSetShaderResources(1, G_MAX, clear_shader_resource_view);
+	}
+}
+
 void Lemur::Scene::BaseScene::ExePostEffct()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
@@ -730,6 +741,7 @@ void Lemur::Scene::BaseScene::ExePostEffct()
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->shader_resource_views[0].Get(),
 		bloomer->ShaderResourceView(),
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)]->shader_resource_views[0].Get(),
+		framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->shader_resource_views[0].Get(),
 	};
 	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0, _countof(final_pass_shader_resource_views), pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
 }

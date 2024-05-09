@@ -23,7 +23,7 @@ public:
 public: // 取得・設定関数関連
     // アニメーションデータ取得
     std::vector<Animation>* GetAnimation() { return &fbx_model->animation_clips; };
-
+    const bool GetIsDissolve()& { return is_dissolve; }
     // 現在のアニメーション番号の取得・設定
     const int GetCurrentAnimationIndex()& { return current_animation_index; }
     const int GetCurrentAnimationSecond()& { return current_animation_seconds; }
@@ -51,6 +51,7 @@ public: // アニメーション関数関連
     // アニメーションが再生中かどうか
     bool IsPlayAnimation() const;
 
+    void Dissolve(const float& elapsedTime);
 public: // デバッグ確認用
     bool is_blend_animation = true;     // アニメーションブレンドオンオフ
 
@@ -61,15 +62,17 @@ public:
     Animation::keyframe keyframe = {};
     DirectX::XMFLOAT4 color = { 1,1,1,1 };
 
+    float       animation_blend_time      = 0.0f;     // 現在のブレンドタイマー
 private:
     float       animation_speed           = 1.0f;     // アニメーション再生速度
     float       current_animation_seconds = 0.0f;     // 現在のアニメーション再生時間
 
-    float       animation_blend_time      = 0.0f;     // 現在のブレンドタイマー
     float       animation_blend_seconds   = 0.0f;     // ブレンド時間
 
     int         current_animation_index   = -1;	      // 現在のアニメーション番号
 
     bool        animation_loop_flag       = false;    // アニメーションをループ再生するか
     bool        animation_end_flag        = false;    // アニメーションが終了したか
+
+    bool        is_dissolve               = true;     // 消えてる最中か
 };

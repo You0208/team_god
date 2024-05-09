@@ -52,7 +52,7 @@ Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
     create_vs_from_cso(device, "Shader/sprite_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
     create_ps_from_cso(device, "Shader/sprite_ps.cso", pixel_shader.GetAddressOf());
 
-    load_texture_from_file(device, filename, shader_resource_view.GetAddressOf(), &texture2d_desc);
+    LoadTextureFromFile(device, filename, shader_resource_view.GetAddressOf(), &texture2d_desc);
 }
 
 void Sprite::Render(ID3D11DeviceContext* immediate_context,
@@ -172,6 +172,14 @@ void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 
     // プリミティブの描画
     immediate_context->Draw(4, 0);
+}
+
+void Sprite::RenderCenter(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh)
+{
+    float x = dx - dw * 0.5f;
+    float y = dy - dh * 0.5f;
+    Render(immediate_context, x, y, dw, dh, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
 }
 
 void Sprite::Render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh)

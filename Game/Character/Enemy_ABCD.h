@@ -3,7 +3,7 @@
 class Enemy_A :public Enemy
 {
 public:
-    Enemy_A();
+    Enemy_A(bool is_minor);
     ~Enemy_A()override {};
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
@@ -21,7 +21,7 @@ private:
 class Enemy_B :public Enemy
 {
 public:
-    Enemy_B();
+    Enemy_B(bool is_minor);
     ~Enemy_B()override {};
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
@@ -43,7 +43,7 @@ private:
 class Enemy_C :public Enemy
 {
 public:
-    Enemy_C();
+    Enemy_C(bool is_minor);
     ~Enemy_C()override {};
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;
@@ -97,7 +97,7 @@ private:
 class Enemy_D :public Enemy
 {
 public:
-    Enemy_D();
+    Enemy_D(bool is_minor);
     ~Enemy_D()override {};
     // デバッグプリミティブ描画
     void DrawDebugPrimitive()override;

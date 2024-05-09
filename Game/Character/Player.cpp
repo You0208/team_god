@@ -4,6 +4,8 @@
 #include "SeedManager.h"
 #include "UnitManager.h"
 #include "Game/Stage/StageManager.h"
+#include "Game/Character/UnitManager.h"
+#include "./Lemur/Scene/SceneManager.h"
 
 static Player* instance = nullptr;
 
@@ -12,14 +14,14 @@ Player::Player()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // モデルの初期化
-    model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\scarecrow_Re.fbx");
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\scarecrow_Re.fbx");
 
     // 左右端初期化
     limit = { StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().left_up.x + 0.5f,
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
     // ユニットカテゴリーの初期化
-    unit_category = UnitCategory::J;
+    unit_category = UnitManager::UNIT_INDEX::GreenPumpkin;
 
     //TODO もね　ゲーム画面
     {
@@ -31,12 +33,14 @@ Player::Player()
         sub_pos_z_puls = 0.55f;
         // 案山子の移動速度
         moveSpeed = 5.1f;
+        // 案山子から種の最短距離
+        dis_scarecrow = 1.0f;
     }
     // 案山子の初期位置修正
     sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
     position.z = -sub_pos_z;
     // とりあえずアニメーション
-    model->PlayAnimation(Animation::Idle, true);
+    PlayAnimation(Animation::Idle, true);
 }
 
 Player::~Player()
@@ -52,7 +56,7 @@ void Player::Update(float elapsedTime)
         UpdateVelocity(elapsedTime);
 
         // モデルアニメーション更新
-        model->UpdateAnimation(elapsedTime);
+        UpdateAnimation(elapsedTime);
 
         // 行列更新処理
         UpdateTransform();
@@ -96,6 +100,7 @@ void Player::DrawDebugGUI()
     ImGui::SliderFloat(u8"はじく強さここで変えれます", &flip_speed, 0.1f, 10.0f);
     ImGui::SliderFloat(u8"コントローラー無い時のはじき", &flip_pos_z, 0.0f, 50.0f);
     ImGui::SliderFloat(u8"溜めの最大時間", &max_charge_time, 0.0f, 3.0f);
+    ImGui::SliderFloat(u8"種が落ちる一番手前", &dis_scarecrow, 0.0f, 3.0f);
     
     ImGui::End();
 }
@@ -114,12 +119,12 @@ void Player::Flick(float elapsedTime)
         // 引っ張りモーションへ
         // 横移動できないように
         velocity.x = 0;
-        model->PlayAnimation(Animation::Pull, false);
+        PlayAnimation(Animation::Pull, false);
 
         if (flip_timer > 0.5f)
         {
             //// 投げアニメーションへ
-            model->PlayAnimation(Animation::Throw, false);
+            PlayAnimation(Animation::Throw, false);
             //// 横移動できないように
             //velocity.x = 0;
 
@@ -142,29 +147,24 @@ void Player::Flick(float elapsedTime)
         if (flip_timer > 0)
         {
             // 投げアニメーションへ
-            model->PlayAnimation(Animation::Throw, false);
+            PlayAnimation(Animation::Throw, false);
             // 横移動できないように
             velocity.x = 0;
 
             // はじき距離を算出
-            //max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
             flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
-            //flip_pos_z = std::pow(flip_pos_z, 1.0f / 2.2f);
-            //max_right_stick_y = std::pow(max_right_stick_y, 2.2f);
-            //flip_pos_z = std::pow(max_right_stick_y*18.0f, 2.2f);
-            //flip_pos_z = std::pow(flip_pos_z, 1.0f/2.2f);
             // 初期化
             if (flip_timer > max_charge_time)
             {
-                flip_pos_z = sub_pos_z_puls;
+                flip_pos_z = sub_pos_z_puls-dis_scarecrow;
             }
 
             // スケーリング
-            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
-            flip_pos_z = scaling * (flip_pos_z / scaling);
+            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2- dis_scarecrow;
+            //flip_pos_z = scaling * (flip_pos_z / scaling);
             // 最小値0、最大値scalingにクランプする
             flip_pos_z = std::clamp(flip_pos_z, 0.0f, scaling);
-            flip_pos_z = (scaling + sub_pos_z_puls) - flip_pos_z;
+            flip_pos_z = (scaling + sub_pos_z_puls + dis_scarecrow) - flip_pos_z;
 
             max_right_stick_y = 0;
             right_stick_y = 0;
@@ -229,34 +229,31 @@ void Player::Flick(float elapsedTime)
     }
 
 }
-//
-//void Player::FlickRe(float elapsedFrame)
-//{
-//    GamePad& gamePad = Input::Instance().GetGamePad();
-//
-//    // コントローラーの右スティックY成分
-//    float right_stick_y = gamePad.GetAxisRY() * -1.0f;
-//
-//    // 履歴を更新
-//    UpdateHistory(right_stick_y);
-//}
+
 
 // カテゴリーの変更
 void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+
     // TODO もね　ユニットのボタン設定
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = UnitCategory::A;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = UnitCategory::F;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category = UnitCategory::B;
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category = UnitCategory::C;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Cauliflower;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Shishito;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::GreenPumpkin;
+
+
+    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category =  Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category =  Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y];
 }
 
 // 入力処理
 void Player::InputProcess()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
-    if ((model->GetCurrentAnimationIndex() == Animation::Throw|| model->GetCurrentAnimationIndex() == Animation::Pull) && model->IsPlayAnimation())
+    if ((GetCurrentAnimationIndex() == Animation::Throw|| GetCurrentAnimationIndex() == Animation::Pull) && IsPlayAnimation())
     {
         velocity.x = 0;
     }
@@ -264,9 +261,9 @@ void Player::InputProcess()
     {
         // 左スティックX成分をスピードに変換
         velocity.x = gamePad.GetAxisLX() * moveSpeed;
-        if (velocity.x < 0)  model->PlayAnimation(Animation::Left, false);
-        else if (velocity.x > 0)  model->PlayAnimation(Animation::Right, false);
-        else if (velocity.x == 0)  model->PlayAnimation(Animation::Idle, false);
+        if (velocity.x < 0)  PlayAnimation(Animation::Left, false);
+        else if (velocity.x > 0)  PlayAnimation(Animation::Right, false);
+        else if (velocity.x == 0)  PlayAnimation(Animation::Idle, false);
     }
 }
 

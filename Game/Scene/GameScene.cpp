@@ -41,17 +41,22 @@ void GameScene::Initialize()
 		InitializeLight();
 
 		// スカイマップテクスチャのロード
-		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
 		// SHADOW
 		double_speed_z = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		load_texture_from_file(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
+
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", unit_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
+
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
@@ -60,14 +65,14 @@ void GameScene::Initialize()
 	{
 		// カメラ
 		Camera& camera = Camera::Instance();
-		// カメラ調整
+		//TODO もね カメラ調整
 		camera_range = 30.0f;
-
+		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 
 		StageManager& stage_manager = StageManager::Instance();
 		stage_manager.SetStageLevel(4);
 
-		//TODO もね 制限時間の初期化、ステージ
+		//TODO もね 制限時間の初期化
 		switch (StageManager::Instance().GetStageLevel())
 		{
 		case 0:// レベル１
@@ -115,6 +120,7 @@ void GameScene::Initialize()
 		UnitManager::Instance().Initialize();
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
+	
 	}
 
 	// デバッグ
@@ -184,6 +190,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		camera.Update(elapsedTime);
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
+		camera.SetEyeYOffset(8.0f);
+		camera.SetAngle(camera_angle);
 	}
 
 	// ライトの更新
@@ -222,7 +230,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// デバッグ
 	{
-		//rect = CalcRotateRect(rect.center, rect.width, angle);
+
 	}
 
 	// Imgui
@@ -280,7 +288,7 @@ void GameScene::Render(float elapsedTime)
 
 	//3D描画
 	{
-		const float scale = 0.01f;
+		const float scale = 0.015f;
 		if (enable_deferred)
 		{
 			// プレイヤー描画
@@ -290,7 +298,7 @@ void GameScene::Render(float elapsedTime)
 			//ステージ描画
 			StageManager::Instance().Render(1.0f, fbx_gbuffer_ps.GetAddressOf());
 			// ユニット描画
-			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
+			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			// 種描画
@@ -299,40 +307,24 @@ void GameScene::Render(float elapsedTime)
 		else
 		{
 			// プレイヤー描画
-			player->Render(scale, chara_ps.GetAddressOf());
+			player->Render(scale, enemy_ps.GetAddressOf());
+
 			// 柵描画
-			fence->Render(scale, chara_ps.GetAddressOf());
-			//ステージ描画
-			StageManager::Instance().Render(1.0f, chara_ps.GetAddressOf());
+			fence->Render(scale, Try.GetAddressOf());
+
+			// ステージ描画
+			StageManager::Instance().Render(1.0f, Try.GetAddressOf());
 			// ユニット描画
-			UnitManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			UnitManager::Instance().Render(scale, unit_ps.Get());
 			// エネミー描画
-			EnemyManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			EnemyManager::Instance().Render(scale, enemy_ps.GetAddressOf());
 			// 種描画
-			SeedManager::Instance().Render(scale, chara_ps.GetAddressOf());
+			SeedManager::Instance().Render(0.1f, Try.GetAddressOf());
 			//test_model->Render(0.01f, Try.Get());
 			//test_model_2->Render(0.1f, Try.Get());
 			//test_model->DrawDebug("Test");
 			//test_model_2->DrawDebug("Test");
 		}
-	}
-
-	//TODO debug
-	{
-		DirectX::XMFLOAT4X4 view;
-		DirectX::XMFLOAT4X4 projection;
-		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
-		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
-		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
-		EffectManager::Instance().Render(view, projection);
-
-		//DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-		//debug_renderer->DrawBox({ rect.center.x,0,rect.center.y }, { 0,DirectX::XMConvertToRadians(angle),0 }, { rect.width.x * 0.5f,0.5f,rect.width.y * 0.5f }, { 1,0,1,1 });
-		//debug_renderer->DrawSphere({ rect.right_down.x,0.5f, rect.right_down.y }, 0.1f, { 0,0,1,1 });
-		//debug_renderer->DrawSphere({ rect.left_up.x,0.5f, rect.left_up.y }, 0.1f, { 0,1,0,1 });
-
-		//if (Collision::IntersectRotateRectVsCircle(rect, c_p, c_r,angle))debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 1,1,0,1 });
-		//else debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 0,0,1,1 });
 	}
 
 	// ステートの再設定
@@ -348,6 +340,27 @@ void GameScene::Render(float elapsedTime)
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
 		ExePostEffct();
 	}
+
+	//TODO debug
+	{
+		DirectX::XMFLOAT4X4 view;
+		DirectX::XMFLOAT4X4 projection;
+		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
+
+		// エフェクト再生
+		EffectManager::Instance().Render(view, projection);
+
+		//DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+		//debug_renderer->DrawBox({ rect.center.x,0,rect.center.y }, { 0,DirectX::XMConvertToRadians(angle),0 }, { rect.width.x * 0.5f,0.5f,rect.width.y * 0.5f }, { 1,0,1,1 });
+		//debug_renderer->DrawSphere({ rect.right_down.x,0.5f, rect.right_down.y }, 0.1f, { 0,0,1,1 });
+		//debug_renderer->DrawSphere({ rect.left_up.x,0.5f, rect.left_up.y }, 0.1f, { 0,1,0,1 });
+
+		//if (Collision::IntersectRotateRectVsCircle(rect, c_p, c_r,angle))debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 1,1,0,1 });
+		//else debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 0,0,1,1 });
+	}
+
 }
 
 void GameScene::DebugImgui()
@@ -369,4 +382,18 @@ void GameScene::DebugImgui()
 	BaseScene::DebugImgui();
 	Camera::Instance().DrawDebug();
 
+}
+
+void GameScene::InitializeLight()
+{
+	point_light[0].position.x = 0;
+	point_light[0].position.y = 50;
+	point_light[0].range = 1000;
+	point_light[0].color = { 1, 1, 1, 1 };
+	point_light[1].position.x = 0;
+	point_light[1].position.y = 10;
+	point_light[1].range = 1000;
+	point_light[1].color = { 1, 1, 1, 1 };
+	ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
+	ZeroMemory(&spot_light[4], sizeof(spotLights) * 4);
 }

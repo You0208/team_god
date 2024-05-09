@@ -3,6 +3,7 @@
 #define NOMINMAX
 #include <windows.h>
 #include <cmath>
+#include <d3d11.h>
 
 // イージング関数
 struct Easing

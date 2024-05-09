@@ -2,6 +2,8 @@
 #include "Lemur/Object/Character.h"
 #include "Lemur/Graphics/Shader.h"
 #include "../Stage/Fence.h"
+#include "Lemur/Effekseer/Effect.h"
+
 
 enum EnemyType
 {
@@ -12,7 +14,9 @@ enum EnemyType
     A_2,
     B_2,
     C_2,
-    D_2
+    D_2,
+    Summon,
+    Boss
 };
 
 enum Shaft
@@ -31,13 +35,28 @@ struct EnemyScript
     DirectX::XMFLOAT3 pos;// スポーン位置
 };
 
-
-
 class Enemy :public Character
 {
 public:
     Enemy() {}
-    ~Enemy() {}
+    ~Enemy() {
+        // エフェクト終了
+        if (attack_effect != nullptr)
+        {
+            delete attack_effect;
+            attack_effect = nullptr;
+        }
+        if (hit_effect != nullptr)
+        {
+            delete hit_effect;
+            hit_effect = nullptr;
+        }
+        if (death_effect != nullptr)
+        {
+            delete death_effect;
+            death_effect = nullptr;
+        }      
+    }
 
     // 更新処理
     virtual void Update(float elapsedTime);
@@ -76,6 +95,13 @@ public:
     void SetDis(float dis_) { dis = dis_; }
     void SetSpeedPowerY(float speed_power_Y_) { speed_power_Y = speed_power_Y_; }
 
+    void SetAttackEffectSize(float attack_effect_size_) { attack_effect_size = attack_effect_size_; }
+    void SetDeathEffectSize(float death_effect_size_) { death_effect_size = death_effect_size_; }
+    void SetHitEffectSize(float hit_effect_size_) { hit_effect_size = hit_effect_size_; }
+
+    // ダメージを与える
+    bool ApplyDamage(int damage);
+
 protected:
     enum Animation
     {
@@ -90,11 +116,19 @@ protected:
         Death
     };
 
-    State   state               = State::Move;  // ステート
+    State       state               = State::Move;      // ステート
 
-    int     shaft               = Shaft::Side;  // 敵の出てくる軸
-    bool    is_hit_unit         = false;        // プレイヤーに当たったか    
-    float   move_timer_max      = 0.0f;         // 移動間隔
-    float   dis                 = 0.0f;         // 進む距離
-    float   speed_power_Y     = 0.0f;         // 斜めに進むときのスピード
+    Effect*     attack_effect       = nullptr;          // 攻撃エフェクト
+    Effect*     death_effect        = nullptr;          // 死亡エフェクト
+    Effect*     hit_effect          = nullptr;          // 被弾エフェクト
+
+    float       attack_effect_size  = 0.0f;             // 攻撃エフェクトサイズ
+    float       death_effect_size   = 0.0f;             // 死亡エフェクトサイズ
+    float       hit_effect_size     = 0.0f;             // 設置エフェクトサイズ
+
+    int         shaft               = Shaft::Side;      // 敵の出てくる軸
+    bool        is_hit_unit         = false;            // プレイヤーに当たったか    
+    float       move_timer_max      = 0.0f;             // 移動間隔
+    float       dis                 = 0.0f;             // 進む距離
+    float       speed_power_Y       = 0.0f;             // 斜めに進むときのスピード
 };

@@ -14,6 +14,8 @@
 #include "../Input/Input.h"
 #include "../imgui/ImGuiCtrl.h"
 
+#include "../Graphics/ParticleSystem.h"
+
 namespace Lemur::Scene
 {
     // ベースシーン
@@ -55,7 +57,7 @@ namespace Lemur::Scene
         void RenderingDeffered();
 
         // ライトのセット
-        void InitializeLight();
+        virtual void InitializeLight();
 
         // バッファーの初期化
         void InitializeFramebuffer();
@@ -94,7 +96,7 @@ namespace Lemur::Scene
         enum class CONSTANT_BUFFER_R { NONE, SCENE, FOG, OPTION, PBR, D_FOG, LIGHT, HEMISPERE/*register用*/ };
 
         std::unique_ptr<Framebuffer> framebuffers[8];
-        enum class FRAME_BUFFER { SCENE, FOG, DEPTH };
+        enum class FRAME_BUFFER { SCENE, FOG, DEPTH,TEX };
 
         // MASK
         struct option_constants {
@@ -114,8 +116,10 @@ namespace Lemur::Scene
             DirectX::XMFLOAT4X4 view_projection;// ビュー行列
             DirectX::XMFLOAT4 camera_position;// カメラの位置
             DirectX::XMFLOAT4X4 inverse_projection;// 逆行列
+
             float time;// 時間
             float pads[3];
+
             //TODO ここら辺ちゃんと調べる        
             DirectX::XMFLOAT4X4 inv_view_projection;// 逆ビュー行列
 
@@ -123,8 +127,12 @@ namespace Lemur::Scene
             DirectX::XMFLOAT4X4 light_view_projection;// 光のビュー行列
             float shadow_depth_bias;
             float pads2[3];
+
+            // ジオメトリシェーダーにてビルボード計算するため
+            DirectX::XMFLOAT4X4 view_matrix;
+            DirectX::XMFLOAT4X4 projection_matrix;
         };
-        scene_constants scene_constants;
+        scene_constants scene_constant;
 
         // FOG
         struct fog_constants
@@ -216,6 +224,7 @@ namespace Lemur::Scene
         // カメラ
         DirectX::XMFLOAT4 camera_position{ 0.0f, 0.0f, 0.0f, 1.0f };
         DirectX::XMFLOAT3 camera_target{ 0.0f, 0.0f, 0.0f };
+        DirectX::XMFLOAT3 camera_angle{ 0.0f, 0.0f, 0.0f };
         float camera_range = 12.0f;
 
         // ディファードレンダリング
@@ -223,6 +232,12 @@ namespace Lemur::Scene
 
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceViewArray[G_MAX];
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetViewArray[G_MAX];
+
+
+        // パーティクルシステム
+        std::unique_ptr<ParticleSystem> particle_system;
+        // 爆発アニメーション付きパーティクルシステム
+        std::unique_ptr<ParticleSystem> particle_bomb;
 
 
         // bloom
@@ -242,6 +257,22 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11PixelShader> Try;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
+
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
+
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_ps;
+
+        // SHADOW
+        const uint32_t shadowmap_width = 2048;
+        const uint32_t shadowmap_height = 2048;
+        std::unique_ptr<ShadowMap> double_speed_z;
+        DirectX::XMFLOAT4 light_view_focus{ 0, 0, 0, 1 };
+        float light_view_distance{ 10.0f };
+        float light_view_size{ 12.0f };
+        float light_view_near_z{ 2.0f };
+        float light_view_far_z{ 18.0f };
+
 
         bool enable_shadow = true;
         bool enable_skymap = false;

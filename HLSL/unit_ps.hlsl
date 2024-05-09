@@ -37,17 +37,22 @@ float4 main(VS_OUT pin) : SV_TARGET
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     color.rgb = pow(color.rgb, GAMMA);
     float alpha = color.a;
+
     // 金属度
-    float metallic = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    float metallic = metalTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     
     // 滑らかさ
-    float smoothness = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).a;
+    float smoothness = SmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    
+    // 不透明度
+    float opacity = Opacity.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
     
     // 粗さ
-    float roughness = 1.0f - smoothness;
+    float roughness = smoothness;
+    
     // マスク
     float mask = noise_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord).x;
     
@@ -94,7 +99,7 @@ float4 main(VS_OUT pin) : SV_TARGET
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
-        float3 pointDiffuse = 0, pointSpecular = 0;       
+        float3 pointDiffuse = 0, pointSpecular = 0;
         PointLight(pin, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
         
         // 最終光に足し合わせる 
@@ -134,6 +139,7 @@ float4 main(VS_OUT pin) : SV_TARGET
         clip(color.a - 0.01f);
     }
     
+    
     finalLig = pow(finalLig, 1.0f / GAMMA);
-    return float4(finalLig, color.a);
+    return float4(finalLig, opacity);
 };

@@ -25,7 +25,7 @@ public:
     void Update(float elapsedTime);
 
     // 描画処理
-    void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
+    void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
 
     // ユニット登録
     void Register(Unit* unit);
@@ -47,6 +47,20 @@ public:
 
     // Imgui
     void DebugImGui();
+
+public:
+
+    enum UNIT_INDEX
+    {
+        Chili,
+        Shishito,
+        OrangePumpkin,
+        GreenPumpkin,
+        Broccoli,
+        Cauliflower,
+        J
+    };
+
 private:
     std::vector<Unit*> units;
     std::set<Unit*>    removes;
@@ -55,65 +69,58 @@ private:
     //-----この下デバッグ用↓--------------------------------------------
     struct UnitStatus
     {
-        int attack_power;//攻撃力
-        float attack_interval;//攻撃間隔
-        int attack_times; // 攻撃回数
+        // 基本ステータス
+        struct Basic
+        {
+            float               attack_interval;    //攻撃間隔
+            int                 attack_power;       //攻撃力
+            int                 attack_times;       // 攻撃回数
+            float               attack_effect_size; // 攻撃エフェクトのサイズ
+            float               death_effect_size;  // 死亡エフェクトのサイズ
+            float               set_effect_size;    // 設置エフェクトのサイズ
+        };
+        Basic basic;
+
+        // 各ステータス
+        float               attack_radius;      // 攻撃半径
+        float               timer_max;          // 存在時間
+        int                 streng_width;       // バフ量
+        float               t_height;           // 三角形高さ
+        float               t_base;             // 三角形底辺長
+        float               attack_width;       //　攻撃幅
+        float               radius_in;         // ドーナツ内側半径
     };
+
     void UnitImGui(UnitStatus& status) {
-        ImGui::SliderInt(u8"攻撃回数", &status.attack_times, 1, 10);
-        ImGui::SliderInt(u8"攻撃力", &status.attack_power, 0, 10);
-        ImGui::SliderFloat(u8"攻撃間隔", &status.attack_interval, 0.0f, 10.0f);
+        ImGui::SliderInt(u8"攻撃回数", &status.basic.attack_times, 1, 10);
+        ImGui::SliderInt(u8"攻撃力", &status.basic.attack_power, 0, 10);
+        ImGui::SliderFloat(u8"攻撃間隔", &status.basic.attack_interval, 0.0f, 10.0f);
+        ImGui::SliderFloat(u8"攻撃エフェクトのサイズ", &status.basic.attack_effect_size, 0.0f, 2.0f);
+        ImGui::SliderFloat(u8"死亡エフェクトのサイズ", &status.basic.death_effect_size, 0.0f, 2.0f);
+        ImGui::SliderFloat(u8"設置エフェクトのサイズ", &status.basic.set_effect_size, 0.0f, 2.0f);
     }
 
-    // Unit_A
-    UnitStatus unit_A;
-    float radius_A;  // 半径
+    void InitializeBasic(
+        UnitStatus& unit,
+        float attack_interval,    //攻撃間隔
+        int attack_power,       //攻撃力
+        int attack_times,       // 攻撃回数
+        float attack_effect_size, // 攻撃エフェクトのサイズ
+        float death_effect_size,  // 死亡エフェクトのサイズ
+        float set_effect_size    // 設置エフェクトのサイズ
+        )
+    {
+        unit = {};
+        unit.basic.attack_interval = attack_interval;
+        unit.basic.attack_power = attack_power;
+        unit.basic.attack_times = attack_times;
+        unit.basic.attack_effect_size = attack_effect_size;
+        unit.basic.death_effect_size = death_effect_size;
+        unit.basic.set_effect_size = set_effect_size;
+    }
 
-    // Unit_B
-    UnitStatus unit_B;
-    float t_height_B;
-    float t_base_B;
-
-    // Unit_C
-    UnitStatus unit_C;
-    float t_height_C;
-    float t_base_C;
-
-    // Unit_D
-    float radius_D;  // 半径
-    float timer_max_D;
-    int streng_width_D;
-
-    // Unit_E
-    UnitStatus unit_E;
-    float attack_width_E;
-
-    // Unit_F
-    UnitStatus unit_F;
-    float attack_width_F;
-
-    // Unit_H
-    UnitStatus unit_H;
-    DirectX::XMFLOAT2 attack_width_H;
-    float rect_angle_H;
-
-    // Unit_I
-    UnitStatus unit_I;
-    DirectX::XMFLOAT2 attack_width_I;
-    float rect_angle_I;
-
-    // Unit_J
-    UnitStatus unit_J;
-    float radius_in_J;  // 半径
-    float radius_out_J;  // 半径
+    UnitStatus unit_status[7];
+  
 public:
-    void SetUpUnit_A(Unit* unit);
-    void SetUpUnit_B(Unit* unit);
-    void SetUpUnit_C(Unit* unit);
-    void SetUpUnit_D(Unit* unit);
-    void SetUpUnit_E(Unit* unit);
-    void SetUpUnit_F(Unit* unit);
-    void SetUpUnit_H(Unit* unit);
-    void SetUpUnit_I(Unit* unit);
-    void SetUpUnit_J(Unit* unit);
+    void SetUpUnit(Unit* unit, int unit_index);
 };

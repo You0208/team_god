@@ -3,12 +3,31 @@
 #include "Lemur/Object/Character.h"
 #include "Lemur/Graphics/Shader.h"
 #include "Lemur/Math/MathHelper.h"
+#include "Lemur/Effekseer/Effect.h"
+
 
 class Unit :public Character
 {
 public:
     Unit() {}
-    ~Unit() {}
+    ~Unit() {
+        // エフェクト終了
+        if (attack_effect != nullptr)
+        {
+            delete attack_effect;
+            attack_effect = nullptr;
+        }
+        if (set_effect != nullptr)
+        {
+            delete set_effect;
+            set_effect = nullptr;
+        }
+        if (death_effect != nullptr)
+        {
+            delete death_effect;
+            death_effect = nullptr;
+        }    
+    }
 
     // 更新処理
     virtual void Update(float elapsed_time);
@@ -34,6 +53,9 @@ public:
     Triangle    GetTriangle2() { return triangle_2; }
     Rect        GetRect() { return unit_back; }
     Rect        GetAttackRect() { return attack_rect; }
+    float       GetAttackRadiusIn() { return attack_radius_in; }
+    Effect*     GetSetEffect() { return set_effect; };
+    float       GetSetEffectSize() { return set_effect_size; }
 
     // Setter
     void SetCategory(int category_) { category = category_; }
@@ -52,6 +74,11 @@ public:
     void SetTBase(float t_base_) { t_base = t_base_; }
     void SetRectAngle(float rect_angle_) { rect_angle = rect_angle_; }
     void SetAttackRadiusIn(float attack_radius_in_) { attack_radius_in = attack_radius_in_; }
+
+    void SetAttackEffectSize(float attack_effect_size_) { attack_effect_size = attack_effect_size_; }
+    void SetDeathEffectSize(float death_effect_size_) { death_effect_size = death_effect_size_; }
+    void SetSetEffectSize(float set_effect_size_) { set_effect_size = set_effect_size_; }
+
 
 protected:
     // 死亡ステートへ遷移
@@ -108,4 +135,13 @@ protected:
     int         streng_width                = 0.0f;             // 強化幅
     float       attack_width                = 0.0f;             // 四角の幅
     float       attack_radius_in            = 0.0f;             // ドーナツ型用の中身円半径
+
+    Effekseer::Handle attack_effect_handle  = 0;
+    Effect*     attack_effect               = nullptr;          // 攻撃エフェクト
+    Effect*     death_effect                = nullptr;          // 死亡エフェクト
+    Effect*     set_effect                  = nullptr;          // 設置エフェクト
+
+    float       attack_effect_size          = 0.0f;             // 攻撃エフェクトサイズ
+    float       death_effect_size           = 0.0f;             // 死亡エフェクトサイズ
+    float       set_effect_size             = 0.0f;             // 設置エフェクトサイズ
 };
