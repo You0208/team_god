@@ -9,6 +9,7 @@
 #include "../Scene/DemoScene.h"
 #include "./Game/Scene/TitleScene.h"
 #include "./Game/Scene/GameScene.h"
+#include "./Game/Scene/OverScene.h"
 #include "./Game/Scene/FormationScene.h"
 
 
@@ -44,7 +45,7 @@ bool Framework::Initialize()
 	}
 
 	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
 
 	return true;
 }

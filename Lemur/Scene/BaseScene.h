@@ -69,6 +69,108 @@ namespace Lemur::Scene
         void ExePostEffct();
 
         void LightUpdate();
+
+    protected:// イージング
+
+        struct EasingFunction
+        {
+        public:
+            float scale;
+            void EasingScale(float elapsed_time);
+            void CallScaleEasing(float target_scale_, float start_scale_, float t = 0.2f)
+            {
+                timer = 0.0f;
+                time_max = t;
+                target_scale = target_scale_;
+                start_scale = start_scale_;
+                is_easing = true;
+                is_continue_scale = false;
+            }
+
+            void CallScaleContinue(float continue_min_,float continue_max_, float start_scale_,float t = 0.5f)
+            {
+                timer = 0.0f;
+                continue_time_max = t;
+                continue_max = continue_max_;
+                continue_min = continue_min_;
+                continue_start_scale = start_scale_;
+
+                if (start_scale >= continue_min)
+                {
+                    continue_state = 1;
+                    continue_target_scale = continue_max;
+                }
+                else if (start_scale < continue_max)
+                {
+                    continue_state = 0;
+                    continue_target_scale = continue_min;
+                }
+
+                is_continue_scale = true;
+            }
+            void ContinueEasing(float elapsed_time);
+
+        private:
+            bool is_easing = false;
+
+            float timer = 0.0f;
+            float time_max = 0.2f;
+            float target_scale = 0.0f;
+            float start_scale = 0.0f;
+
+            bool is_continue_scale = false;
+            float continue_time_max = 0.2f;
+            float continue_max = 0.0f;
+            float continue_min = 0.0f;
+            float continue_target_scale = 0.0f;
+            float continue_start_scale = 0.0f;
+
+            int continue_state = 0;// 0:Up,1:Down
+        };
+
+#if 0
+
+        bool is_down_scale_easing = false;
+        bool is_up_scale_easing = false;
+        //float timer = 0.0f;
+        //float time_max = 0.2f;
+        //float target_scale = 0.0f;
+        //float start_scale = 0.0f;
+
+        void DownScaleEasing(float& scale, float& easing_timer, float easing_target_scale, float easing_start_scale, float easing_time_max = 0.2f);
+        void UpScaleEasing(float& scale, float& easing_timer, float easing_target_scale, float easing_start_scale, float easing_time_max = 0.2f);
+        void CallUpScaleEasing(float& easing_timer, float& start_scale, float scale)
+        {
+            easing_timer = 0.0f;
+            start_scale = scale;
+            is_up_scale_easing = true;
+        }
+        void CallDownScaleEasing(float& easing_timer, float& start_scale, float scale)
+        {
+            easing_timer = 0.0f;
+            start_scale = scale;
+            is_up_scale_easing = true;
+        }
+
+        bool is_down_scale_easing = false;
+        bool is_up_scale_easing = false;
+        float easing_timer = 0.0f;
+        float easing_time_max = 0.2f;
+        float easing_target_scale = 0.0f;
+        float easing_start_scale = 0.0f;
+
+        void DownScaleEasing(float& scale);
+        void UpScaleEasing(float& scale);
+        void CallScaleEasing(float target_scale, float start_scale, float t = 0.2f, bool down)
+        {
+            easing_timer = 0.0f;
+            easing_time_max = t;
+            easing_target_scale = target_scale;
+            easing_start_scale = start_scale;
+            if (down)is_down_scale_easing = true;
+            if (!down)is_down_scale_easing = true;
+        }
+#endif
     protected:
         // サンプラーステート
         enum class SAMPLER_STATE { POINT, LINEAR, ANISOTROPIC, LINEAR_BORDER_BLACK, LINEAR_BORDER_WHITE, COMPARISON_LINEAR_BORDER_WHITE, LINEAR_CLAMP };
@@ -281,7 +383,7 @@ namespace Lemur::Scene
 
         bool enable_deferred = false;
         bool enable_deferred_post = false;
-        bool enable_post_effect = false;
+        bool enable_post_effect = true;
     private:
         bool ready = false;
     };

@@ -5,6 +5,7 @@
 #include "Unit_ABC.h"
 #include "Unit_DEF.h"
 #include "Unit_HIJ.h"
+#include "../Stage/Fence.h"
 
 #include <random>
 
@@ -17,9 +18,13 @@ Seed::Seed()
     scaleFactor = 0.1f;
     radius = 0.3f;
     height = 0.3f;
+    rotation.y = DirectX::XMConvertToRadians(90.0f);
+
     //TODO もね　種エフェクトのサイズ
     effect_size = 0.1f;
-    PlayAnimation(0, false);
+
+    // 回す
+    PlayAnimation(Animation_Index::Throw, true);
 }
 
 Seed::~Seed()
@@ -130,6 +135,8 @@ void Seed::throwDirection()
     {
         velocity.z = 0;
         is_direction = false;
+
+        PlayAnimation(Animation_Index::Idle, true);
     }
     else
     {
@@ -141,6 +148,7 @@ void Seed::DisDirection()
 {
     if (position.z >= distination_position.z)
     {
+        PlayAnimation(Animation_Index::Jump, true);
         error_effect->Play(position, effect_size);
         velocity.z = 0;
         death = true;
@@ -219,6 +227,17 @@ void Seed::DecisionPos()
 
         }
     }
+
+    // 種が柵の外側にでたら消す
+    if (Fence::Instance().GetLeftRect().right_down.x + seed_fence_dis >= outPosition.x||// 左
+        Fence::Instance().GetRightRect().left_up.x - seed_fence_dis <= outPosition.x|| // 右
+        Fence::Instance().GetBackRect().right_down.y - seed_fence_dis <= outPosition.y ||// 奥
+        Fence::Instance().GetFrontRect().left_up.y + seed_fence_dis >= outPosition.y // 手前
+        )
+    {
+        error_effect->Play(position, effect_size);
+        death = true;// 種を破壊
+    }
     // 当たらなかったら
     if (overlap_num == 0)
     {
@@ -232,10 +251,13 @@ void Seed::DecisionPos()
         position.z = outPosition.y;
         decision_pos = true;// 位置決定フラグをON
         outPosition = {};
+
     }
     else if (overlap_num >= 2)// 重なった回数が２回以上なら
     {
         outPosition = {};
+
+        error_effect->Play(position, effect_size);
         death = true;// 種を破壊
     }
 }

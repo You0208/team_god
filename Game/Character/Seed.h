@@ -50,6 +50,14 @@ public:
 
     Effect* error_effect = nullptr;
 private:
+    enum Animation_Index
+    {
+        Stop,
+        Idle,
+        Jump,
+        Throw
+    };
+
     float               timer                   = 0.0f;            // 種が配置されてからの時間
     int                 number                  = 0;               // 種番号
     int                 category                = 0;               // 種の種類
@@ -63,6 +71,8 @@ private:
     bool                is_dis_direction        = false;           // 種の消える演出
     float               throw_speed             = 20.0f;           // 種の速度
     float               effect_size             = 0.0f;            // エフェクトのサイズ
+
+    float               seed_fence_dis          = 0.5f;            // 種と柵の距離の許容範囲
 };
 
 

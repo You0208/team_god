@@ -185,6 +185,8 @@ private:
     std::shared_ptr<FbxModelManager> model = nullptr;                           // FBXモデル
     std::shared_ptr<GltfModelManager> gltf_model = nullptr;                     // Gltfモデル
 
+    public:
+        //std::shared_ptr<FbxModelManager> collision_model = nullptr;                           // FBXモデル
 protected:
     //----------モデル関連------------------------------------------------
     Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    = nullptr;                     // ピクセルシェーダー

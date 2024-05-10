@@ -144,4 +144,5 @@ protected:
     float       attack_effect_size          = 0.0f;             // 攻撃エフェクトサイズ
     float       death_effect_size           = 0.0f;             // 死亡エフェクトサイズ
     float       set_effect_size             = 0.0f;             // 設置エフェクトサイズ
+
 };

@@ -20,6 +20,8 @@ public:
     // 更新処理
     void Update(float elapsedTime);
 
+    void PowerUpEnemy(int add_power);
+
     // 描画処理
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader);
 
@@ -45,4 +47,6 @@ private:
     std::vector<Enemy*> enemies = {};
     std::set<Enemy*>    removes = {};
     DirectX::XMFLOAT2   shaft_pos = {};    // 各軸の位置
+
+    int add_attack = 2;
 };

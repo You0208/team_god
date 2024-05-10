@@ -62,7 +62,7 @@ private:// ゲーム
 
     float   timer = 0.0f;
     float   time_limit;
-
+    bool    time_up = false;
 
     // コントローラー用
     float s_l;

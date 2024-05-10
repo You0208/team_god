@@ -28,11 +28,11 @@
 #include "./Lemur/Math/Vector.h"
 #include "./Lemur/Math/MathHelper.h"
 
-class ResultScene :public Lemur::Scene::BaseScene
+class OverScene :public Lemur::Scene::BaseScene
 {
 public:
-    ResultScene() {}
-    ~ResultScene() override {}
+    OverScene() {}
+    ~OverScene() override {}
 
     // 初期化
     void Initialize()override;
@@ -48,17 +48,16 @@ public:
 
     void DebugImgui()override;
 private:
-    std::shared_ptr<Sprite> result;
+    std::shared_ptr<Sprite> game_over_back;
+    std::shared_ptr<Sprite> continue_back;
+    std::shared_ptr<Sprite> game_over_text;
+    std::shared_ptr<Sprite> again_text;
+    std::shared_ptr<Sprite> stageselect_text;
 
-    // MASK
-    struct option_constants {
-        DirectX::XMFLOAT4 parameters{ 1.0f,0.0f,0.0f,0.0f }; // x : ディゾルブ適応量、yzw : 空き
-    };
-    float dissolve_value{ 0.0f };
-    option_constants option_constant;
-    Microsoft::WRL::ComPtr<ID3D11Buffer> option_constant_buffer;
+    int select_num = 0;
 
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
+    EasingFunction select;
+    EasingFunction again;
 
-
+    bool once_only = true;
 };

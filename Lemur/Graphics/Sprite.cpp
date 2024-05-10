@@ -220,7 +220,7 @@ void Sprite::Textout(ID3D11DeviceContext* immediate_context, int n, float x, flo
     }
 }
 
-void Sprite::Animation(ID3D11DeviceContext* immediate_context, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4 color, float angle, DirectX::XMFLOAT2 texsize)
+void Sprite::Animation(ID3D11DeviceContext* immediate_context, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4 color, float angle, DirectX::XMFLOAT2 texsize, int last, bool stop)
 {
     float sw = static_cast<float>(texture2d_desc.Width);
     float sh = static_cast<float>(texture2d_desc.Height);
@@ -230,11 +230,19 @@ void Sprite::Animation(ID3D11DeviceContext* immediate_context, DirectX::XMFLOAT2
 
     {
       interval<10>::run([&] {
-          if (anime_x < anime_x_max) anime_x++;
+          if (anime_x < anime_x_max)
+          {
+              if (anime_y != anime_y_max)  anime_x++;
+              else if (anime_y == anime_y_max && anime_x < last) anime_x++;
+          }
           else
           {
               if (anime_y < anime_y_max)anime_y++;
-              else { anime_y = 0; }
+              else if(!stop){ anime_y = 0; }
+              else if (stop)
+              {
+
+              }
               anime_x = 0;
           }
           });

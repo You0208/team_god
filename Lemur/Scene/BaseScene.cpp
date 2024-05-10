@@ -1,5 +1,6 @@
 #include "BaseScene.h"
 #include "../Graphics/Camera.h"
+#include "../Math/Easing.h"
 
 void Lemur::Scene::BaseScene::DebugImgui()
 {
@@ -774,5 +775,121 @@ void Lemur::Scene::BaseScene::LightUpdate()
 		spot_light[i].direction.x = spDirection.x;
 		spot_light[i].direction.y = spDirection.y;
 		spot_light[i].direction.z = spDirection.z;
+	}
+}
+
+
+void Lemur::Scene::BaseScene::EasingFunction::EasingScale(float elapsed_time)
+{
+	if (is_easing)
+	{
+		if (timer > time_max)
+		{
+			timer = time_max;
+			scale = target_scale;
+			is_easing = false;
+			timer = 0.0f;
+			return;
+		}
+
+		if (target_scale >= start_scale)
+		{
+			if (scale >= target_scale) {
+				scale = target_scale;
+				is_easing = false;
+				timer = 0.0f;
+				return;
+			}
+		}
+		else if (target_scale >= start_scale)
+		{
+			if (scale <= target_scale) {
+				scale = target_scale;
+				is_easing = false;
+				timer = 0.0f;
+				return;
+			}
+		}
+
+		timer += elapsed_time;
+
+		scale = {
+		Easing::InSine(timer, time_max, target_scale, start_scale)
+		};
+	}
+}
+
+void Lemur::Scene::BaseScene::EasingFunction::ContinueEasing(float elapsed_time)
+{
+	if (!is_easing && is_continue_scale)
+	{
+		switch (continue_state)
+		{
+		case 0:// Up
+			// 時間切れ
+			if (timer > continue_time_max)
+			{
+				timer = continue_time_max;// 超過した時間を戻す
+				scale = continue_target_scale;// スケールを調整
+				timer = 0.0f;// タイマーを初期化
+
+				// ダウンスケールの準備
+				continue_start_scale = scale;// スタートスケールの設定
+				continue_target_scale = continue_min;// ターゲットスケールの設定
+				continue_state = 1;// ステートを次へ
+				break;
+			}
+			if (scale >= continue_target_scale)
+			{
+				scale = continue_target_scale;// スケールを調整
+				timer = 0.0f;// タイマーを初期化
+
+				// ダウンスケールの準備
+				continue_start_scale = scale;// スタートスケールの設定
+				continue_target_scale = continue_min;// ターゲットスケールの設定
+				continue_state = 1;// ステートを次へ
+				break;
+			}
+
+			timer += elapsed_time;
+
+			scale = {
+			Easing::OutSine(timer, continue_time_max, continue_target_scale, continue_start_scale)
+			};
+
+			break;
+
+		case 1:// Down
+			if (timer > continue_time_max)
+			{
+				timer = continue_time_max;
+				scale = continue_target_scale;
+				timer = 0.0f;
+
+				// アップスケールの準備
+				continue_start_scale = scale;// スタートスケールの設定
+				continue_target_scale = continue_max;// ターゲットスケールの設定
+				continue_state = 0;// ステートを前へ
+				break;
+			}
+
+			if (scale <= continue_target_scale) {
+				scale = continue_target_scale;// スケールを調整
+				timer = 0.0f;// タイマーを初期化
+
+				// アップスケールの準備
+				continue_start_scale = scale;// スタートスケールの設定
+				continue_target_scale = continue_max;// ターゲットスケールの設定
+				continue_state = 0;// ステートを前へ
+				break;
+			}
+
+			timer += high_resolution_timer::Instance().time_interval();
+
+			scale = {
+			Easing::InSine(timer, continue_time_max, continue_target_scale, continue_start_scale)
+			};
+			break;
+		}
 	}
 }

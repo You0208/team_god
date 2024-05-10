@@ -450,6 +450,7 @@ void Character::UpdateTransform()
         model->GetTransform()->SetPosition(position);
         model->GetTransform()->SetScale(scale);
         model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+
     }
     else 
     {

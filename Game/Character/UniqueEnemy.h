@@ -20,6 +20,7 @@ private:
     EnemySpawner::EnemyStatus status[4];
     float mover_timer_max_B = 1.0f; // 一気に進むまでの時間
     float dis_B = 3.0f;     // 一気に進む距離
+    bool once = true;
 };
 
 class BossEnemy :public Enemy

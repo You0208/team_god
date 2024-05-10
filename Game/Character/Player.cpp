@@ -156,30 +156,26 @@ void Player::Flick(float elapsedTime)
             // 初期化
             if (flip_timer > max_charge_time)
             {
-                flip_pos_z = sub_pos_z_puls-dis_scarecrow;
+                flip_pos_z = sub_pos_z_puls;
             }
 
             // スケーリング
-            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2- dis_scarecrow;
-            //flip_pos_z = scaling * (flip_pos_z / scaling);
+            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
             // 最小値0、最大値scalingにクランプする
-            flip_pos_z = std::clamp(flip_pos_z, 0.0f, scaling);
-            flip_pos_z = (scaling + sub_pos_z_puls + dis_scarecrow) - flip_pos_z;
+            flip_pos_z = std::clamp(flip_pos_z + dis_scarecrow, dis_scarecrow, scaling);
+            flip_pos_z = (scaling + sub_pos_z_puls+ dis_scarecrow) - flip_pos_z;
 
             max_right_stick_y = 0;
             right_stick_y = 0;
             flip_timer = 0;
 
             is_throw = true;
-            //flip_pos_z = (scaling+sub_pos_zt) - flip_pos_z;
-            //flip_pos_z = flip_pos_z * -1.0f;
         }
     }
 
     //TODO この条件は暴発しかねないので要修正
     if (is_throw)
     {
-        //
         is_throw = false;
         // 横移動出来ないように
         velocity.x = 0;
@@ -238,9 +234,9 @@ void Player::ChangeCategory()
 
     // TODO もね　ユニットのボタン設定
     Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Cauliflower;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Shishito;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::GreenPumpkin;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Cauliflower;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::Shishito;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::GreenPumpkin;
 
     if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
     else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];

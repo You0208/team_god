@@ -80,7 +80,7 @@ void DemoScene::Initialize()
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit1_RE.glb");
 		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf",false);	
 
-		result = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation_scene.png");
+		result = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Gameover.png");
 
 		debugEffect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
 	}
@@ -346,9 +346,9 @@ void DemoScene::Render(float elapsedTime)
 	else
 	{
 
-		test_model->Render(0.01f, Try.Get());
+		//test_model->Render(0.01f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
-		test_model->DrawDebug("Test");
+		//test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
 
 		//gltf_test_model->Render(1.0f, gltf_ps.Get());
@@ -366,9 +366,10 @@ void DemoScene::Render(float elapsedTime)
 	}
 
 	// ステートの設定
-	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-	//result->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	result->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 3, true);
+	//game_over_back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0.0f, SCREEN_WIDTH * 7, SCREEN_HEIGHT*3, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
 	RenderingDeffered();
 	

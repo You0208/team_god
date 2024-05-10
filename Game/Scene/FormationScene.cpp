@@ -4,8 +4,6 @@
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
 
-#include "Lemur/Math/Easing.h"
-
 #include "GameScene.h"
 
 void FormationScene::Initialize()
@@ -99,6 +97,8 @@ void FormationScene::Initialize()
         {
             controllers_position[i] = { float(850 + i * 300),800 };
         }
+
+        button.scale = 0.9f;
     }
 
     // ポイントライト・スポットライトの初期位置設定
@@ -172,8 +172,7 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
         gltf_unit_6->GetTransform()->SetScaleFactor(2.0f);
     }
 
-    if(is_up_scale_easing)UpScaleEasing();
-    if(is_down_scale_easing)DownScaleEasing();
+    button.EasingScale(elapsedTime);
 
     // 操作
     {
@@ -181,15 +180,13 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
         {
             select_button = true;
             interval_timer = 0.0f;
-            CallScaleEasing(1.1f, button_scale);
-            is_up_scale_easing = true;
+            button.CallScaleEasing(1.1f, button.scale);
         }
         else if (select_button && gamePad.GetAxisLY() >= 1.0f || gamePad.GetButtonDown() & gamePad.BTN_UP)
         {
             select_button = false;
             interval_timer = 0.0f;
-            CallScaleEasing(0.9f, button_scale);
-            is_down_scale_easing = true;
+            button.CallScaleEasing(0.9f, button.scale);
         }
 
         if (!select_button)
@@ -417,7 +414,7 @@ void FormationScene::Render(float elapsedTime)
         if (enable_controllers[gamePad.Y])Controller_UI_Y->Render(immediate_context, controllers_position[controllers_num[gamePad.Y]].x, controllers_position[controllers_num[gamePad.Y]].y, 150, 150);
 
         // ボタン
-        Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button_scale, 200* button_scale);
+        Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button.scale, 200* button.scale);
     }
 }
 
@@ -441,54 +438,4 @@ void FormationScene::InitializeLight()
 
     BaseScene::InitializeLight();
 
-}
-
-void FormationScene::DownScaleEasing()
-{
-    if (easing_timer > easing_time_max)
-    {
-        easing_timer = easing_time_max;
-        button_scale = easing_target_scale;
-        is_down_scale_easing = false;
-        easing_timer = 0.0f;
-        return;
-    }
-
-    //if (button_scale <= easing_target_scale) {
-    //    button_scale = easing_target_scale;
-    //    is_down_scale_easing = false;
-    //    easing_timer = 0.0f;
-    //    return;
-    //}
-
-    easing_timer += high_resolution_timer::Instance().time_interval();
-
-    button_scale = {
-    Easing::InQuad(easing_timer, easing_time_max, easing_target_scale, easing_start_scale)
-    };
-}
-
-void FormationScene::UpScaleEasing()
-{
-    if (easing_timer > easing_time_max)
-    {
-        easing_timer = easing_time_max;
-        button_scale = easing_target_scale;
-        is_up_scale_easing = false;
-        easing_timer = 0.0f;
-        return;
-    }
-
-    //if (button_scale >= easing_target_scale) {
-    //    button_scale = easing_target_scale;
-    //    is_up_scale_easing = false;
-    //    easing_timer = 0.0f;
-    //    return;
-    //}
-
-    easing_timer += high_resolution_timer::Instance().time_interval();
-
-    button_scale = {
-    Easing::InOutCubic(easing_timer, easing_time_max, easing_target_scale, easing_start_scale)
-    };
 }

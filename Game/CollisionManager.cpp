@@ -112,7 +112,6 @@ void CollisionManager::CollisionSeedVsUnit()
     }
 }
 
-
 // TODO ŒŸ“¢’†
 DirectX::XMFLOAT2 CollisionManager::CollisionSeedVsSeed(DirectX::XMFLOAT2 position)
 {

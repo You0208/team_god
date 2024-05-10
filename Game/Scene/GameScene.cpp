@@ -3,7 +3,7 @@
 #include "./Lemur/Graphics/Camera.h"
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
-#include "Game/Scene/ResultScene.h"
+#include "Game/Scene/OverScene.h"
 #include "./high_resolution_timer.h"
 
 // Effect
@@ -204,9 +204,13 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 		if (timer >= time_limit)
 		{
-			Lemur::Scene::SceneManager::Instance().ChangeScene(new ResultScene);
+			time_up = true;
 		}
-
+		if (time_up)
+		{
+			// タイムアップかつ敵が全て死んだら
+			if (EnemyManager::Instance().GetEnemyCount() <= 0)Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
+		}
 
 		// プレイヤーの更新
 		player->Update(elapsedTime);
@@ -316,14 +320,14 @@ void GameScene::Render(float elapsedTime)
 			StageManager::Instance().Render(1.0f, Try.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, unit_ps.Get());
+			for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+			{
+				//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
+			}
 			// エネミー描画
 			EnemyManager::Instance().Render(scale, enemy_ps.GetAddressOf());
 			// 種描画
 			SeedManager::Instance().Render(0.1f, Try.GetAddressOf());
-			//test_model->Render(0.01f, Try.Get());
-			//test_model_2->Render(0.1f, Try.Get());
-			//test_model->DrawDebug("Test");
-			//test_model_2->DrawDebug("Test");
 		}
 	}
 
@@ -341,6 +345,8 @@ void GameScene::Render(float elapsedTime)
 		ExePostEffct();
 	}
 
+
+
 	//TODO debug
 	{
 		DirectX::XMFLOAT4X4 view;
@@ -351,14 +357,6 @@ void GameScene::Render(float elapsedTime)
 
 		// エフェクト再生
 		EffectManager::Instance().Render(view, projection);
-
-		//DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-		//debug_renderer->DrawBox({ rect.center.x,0,rect.center.y }, { 0,DirectX::XMConvertToRadians(angle),0 }, { rect.width.x * 0.5f,0.5f,rect.width.y * 0.5f }, { 1,0,1,1 });
-		//debug_renderer->DrawSphere({ rect.right_down.x,0.5f, rect.right_down.y }, 0.1f, { 0,0,1,1 });
-		//debug_renderer->DrawSphere({ rect.left_up.x,0.5f, rect.left_up.y }, 0.1f, { 0,1,0,1 });
-
-		//if (Collision::IntersectRotateRectVsCircle(rect, c_p, c_r,angle))debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 1,1,0,1 });
-		//else debug_renderer->DrawSphere({ c_p.x,0.5f, c_p.y }, c_r, { 0,0,1,1 });
 	}
 
 }

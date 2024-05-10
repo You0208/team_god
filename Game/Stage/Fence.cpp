@@ -1,7 +1,7 @@
 #include "Fence.h"
 #include "StageManager.h"
 #include "Lemur/Scene/SceneManager.h"
-#include "Game/Scene/ResultScene.h"
+#include "Game/Scene/OverScene.h"
 #include "Lemur/Graphics/DebugRenderer.h"
 static Fence* instance = nullptr;
 
@@ -84,7 +84,7 @@ void Fence::Update(float elapsedTime)
 {
     if (health <= 0)
     {
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new ResultScene);
+        Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
     }
 
     Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision();
@@ -125,7 +125,7 @@ void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 
 void Fence::DrawDebugGui()
 {
-    ImGui::Begin(u8"çÚ");
+    ImGui::Begin(u8"çÚÇ§");
     ImGui::SliderInt(u8"ëœãvíl", &health, 0, 100);
     ImGui::End();
 

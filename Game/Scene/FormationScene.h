@@ -71,23 +71,7 @@ private:
     int controllers_num[4];// 何番目に選ばれたか
     int cont_num[4];
 
-    bool is_down_scale_easing = false;
-    bool is_up_scale_easing = false;
-    float button_scale = 0.9f;// ボタンのスケール
-    float easing_timer = 0.0f;
-    float easing_time_max = 0.2f;
-    float easing_target_scale = 0.0f;
-    float easing_start_scale = 0.0f;
-
-    void DownScaleEasing();
-    void UpScaleEasing();
-    void CallScaleEasing(float target_scale, float start_scale,  float t = 0.2f)
-    {
-        easing_timer = 0.0f;
-        easing_time_max = t;
-        easing_target_scale = target_scale;
-        easing_start_scale = start_scale;
-    }
+    EasingFunction button;
 
     std::shared_ptr<Sprite> back;
     std::shared_ptr<Sprite> line_1;

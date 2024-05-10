@@ -17,11 +17,11 @@ private:
     D3D11_TEXTURE2D_DESC texture2d_desc;
 
 public:
-    int anime_x_max;
-    int anime_y_max;
+    int anime_x_max = 0;
+    int anime_y_max = 0;
 
-    int anime_x;
-    int anime_y;
+    int anime_x = 0;
+    int anime_y = 0;
 
     // 頂点フォーマット（自由に作れる）
     struct vertex
@@ -56,7 +56,7 @@ public:
     void Textout(ID3D11DeviceContext* immediate_context, std::string s, float x, float y, float w, float h, float r, float g, float b, float a);
     void Textout(ID3D11DeviceContext* immediate_context, int n, float x, float y, float w, float h, float r, float g, float b, float a);
 
-    void Animation(ID3D11DeviceContext* immediate_context,DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4 color,float angle, DirectX::XMFLOAT2 texsize);
+    void Animation(ID3D11DeviceContext* immediate_context, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4 color, float angle, DirectX::XMFLOAT2 texsize,int last, bool stop = false);
 
     float timer;
 };
