@@ -1,29 +1,5 @@
 #pragma once
 #include "./Lemur/Scene/BaseScene.h"
-#include "./Lemur/Graphics/Shader.h"
-#include "./Lemur/Graphics/Texture.h"
-#include "./Lemur/Graphics/Framework.h"
-
-// BLOOM
-#include "./Lemur/Graphics/Bloom.h"
-
-// Audio
-#include <wrl.h>
-#include "./Lemur/Audio/audio.h"
-
-#include "./Lemur/Effekseer/Effect.h"
-
-// Font
-#include"./Lemur/Font/Font.h"
-#include <dwrite.h>                
-#pragma comment(lib,"d2d1.lib")    
-#pragma comment(lib,"dwrite.lib")
-
-// GLTF
-#include "./Lemur/Model/GltfModel.h"
-
-#include "./Lemur/Math/Vector.h"
-#include "./Lemur/Math/MathHelper.h"
 
 //Game
 #include "../Stage/Stage.h"

@@ -1,32 +1,5 @@
 #pragma once
 #include "./Lemur/Scene/BaseScene.h"
-#include "./Lemur/Component/GameObject.h"
-#include "./Lemur/Component/DemoPlayer.h"
-#include "./Lemur/Component/DemoEnemy.h"
-#include "./Lemur/Graphics/Shader.h"
-#include "./Lemur/Graphics/Texture.h"
-#include "./Lemur/Graphics/Framework.h"
-
-// BLOOM
-#include "./Lemur/Graphics/Bloom.h"
-
-// Audio
-#include <wrl.h>
-#include "./Lemur/Audio/audio.h"
-
-#include "./Lemur/Effekseer/Effect.h"
-
-// Font
-#include"./Lemur/Font/Font.h"
-#include <dwrite.h>                
-#pragma comment(lib,"d2d1.lib")    
-#pragma comment(lib,"dwrite.lib")
-
-// GLTF
-#include "./Lemur/Model/GltfModel.h"
-
-#include "./Lemur/Math/Vector.h"
-#include "./Lemur/Math/MathHelper.h"
 
 class OverScene :public Lemur::Scene::BaseScene
 {
@@ -48,16 +21,34 @@ public:
 
     void DebugImgui()override;
 private:
-    std::shared_ptr<Sprite> game_over_back;
-    std::shared_ptr<Sprite> continue_back;
-    std::shared_ptr<Sprite> game_over_text;
-    std::shared_ptr<Sprite> again_text;
-    std::shared_ptr<Sprite> stageselect_text;
+    enum Button
+    {
+        Select,
+        Again
+    };
+    std::shared_ptr<Sprite> game_over_back      = nullptr;              //ゲームオーバー基本の背景
+    std::shared_ptr<Sprite> continue_back       = nullptr;              // 選択された時の背景
+    std::shared_ptr<Sprite> ui_text[8]          = {};                   // ゲームオーバーの文字
+    std::shared_ptr<Sprite> again_text          = nullptr;              // もう一度
+    std::shared_ptr<Sprite> stageselect_text    = nullptr;              // 畑に戻る
 
-    int select_num = 0;
+    EasingFunction          text_y[8]           = {};                   // 文字のY
+    EasingFunction          text_angle[8]       = {};                   // 文字の角度
 
-    EasingFunction select;
-    EasingFunction again;
+    int                     select_num          = 0;                    // 今何のボタンが選ばれているか
 
-    bool once_only = true;
+    EasingFunction          select              = {};                   // セレクトサイズ用
+    EasingFunction          again               = {};                   // もう一度のサイズ用
+
+    bool                    once_only           = true;                 // 演出用
+
+    int                     direction_num       = 0;                    // どの演出か
+    int                     random_num[8]       = { 0,7,5,4,3,1,6,2 };  // 角度が何処から進んでいるか
+
+    float                   interval            = 0.0f;                 // インターバル
+    float                   timer               = 0.0f;                 // タイマー
+
+    bool                    anim_stop           = true;                 // アニメがストップされたか
+    bool                    is_continue         = false;                // ボタンが選ばれたか
+    int                     count_num           = 0;                    // 文字カウント
 };

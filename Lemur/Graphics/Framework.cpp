@@ -9,8 +9,11 @@
 #include "../Scene/DemoScene.h"
 #include "./Game/Scene/TitleScene.h"
 #include "./Game/Scene/GameScene.h"
+#include "./Game/Scene/LoadingScene.h"
 #include "./Game/Scene/OverScene.h"
+#include "./Game/Scene/SelectScene.h"
 #include "./Game/Scene/FormationScene.h"
+#include "./Game/Scene/ResultScene.h"
 
 
 // Effect
@@ -45,7 +48,7 @@ bool Framework::Initialize()
 	}
 
 	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
 
 	return true;
 }

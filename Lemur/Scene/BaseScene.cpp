@@ -1,6 +1,7 @@
 #include "BaseScene.h"
 #include "../Graphics/Camera.h"
 #include "../Math/Easing.h"
+#include "./Lemur/Resource/ResourceManager.h"
 
 void Lemur::Scene::BaseScene::DebugImgui()
 {
@@ -149,6 +150,73 @@ void Lemur::Scene::BaseScene::InitializeState()
 		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 		hr = graphics.GetDevice()->CreateDepthStencilState(&depth_stencil_desc, depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+
+		depth_stencil_desc = {};
+		depth_stencil_desc.DepthEnable = FALSE;
+		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+		depth_stencil_desc.StencilEnable = FALSE;
+		hr = graphics.GetDevice()->CreateDepthStencilState(&depth_stencil_desc, depth_stencil_states[static_cast<size_t>(DEPTH_STATE::NONE_D)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		// MODE::MASK
+		depth_stencil_desc = {};
+		depth_stencil_desc.DepthEnable = TRUE;//深度テストを行う
+		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;//深度値を書き込まない
+		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_NEVER;//深度テストに必ず失敗する（描画はしないがステンシル値は書き込む）
+		depth_stencil_desc.StencilEnable = TRUE;//ステンシルテストを行う
+		depth_stencil_desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+		depth_stencil_desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+		depth_stencil_desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;//ステンシルテストには必ず合格
+		depth_stencil_desc.FrontFace.StencilDepthFailOp =D3D11_STENCIL_OP_REPLACE;//深度テストに失敗してステンシルテストに成功した場合
+		depth_stencil_desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		hr = graphics.GetDevice()->CreateDepthStencilState(&depth_stencil_desc, depth_stencil_states[static_cast<size_t>(DEPTH_STATE::MASK)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+		// MODE::APPLY_MASK
+		depth_stencil_desc = {};
+		depth_stencil_desc.DepthEnable = TRUE;
+		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ZERO;//Turn off writes to the depth-stencil buffer.
+		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_ALWAYS;//Never pass the comparison.
+		depth_stencil_desc.StencilEnable = TRUE;
+		depth_stencil_desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+		depth_stencil_desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_NEVER;
+		depth_stencil_desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.BackFace.StencilFailOp = D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.BackFace.StencilPassOp = D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_NOT_EQUAL;
+		depth_stencil_desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP::D3D11_STENCIL_OP_KEEP;
+		hr = graphics.GetDevice()->CreateDepthStencilState(&depth_stencil_desc, depth_stencil_states[static_cast<size_t>(DEPTH_STATE::APPLY_MASK)].GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+
+		// MODE::EXCLUSIVE
+		depth_stencil_desc = {};
+		depth_stencil_desc.DepthEnable = TRUE;
+		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;//Turn off writes to the depth-stencil buffer.
+		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_ALWAYS;//Never pass the comparison.
+		depth_stencil_desc.StencilEnable = TRUE;
+		depth_stencil_desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+		depth_stencil_desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+		depth_stencil_desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilFunc =D3D11_COMPARISON_EQUAL;
+		depth_stencil_desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depth_stencil_desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		hr = graphics.GetDevice()->CreateDepthStencilState(&depth_stencil_desc, depth_stencil_states[static_cast<size_t>(DEPTH_STATE::EXCLUSIVE)].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
@@ -390,6 +458,18 @@ void Lemur::Scene::BaseScene::InitializeState()
 	}
 }
 
+void Lemur::Scene::BaseScene::InitializeMask()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+	create_ps_from_cso(graphics.GetDevice(), "./Shader/transition_mask_ps.cso", transition_mask_ps.GetAddressOf());
+
+	spr_transition_mask_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\back.png");
+	spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\transition_mask.png");
+
+	//LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\Transition\\transition_mask.png", transition_mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
+}
+
 void Lemur::Scene::BaseScene::InitializeDeffered(int textureWidth, int textureHeight)
 {
 	HRESULT hr{ S_OK };
@@ -518,6 +598,9 @@ void Lemur::Scene::BaseScene::InitializeFramebuffer()
 	// 輪郭線
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
+	// MASK
+	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
+
 }
 
 void Lemur::Scene::BaseScene::InitializePS()
@@ -532,6 +615,7 @@ void Lemur::Scene::BaseScene::InitializePS()
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[static_cast<size_t>(PS::SKY)].GetAddressOf());
 	// DEFERRED
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
+
 }
 
 
@@ -566,9 +650,8 @@ void Lemur::Scene::BaseScene::SetUpRendering()
 	immediate_context->PSSetSamplers(4, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_BORDER_WHITE)].GetAddressOf());
 	// SHADOW
 	immediate_context->PSSetSamplers(5, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::COMPARISON_LINEAR_BORDER_WHITE)].GetAddressOf());
-	//FOG
+	// FOG
 	immediate_context->PSSetSamplers(6, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_CLAMP)].GetAddressOf());
-
 
 	Camera& camera = Camera::Instance();
 
@@ -778,33 +861,87 @@ void Lemur::Scene::BaseScene::LightUpdate()
 	}
 }
 
+void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_)
+{
+	if (in)
+	{
+		mask_angle = 0.0f;
+		mask_scale.value = 4.0f;
+		mask_pos = mask_pos_;
+		mask_scale.CallValueEasing(0.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
+		is_in = true;
+	}
+	else
+	{
+		mask_angle = 0.0f;
+		mask_scale.value = 0.0f;
+		mask_pos = mask_pos_;
+		mask_scale.CallValueEasing(4.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
+	}
+	start_transition = true;
+}
 
-void Lemur::Scene::BaseScene::EasingFunction::EasingScale(float elapsed_time)
+void Lemur::Scene::BaseScene::TransitionMask(float elapsed_time)
+{
+	if (start_transition)
+	{
+		if (!mask_scale.is_easing && start_transition)
+		{
+			start_transition = false;
+		}
+		mask_scale.EasingValue(elapsed_time);
+		mask_angle += elapsed_time * 300.0f;
+	}
+}
+
+void Lemur::Scene::BaseScene::RenderTransitionMask(float elapsed_time)
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+
+	//immediate_context->PSSetShaderResources(10/*slot(1番にセットします)*/, 1, transition_mask_texture.GetAddressOf());//TODO
+
+	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Clear(immediate_context, 0.0f, 0.0f, 0.0f, 0.0f, 0);
+	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Activate(immediate_context);
+	spr_transition_mask->RenderCenter(immediate_context, mask_pos.x, mask_pos.y, 856 * mask_scale.value, 424 * mask_scale.value,mask_angle);
+	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Deactivate(immediate_context);
+
+	//　MASK
+	immediate_context->PSSetShaderResources(10, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->shader_resource_views[0].GetAddressOf());
+
+	if (is_in)spr_transition_mask_back->Render(immediate_context, transition_mask_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f);
+	else if (start_transition)spr_transition_mask_back->Render(immediate_context, transition_mask_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f);
+}
+
+
+void Lemur::Scene::BaseScene::EasingFunction::EasingValue(float elapsed_time)
 {
 	if (is_easing)
 	{
 		if (timer > time_max)
 		{
 			timer = time_max;
-			scale = target_scale;
+			value = target_value;
 			is_easing = false;
 			timer = 0.0f;
 			return;
 		}
 
-		if (target_scale >= start_scale)
+		if (target_value >= start_value)
 		{
-			if (scale >= target_scale) {
-				scale = target_scale;
+			if (value >= target_value) {
+				value = target_value;
 				is_easing = false;
 				timer = 0.0f;
 				return;
 			}
 		}
-		else if (target_scale >= start_scale)
+		else if (target_value >= start_value)
 		{
-			if (scale <= target_scale) {
-				scale = target_scale;
+			if (value <= target_value) {
+				value = target_value;
 				is_easing = false;
 				timer = 0.0f;
 				return;
@@ -813,15 +950,30 @@ void Lemur::Scene::BaseScene::EasingFunction::EasingScale(float elapsed_time)
 
 		timer += elapsed_time;
 
-		scale = {
-		Easing::InSine(timer, time_max, target_scale, start_scale)
-		};
+		switch (easing_type)
+		{
+		case EasingType::InSine:
+			value = {
+			Easing::InSine(timer, time_max, target_value, start_value)
+			};
+			break;
+		case EasingType::OutSine:
+			value = {
+			Easing::InSine(timer, time_max, target_value, start_value)
+			};
+			break;
+		case EasingType::OutBounce:
+			value = {
+			Easing::OutBounce(timer, time_max, target_value, start_value)
+			};
+			break;
+		}
 	}
 }
 
 void Lemur::Scene::BaseScene::EasingFunction::ContinueEasing(float elapsed_time)
 {
-	if (!is_easing && is_continue_scale)
+	if (!is_easing && is_continue_easing)
 	{
 		switch (continue_state)
 		{
@@ -830,65 +982,104 @@ void Lemur::Scene::BaseScene::EasingFunction::ContinueEasing(float elapsed_time)
 			if (timer > continue_time_max)
 			{
 				timer = continue_time_max;// 超過した時間を戻す
-				scale = continue_target_scale;// スケールを調整
+				value = continue_target_value;// スケールを調整
 				timer = 0.0f;// タイマーを初期化
 
 				// ダウンスケールの準備
-				continue_start_scale = scale;// スタートスケールの設定
-				continue_target_scale = continue_min;// ターゲットスケールの設定
+				continue_start_scale = value;// スタートスケールの設定
+				continue_target_value = continue_min;// ターゲットスケールの設定
 				continue_state = 1;// ステートを次へ
 				break;
 			}
-			if (scale >= continue_target_scale)
+			if (value >= continue_target_value)
 			{
-				scale = continue_target_scale;// スケールを調整
+				value = continue_target_value;// スケールを調整
 				timer = 0.0f;// タイマーを初期化
 
 				// ダウンスケールの準備
-				continue_start_scale = scale;// スタートスケールの設定
-				continue_target_scale = continue_min;// ターゲットスケールの設定
+				continue_start_scale = value;// スタートスケールの設定
+				continue_target_value = continue_min;// ターゲットスケールの設定
 				continue_state = 1;// ステートを次へ
 				break;
 			}
 
 			timer += elapsed_time;
 
-			scale = {
-			Easing::OutSine(timer, continue_time_max, continue_target_scale, continue_start_scale)
-			};
-
+			switch (easing_type_up)
+			{
+			case EasingType::InSine:
+				value = {
+				Easing::InSine(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			case EasingType::OutSine:
+				value = {
+				Easing::OutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			case EasingType::InOutSine:
+				value = {
+				Easing::InOutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			case EasingType::OutBounce:
+				value = {
+				Easing::InBounce(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			}
 			break;
 
 		case 1:// Down
 			if (timer > continue_time_max)
 			{
 				timer = continue_time_max;
-				scale = continue_target_scale;
+				value = continue_target_value;
 				timer = 0.0f;
 
 				// アップスケールの準備
-				continue_start_scale = scale;// スタートスケールの設定
-				continue_target_scale = continue_max;// ターゲットスケールの設定
+				continue_start_scale = value;// スタートスケールの設定
+				continue_target_value = continue_max;// ターゲットスケールの設定
 				continue_state = 0;// ステートを前へ
 				break;
 			}
 
-			if (scale <= continue_target_scale) {
-				scale = continue_target_scale;// スケールを調整
+			if (value <= continue_target_value) {
+				value = continue_target_value;// スケールを調整
 				timer = 0.0f;// タイマーを初期化
 
 				// アップスケールの準備
-				continue_start_scale = scale;// スタートスケールの設定
-				continue_target_scale = continue_max;// ターゲットスケールの設定
+				continue_start_scale = value;// スタートスケールの設定
+				continue_target_value = continue_max;// ターゲットスケールの設定
 				continue_state = 0;// ステートを前へ
 				break;
 			}
 
 			timer += high_resolution_timer::Instance().time_interval();
 
-			scale = {
-			Easing::InSine(timer, continue_time_max, continue_target_scale, continue_start_scale)
-			};
+			switch (easing_type_down)
+			{
+			case EasingType::InSine:
+				value = {
+				Easing::InSine(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			case EasingType::OutSine:
+				value = {
+				Easing::OutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			case EasingType::InOutSine:
+				value = {
+				Easing::InOutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			case EasingType::OutBounce:
+				value = {
+				Easing::InBounce(timer, continue_time_max, continue_target_value, continue_start_scale)
+				};
+				break;
+			}
 			break;
 		}
 	}

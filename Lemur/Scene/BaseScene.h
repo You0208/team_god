@@ -44,6 +44,9 @@ namespace Lemur::Scene
         // ステートの初期化
         void InitializeState();
 
+        // テクスチャの初期化
+        void InitializeMask();
+
         // レンダリング前設定
         void SetUpRendering();
 
@@ -70,24 +73,42 @@ namespace Lemur::Scene
 
         void LightUpdate();
 
+
+        // 遷移
+        DirectX::XMFLOAT2 mask_pos;
+        void CallTransition(bool in, DirectX::XMFLOAT2 mask_pos_ = { SCREEN_WIDTH * 0.5f,SCREEN_HEIGHT * 0.5f });
+        void TransitionMask(float elapsed_time);
+        void RenderTransitionMask(float elapsed_time);
+
     protected:// イージング
 
         struct EasingFunction
         {
         public:
-            float scale;
-            void EasingScale(float elapsed_time);
-            void CallScaleEasing(float target_scale_, float start_scale_, float t = 0.2f)
+            enum EasingType
+            {
+                InSine,
+                OutSine,
+                InOutSine,
+                OutBounce
+            };
+            float value = 0.0f;
+            bool is_easing = false;
+
+        public:
+            void EasingValue(float elapsed_time);
+            void CallValueEasing(float target_scale_, float start_scale_, EasingType easing_type_, float t = 0.2f)
             {
                 timer = 0.0f;
                 time_max = t;
-                target_scale = target_scale_;
-                start_scale = start_scale_;
+                target_value = target_scale_;
+                start_value = start_scale_;
                 is_easing = true;
-                is_continue_scale = false;
+                is_continue_easing = false;
+                easing_type = easing_type_;
             }
 
-            void CallScaleContinue(float continue_min_,float continue_max_, float start_scale_,float t = 0.5f)
+            void CallValueContinue(float continue_min_,float continue_max_, float start_scale_, int easing_type_up_, int easing_type_down_,float t = 0.5f)
             {
                 timer = 0.0f;
                 continue_time_max = t;
@@ -95,36 +116,39 @@ namespace Lemur::Scene
                 continue_min = continue_min_;
                 continue_start_scale = start_scale_;
 
-                if (start_scale >= continue_min)
-                {
-                    continue_state = 1;
-                    continue_target_scale = continue_max;
-                }
-                else if (start_scale < continue_max)
+                if (start_value >= continue_min)
                 {
                     continue_state = 0;
-                    continue_target_scale = continue_min;
+                    continue_target_value = continue_max;
+                }
+                else if (start_value < continue_max)
+                {
+                    continue_state = 1;
+                    continue_target_value = continue_min;
                 }
 
-                is_continue_scale = true;
+                is_continue_easing = true;
+                easing_type_up = easing_type_up_;
+                easing_type_down = easing_type_down_;
             }
             void ContinueEasing(float elapsed_time);
 
         private:
-            bool is_easing = false;
 
             float timer = 0.0f;
             float time_max = 0.2f;
-            float target_scale = 0.0f;
-            float start_scale = 0.0f;
+            float target_value = 0.0f;
+            float start_value = 0.0f;
 
-            bool is_continue_scale = false;
+            bool is_continue_easing = false;
             float continue_time_max = 0.2f;
             float continue_max = 0.0f;
             float continue_min = 0.0f;
-            float continue_target_scale = 0.0f;
+            float continue_target_value = 0.0f;
             float continue_start_scale = 0.0f;
-
+            int easing_type = 0;
+            int easing_type_up = 0;
+            int easing_type_down = 0;
             int continue_state = 0;// 0:Up,1:Down
         };
 
@@ -134,8 +158,8 @@ namespace Lemur::Scene
         bool is_up_scale_easing = false;
         //float timer = 0.0f;
         //float time_max = 0.2f;
-        //float target_scale = 0.0f;
-        //float start_scale = 0.0f;
+        //float target_value = 0.0f;
+        //float start_value = 0.0f;
 
         void DownScaleEasing(float& scale, float& easing_timer, float easing_target_scale, float easing_start_scale, float easing_time_max = 0.2f);
         void UpScaleEasing(float& scale, float& easing_timer, float easing_target_scale, float easing_start_scale, float easing_time_max = 0.2f);
@@ -177,8 +201,8 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_states[7];
 
         // 深度ステート
-        enum  DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF };
-        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_states[4];
+        enum  DEPTH_STATE { ZT_ON_ZW_ON, ZT_ON_ZW_OFF, ZT_OFF_ZW_ON, ZT_OFF_ZW_OFF,NONE_D, MASK, APPLY_MASK,EXCLUSIVE };
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_states[8];
 
         // ブレンドステート
         enum  BLEND_STATE { NONE, ALPHA, ADD, MULTIPLY, MLT_ALPHA };
@@ -198,7 +222,7 @@ namespace Lemur::Scene
         enum class CONSTANT_BUFFER_R { NONE, SCENE, FOG, OPTION, PBR, D_FOG, LIGHT, HEMISPERE/*register用*/ };
 
         std::unique_ptr<Framebuffer> framebuffers[8];
-        enum class FRAME_BUFFER { SCENE, FOG, DEPTH,TEX };
+        enum class FRAME_BUFFER { SCENE, FOG, DEPTH, TEX, MASK };
 
         // MASK
         struct option_constants {
@@ -347,6 +371,7 @@ namespace Lemur::Scene
         // 画面用
         std::unique_ptr<FullscreenQuad> fullscreenQuad;
     protected:
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> transition_mask_texture;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
         std::shared_ptr<Sprite> dummy_sprite;
         Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader;
@@ -364,6 +389,7 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;
 
         Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_ps;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> transition_mask_ps;
 
         // SHADOW
         const uint32_t shadowmap_width = 2048;
@@ -375,7 +401,6 @@ namespace Lemur::Scene
         float light_view_near_z{ 2.0f };
         float light_view_far_z{ 18.0f };
 
-
         bool enable_shadow = true;
         bool enable_skymap = false;
         bool enable_bloom = false;
@@ -384,6 +409,14 @@ namespace Lemur::Scene
         bool enable_deferred = false;
         bool enable_deferred_post = false;
         bool enable_post_effect = true;
+
+        // 遷移
+        std::shared_ptr<Sprite> spr_transition_mask;
+        std::shared_ptr<Sprite> spr_transition_mask_back;
+        EasingFunction mask_scale;
+        float mask_angle = 0.0f;
+        bool start_transition = false;
+        bool is_in = false;
     private:
         bool ready = false;
     };

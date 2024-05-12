@@ -57,12 +57,12 @@ void FormationScene::Initialize()
         mark_2_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2_2.png");
 
         // 3D
-        gltf_unit_1 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit1_RE.glb", true);
-        gltf_unit_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
-        gltf_unit_3 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit3_RE.glb", true);
-        gltf_unit_4 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit4_RE.glb", true);
-        gltf_unit_5 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit5_RE.glb", true);
-        gltf_unit_6 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit6_RE.glb", true);
+        gltf_unit_1 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb", true);
+        gltf_unit_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb", true);
+        gltf_unit_3 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\GreenPumpkin.glb", true);
+        gltf_unit_4 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb", true);
+        gltf_unit_5 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb", true);
+        gltf_unit_6 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb", true);
     }
 
     // ゲーム関連
@@ -98,7 +98,7 @@ void FormationScene::Initialize()
             controllers_position[i] = { float(850 + i * 300),800 };
         }
 
-        button.scale = 0.9f;
+        button.value = 0.9f;
     }
 
     // ポイントライト・スポットライトの初期位置設定
@@ -172,7 +172,7 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
         gltf_unit_6->GetTransform()->SetScaleFactor(2.0f);
     }
 
-    button.EasingScale(elapsedTime);
+    button.EasingValue(elapsedTime);
 
     // 操作
     {
@@ -180,13 +180,13 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
         {
             select_button = true;
             interval_timer = 0.0f;
-            button.CallScaleEasing(1.1f, button.scale);
+            button.CallValueEasing(1.1f, button.value, EasingFunction::EasingType::InSine);
         }
         else if (select_button && gamePad.GetAxisLY() >= 1.0f || gamePad.GetButtonDown() & gamePad.BTN_UP)
         {
             select_button = false;
             interval_timer = 0.0f;
-            button.CallScaleEasing(0.9f, button.scale);
+            button.CallValueEasing(0.9f, button.value, EasingFunction::EasingType::InSine);
         }
 
         if (!select_button)
@@ -414,7 +414,7 @@ void FormationScene::Render(float elapsedTime)
         if (enable_controllers[gamePad.Y])Controller_UI_Y->Render(immediate_context, controllers_position[controllers_num[gamePad.Y]].x, controllers_position[controllers_num[gamePad.Y]].y, 150, 150);
 
         // ボタン
-        Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button.scale, 200* button.scale);
+        Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button.value, 200* button.value);
     }
 }
 
