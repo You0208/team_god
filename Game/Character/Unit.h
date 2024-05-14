@@ -1,9 +1,7 @@
 #pragma once
-#include "Enemy.h"
 #include "Lemur/Object/Character.h"
-#include "Lemur/Graphics/Shader.h"
-#include "Lemur/Math/MathHelper.h"
 #include "Lemur/Effekseer/Effect.h"
+#include "Lemur/Math/MathHelper.h"
 
 
 class Unit :public Character

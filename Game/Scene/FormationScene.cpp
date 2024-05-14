@@ -3,8 +3,11 @@
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
+#include "./Lemur/Effekseer/EffekseerManager.h"
+
 
 #include "GameScene.h"
+#include "LoadingScene.h"
 
 void FormationScene::Initialize()
 {
@@ -20,6 +23,8 @@ void FormationScene::Initialize()
         InitializeFramebuffer();
         // ピクセルシェーダーの初期化
         InitializePS();
+        // マスクの初期化
+        InitializeMask();
 
         // SHADOW
         double_speed_z = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
@@ -36,33 +41,36 @@ void FormationScene::Initialize()
     // モデル、テクスチャ読み込み
     {
         // 2D
-        back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene.png");
-        line_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_1.png");
-        line_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_2.png");
-        unit_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_1.png");
-        unit_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_2.png");
-        unit_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_3.png");
-        unit_4 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_4.png");
-        unit_5 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_5.png");
-        unit_6 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_6.png");
-        Button = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Button.png");
-        base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Base.png");
-        Controller_UI_A = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_A.png");
-        Controller_UI_B = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_B.png");
-        Controller_UI_X = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_X.png");
-        Controller_UI_Y = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_Y.png");
-        mark_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1.png");
-        mark_1_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1_1.png");
-        mark_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2.png");
-        mark_2_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2_2.png");
+        back             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene.png");
+        line_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_1.png");
+        line_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_2.png");
+        unit_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_1.png");
+        unit_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_2.png");
+        unit_3           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_3.png");
+        unit_4           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_4.png");
+        unit_5           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_5.png");
+        unit_6           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_6.png");
+        Button           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Button.png");
+        base             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Base.png");
+        Controller_UI[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_A.png");
+        Controller_UI[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_B.png");
+        Controller_UI[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_X.png");
+        Controller_UI[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_Y.png");
+        mark_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1.png");
+        mark_1_1         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1_1.png");
+        mark_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2.png");
+        mark_2_2         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2_2.png");
 
         // 3D
-        gltf_unit_1 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb", true);
-        gltf_unit_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb", true);
-        gltf_unit_3 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\GreenPumpkin.glb", true);
-        gltf_unit_4 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb", true);
-        gltf_unit_5 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb", true);
-        gltf_unit_6 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb", true);
+        gltf_unit[0]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb", true);
+        gltf_unit[1]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb", true);
+        gltf_unit[2]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb", true);
+        gltf_unit[3]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\GreenPumpkin.glb", true);
+        gltf_unit[4]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb", true);
+        gltf_unit[5]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb", true);
+   
+        // エフェクト
+        effect           = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     }
 
     // ゲーム関連
@@ -74,13 +82,13 @@ void FormationScene::Initialize()
         // 並行ライト
         directional_light_direction = { 0.0f,-0.3f,-1.0f,1.0f };
 
-        // アニメーションの再生
-        gltf_unit_1->PlayAnimation(0, true);
-        gltf_unit_2->PlayAnimation(0, true);
-        gltf_unit_3->PlayAnimation(0, true);
-        gltf_unit_4->PlayAnimation(0, true);
-        gltf_unit_5->PlayAnimation(0, true);
-        gltf_unit_6->PlayAnimation(0, true);
+        for (int i = 0; i < 6; i++)
+        {
+            // アニメーションの再生
+            gltf_unit[i]->PlayAnimation(0, true);
+            // 透明度のクリア
+            gltf_unit[i]->ClearThreshold();
+        }
 
         // ブルームの調整
         bloomer->bloom_extraction_threshold = 0.05f;
@@ -88,17 +96,11 @@ void FormationScene::Initialize()
 
         enable_post_effect = true;
 
-        //enable_controllers[0] = true;
-        //enable_controllers[1] = true;
-        //enable_controllers[2] = true;
-        //enable_controllers[3] = true;
-
-        for (int i = 0; i < 4; i++)
-        {
-            controllers_position[i] = { float(850 + i * 300),800 };
-        }
-
+        line_y.value = -1080.0f;
         button.value = 0.9f;
+
+        // マスクを呼ぶ
+        CallTransition(false);
     }
 
     // ポイントライト・スポットライトの初期位置設定
@@ -107,23 +109,21 @@ void FormationScene::Initialize()
 
 void FormationScene::Finalize()
 {
+    // エフェクト終了
+    if (effect != nullptr)
+    {
+        delete effect;
+        effect = nullptr;
+    }
+
 }
 
 void FormationScene::Update(HWND hwnd, float elapsedTime)
 {
     using namespace DirectX;
     Camera& camera = Camera::Instance();
-    GamePad& gamePad = Input::Instance().GetGamePad();
-
-    {
-        gltf_unit_1->UpdateAnimation(elapsedTime);
-        gltf_unit_2->UpdateAnimation(elapsedTime);
-        gltf_unit_3->UpdateAnimation(elapsedTime);
-        gltf_unit_4->UpdateAnimation(elapsedTime);
-        gltf_unit_5->UpdateAnimation(elapsedTime);
-        gltf_unit_6->UpdateAnimation(elapsedTime);
-    }
-
+    // エフェクト更新処理
+    EffectManager::Instance().Update(elapsedTime);
     // カメラ
     {
         camera.Update(elapsedTime);
@@ -132,76 +132,157 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
         camera.SetEyeYOffset(0);
         camera.SetAngle(camera_angle);
     }
+    // ライトの更新
+    LightUpdate();
+
+    // マスクの更新
+    TransitionMask(elapsedTime);
+
+    // アイリスインの最中操作を受け付けない
+    if (start_transition && is_in)return;
+
+    // イージングの更新
+    line_y.EasingValue(elapsedTime);
+
+    if (once_only && !start_transition)
+    {
+        line_y.CallValueEasing(0, line_y.value, EasingFunction::EasingType::OutBounce, 1.5f);
+        once_only = false;
+    }
+    if (line_y.is_easing)return;
 
     // ユニットの更新
+    UpdateUnit(elapsedTime);
+
+    // 操作
+    UpdateOperate(elapsedTime);
+
+    DebugImgui();
+}
+
+void FormationScene::UpdateUnit(float elapsedTime)
+{
+    // ユニットの更新
     {
-        gltf_unit_1->GetTransform()->SetPositionX(units_position[0].x);
-        gltf_unit_1->GetTransform()->SetPositionY(units_position[0].y);
-        gltf_unit_1->GetTransform()->SetPositionZ(units_position[0].z);
-        gltf_unit_1->GetTransform()->SetRotationY(units_rotation[0]);
-        gltf_unit_1->GetTransform()->SetScaleFactor(2.0f);
+        for (int i = 0; i < 6; i++)
+        {
+            gltf_unit[i]->UpdateAnimation(elapsedTime);
 
-        gltf_unit_2->GetTransform()->SetPositionX(units_position[1].x);
-        gltf_unit_2->GetTransform()->SetPositionY(units_position[1].y);
-        gltf_unit_2->GetTransform()->SetPositionZ(units_position[1].z);
-        gltf_unit_2->GetTransform()->SetRotationY(units_rotation[1]);
-        gltf_unit_2->GetTransform()->SetScaleFactor(2.0f);
+            gltf_unit[i]->GetTransform()->SetPositionX(units_position[i].x);
+            gltf_unit[i]->GetTransform()->SetPositionY(units_position[i].y);
+            gltf_unit[i]->GetTransform()->SetPositionZ(units_position[i].z);
+            gltf_unit[i]->GetTransform()->SetRotationY(units_rotation[i]);
+            gltf_unit[i]->GetTransform()->SetScaleFactor(2.0f);
 
-        gltf_unit_3->GetTransform()->SetPositionX(units_position[2].x);
-        gltf_unit_3->GetTransform()->SetPositionY(units_position[2].y);
-        gltf_unit_3->GetTransform()->SetPositionZ(units_position[2].z);
-        gltf_unit_3->GetTransform()->SetRotationY(units_rotation[2]);
-        gltf_unit_3->GetTransform()->SetScaleFactor(2.0f);
-
-        gltf_unit_4->GetTransform()->SetPositionX(units_position[3].x);
-        gltf_unit_4->GetTransform()->SetPositionY(units_position[3].y);
-        gltf_unit_4->GetTransform()->SetPositionZ(units_position[3].z);
-        gltf_unit_4->GetTransform()->SetRotationY(units_rotation[3]);
-        gltf_unit_4->GetTransform()->SetScaleFactor(2.0f);
-
-        gltf_unit_5->GetTransform()->SetPositionX(units_position[4].x);
-        gltf_unit_5->GetTransform()->SetPositionY(units_position[4].y);
-        gltf_unit_5->GetTransform()->SetPositionZ(units_position[4].z);
-        gltf_unit_5->GetTransform()->SetRotationY(units_rotation[4]);
-        gltf_unit_5->GetTransform()->SetScaleFactor(2.0f);
-
-        gltf_unit_6->GetTransform()->SetPositionX(units_position[5].x);
-        gltf_unit_6->GetTransform()->SetPositionY(units_position[5].y);
-        gltf_unit_6->GetTransform()->SetPositionZ(units_position[5].z);
-        gltf_unit_6->GetTransform()->SetRotationY(units_rotation[5]);
-        gltf_unit_6->GetTransform()->SetScaleFactor(2.0f);
+            gltf_unit[i]->InDissolve(elapsedTime);
+        }
     }
+}
+
+void FormationScene::UpdateOperate(float elapsedTime)
+{
+    GamePad& gamePad = Input::Instance().GetGamePad();
 
     button.EasingValue(elapsedTime);
 
-    // 操作
+    if (!start_transition && is_in)
     {
-        if (!select_button && gamePad.GetAxisLY() <= -1.0f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
-        {
-            select_button = true;
-            interval_timer = 0.0f;
-            button.CallValueEasing(1.1f, button.value, EasingFunction::EasingType::InSine);
-        }
-        else if (select_button && gamePad.GetAxisLY() >= 1.0f || gamePad.GetButtonDown() & gamePad.BTN_UP)
+        // 次のシーンへ
+        Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
+    }
+    // ボタンを選択してる時
+    if (select_button)
+    {
+        // イージングを更新
+        button.ContinueEasing(elapsedTime);
+
+        // 上に行ったら
+        if (gamePad.GetAxisLY() >= 1.0f || gamePad.GetButtonDown() & gamePad.BTN_UP)
         {
             select_button = false;
             interval_timer = 0.0f;
             button.CallValueEasing(0.9f, button.value, EasingFunction::EasingType::InSine);
         }
 
-        if (!select_button)
+        // Aボタンを押したら
+        if (gamePad.GetButtonDown() & gamePad.BTN_A && all_unit_num >= 4)
         {
-            // ユニットの選択
+            Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A] = cont_num[gamePad.A];
+            Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B] = cont_num[gamePad.B];
+            Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X] = cont_num[gamePad.X];
+            Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y] = cont_num[gamePad.Y];
+
+            CallTransition(true);
+        }
+    }
+
+
+    // ボタンを選択していない時
+    if (!select_button)
+    {
+        // イージングを更新
+        button.EasingValue(elapsedTime);
+
+        // 全部初期化
+        if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_TRIGGER)
+        {
+            bool is = false;
+            for (int n = 0; n < 6; n++)
+            {
+                if (gltf_unit[n]->GetIsDissolve())
+                {
+                    is = true;
+                }
+            }
+            if (is)return;
+            for (int i = 0; i < 6; i++)
+            {
+                enable_units[i] = {};
+                units_rotation[i] = {};
+                units_position[i] = {};
+            }
+            for (int j = 0; j < 4; j++)
+            {
+                enable_controllers[j] = {};
+                cont_num[j] = {};
+            }
+            choose_num = 0;
+            all_unit_num = 0;
+            select_button = false;
+
+            for (int i = 0; i < 6; i++)
+            {
+                // 透明度のクリア
+                gltf_unit[i]->ClearThreshold();
+            }
+        }
+
+        // 下を選択する時
+        if (gamePad.GetAxisLY() <= -1.0f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+        {
+            select_button = true;
+            interval_timer = 0.0f;
+            // ボタンコンティニューを呼ぶ
+            button.CallValueContinue(0.9f, 1.1f, button.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+        }
+
+
+        // ユニットの選択
+        {
+            // 右
             if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
             {
                 if (choose_num < 6)choose_num++;
             }
-            if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)
+            // 左
+            else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)
             {
                 if (choose_num > 0)choose_num--;
             }
-            if (gamePad.GetAxisLX() >= 0.5f)
+            // 右
+            else if (gamePad.GetAxisLX() >= 0.5f)
             {
+                // インターバルを考慮してカウントを動かす
                 interval_timer += elapsedTime;
                 if (choose_num < 5 && interval_timer_max <= interval_timer)
                 {
@@ -209,8 +290,10 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
                     interval_timer = 0.0f;
                 }
             }
+            // 左
             else if (gamePad.GetAxisLX() <= -0.5f)
             {
+                // インターバルを考慮してカウントを動かす
                 interval_timer += elapsedTime;
                 if (choose_num > 0 && interval_timer_max <= interval_timer)
                 {
@@ -218,86 +301,21 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
                     interval_timer = 0.0f;
                 }
             }
-
-            if (all_unit_num < 4)
-            {
-                if (!enable_units[choose_num])
-                {
-                    if (gamePad.GetButtonDown() & gamePad.BTN_A && !enable_controllers[0])
-                    {
-                        // ユニット
-                        units_position[choose_num] = position[all_unit_num];
-                        units_rotation[choose_num] = rotation[all_unit_num];
-                        enable_units[choose_num] = true;
-                        all_unit_num++;
-
-                        // コントローラー
-                        controllers_num[gamePad.A] = all_controllers_num;
-                        enable_controllers[gamePad.A] = true;
-                        cont_num[gamePad.A] = choose_num;
-                        all_controllers_num++;
-                    }
-                    else if (gamePad.GetButtonDown() & gamePad.BTN_B && !enable_controllers[1])
-                    {
-                        units_position[choose_num] = position[all_unit_num];
-                        units_rotation[choose_num] = rotation[all_unit_num];
-                        enable_units[choose_num] = true;
-                        all_unit_num++;
-
-                        // コントローラー
-                        controllers_num[gamePad.B] = all_controllers_num;
-                        enable_controllers[gamePad.B] = true;
-                        cont_num[gamePad.B] = choose_num;
-                        all_controllers_num++;
-                    }
-                    else if (gamePad.GetButtonDown() & gamePad.BTN_X && !enable_controllers[2])
-                    {
-                        units_position[choose_num] = position[all_unit_num];
-                        units_rotation[choose_num] = rotation[all_unit_num];
-                        enable_units[choose_num] = true;
-                        all_unit_num++;
-
-                        // コントローラー
-                        controllers_num[gamePad.X] = all_controllers_num;
-                        enable_controllers[gamePad.X] = true;
-                        cont_num[gamePad.X] = choose_num;
-                        all_controllers_num++;
-                    }
-                    else if (gamePad.GetButtonDown() & gamePad.BTN_Y && !enable_controllers[3])
-                    {
-                        units_position[choose_num] = position[all_unit_num];
-                        units_rotation[choose_num] = rotation[all_unit_num];
-                        enable_units[choose_num] = true;
-                        all_unit_num++;
-
-                        // コントローラー
-                        controllers_num[gamePad.Y] = all_controllers_num;
-                        enable_controllers[gamePad.Y] = true;
-                        cont_num[gamePad.Y] = choose_num;
-                        all_controllers_num++;
-                    }
-                }
-            }
         }
-        else
-        {
-            if (gamePad.GetButtonDown() & gamePad.BTN_A && all_controllers_num == 4)
-            {
-                Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A] = cont_num[gamePad.A];
-                Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B] = cont_num[gamePad.B];
-                Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X] = cont_num[gamePad.X];
-                Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y] = cont_num[gamePad.Y];
 
-                Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
+        // ユニットが全員選ばれていない時
+        if (all_unit_num < 4)
+        {
+            // ユニットが選べる状態の時
+            if (!enable_units[choose_num])
+            {
+                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_A, gamePad.A);
+                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_B, gamePad.B);
+                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_X, gamePad.X);
+                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_Y, gamePad.Y);
             }
         }
     }
-
-    // ライトの更新
-    LightUpdate();
-
-    // DebugImgui
-    //DebugImgui();
 }
 
 void FormationScene::Render(float elapsedTime)
@@ -314,10 +332,6 @@ void FormationScene::Render(float elapsedTime)
     camera.SetPerspectiveFov(immediate_context);
     // 描画の設定
     SetUpRendering();
-
-    // ディファードレンダリングの設定
-    SetUpDeffered();
-
 
     // テクスチャをセット
     {
@@ -348,28 +362,23 @@ void FormationScene::Render(float elapsedTime)
 
         for (int i = 0; i < 6; i++)
         {
-            line_1->Render(immediate_context, (660 + 210 * i), 0, 210, SCREEN_HEIGHT);
+            line_1->Render(immediate_context, (660 + 210 * i), line_y.value, 210, SCREEN_HEIGHT);
         }
-        line_2->Render(immediate_context, (660 + 210 * choose_num), 0, 210, SCREEN_HEIGHT);
+        line_2->Render(immediate_context, (660 + 210 * choose_num), line_y.value, 210, SCREEN_HEIGHT);
 
-        unit_1->Render(immediate_context,(660 + 210 * 0), 0, 210, SCREEN_HEIGHT);
-        unit_2->Render(immediate_context,(660 + 210 * 1), 0, 210, SCREEN_HEIGHT);
-        unit_3->Render(immediate_context,(660 + 210 * 2), 0, 210, SCREEN_HEIGHT);
-        unit_4->Render(immediate_context,(660 + 210 * 3), 0, 210, SCREEN_HEIGHT);
-        unit_5->Render(immediate_context,(660 + 210 * 4), 0, 210, SCREEN_HEIGHT);
-        unit_6->Render(immediate_context,(660 + 210 * 5), 0, 210, SCREEN_HEIGHT);
+        unit_1->Render(immediate_context,(660 + 210 * 0), line_y.value, 210, SCREEN_HEIGHT);
+        unit_2->Render(immediate_context,(660 + 210 * 1), line_y.value, 210, SCREEN_HEIGHT);
+        unit_3->Render(immediate_context,(660 + 210 * 2), line_y.value, 210, SCREEN_HEIGHT);
+        unit_4->Render(immediate_context,(660 + 210 * 3), line_y.value, 210, SCREEN_HEIGHT);
+        unit_5->Render(immediate_context,(660 + 210 * 4), line_y.value, 210, SCREEN_HEIGHT);
+        unit_6->Render(immediate_context,(660 + 210 * 5), line_y.value, 210, SCREEN_HEIGHT);
 
         for (int j = 0; j < 4; j++)
         {
             base->Render(immediate_context, (691.5f + 300 * j), 680, 300, 300);
         }
-
-
-        //mark_1->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        //mark_1_1->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        //mark_2->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        //mark_2_2->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
+
     // ポストエフェクトの実行
     if (enable_post_effect)
     {
@@ -388,15 +397,11 @@ void FormationScene::Render(float elapsedTime)
         immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
         immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
-        if(enable_units[0])gltf_unit_1->Render(1.0f, gltf_ps.Get());
-        if(enable_units[1])gltf_unit_2->Render(1.0f, gltf_ps.Get());
-        if(enable_units[2])gltf_unit_3->Render(1.0f, gltf_ps.Get());
-        if(enable_units[3])gltf_unit_4->Render(1.0f, gltf_ps.Get());
-        if(enable_units[4])gltf_unit_5->Render(1.0f, gltf_ps.Get());
-        if(enable_units[5])gltf_unit_6->Render(1.0f, gltf_ps.Get());
+        for (int i = 0; i < 6; i++)
+        {
+            if (enable_units[i])           gltf_unit[i]->Render(1.0f, gltf_ps.Get());
+        }
     }
-
-    RenderingDeffered();
 
     // ポストエフェクトの実行
     if (enable_post_effect)
@@ -408,27 +413,35 @@ void FormationScene::Render(float elapsedTime)
     // 2D描画（3Dの前面）
     {
         // ボタンのアルファベット
-        if (enable_controllers[gamePad.A])Controller_UI_A->Render(immediate_context, controllers_position[controllers_num[gamePad.A]].x, controllers_position[controllers_num[gamePad.A]].y, 150, 150);
-        if (enable_controllers[gamePad.B])Controller_UI_B->Render(immediate_context, controllers_position[controllers_num[gamePad.B]].x, controllers_position[controllers_num[gamePad.B]].y, 150, 150);
-        if (enable_controllers[gamePad.X])Controller_UI_X->Render(immediate_context, controllers_position[controllers_num[gamePad.X]].x, controllers_position[controllers_num[gamePad.X]].y, 150, 150);
-        if (enable_controllers[gamePad.Y])Controller_UI_Y->Render(immediate_context, controllers_position[controllers_num[gamePad.Y]].x, controllers_position[controllers_num[gamePad.Y]].y, 150, 150);
-
+        for (int i = 0; i < 4; i++)
+        {
+            Controller_UI[i]->Render(immediate_context, float(850 + i * 300), 800, 150, 150);
+        }
         // ボタン
         Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button.value, 200* button.value);
+
+        {
+            DirectX::XMFLOAT4X4 view;
+            DirectX::XMFLOAT4X4 projection;
+            DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+            DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+            graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
+
+            // エフェクト再生
+            EffectManager::Instance().Render(view, projection);
+        }
+
+        // マスク
+        RenderTransitionMask(elapsedTime);
     }
 }
 
+
 void FormationScene::DebugImgui()
 {
-    ImGui::Begin("Contlo");
-    ImGui::SliderFloat2("position", &controllers_position[0].x, 0.0f, 1920.0f);
-    ImGui::End();
     BaseScene::DebugImgui();
     Camera::Instance().DrawDebug();
-    gltf_unit_1->GetTransform()->DrawDebug("unit_1");
-    gltf_unit_2->GetTransform()->DrawDebug("unit_2");
-    gltf_unit_3->GetTransform()->DrawDebug("unit_3");
-    gltf_unit_4->GetTransform()->DrawDebug("unit_4");
+    gltf_unit[0]->DrawDebug();
 }
 
 void FormationScene::InitializeLight()
@@ -438,4 +451,25 @@ void FormationScene::InitializeLight()
 
     BaseScene::InitializeLight();
 
+}
+
+void FormationScene::SelectUnit(bool BTN, int button_num)
+{
+    if (BTN && !enable_controllers[button_num])
+    {
+        // ユニットの設定
+        units_position[choose_num] = position[button_num];
+        units_rotation[choose_num] = rotation[button_num];
+        enable_units[choose_num] = true;
+        all_unit_num++;
+
+        // コントローラー
+        enable_controllers[button_num] = true;
+        // 何番目のユニットがAボタンに選ばれたか
+        cont_num[button_num] = choose_num;
+
+        // エフェクトの再生
+        effect->Play(position[button_num], effect_scale);
+        gltf_unit[choose_num]->SetIsDissolve(true);
+    }
 }

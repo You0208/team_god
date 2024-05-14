@@ -187,6 +187,9 @@ void Shishito::UpdateIdleState(float elapsed_time)
 
     attack_timer += elapsed_time;// 攻撃タイマー
 
+    // 強制的にアタックに
+    TransitionAttackState();
+
     //TODO モーションが来たらまた変える
     // ユニットの総当たり
     for (int j = 0; j < unitCount; ++j)
@@ -208,9 +211,12 @@ void Shishito::UpdateIdleState(float elapsed_time)
             // 強化状態をtrueに
             unit->SetBuff(true);
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
+
+            // アニメーションとエフェクト
+            attack_effect->Play(position, attack_effect_size);
+
             // 攻撃ステートに切り替え
             PlayAnimation(Animation::Attack, false);
-            attack_effect->Play(position, attack_effect_size);
             TransitionAttackState();
         }
     }
@@ -265,11 +271,11 @@ void Shishito::UpdateAttackState(float elapsed_time)
         }
     }
 
-    // 範囲内に敵が一体も居なければ待機
-    if (!is_intersected)
-    {
-        TransitionIdleState();
-    }
+    //// 範囲内に敵が一体も居なければ待機
+    //if (!is_intersected)
+    //{
+    //    TransitionIdleState();
+    //}
 
     // 攻撃時間が過ぎたら消滅
     if (attack_timer >= timer_max)

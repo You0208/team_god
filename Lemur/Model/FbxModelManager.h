@@ -13,7 +13,7 @@ public:
     void Render(const float& scale, ID3D11PixelShader* replaced_pixel_shader);
     void Render(const float& scale, ID3D11PixelShader** replaced_pixel_shader); 
 
-    void DrawDebug(std::string i);
+    void DrawDebug(float i);
 
     Transform* GetTransform() { return &transform; }
 
@@ -23,15 +23,16 @@ public:
 public: // 取得・設定関数関連
     // アニメーションデータ取得
     std::vector<Animation>* GetAnimation() { return &fbx_model->animation_clips; };
-    const bool GetIsDissolve()& { return is_dissolve; }
     // 現在のアニメーション番号の取得・設定
     const int GetCurrentAnimationIndex()& { return current_animation_index; }
     const int GetCurrentAnimationSecond()& { return current_animation_seconds; }
-    void SetCurrentAnimationIndex(const int& animationIndex) { current_animation_index = animationIndex; }
+    const bool GetIsDissolve()& { return is_dissolve; }
 
+    void SetIsDissolve(bool is) { is_dissolve = is; }
+    void SetCurrentAnimationIndex(const int& animationIndex) { current_animation_index = animationIndex; }
     // アニメーション再生速度設定（途中で再生速度を変えたいときなどに）
     void SetAnimationSpeed(const float& speed) { animation_speed = speed; }
-
+    void SetLoopFlag(const bool& loop) { animation_loop_flag = loop; }
 public: // アニメーション関数関連
     // アニメーション再生設定
     // (アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
@@ -51,7 +52,11 @@ public: // アニメーション関数関連
     // アニメーションが再生中かどうか
     bool IsPlayAnimation() const;
 
-    void Dissolve(const float& elapsedTime);
+    // ディゾルブ
+    void OutDissolve(const float& elapsedTime, const float& speed = 1.0f);
+    void InDissolve(const float& elapsedTime, const float& speed = 1.0f);
+    // 透明度を０に
+    void ClearThreshold() { fbx_model->dissolve = 0.0f; }
 public: // デバッグ確認用
     bool is_blend_animation = true;     // アニメーションブレンドオンオフ
 

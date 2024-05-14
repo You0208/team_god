@@ -200,6 +200,7 @@ struct Material
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> roughness;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> opacity;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> height;
 
     // UNIT.30
     template<class T>
@@ -230,6 +231,7 @@ public:
             archive(position, normal, tangent, texcoord, bone_weights, bone_indices);
         }
     };
+
     // 定数バッファー
     static const int MAX_BONES{ 256 };
     struct constants
@@ -240,7 +242,8 @@ public:
         float threshold = 1.0f;
         float pads[3];
     };
-    float dissolve = 1.0f;
+    float dissolve = 0.0f;
+
     struct mesh
     {
 
@@ -372,6 +375,8 @@ public:
     void UpdateAnimation(Animation::keyframe& keyframe);
     void UpdateAnimation(float elapsedTIme);
 
+
+    void DebugThreshold(float i);
 
 
     bool AppendAnimations(const char* animation_filename, float sampling_rate /*0:use default damage_value*/);

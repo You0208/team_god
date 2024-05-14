@@ -19,6 +19,7 @@ struct VS_OUT
     float4 color : COLOR;
     
     float3 binormal : BINORMAL;
+    //float3 view_tan : TEXCOORD2;
 };
 
 // ŠÖ”éŒ¾

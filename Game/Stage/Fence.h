@@ -1,6 +1,5 @@
 #pragma once
 #include "Lemur/Object/Character.h"
-#include "Lemur/Graphics/Shader.h"
 #include "Lemur/Collision/Collision.h"
 #include "Lemur/Math/MathHelper.h"
 

@@ -139,7 +139,7 @@ void EnemySpawner::Initialize()
 		summon_enemy.death_effect_size = 0.3f;
 		summon_enemy.hit_effect_size = 0.3f;
 
-		// Summon_Enemy
+		// Boss_Enemy
 		boss_enemy.attack_power = 3;		// UŒ‚—Í
 		boss_enemy.attack_interval = 3.0f; // UŒ‚ŠÔŠu
 		boss_enemy.speed_power = -0.75f;    // ˆÚ“®‘¬“x
@@ -149,6 +149,16 @@ void EnemySpawner::Initialize()
 		boss_enemy.death_effect_size = 0.3f;
 		boss_enemy.hit_effect_size = 0.3f;
 
+		// Boss_Enemy
+		nuisance_enemy.attack_power = 0;		// UŒ‚—Í
+		nuisance_enemy.attack_interval = 0.0f; // UŒ‚ŠÔŠu
+		nuisance_enemy.speed_power = 0.0f;    // ˆÚ“®‘¬“x
+		nuisance_enemy.radius = 0.5f;			// ”¼Œa
+		nuisance_enemy.health = 3;				// ‘Ì—Í
+		nuisance_enemy.attack_effect_size = 0.3f;
+		nuisance_enemy.death_effect_size = 0.3f;
+		nuisance_enemy.hit_effect_size = 0.3f;
+
 		// ƒfƒoƒbƒO—p
 		script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
 		script_enemy_B = SetEnemy(4.0f, EnemyType::B, Shaft::Side, 4.0f);
@@ -157,9 +167,10 @@ void EnemySpawner::Initialize()
 		script_enemy_A_2 = SetEnemy(4.0f, EnemyType::A_2, Shaft::Side, 4.0f);
 		script_enemy_B_2 = SetEnemy(4.0f, EnemyType::B_2, Shaft::Side, 4.0f);
 		script_enemy_C_2 = SetEnemy(4.0f, EnemyType::C_2, Shaft::Side, 4.0f);
-		script_enemy_D_2 = SetEnemy(4.0f, EnemyType::D_2, Shaft::Side, 4.0f);
-		script_summon_enemy = SetEnemy(4.0f, EnemyType::Summon, Shaft::Side, 4.0f);
+		script_enemy_D_2 = SetEnemy(4.0f, EnemyType::D_2, Shaft::Vertical, 4.0f);
+		script_summon_enemy = SetEnemy(4.0f, EnemyType::Summon, { 4.0f,4.0f });
 		script_boss_enemy = SetEnemy(4.0f, EnemyType::Boss, Shaft::Side, 4.0f);
+		script_nuisance_enemy = SetEnemy(4.0f, EnemyType::Nuisance, { 4.0f,4.0f });
 	}
 }
 
@@ -435,6 +446,38 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
 
+		// TODO‚à‚Ë@ƒXƒe[ƒW‚ÌƒŒƒxƒ‹‚É‚æ‚Á‚ÄUŒ‚ŠÔŠu•ÏX
+		switch (StageManager::Instance().GetStageLevel())
+		{
+		case 0:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 1:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 2:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 3:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 4:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 5:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 6:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 7:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		case 8:
+			enemy->SetAttackInterval(3.0f);
+			break;
+		}
+
 		// ƒŠƒXƒg‚É’Ç‰Á
 		EnemyManager::Instance().Register(enemy);
 
@@ -444,6 +487,18 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new BossEnemy(false);
 		SetBasicEnemyStatus(enemy, boss_enemy);
+
+		enemy->SetShaft(script.shaft);
+		enemy->SetPosition(script.pos);
+		enemy->UpdateTransform();
+		// ƒŠƒXƒg‚É’Ç‰Á
+		EnemyManager::Instance().Register(enemy);
+		break;
+	}
+	case EnemyType::Nuisance:
+	{
+		enemy = new NuisanceEnemy(false);
+		SetBasicEnemyStatus(enemy, nuisance_enemy);
 
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
@@ -521,6 +576,11 @@ void EnemySpawner::DebugImGui()
 		EnemyImGui(boss_enemy);
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("nuisance"))
+	{
+		EnemyImGui(nuisance_enemy);
+		ImGui::TreePop();
+	}
 
 
 
@@ -569,6 +629,10 @@ void EnemySpawner::DebugImGui()
 	if (ImGui::Button("boss"))
 	{
 		EnemySpawn(script_boss_enemy);
+	}
+	if (ImGui::Button("nuisance"))
+	{
+		EnemySpawn(script_nuisance_enemy);
 	}
 	ImGui::End();
 }
@@ -865,6 +929,9 @@ void EnemySpawner::InitializeLevel6()
 
 void EnemySpawner::InitializeLevel7()
 {
+	level_7.emplace_back(SetEnemy(0.0f, EnemyType::C, Shaft::Vertical, 5.0f));
+	level_7.emplace_back(SetEnemy(0.0f, EnemyType::C, Shaft::Side, 5.0f));
+	//level_7.emplace_back(SetEnemy(1.0f, EnemyType::Nuisance, { 5.0f,5.0f }));
 }
 
 void EnemySpawner::InitializeLevel8()

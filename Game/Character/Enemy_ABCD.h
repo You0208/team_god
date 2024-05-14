@@ -123,6 +123,8 @@ private:
         Up,
     };
 
+
+
     int     move_state      = Move::Straight;         // ˆÚ“®‚Ìó‘Ô
     int     direction_state = Direction::Under;       // •ûŒü‚Ìó‘Ô
     float   dis             = 0.0f;                   // ˆÚ“®—Ê

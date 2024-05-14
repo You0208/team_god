@@ -13,7 +13,7 @@ FbxModelManager::FbxModelManager(ID3D11Device* device, const char* fbx_filename,
         sampling_rate
     );
 #else // リソースマネージャーなし
-    fbx_model = std::make_unique<skinned_mesh>(device, fbx_filename, triangulate, sampling_rate);
+    fbx_model = std::make_unique<SkinnedMesh>(device, fbx_filename, triangulate, sampling_rate);
 #endif
 
 }
@@ -67,9 +67,9 @@ void FbxModelManager::Render(const float& scale, ID3D11PixelShader** replaced_pi
     }
 }
 
-void FbxModelManager::DrawDebug(std::string i)
+void FbxModelManager::DrawDebug(float i)
 {
-    GetTransform()->DrawDebug(i);
+
 }
 
 
@@ -210,11 +210,22 @@ bool FbxModelManager::IsPlayAnimation() const
     return true;
 }
 
-void FbxModelManager::Dissolve(const float& elapsedTime)
+void FbxModelManager::OutDissolve(const float& elapsedTime, const float& speed)
 {
-    if (fbx_model->dissolve >= 0)
+    if (fbx_model->dissolve >= 0 && is_dissolve)
     {
-        fbx_model->dissolve -= elapsedTime;
+        is_dissolve = true;
+        fbx_model->dissolve -= elapsedTime * speed;
+    }
+    else  is_dissolve = false;
+}
+
+void FbxModelManager::InDissolve(const float& elapsedTime, const float& speed)
+{
+    if (fbx_model->dissolve <= 1.0f && is_dissolve)
+    {
+        is_dissolve = true;
+        fbx_model->dissolve += elapsedTime * speed;
     }
     else  is_dissolve = false;
 }

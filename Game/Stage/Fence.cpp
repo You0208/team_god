@@ -3,6 +3,7 @@
 #include "Lemur/Scene/SceneManager.h"
 #include "Game/Scene/OverScene.h"
 #include "Lemur/Graphics/DebugRenderer.h"
+
 static Fence* instance = nullptr;
 
 Fence::Fence()

@@ -28,8 +28,7 @@ public: // 取得・設定関数関連
 
     // アニメーション再生速度設定（途中で再生速度を変えたいときなどに）
     void SetAnimationSpeed(const float& speed) { animation_speed = speed; }
-
-
+    void SetLoopFlag(const bool& loop) { animation_loop_flag = loop; }
 public: // アニメーション関数関連
     // アニメーション再生設定
     // (アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
@@ -47,8 +46,15 @@ public: // アニメーション関数関連
     // アニメーションが再生中かどうか
     bool IsPlayAnimation() const;
 
-    void Dissolve(const float& elapsedTime);
+    // ディゾルブ
+    void OutDissolve(const float& elapsedTime, const float& speed = 1.0f);
+    void InDissolve(const float& elapsedTime, const float& speed = 1.0f);
+    // 透明度を０に
+    void ClearThreshold() { gltf_model->threshold = 0.0f; }
+    bool GetIsDissolve() { return is_dissolve; }
+    void SetIsDissolve(bool is) { is_dissolve = is; }
 public: // デバッグ確認用
+
     bool is_blend_animation = true;     // アニメーションブレンドオンオフ
 
 public:
@@ -80,5 +86,5 @@ private:
     bool once = true;
 
     bool is_blend = false;
-    bool is_dissolve = true;
+    bool is_dissolve = false;
 };

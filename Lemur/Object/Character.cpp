@@ -33,7 +33,6 @@ void Character::DrawDebugGUI(std::string name, int i)
 {
     std::string num = std::to_string(i);
     name = name + num;
-
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))
     {

@@ -114,6 +114,9 @@ private:
     // BossEnemy
     EnemyStatus boss_enemy;
 
+    // NuisanceEnemy
+    EnemyStatus nuisance_enemy;
+
     // Imgui
     void EnemyImGui(EnemyStatus& status);
 
@@ -129,6 +132,7 @@ private:
 
     EnemyScript script_summon_enemy;
     EnemyScript script_boss_enemy;
+    EnemyScript script_nuisance_enemy;
 
     int count;
 };

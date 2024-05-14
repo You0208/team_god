@@ -1,6 +1,5 @@
 #pragma once
 #include "Lemur/Object/Character.h"
-#include "Lemur/Graphics/Shader.h"
 #include "Lemur/Effekseer/Effect.h"
 #include "Seed.h"
 

@@ -41,6 +41,14 @@ Player::Player()
     position.z = -sub_pos_z;
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+
+    // 姿勢を変えておく
+    // 案山子位置の更新
+    sub_pos_z = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y + sub_pos_z_puls;
+    position.z = -sub_pos_z;
+
+    // 行列更新処理
+    UpdateTransform();
 }
 
 Player::~Player()

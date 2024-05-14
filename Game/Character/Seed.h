@@ -1,8 +1,7 @@
 #pragma once
 #include "Lemur/Object/Character.h"
-#include "Lemur/Graphics/Shader.h"
-#include "Lemur/Model/FbxModelManager.h"
 #include "Lemur/Effekseer/Effect.h"
+
 class Seed :public Character
 {
 public:

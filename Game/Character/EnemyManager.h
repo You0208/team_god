@@ -20,7 +20,7 @@ public:
     // XVˆ—
     void Update(float elapsedTime);
 
-    void PowerUpEnemy(int add_power);
+    void PowerUpEnemy();
 
     // •`‰æˆ—
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader);

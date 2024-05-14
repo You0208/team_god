@@ -48,20 +48,12 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
          // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
-            //TODO これはアニメーションがきたら要変更
-            PlayAnimation(Animation::Attack, false);
-            attack_effect->Play(position,attack_effect_size);
+            attack_effect->Play(position, attack_effect_size);
+            PlayAnimation(2, false);
             // タイマーをに
             timer = 0.0f;
         }
     }
-
-    //TODO これはアニメーションがきたら要変更
-    if (!IsPlayAnimation())
-    {
-        PlayAnimation(7, true);
-    }
-
     // 死亡時は死亡ステートへ切り替え
     if (IsDead())
     {
@@ -120,7 +112,7 @@ Enemy_B::Enemy_B(bool is_minor)
     health          = 10;       // HP
 
     // とりあえずアニメーション
-    PlayAnimation(Animation::Move, true);
+    PlayAnimation(Animation::Move, false);
 }
 
 void Enemy_B::DrawDebugGUI(int n)
@@ -139,18 +131,18 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
-            attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
-            PlayAnimation(Animation::Attack, false);
+            PlayAnimation(Animation::Attack, false,0.8f, 0.5f);
+
+            attack_effect->Play(position, attack_effect_size);
             // タイマーをに
             attack_timer = 0.0f;
         }
     }
 
-    //TODO これはアニメーションがきたら要変更
-    if (!IsPlayAnimation())
+    if (!IsPlayAnimation() && GetCurrentAnimationIndex() != Animation::Move)
     {
-       PlayAnimation(7, true);
+        PlayAnimation(Animation::Move, false, 0.8f,0.5f);
     }
 
     // 死亡時は死亡ステートへ切り替え
@@ -186,6 +178,7 @@ void Enemy_B::UpdateMoveState(float elapsed_time)
             {
                 // 再び待機
                 move_timer = 0.0f;
+                PlayAnimation(Animation::Move, false);
             }
         }
         else
@@ -197,6 +190,7 @@ void Enemy_B::UpdateMoveState(float elapsed_time)
             {
                 // 再び待機
                 move_timer = 0.0f;
+                PlayAnimation(Animation::Move, false,1.0f,1.0f);
             }
         }
     }
@@ -249,7 +243,7 @@ Enemy_C::Enemy_C(bool is_minor)
     radius          = 1.0f;      // 半径
     height          = 1.0f;      // デバッグ要
     //position.x      = 5.0f;      // 初期位置
-    //rotation.y      = -90.0f;    // 初期角度
+    rotation.y      = -90.0f;    // 初期角度
     speed_power     = -1.0f;     // 速度
     health          = 10;        // HP
 
@@ -304,6 +298,8 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
 {
     if (shaft == Shaft::Side)
     {
+        // 角度調整
+        rotation.y = DirectX::XMConvertToRadians(-90);
         // 移動
         HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
             speed_power, Move::Straight, Move::Avoid, velocity.x, is_touched_unit, elapsed_time);
@@ -312,6 +308,8 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
     }
     else
     {
+        // 角度調整
+        rotation.y = DirectX::XMConvertToRadians(180);
         // 移動
         HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
             speed_power, Move::Straight, Move::Avoid, velocity.z, is_touched_unit, elapsed_time);
@@ -636,6 +634,7 @@ void Enemy_D::UpdateMoveState_S(float elapsed_time)
     switch (move_state)
     {
     case Move::Straight:
+        rotation.y = DirectX::XMConvertToRadians(-90);
         // 横移動
         velocity.x = speed_power;
         // 移動量を記録
@@ -651,6 +650,7 @@ void Enemy_D::UpdateMoveState_S(float elapsed_time)
         }
         break;
     case Move::Diagonal:
+        rotation.y = DirectX::XMConvertToRadians(-45);
         // 横移動
         velocity.x = speed_power;
         // 移動量を記録
@@ -668,6 +668,7 @@ void Enemy_D::UpdateMoveState_S(float elapsed_time)
         switch (direction_state)
         {
         case Direction::Under:
+            rotation.y = DirectX::XMConvertToRadians(45);
             velocity.z = speed_power_Y;// 縦移動
 
             // 後ろ方向に振り切っていたら
@@ -701,6 +702,8 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
     switch (move_state)
     {
     case Move::Straight:
+        // 角度調整
+        rotation.y = DirectX::XMConvertToRadians(180);
         // 縦移動
         velocity.z = speed_power;
         // 移動量を記録
@@ -733,6 +736,8 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
         switch (direction_state)
         {
         case Direction::Under:// 右側
+            rotation.y = DirectX::XMConvertToRadians(225);
+
             velocity.x = speed_power_Y;// 右斜め移動
 
             // 後ろ方向に振り切っていたら
@@ -742,6 +747,8 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
             }
             break;
         case Direction::Up:// 左側
+            rotation.y = DirectX::XMConvertToRadians(135);
+
             velocity.x = -speed_power_Y;// 縦移動
 
             // 後ろ方向に振り切っていたら

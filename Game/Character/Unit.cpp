@@ -1,5 +1,4 @@
 #include "Unit.h"
-#include "Lemur/Graphics/Graphics.h"
 #include "UnitManager.h"
 #include "Lemur/Effekseer/EffekseerManager.h"
 

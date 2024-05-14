@@ -50,7 +50,16 @@ VS_OUT main(VS_IN vin)
 
 #endif
     vout.binormal = normalize(cross(vout.world_normal.xyz, vout.world_tangent.xyz));
-  
+    
+    
+    //// Calculate view direction in world space
+    //float3 viewDirection = normalize(camera_position.xyz - mul(world, float4(vin.position.xyz, 1.0f)).xyz);
+
+    
+    //// Construct TBN matrix
+    //float3x3 TBN = float3x3(vout.world_tangent.xyz, vout.binormal.xyz, vout.world_normal.xyz);
+    //vout.view_tan= mul(viewDirection, TBN);
+    
     
     return vout;
 }

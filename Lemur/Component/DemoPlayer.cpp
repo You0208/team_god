@@ -61,7 +61,6 @@ void DemoPlayer::DebugImgui()
 	// int‚ÌêŠ‚É–¼‘O‚ð“ü‚ê‚Ä‚ào—ˆ‚Ü‚·B
 	float f = Model->JointPosition(0, 0, &keyframe, world).x;
 	ImGui::Begin("DemoPlayer");// ‚±‚±‚Ìname‚ðDemoPlayer‚É•Ï‚¦‚Ü‚µ‚½
-	ImGui::DragFloat("dissolve", &GetModel()->dissolve,-1.0f,1.0f);
 	ImGui::DragFloat("PlayerPosition", &position.x);
 	ImGui::DragFloat("ScaleFactor", &scaleFactor);
 	ImGui::DragFloat("jointposition", &f);

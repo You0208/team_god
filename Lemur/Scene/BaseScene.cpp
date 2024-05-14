@@ -462,10 +462,12 @@ void Lemur::Scene::BaseScene::InitializeMask()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
+	LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
+
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/transition_mask_ps.cso", transition_mask_ps.GetAddressOf());
 
 	spr_transition_mask_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\back.png");
-	spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\transition_mask.png");
+	spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\tomato_mask.png");
 
 	//LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\Transition\\transition_mask.png", transition_mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
 }
@@ -905,7 +907,10 @@ void Lemur::Scene::BaseScene::RenderTransitionMask(float elapsed_time)
 
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Clear(immediate_context, 0.0f, 0.0f, 0.0f, 0.0f, 0);
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Activate(immediate_context);
-	spr_transition_mask->RenderCenter(immediate_context, mask_pos.x, mask_pos.y, 856 * mask_scale.value, 424 * mask_scale.value,mask_angle);
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	spr_transition_mask->RenderCenter(immediate_context, mask_pos.x, mask_pos.y, 591 * mask_scale.value, 525 * mask_scale.value,mask_angle);
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Deactivate(immediate_context);
 
 	//@MASK
@@ -929,25 +934,27 @@ void Lemur::Scene::BaseScene::EasingFunction::EasingValue(float elapsed_time)
 			return;
 		}
 
-		if (target_value >= start_value)
+		if (easing_type != EasingType::OutBounce)
 		{
-			if (value >= target_value) {
-				value = target_value;
-				is_easing = false;
-				timer = 0.0f;
-				return;
+			if (target_value >= start_value)
+			{
+				if (value >= target_value) {
+					value = target_value;
+					is_easing = false;
+					timer = 0.0f;
+					return;
+				}
+			}
+			else if (target_value >= start_value)
+			{
+				if (value <= target_value) {
+					value = target_value;
+					is_easing = false;
+					timer = 0.0f;
+					return;
+				}
 			}
 		}
-		else if (target_value >= start_value)
-		{
-			if (value <= target_value) {
-				value = target_value;
-				is_easing = false;
-				timer = 0.0f;
-				return;
-			}
-		}
-
 		timer += elapsed_time;
 
 		switch (easing_type)
@@ -959,7 +966,7 @@ void Lemur::Scene::BaseScene::EasingFunction::EasingValue(float elapsed_time)
 			break;
 		case EasingType::OutSine:
 			value = {
-			Easing::InSine(timer, time_max, target_value, start_value)
+			Easing::OutSine(timer, time_max, target_value, start_value)
 			};
 			break;
 		case EasingType::OutBounce:

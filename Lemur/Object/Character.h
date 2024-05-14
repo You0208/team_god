@@ -26,9 +26,18 @@ public:
     // 行列の更新処理
     void UpdateTransform();
 
-    void Dissolve(float elapsedTime) {
-        if (is_gltf) gltf_model->Dissolve(elapsedTime);
-        else model->Dissolve(elapsedTime);
+    void CallDissolve()
+    {
+        if (is_gltf) gltf_model->SetIsDissolve(true);
+        else
+        {
+            model->SetIsDissolve(true);
+        }
+    }
+
+    void OutDissolve(float elapsedTime) {
+        if (is_gltf) gltf_model->OutDissolve(elapsedTime);
+        else model->OutDissolve(elapsedTime);
     }
 protected:
     //----------モデル関連------------------------------------------------
@@ -133,7 +142,8 @@ protected:
     //TODO ここ修正
     const bool GetIsDissolve()&
     {
-        return model->GetIsDissolve();
+        if (is_gltf)return gltf_model->GetIsDissolve();
+        else return  model->GetIsDissolve();
     }
 public:
     //---------Getter--------------------------------------------------------------------------
@@ -169,6 +179,7 @@ public:
     void SetAngle(const DirectX::XMFLOAT3& rotation) { this->rotation = rotation; }                 // 回転
     void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }                          // スケール
     void SetScaleFactor(const float scaleFactor) { this->scaleFactor = scaleFactor; }               // スケールファクター
+    void SetModelScale(const float model_scale) { this->model_scale = model_scale; }               // スケールファクター
     void SetModel(std::shared_ptr<FbxModelManager> Model) { this->model = Model; }                  // モデル
     void SetAnimCalcRate(const float calc_rate_) { anim_calc_rate = calc_rate_; }                   // アニメーションの再生速度倍率
 
@@ -180,7 +191,10 @@ public:
     void SetRadius(const float radius_) { this->radius = radius_; }                                   // 半径
     void SetAttackRadius(const float attack_radius_) { this->attack_collision_range = attack_radius_; } // 半径
     void SetSpeedPower(const float speed_power_) { this->speed_power = speed_power_; }                // 速度
-
+    void SetLoopFlag(const bool& loop) {
+        if (is_gltf)return gltf_model->SetLoopFlag(loop);
+        else return  model->SetLoopFlag(loop);
+    }
 private:
     std::shared_ptr<FbxModelManager> model = nullptr;                           // FBXモデル
     std::shared_ptr<GltfModelManager> gltf_model = nullptr;                     // Gltfモデル

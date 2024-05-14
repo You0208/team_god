@@ -11,33 +11,40 @@ void Enemy::TransitionDeathState()
 {
     // 速度を０に
     velocity.x = velocity.y = velocity.z = 0.0f;
+
     // アニメーションの切り替え
-    PlayAnimation(Animation::Out, false);
+    if (EnemyType::A || EnemyType::A_2)
+    {
+        PlayAnimation(1, false);
+    }
+    else
+    {
+        PlayAnimation(Animation::Out, false);
+    }
 
     death_effect->Play(position, death_effect_size);
+
+
     // ステート切り替え
     state = State::Death;
 }
 
 void Enemy::UpdateDeathState(float elapsed_time)
 {
-   // radius = 0.0f;
     if(!IsPlayAnimation())
     {
-        //Dissolve(elapsed_time);
-       /* if (!GetIsDissolve()) */EnemyManager::Instance().Remove(this);
+        EnemyManager::Instance().Remove(this);
     }
-    //Dissolve(elapsed_time);
-
-    //if (!GetIsDissolve() && !IsPlayAnimation())EnemyManager::Instance().Remove(this);
 }
 
 void Enemy::TransitionAttackState()
 {
     // 速度を０に
     velocity.x = velocity.y = velocity.z = 0.0f;
+
     // アニメーションの切り替え
-    PlayAnimation(Animation::Attack, false);
+    SetLoopFlag(false);
+
     // ステート切り替え
     state = State::Attack;
 }

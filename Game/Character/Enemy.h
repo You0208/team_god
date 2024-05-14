@@ -1,6 +1,5 @@
 #pragma once
 #include "Lemur/Object/Character.h"
-#include "Lemur/Graphics/Shader.h"
 #include "../Stage/Fence.h"
 #include "Lemur/Effekseer/Effect.h"
 
@@ -16,7 +15,8 @@ enum EnemyType
     C_2,
     D_2,
     Summon,
-    Boss
+    Boss,
+    Nuisance
 };
 
 enum Shaft
@@ -102,12 +102,20 @@ public:
     // ダメージを与える
     bool ApplyDamage(int damage);
 
+    void PowerUp(int add) 
+    {
+        if (!is_power_up)
+        {
+            attack_power += add;
+            is_power_up = true;
+        }
+    }
 protected:
     enum Animation
     {
         Move,
-        Out,
-        Attack
+        Attack,
+        Out
     };
     enum class State
     {
@@ -131,4 +139,6 @@ protected:
     float       move_timer_max      = 0.0f;             // 移動間隔
     float       dis                 = 0.0f;             // 進む距離
     float       speed_power_Y       = 0.0f;             // 斜めに進むときのスピード
+
+    bool        is_power_up         = false;            // パワーアップしたか
 };

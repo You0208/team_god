@@ -1,5 +1,4 @@
 #pragma once
-#include "Lemur/Graphics/Shader.h"
 #include "Lemur/Collision/Collision.h"
 #include "Lemur/Model/FbxModelManager.h"
 

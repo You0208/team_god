@@ -167,11 +167,22 @@ bool GltfModelManager::IsPlayAnimation() const
     return true;
 }
 
-void GltfModelManager::Dissolve(const float& elapsedTime)
+void GltfModelManager::OutDissolve(const float& elapsedTime,const float& speed)
 {
-    if (gltf_model->threshold >= 0)
+    if (gltf_model->threshold >= 0 && is_dissolve)
     {
-        gltf_model->threshold -= elapsedTime;
+        is_dissolve = true;
+        gltf_model->threshold -= elapsedTime * speed;
+    }
+    else  is_dissolve = false;
+}
+
+void GltfModelManager::InDissolve(const float& elapsedTime, const float& speed)
+{
+    if (gltf_model->threshold <= 1.0f&& is_dissolve)
+    {
+        is_dissolve = true;
+        gltf_model->threshold += elapsedTime * speed;
     }
     else  is_dissolve = false;
 }

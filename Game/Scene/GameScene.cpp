@@ -4,6 +4,7 @@
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
 #include "Game/Scene/OverScene.h"
+#include "Game/Scene/LoadingScene.h"
 #include "./high_resolution_timer.h"
 
 // Effect
@@ -40,6 +41,9 @@ void GameScene::Initialize()
 		// ポイントライト・スポットライトの初期位置設定
 		InitializeLight();
 
+		// マスクの初期化
+		InitializeMask();
+
 		// スカイマップテクスチャのロード
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
@@ -65,12 +69,17 @@ void GameScene::Initialize()
 	{
 		// カメラ
 		Camera& camera = Camera::Instance();
+
 		//TODO もね カメラ調整
 		camera_range = 30.0f;
 		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
+		camera.SetTarget(camera_target);
+		camera.SetRange(camera_range);
+		camera.SetEyeYOffset(8.0f);
+		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(4);
+		stage_manager.SetStageLevel(6);
 
 		//TODO もね 制限時間の初期化
 		switch (StageManager::Instance().GetStageLevel())
@@ -120,7 +129,9 @@ void GameScene::Initialize()
 		UnitManager::Instance().Initialize();
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
-	
+
+		// アイリスアウトを呼ぶ
+		CallTransition(false);
 	}
 
 	// デバッグ
@@ -188,14 +199,16 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	// カメラ
 	{
 		camera.Update(elapsedTime);
-		camera.SetTarget(camera_target);
-		camera.SetRange(camera_range);
-		camera.SetEyeYOffset(8.0f);
-		camera.SetAngle(camera_angle);
 	}
 
 	// ライトの更新
 	LightUpdate();
+
+	// マスクの更新
+	TransitionMask(elapsedTime);
+
+	// 遷移演出の最中はこれより下に行かない
+	if (start_transition)return;
 
 	// ゲーム
 	{
@@ -208,8 +221,9 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		}
 		if (time_up)
 		{
+			EnemyManager::Instance().PowerUpEnemy();
 			// タイムアップかつ敵が全て死んだら
-			if (EnemyManager::Instance().GetEnemyCount() <= 0)Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
+			if (EnemyManager::Instance().GetEnemyCount() <= 0)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new OverScene));
 		}
 
 		// プレイヤーの更新
@@ -359,6 +373,8 @@ void GameScene::Render(float elapsedTime)
 		EffectManager::Instance().Render(view, projection);
 	}
 
+	// マスクの描画
+	RenderTransitionMask(elapsedTime);
 }
 
 void GameScene::DebugImgui()

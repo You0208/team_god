@@ -34,6 +34,15 @@ void EnemyManager::Update(float elapsedTime)
     removes.clear();
 }
 
+void EnemyManager::PowerUpEnemy()
+{
+    for (int i = 0; i < GetEnemyCount(); i++)
+    {
+        Enemy* enemy = enemies.at(i);
+        enemy->PowerUp(add_attack);
+    }
+}
+
 // •`‰æˆ—
 void EnemyManager::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
 {

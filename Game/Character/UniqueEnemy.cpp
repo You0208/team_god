@@ -13,20 +13,22 @@ SummonEnemy::SummonEnemy(bool is_minor)
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
     attack_power = 1;        // 攻撃力
-    attack_interval = 3.0f;     // 攻撃間隔
+    attack_interval = 7.0f;     // 攻撃間隔
 
     health = 10;       // HP
-    radius = 1.0f;     // 半径
+
     height = 1.0f;     // デバッグ用
     speed_power = -1.0f;    // 速度
 
-    
     // TODO もね
+    // 出現敵の大きさ
+    child_scale = 1.0f;
+
     // 出現敵のステータススタック
     status[0].attack_power = 1;              //攻撃力
     status[0].attack_interval = 0.5f;        //攻撃間隔
     status[0].health = 3;                    // HP
-    status[0].speed_power = -0.5f;            // 速度
+    status[0].speed_power = -0.5f;           // 速度
     status[0].radius = 0.5f;                 // 半径
     status[0].attack_effect_size = 0.5f;     // 攻撃エフェクトのサイズ
     status[0].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
@@ -63,8 +65,13 @@ SummonEnemy::SummonEnemy(bool is_minor)
     mover_timer_max_B = 1.0f; // 一気に進むまでの時間
     dis_B             = 3.0f;     // 一気に進む距離
 
+    // TODO もね　大きさ
+    model_scale = 1.0f;
+    // 半径の調整
+    radius = 1.0f;     // 半径
+
     // とりあえずアニメーション
-    PlayAnimation(Animation::Move, true);
+    PlayAnimation(Animation::Attack, false);
 }
 
 void SummonEnemy::DrawDebugPrimitive()
@@ -85,10 +92,18 @@ void SummonEnemy::UpdateAttackState(float elapsed_time)
 void SummonEnemy::UpdateMoveState(float elapsed_time)
 {
     timer += elapsed_time;
+    float interval = 0.0f;
+    if (first)
+    {
+        interval = 1.0f;
+        first = false;
+    }
+    else interval = attack_interval;
 
     // タイマーが既定の時間になったら敵を召喚
-    if (attack_interval < timer)
+    if (interval < timer )
     {
+        PlayAnimation(Animation::Attack, false);
         Enemy* enemy = nullptr;
         switch (rand() % 3)
         {
@@ -99,6 +114,7 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
 
             enemy->SetShaft(rand() % 2);// ランダムな軸に
             enemy->SetPosition(position);// 召喚敵の座標を設定
+            enemy->SetModelScale(child_scale);
             enemy->UpdateTransform();
 
             // リストに追加
@@ -114,6 +130,7 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
 
             enemy->SetShaft(rand() % 2);// ランダムな軸に
             enemy->SetPosition(position);// 召喚敵の座標を設定
+            enemy->SetModelScale(child_scale);
             enemy->UpdateTransform();
 
             // リストに追加
@@ -127,6 +144,7 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
 
             enemy->SetShaft(rand() % 2);// ランダムな軸に
             enemy->SetPosition(position);// 召喚敵の座標を設定
+            enemy->SetModelScale(child_scale);
             enemy->UpdateTransform();
 
             // リストに追加
@@ -231,6 +249,49 @@ void BossEnemy::UpdateMoveState(float elapsed_time)
         else if (shaft == Shaft::Vertical)velocity.z = speed_power;
     }
 
+    // 死亡ステートへ
+    if (IsDead())
+    {
+        TransitionDeathState();
+    }
+}
+
+
+
+NuisanceEnemy::NuisanceEnemy(bool is_minor)
+{
+    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer2.fbx");
+
+    attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
+    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+
+    health = 10;            // HP
+    radius = 1.0f;          // 半径
+    height = 1.0f;          // デバッグ用
+
+    // TODO もね　大きさ
+    model_scale = 2.0f;
+
+    // とりあえずアニメーション
+    PlayAnimation(Animation::Move, true);
+}
+
+void NuisanceEnemy::DrawDebugPrimitive()
+{
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+}
+
+void NuisanceEnemy::DrawDebugGUI(int n)
+{
+    Character::DrawDebugGUI("NuisanceEnemy", n);
+}
+
+void NuisanceEnemy::UpdateMoveState(float elapsed_time)
+{
     // 死亡ステートへ
     if (IsDead())
     {

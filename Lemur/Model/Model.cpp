@@ -18,6 +18,8 @@ using namespace DirectX;
 #include <stb_image.h>
 #include <DDSTextureLoader.h>
 
+#include "ImGuiCtrl.h"
+
 inline XMFLOAT4X4  to_xmfloat4x4(const FbxAMatrix& fbxamatrix)
 {
     XMFLOAT4X4 xmfloat4x4;
@@ -200,7 +202,7 @@ SkinnedMesh::SkinnedMesh(ID3D11Device* device, const char* fbx_filename, bool tr
         serialization(scene_view, meshes, materials, animation_clips);
     }
     CreateComObjects(device, fbx_filename, used_as_collider/*RAYCAST*/);
-
+    dissolve = 1.0f;
 }
 
 // アペンドアニメーション
@@ -405,6 +407,7 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         LoadTexture(device, filename, "_Metalness", true, iterator->second.metalness.GetAddressOf(), 0x00FFFF00);
         LoadTexture(device, filename, "_Roughness", true, iterator->second.roughness.GetAddressOf(), 0x00FFFF00);
         LoadTexture(device, filename, "_Opacity", true, iterator->second.opacity.GetAddressOf(), 0xFFFFFFFF);
+        LoadTexture(device, filename, "_Height", true, iterator->second.height.GetAddressOf(), 0xFFFFFFFF);
     }
 
     HRESULT hr = S_OK;
@@ -508,6 +511,7 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const XMFLOAT4X
             immediate_context->PSSetShaderResources(4, 1, material.metalness.GetAddressOf());
             immediate_context->PSSetShaderResources(5, 1, material.roughness.GetAddressOf());
             immediate_context->PSSetShaderResources(6, 1, material.opacity.GetAddressOf());
+            immediate_context->PSSetShaderResources(7, 1, material.height.GetAddressOf());
 
 
             // 使用するインデックスバッファの範囲を指定して描画する
@@ -539,8 +543,6 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const DirectX::
         }
 
         constants data;
-        data.threshold = dissolve;
-
         if (keyframe && keyframe->nodes.size() > 0)
         {
             // メッシュ全体が動くように変更
@@ -579,6 +581,8 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const DirectX::
 
             // material 構造体のメンバ変数 Kd と  material_color を合成する
             XMStoreFloat4(&data.material_color, XMLoadFloat4(&material_color) * XMLoadFloat4(&material.Kd));;
+
+            data.threshold = this->dissolve;
 
             // サブリソースにデータをコピー
             immediate_context->UpdateSubresource(constant_buffer.Get(), 0, 0, &data, 0, 0);
@@ -1029,6 +1033,13 @@ void SkinnedMesh::FetchAnimations(FbxScene* fbx_scene, std::vector<Animation>& a
         delete animation_stack_names[animation_stack_index];
     }
 }
+
+void SkinnedMesh::DebugThreshold(float n)
+{
+    dissolve = n;
+    //ImGui::SliderFloat("threshold", &this->dissolve, 0.0f, 1.0f);
+}
+
 
 bool SkinnedMesh::AppendAnimations(const char* animation_filename, float sampling_rate)
 {
