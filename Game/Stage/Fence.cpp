@@ -125,7 +125,7 @@ void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 
 void Fence::DrawDebugGui()
 {
-    ImGui::Begin(u8"ò");
+    ImGui::Begin(u8"ò‚¤");
     ImGui::SliderInt(u8"‘Ï‹v’l", &health, 0, 100);
     ImGui::End();
 

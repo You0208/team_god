@@ -11,18 +11,18 @@ void UnitManager::Initialize()
             0.0f,// 攻撃間隔
             3,   // 攻撃力
             1,   // 攻撃回数
-            0.3f,// 攻撃エフェクトサイズ
+            0.4f,// 攻撃エフェクトサイズ
             0.3f,// 死亡エフェクトサイズ
             0.3f // 設置エフェクトサイズ
         );
-        unit_status[UNIT_INDEX::Chili].attack_radius                  = 1.62f;                 // 攻撃半径
+        unit_status[UNIT_INDEX::Chili].attack_radius                  = 1.60f;                 // 攻撃半径
 
         //Shishito
         InitializeBasic(unit_status[UNIT_INDEX::Shishito],
             0.0f,// 攻撃間隔
             0,   // 攻撃力
             0,   // 攻撃回数
-            0.3f,// 攻撃エフェクトサイズ
+            0.25f,// 攻撃エフェクトサイズ
             0.3f,// 死亡エフェクトサイズ
             0.3f // 設置エフェクトサイズ
         );
@@ -33,13 +33,13 @@ void UnitManager::Initialize()
         //OrangePumpkin
         InitializeBasic(unit_status[UNIT_INDEX::OrangePumpkin],
             0.0f,// 攻撃間隔
-            5,   // 攻撃力
+            5,   // 攻撃力R
             1,   // 攻撃回数
             0.1f,// 攻撃エフェクトサイズ
             0.3f,// 死亡エフェクトサイズ
             0.3f // 設置エフェクトサイズ
         );
-        unit_status[UNIT_INDEX::OrangePumpkin].t_height = 1.59f;             // 三角形の高さ
+        unit_status[UNIT_INDEX::OrangePumpkin].t_height = 1.7f;             // 三角形の高さ
         unit_status[UNIT_INDEX::OrangePumpkin].t_base = 1.59f;             // 三角形の底辺長
 
         //GreenPumpkin
@@ -51,7 +51,7 @@ void UnitManager::Initialize()
             0.3f,// 死亡エフェクトサイズ
             0.3f // 設置エフェクトサイズ
         );
-        unit_status[UNIT_INDEX::GreenPumpkin].t_height = 1.59f;                // 三角形の高さ
+        unit_status[UNIT_INDEX::GreenPumpkin].t_height = 1.7f;                // 三角形の高さ
         unit_status[UNIT_INDEX::GreenPumpkin].t_base   = 1.59f;                // 三角形の底辺長
 
         //Broccoli

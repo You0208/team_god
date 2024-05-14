@@ -18,7 +18,7 @@ Seed::Seed()
     radius = 0.3f;
     height = 0.3f;
     //TODO もね　種エフェクトのサイズ
-    effect_size = 0.1f;
+    effect_size = 0.05f;
     PlayAnimation(0, false);
 }
 

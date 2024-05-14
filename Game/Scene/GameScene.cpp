@@ -65,24 +65,23 @@ void GameScene::Initialize()
 	{
 		// カメラ
 		Camera& camera = Camera::Instance();
-		//TODO もね カメラ調整
 		camera_range = 30.0f;
 		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(4);
+		stage_manager.SetStageLevel(3);
 
-		//TODO もね 制限時間の初期化
+		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
 		case 0:// レベル１
-			time_limit = 70.0f;// ここで制限時間を調整
+			time_limit = 80.0f;// ここで制限時間を調整
 			break;
 		case 1:// レベル２
-			time_limit = 85.0f;// ここで制限時間を調整
+			time_limit = 95.0f;// ここで制限時間を調整
 			break;
 		case 2:// レベル３
-			time_limit = 92.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
 			time_limit = 95.0f;// ここで制限時間を調整
@@ -347,6 +346,7 @@ void GameScene::Render(float elapsedTime)
 		DirectX::XMFLOAT4X4 projection;
 		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+		//TODO もね　当たり判定
 		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
 
 		// エフェクト再生
