@@ -250,10 +250,10 @@ void Player::ChangeCategory()
     //Cauliflower（横）
     //ｊ（ドーナツ）
 
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Broccoli;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Broccoli;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
 
 
     if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];

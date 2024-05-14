@@ -47,8 +47,8 @@ void EnemySpawner::Initialize()
 		enemy_A.radius = 0.35f;			// ”¼Œa
 		enemy_A.health = 3;				// ‘Ì—Í
 		enemy_A.attack_effect_size = 0.3f;			
-		enemy_A.death_effect_size = 0.3f;
-		enemy_A.hit_effect_size = 0.2f;
+		enemy_A.death_effect_size = 0.4f;
+		enemy_A.hit_effect_size = 0.3f;
 
 		// Enemy_B
 		enemy_B.attack_power = 2;		 // UŒ‚—Í
@@ -57,8 +57,8 @@ void EnemySpawner::Initialize()
 		enemy_B.radius = 0.35f;			 // ”¼Œa
 		enemy_B.health = 4;				 // ‘Ì—Í
 		enemy_B.attack_effect_size = 0.3f;
-		enemy_B.death_effect_size = 0.3f;
-		enemy_B.hit_effect_size = 0.2f;
+		enemy_B.death_effect_size = 0.4f;
+		enemy_B.hit_effect_size = 0.3f;
 		mover_timer_max_B = 1.3f;		 // ‚Æ‚Ç‚Ü‚Á‚Ä‚¢‚éŠÔ
 		dis_B = 3.0f;					 // ˆê‹C‚Éi‚Ş‹——£
 
@@ -70,8 +70,8 @@ void EnemySpawner::Initialize()
 		enemy_C.radius = 0.35f;				// ”¼Œa
 		enemy_C.health = 3;					// ‘Ì—Í
 		enemy_C.attack_effect_size = 0.3f;
-		enemy_C.death_effect_size = 0.3f;
-		enemy_C.hit_effect_size = 0.2f;
+		enemy_C.death_effect_size = 0.4f;
+		enemy_C.hit_effect_size = 0.3f;
 		speed_power_Y_D = -0.0f;			// Î‚ßˆÚ“®‚Ì‚Ì‚à‚¤ˆêŒÂ‚Ì‘¬“x
 
 		// Enemy_D
@@ -81,9 +81,9 @@ void EnemySpawner::Initialize()
 		enemy_D.radius = 0.35f;				 // ”¼Œa
 		enemy_D.health = 2;					 // ‘Ì—Í
 		enemy_D.attack_effect_size = 0.3f;
-		enemy_D.death_effect_size = 0.3f;
+		enemy_D.death_effect_size = 0.4f;
 		enemy_D.hit_effect_size = 0.3f;
-		enemy_D.hit_effect_size = 0.2f;
+		//enemy_D.hit_effect_size = 0.2f;
 		dis_D = 1.0f;						 // ˆÚ“®‚·‚é‹——£
 
 		// Enemy_A_2
@@ -93,8 +93,8 @@ void EnemySpawner::Initialize()
 		enemy_A_2.radius = 0.35f;			// ”¼Œa
 		enemy_A_2.health = 5;				// ‘Ì—Í
 		enemy_A_2.attack_effect_size = 0.3f;
-		enemy_A_2.death_effect_size = 0.3f;
-		enemy_A_2.hit_effect_size = 0.2f;
+		enemy_A_2.death_effect_size = 0.4f;
+		enemy_A_2.hit_effect_size = 0.3f;
 
 		// Enemy_B_2
 		enemy_B_2.attack_power = 3;		 // UŒ‚—Í
@@ -103,8 +103,8 @@ void EnemySpawner::Initialize()
 		enemy_B_2.radius = 0.35f;			 // ”¼Œa
 		enemy_B_2.health = 6;				 // ‘Ì—Í
 		enemy_B_2.attack_effect_size = 0.3f;
-		enemy_B_2.death_effect_size = 0.3f;
-		enemy_B_2.hit_effect_size = 0.2f;
+		enemy_B_2.death_effect_size = 0.4f;
+		enemy_B_2.hit_effect_size = 0.3f;
 		mover_timer_max_B_2 = 1.0f;		 // ‚Æ‚Ç‚Ü‚Á‚Ä‚¢‚éŠÔ
 		dis_B_2 = 3.0f;					 // ˆê‹C‚Éi‚Ş‹——£
 
@@ -115,8 +115,8 @@ void EnemySpawner::Initialize()
 		enemy_C_2.radius = 0.35f;				// ”¼Œa
 		enemy_C_2.health = 4;					// ‘Ì—Í
 		enemy_C_2.attack_effect_size = 0.3f;
-		enemy_C_2.death_effect_size = 0.3f;
-		enemy_C_2.hit_effect_size = 0.2f;
+		enemy_C_2.death_effect_size = 0.4f;
+		enemy_C_2.hit_effect_size = 0.3f;
 		speed_power_Y_D_2 = -0.82f;			// Î‚ßˆÚ“®‚Ì‚Ì‚à‚¤ˆêŒÂ‚Ì‘¬“x
 
 		// Enemy_D
@@ -126,8 +126,8 @@ void EnemySpawner::Initialize()
 		enemy_D_2.radius = 0.35f;				 // ”¼Œa
 		enemy_D_2.health = 5;					 // ‘Ì—Í
 		enemy_D_2.attack_effect_size = 0.3f;
-		enemy_D_2.death_effect_size = 0.3f;
-		enemy_D_2.hit_effect_size = 0.2f;
+		enemy_D_2.death_effect_size = 0.4f;
+		enemy_D_2.hit_effect_size = 0.3f;
 		dis_D_2 = 1.0f;						 // ˆÚ“®‚·‚é‹——£
 
 		// Summon_Enemy
@@ -137,8 +137,8 @@ void EnemySpawner::Initialize()
 		summon_enemy.radius = 0.3f;				 // ”¼Œa
 		summon_enemy.health = 2;					 // ‘Ì—Í
 		summon_enemy.attack_effect_size = 0.3f;
-		summon_enemy.death_effect_size = 0.3f;
-		summon_enemy.hit_effect_size = 0.2f;
+		summon_enemy.death_effect_size = 0.4f;
+		summon_enemy.hit_effect_size = 0.3f;
 
 		// boss_Enemy
 		boss_enemy.attack_power = 10;		// UŒ‚—Í
@@ -147,7 +147,7 @@ void EnemySpawner::Initialize()
 		boss_enemy.radius = 0.5f;			// ”¼Œa
 		boss_enemy.health = 30;				// ‘Ì—Í
 		boss_enemy.attack_effect_size = 0.3f;
-		boss_enemy.death_effect_size = 0.3f;
+		boss_enemy.death_effect_size = 0.4f;
 		boss_enemy.hit_effect_size = 0.3f;
 
 		// Boss_Enemy
@@ -157,7 +157,7 @@ void EnemySpawner::Initialize()
 		nuisance_enemy.radius = 0.5f;			// ”¼Œa
 		nuisance_enemy.health = 3;				// ‘Ì—Í
 		nuisance_enemy.attack_effect_size = 0.3f;
-		nuisance_enemy.death_effect_size = 0.3f;
+		nuisance_enemy.death_effect_size = 0.4f;
 		nuisance_enemy.hit_effect_size = 0.3f;
 
 		// ƒfƒoƒbƒO—p
@@ -733,7 +733,7 @@ void EnemySpawner::InitializeLevel2()
 {
 	// level_2‚©’ˆÓ ‰¼Š®
 
-	level_1.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { 2,2 }));//11
+	//level_1.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { 2,2 }));//11
 
 	level_2.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { 4.5,4.5 }));
 	level_2.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { -4.5,4.5 }));
@@ -832,6 +832,7 @@ void EnemySpawner::InitializeLevel3()
 	level_3.emplace_back(SetEnemy(1.0f, EnemyType::A, Shaft::Side, 5.0f));
 	level_3.emplace_back(SetEnemy(1.0f, EnemyType::A, Shaft::Vertical, 3.0f));
 	level_3.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Vertical, 13.0f));//1
+
 	level_3.emplace_back(SetEnemy(22.0f, EnemyType::B, Shaft::Side, 3.0f));
 	level_3.emplace_back(SetEnemy(25.0f, EnemyType::B, Shaft::Vertical, 6.0f));//2
 
@@ -840,8 +841,8 @@ void EnemySpawner::InitializeLevel3()
 	level_3.emplace_back(SetEnemy(32.0f, EnemyType::A, Shaft::Side, 10.0f));//3
 
 	//level_3.emplace_back(SetEnemy(40.0f, EnemyType::B, Shaft::Vertical, 5.0f));
-	//level_3.emplace_back(SetEnemy(40.0f, EnemyType::B, Shaft::Vertical, 6.0f));
-	//level_3.emplace_back(SetEnemy(40.0f, EnemyType::B, Shaft::Vertical, 7.0f));//4
+	//level_3.emplace_back(SetEnemy(40.0f, EnemyType::B, Shaft::Vertical,));
+	level_3.emplace_back(SetEnemy(33.0f, EnemyType::B, Shaft::Vertical, 7.0f));//4
 
 	level_3.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 3.0f));
 	level_3.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 15.0f));
