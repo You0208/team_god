@@ -23,7 +23,7 @@ Player::Player()
     // ユニットカテゴリーの初期化
     unit_category = UnitManager::UNIT_INDEX::GreenPumpkin;
 
-    //TODO もね　ゲーム画面
+    //TODO もね　ゲーム画面 案山子
     {
         // はじく強さ
         flip_speed = 2.0f;
@@ -173,6 +173,7 @@ void Player::Flick(float elapsedTime)
             flip_pos_z = std::clamp(flip_pos_z + dis_scarecrow, dis_scarecrow, scaling);
             flip_pos_z = (scaling + sub_pos_z_puls+ dis_scarecrow) - flip_pos_z;
 
+
             max_right_stick_y = 0;
             right_stick_y = 0;
             flip_timer = 0;
@@ -241,10 +242,19 @@ void Player::ChangeCategory()
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     // TODO もね　ユニットのボタン設定
+    //Chili (丸)
+    //Shishito（バフ）
+    //OrangePumpkin（縦三角）
+    //GreenPumpkin（横三角）
+    //Broccoli（縦）
+    //Cauliflower（横）
+    //ｊ（ドーナツ）
+
     Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Cauliflower;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::Shishito;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::GreenPumpkin;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Broccoli;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
+    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
+
 
     if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
     else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];

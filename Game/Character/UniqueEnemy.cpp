@@ -24,40 +24,42 @@ SummonEnemy::SummonEnemy(bool is_minor)
     // 出現敵の大きさ
     child_scale = 1.0f;
 
+    // TODO もね 召喚敵ランダムステータス
+  
     // 出現敵のステータススタック
     status[0].attack_power = 1;              //攻撃力
-    status[0].attack_interval = 0.5f;        //攻撃間隔
-    status[0].health = 3;                    // HP
-    status[0].speed_power = -0.5f;           // 速度
+    status[0].attack_interval = 2.6f;        //攻撃間隔
+    status[0].health = 5;                    // HP
+    status[0].speed_power = -0.73f;            // 速度
     status[0].radius = 0.5f;                 // 半径
-    status[0].attack_effect_size = 0.5f;     // 攻撃エフェクトのサイズ
+    status[0].attack_effect_size = 0.3f;     // 攻撃エフェクトのサイズ
     status[0].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
     status[0].hit_effect_size = 0.5f;        // 設置エフェクトのサイズ
 
-    status[1].attack_power = 1;              //攻撃力
-    status[1].attack_interval = 0.5f;        //攻撃間隔
-    status[1].health = 3;                    // HP
-    status[1].speed_power = -0.5f;            // 速度
+    status[1].attack_power = 2;              //攻撃力
+    status[1].attack_interval = 2.8f;        //攻撃間隔
+    status[1].health = 6;                    // HP
+    status[1].speed_power = -0.7f;            // 速度
     status[1].radius = 0.5f;                 // 半径
-    status[1].attack_effect_size = 0.5f;     // 攻撃エフェクトのサイズ
+    status[1].attack_effect_size = 0.3f;     // 攻撃エフェクトのサイズ
     status[1].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
     status[1].hit_effect_size = 0.5f;        // 設置エフェクトのサイズ
 
-    status[2].attack_power = 1;              //攻撃力
-    status[2].attack_interval = 0.5f;        //攻撃間隔
+    status[2].attack_power = 3;              //攻撃力
+    status[2].attack_interval = 3.0f;        //攻撃間隔
     status[2].health = 3;                    // HP
-    status[2].speed_power = -0.5f;            // 速度
+    status[2].speed_power = -0.85f;            // 速度
     status[2].radius = 0.5f;                 // 半径
-    status[2].attack_effect_size = 0.5f;     // 攻撃エフェクトのサイズ
+    status[2].attack_effect_size = 0.3f;     // 攻撃エフェクトのサイズ
     status[2].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
     status[2].hit_effect_size = 0.5f;        // 設置エフェクトのサイズ
 
-    status[3].attack_power = 1;              //攻撃力
-    status[3].attack_interval = 0.5f;        //攻撃間隔
-    status[3].health = 3;                    // HP
-    status[3].speed_power = -0.5f;           // 速度
+    status[3].attack_power = 4;              //攻撃力
+    status[3].attack_interval = 3.2f;        //攻撃間隔
+    status[3].health = 4;                    // HP
+    status[3].speed_power = -0.8f;           // 速度
     status[3].radius = 0.5f;                 // 半径
-    status[3].attack_effect_size = 0.5f;     // 攻撃エフェクトのサイズ
+    status[3].attack_effect_size = 0.3f;     // 攻撃エフェクトのサイズ
     status[3].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
     status[3].hit_effect_size = 0.5f;        // 設置エフェクトのサイズ
 
@@ -105,6 +107,8 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
     {
         PlayAnimation(Animation::Attack, false);
         Enemy* enemy = nullptr;
+        // TODO もねランダムボス確率
+
         switch (rand() % 3)
         {
         case EnemyType::A:
@@ -183,7 +187,7 @@ BossEnemy::BossEnemy(bool is_minor)
     speed_power = -1.0f;    // 速度
 
     // TODO もね　大きさ
-    model_scale = 2.0f;;
+    model_scale = 2.0f;
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
