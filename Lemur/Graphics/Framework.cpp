@@ -48,7 +48,7 @@ bool Framework::Initialize()
 	}
 
 	// シーン初期化
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
 
 	return true;
 }

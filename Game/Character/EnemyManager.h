@@ -43,10 +43,13 @@ public:
     // エネミー削除
     void Remove(Enemy* enemy);
 
+    void SetTimeUp(bool time_up_) { time_up = time_up_; }
+    bool GetTimeUp() { return time_up; }
 private:
     std::vector<Enemy*> enemies = {};
     std::set<Enemy*>    removes = {};
     DirectX::XMFLOAT2   shaft_pos = {};    // 各軸の位置
 
     int add_attack = 2;
+    bool time_up = true;
 };

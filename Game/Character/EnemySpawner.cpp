@@ -43,7 +43,7 @@ void EnemySpawner::Initialize()
 		// Enemy_A
 		enemy_A.attack_power = 2;		// 攻撃力
 		enemy_A.attack_interval = 3.0f; // 攻撃間隔
-		enemy_A.speed_power = -0.73f;    // 移動速度
+		enemy_A.speed_power = -1.73f;    // 移動速度
 		enemy_A.radius = 0.35f;			// 半径
 		enemy_A.health = 3;				// 体力
 		enemy_A.attack_effect_size = 0.3f;			
@@ -89,7 +89,7 @@ void EnemySpawner::Initialize()
 		// Enemy_A_2
 		enemy_A_2.attack_power = 3;		// 攻撃力
 		enemy_A_2.attack_interval = 3.0f; // 攻撃間隔
-		enemy_A_2.speed_power = -0.76f;    // 移動速度
+		enemy_A_2.speed_power = -1.76f;    // 移動速度
 		enemy_A_2.radius = 0.35f;			// 半径
 		enemy_A_2.health = 5;				// 体力
 		enemy_A_2.attack_effect_size = 0.3f;
@@ -195,7 +195,7 @@ void EnemySpawner::Update(float elapsed_time)
 	};
 
 
-	if (EnemyManager::Instance().GetEnemyCount() == 0)timer += elapsed_time * timer_speed;
+	if (EnemyManager::Instance().GetEnemyCount() == 0 && !EnemyManager::Instance().GetTimeUp())timer += elapsed_time * timer_speed;
 	else timer += elapsed_time;
 
 	switch (StageManager::Instance().GetStageLevel())
@@ -451,31 +451,31 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		switch (StageManager::Instance().GetStageLevel())
 		{
 		case 0:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 1:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 2:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 3:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 4:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 5:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 6:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 7:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		case 8:
-			enemy->SetAttackInterval(3.0f);
+			enemy->SetAttackInterval(8.0f);
 			break;
 		}
 
@@ -691,7 +691,6 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, DirectX::XMFLOA
 void EnemySpawner::InitializeLevel1()
 {
 	// 開始からの秒・エネミーのタイプ・軸（Side:縦軸　Vertical:横軸）・軸に対する長さ
-
 
 	//1-1 17体
 	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
@@ -1059,11 +1058,11 @@ void EnemySpawner::InitializeLevel7()
 	level_7.emplace_back(SetEnemy(1.0f, EnemyType::Summon, {-2.5,6}));//11
 	level_7.emplace_back(SetEnemy(1.0f, EnemyType::Summon, {2.5,6}));//11
 	level_7.emplace_back(SetEnemy(1.0f, EnemyType::C, Shaft::Vertical, 14.0f));//11
-
 }
 
 void EnemySpawner::InitializeLevel8()
 {
+	level_8.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { -2.5,6 }));//11
 }
 
 void EnemySpawner::InitializeLevel9()

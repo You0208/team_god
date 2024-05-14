@@ -276,19 +276,6 @@ void Character::UpdateHorizontalMove(float elapsedTime)
     position.x += velocity.x * elapsedTime;
     position.z += velocity.z * elapsedTime;
 
-    //if (position.x < -20)
-    //    position.x = -20;
-    //else if (position.x > 22)
-    //    position.x = 22;
-
-    //if (position.z < 3)
-    //    position.z = 3;
-    ////else if (position.z > 50)
-    ////    position.z = 50;
-    //else if (position.z > 55)
-    //    position.z = 55;
-
-
 #if 0
     // ˆÚ“®—ÊŽæ“¾
     float VecX = position.x + velocity.x - position.x;

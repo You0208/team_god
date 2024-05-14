@@ -78,7 +78,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(3);
+		stage_manager.SetStageLevel(7);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -210,11 +210,9 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// ゲーム
 	{
-		// タイマー
-		timer += elapsedTime;
-
 		if (timer >= time_limit)
 		{
+			EnemyManager::Instance().SetTimeUp(true);
 			time_up = true;
 		}
 		if (time_up)
@@ -223,7 +221,10 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 			// タイムアップかつ敵が全て死んだら
 			if (EnemyManager::Instance().GetEnemyCount() <= 0)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new OverScene));
 		}
-
+		else
+		{
+			timer += elapsedTime;
+		}
 		// プレイヤーの更新
 		player->Update(elapsedTime);
 		// 柵の更新
