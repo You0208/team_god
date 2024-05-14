@@ -65,6 +65,13 @@ private:
     std::vector<Unit*> units;
     std::set<Unit*>    removes;
 
+    std::shared_ptr<FbxModelManager> model_1 = nullptr;
+    std::shared_ptr<FbxModelManager> model_2 = nullptr;
+    std::shared_ptr<FbxModelManager> model_3 = nullptr;
+    std::shared_ptr<FbxModelManager> model_4 = nullptr;
+    std::shared_ptr<FbxModelManager> model_5 = nullptr;
+    std::shared_ptr<FbxModelManager> model_6 = nullptr;
+    std::shared_ptr<FbxModelManager> model_7 = nullptr;
 
     //-----この下デバッグ用↓--------------------------------------------
     struct UnitStatus

@@ -24,6 +24,7 @@ void EnemySpawner::Initialize()
 	};
 	// タイマーの初期化
 	timer = 0.0f;
+	index = 0;
 
 	// レベル１の初期化
 	InitializeLevel1();
@@ -173,6 +174,18 @@ void EnemySpawner::Initialize()
 		script_boss_enemy = SetEnemy(4.0f, EnemyType::Boss, Shaft::Side, 4.0f);
 		script_nuisance_enemy = SetEnemy(4.0f, EnemyType::Nuisance, { 4.0f,4.0f });
 	}
+}
+
+void EnemySpawner::Finalize()
+{
+	level_1.clear();
+	level_2.clear();
+	level_3.clear();
+	level_4.clear();
+	level_5.clear();
+	level_6.clear();
+	level_7.clear();
+	level_8.clear();
 }
 
 void EnemySpawner::Update(float elapsed_time)

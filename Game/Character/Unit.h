@@ -9,6 +9,10 @@ class Unit :public Character
 public:
     Unit() {}
     ~Unit() {
+        set_effect->Stop(set_handle);
+        attack_effect->Stop(attack_handle);
+        death_effect->Stop(death_handle);
+
         // エフェクト終了
         if (attack_effect != nullptr)
         {
@@ -41,6 +45,10 @@ public:
 
     // 破棄
     void Destroy();
+
+    void PlaySetEffect(DirectX::XMFLOAT3 pos, float size) {
+        set_handle = set_effect->Play(pos, size);
+    }
 
     // Getter
     int         GetCategory() { return category; }
@@ -134,10 +142,14 @@ protected:
     float       attack_width                = 0.0f;             // 四角の幅
     float       attack_radius_in            = 0.0f;             // ドーナツ型用の中身円半径
 
-    Effekseer::Handle attack_effect_handle  = 0;
     Effect*     attack_effect               = nullptr;          // 攻撃エフェクト
     Effect*     death_effect                = nullptr;          // 死亡エフェクト
     Effect*     set_effect                  = nullptr;          // 設置エフェクト
+
+    Effekseer::Handle attack_handle         = 0;          // 攻撃エフェクト
+    Effekseer::Handle death_handle          = 0;          // 死亡エフェクト
+    Effekseer::Handle set_handle            = 0;          // 設置エフェクト
+
 
     float       attack_effect_size          = 0.0f;             // 攻撃エフェクトサイズ
     float       death_effect_size           = 0.0f;             // 死亡エフェクトサイズ

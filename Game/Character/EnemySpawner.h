@@ -15,6 +15,7 @@ public:
     };
 
     void Initialize();
+    void Finalize();
 
     void Update(float elapsed_time);
 

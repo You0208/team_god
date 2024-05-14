@@ -17,6 +17,9 @@ public:
         static EnemyManager instance;
         return instance;
     }
+    // 初期化
+    void Initialize();
+
     // 更新処理
     void Update(float elapsedTime);
 
@@ -46,6 +49,11 @@ public:
     void SetTimeUp(bool time_up_) { time_up = time_up_; }
     bool GetTimeUp() { return time_up; }
 private:
+    std::shared_ptr<FbxModelManager> model_1 = nullptr;
+    std::shared_ptr<FbxModelManager> model_2 = nullptr;
+    std::shared_ptr<FbxModelManager> model_3 = nullptr;
+    std::shared_ptr<FbxModelManager> model_4 = nullptr;
+
     std::vector<Enemy*> enemies = {};
     std::set<Enemy*>    removes = {};
     DirectX::XMFLOAT2   shaft_pos = {};    // 各軸の位置

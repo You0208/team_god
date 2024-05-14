@@ -4,6 +4,18 @@
 
 void UnitManager::Initialize()
 {
+    // モデル前読み込み
+    {
+        Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+        model_1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili.fbx");
+        model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Shishito.fbx");
+        model_3 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\OrangePumpkin.fbx");
+        model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\GreenPumpkin.fbx");
+        model_5 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
+        model_6 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
+    }
+
     //TODO もね　ユニットステータス
     {
         //Chili

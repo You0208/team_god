@@ -48,7 +48,7 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
          // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
-            attack_effect->Play(position, attack_effect_size);
+            attack_handle = attack_effect->Play(position, attack_effect_size);
             PlayAnimation(2, false);
             // タイマーをに
             timer = 0.0f;
@@ -134,7 +134,7 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false,0.8f, 0.5f);
 
-            attack_effect->Play(position, attack_effect_size);
+            attack_handle = attack_effect->Play(position, attack_effect_size);
             // タイマーをに
             attack_timer = 0.0f;
         }
@@ -273,7 +273,7 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
-            attack_effect->Play(position, attack_effect_size);
+            attack_handle = attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーをに
@@ -608,7 +608,7 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
-            attack_effect->Play(position, attack_effect_size);
+            attack_handle = attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーを0に

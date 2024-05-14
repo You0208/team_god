@@ -106,7 +106,7 @@ void Unit_J::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_effect->Play(position, attack_effect_size);
+                    attack_handle = attack_effect->Play(position, attack_effect_size);
                 }
             }
         }

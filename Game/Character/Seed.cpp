@@ -112,7 +112,7 @@ void Seed::Update(float elapsedTime)
                 // カテゴリーをセット
                 unit->SetCategory(category);
                 // 設置エフェクトを再生
-                unit->GetSetEffect()->Play(unit->GetPosition(), unit->GetSetEffectSize());
+                unit->PlaySetEffect(unit->GetPosition(), unit->GetSetEffectSize());
 
                 // 姿勢を更新しておく
                 unit->Update(elapsedTime);

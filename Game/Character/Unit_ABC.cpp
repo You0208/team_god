@@ -115,7 +115,7 @@ void Chili::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_effect->Play(position, attack_effect_size);
+                    attack_handle = attack_effect->Play(position, attack_effect_size);
                 }
             }
         }
@@ -213,7 +213,7 @@ void Shishito::UpdateIdleState(float elapsed_time)
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
 
             // アニメーションとエフェクト
-            attack_effect->Play(position, attack_effect_size);
+            attack_handle = attack_effect->Play(position, attack_effect_size);
 
             // 攻撃ステートに切り替え
             PlayAnimation(Animation::Attack, false);
@@ -261,7 +261,7 @@ void Shishito::UpdateAttackState(float elapsed_time)
             if (!IsPlayAnimation())
             {
                 PlayAnimation(Animation::Attack, false);
-                attack_effect_handle = attack_effect->Play(position, attack_effect_size);
+                attack_handle = attack_effect->Play(position, attack_effect_size);
             }
         }
         else// 範囲内にいない
@@ -280,7 +280,7 @@ void Shishito::UpdateAttackState(float elapsed_time)
     // 攻撃時間が過ぎたら消滅
     if (attack_timer >= timer_max)
     {
-        attack_effect->Stop(attack_effect_handle);
+        attack_effect->Stop(attack_handle);
         TransitionDeathState();
     }
 }
@@ -448,7 +448,7 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_effect->Play(position, attack_effect_size);
+                    attack_handle = attack_effect->Play(position, attack_effect_size);
                 }
             }
             // 右三角
@@ -468,7 +468,7 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_effect->Play(position, attack_effect_size);
+                    attack_handle=attack_effect->Play(position, attack_effect_size);
                 }
             }
         }

@@ -78,7 +78,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(2);
+		stage_manager.SetStageLevel(7);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -110,6 +110,8 @@ void GameScene::Initialize()
 			time_limit = 200.0f;// ここで制限時間を調整
 			break;
 		}
+
+		// タイマーの初期化
 		timer = 0.0f;
 		
 		// ステージ初期化
@@ -125,6 +127,8 @@ void GameScene::Initialize()
 		EnemySpawner::Instance().Initialize();
 		// ユニットマネージャーの初期化
 		UnitManager::Instance().Initialize();
+		// エネミーマネージャーの初期化
+		EnemyManager::Instance().Initialize();
 
 		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 
@@ -186,6 +190,8 @@ void GameScene::Finalize()
 	UnitManager::Instance().Clear();
 	// 種終了
 	SeedManager::Instance().Clear();
+	// 敵スポーン制御装置の初期化
+	EnemySpawner::Instance().Finalize();
 }
 
 void GameScene::Update(HWND hwnd, float elapsedTime)

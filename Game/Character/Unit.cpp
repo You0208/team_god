@@ -41,6 +41,9 @@ int Unit::ReturnDamage()
 
 void Unit::Destroy()
 {
+    set_effect->Stop(set_handle);
+    attack_effect->Stop(attack_handle);
+    death_effect->Stop(death_handle);
     if (!IsPlayAnimation())UnitManager::Instance().Remove(this);
 }
 
@@ -50,7 +53,7 @@ void Unit::TransitionDeathState()
     // アニメーションの切り替え
     PlayAnimation(Animation::Out, false);
     // エフェクトの再生
-    death_effect->Play(position, death_effect_size);
+    death_handle = death_effect->Play(position, death_effect_size);
     // ステート切り替え
     state = State::Death;
 }

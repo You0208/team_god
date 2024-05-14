@@ -156,7 +156,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_effect->Play_R(position, attack_effect_size,DirectX::XMConvertToRadians(90.0f));
+                    attack_handle = attack_effect->Play_R(position, attack_effect_size, DirectX::XMConvertToRadians(90.0f));
                 }
             }
             // 右三角
@@ -176,7 +176,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_effect->Play_R(position, attack_effect_size, DirectX::XMConvertToRadians(90.0f));
+                    attack_handle = attack_effect->Play_R(position, attack_effect_size, DirectX::XMConvertToRadians(90.0f));
                 }
             }
         }

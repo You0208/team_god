@@ -3,6 +3,20 @@
 #include "Lemur/Graphics/Graphics.h"
 #include "Lemur/Collision/Collision.h"
 
+void EnemyManager::Initialize()
+{
+    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+    model_1 = std::make_unique<FbxModelManager>(graphics.GetDevice(),".\\resources\\Model\\Enemy\\Bear.fbx");
+    model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear2.fbx");
+    model_3 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
+    model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar2.fbx");
+    model_1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit.fbx");
+    model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit2.fbx");
+    model_3 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+    model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+}
+
 // 更新処理
 void EnemyManager::Update(float elapsedTime)
 {
@@ -59,6 +73,21 @@ void EnemyManager::Register(Enemy* enemy)
 
 void EnemyManager::Clear()
 {
+    // 破棄処理
+    for (Enemy* enemy : removes)
+    {
+        std::vector<Enemy*>::iterator it = std::find(enemies.begin(), enemies.end(), enemy);
+        if (it != enemies.end())
+        {
+            enemies.erase(it);
+        }
+
+        // 削除
+        delete enemy;
+    }
+    // 破棄リストをクリア
+    removes.clear();
+
     for (Enemy* enemy : enemies)
     {
         delete enemy;

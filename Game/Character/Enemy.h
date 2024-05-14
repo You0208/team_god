@@ -40,6 +40,12 @@ class Enemy :public Character
 public:
     Enemy() {}
     ~Enemy() {
+        attack_effect->Stop(attack_handle);
+        death_effect->Stop(death_handle);
+        hit_effect->Stop(hit_handle);
+        attack_handle = 0;
+        death_handle = 0;
+        hit_handle = 0;
         // エフェクト終了
         if (attack_effect != nullptr)
         {
@@ -55,7 +61,7 @@ public:
         {
             delete death_effect;
             death_effect = nullptr;
-        }      
+        }
     }
 
     // 更新処理
@@ -129,6 +135,11 @@ protected:
     Effect*     attack_effect       = nullptr;          // 攻撃エフェクト
     Effect*     death_effect        = nullptr;          // 死亡エフェクト
     Effect*     hit_effect          = nullptr;          // 被弾エフェクト
+
+    Effekseer::Handle attack_handle = 0;                // 攻撃エフェクト
+    Effekseer::Handle hit_handle    = 0;                // 被弾エフェクト
+    Effekseer::Handle death_handle  = 0;                // 死亡エフェクト
+
 
     float       attack_effect_size  = 0.0f;             // 攻撃エフェクトサイズ
     float       death_effect_size   = 0.0f;             // 死亡エフェクトサイズ

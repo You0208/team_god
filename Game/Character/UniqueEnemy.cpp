@@ -94,8 +94,8 @@ void SummonEnemy::UpdateAttackState(float elapsed_time)
 void SummonEnemy::UpdateMoveState(float elapsed_time)
 {
     timer += elapsed_time;
-    float interval = 1.0f;
-    if (first&& interval>=timer)
+    float interval = 8.0f;
+    if (first && interval <= timer)
     {
         PlayAnimation(Animation::Attack, false);
         Enemy* enemy = nullptr;
@@ -266,17 +266,12 @@ void BossEnemy::UpdateAttackState(float elapsed_time)
         {
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
-            attack_effect->Play(position, attack_effect_size);
+            attack_handle = attack_effect->Play(position, attack_effect_size);
             // タイマーをに
             timer = 0.0f;
         }
     }
 
-    //TODO これはアニメーションがきたら要変更
-    if (!IsPlayAnimation())
-    {
-        PlayAnimation(7, true);
-    }
 
     // 死亡時は死亡ステートへ切り替え
     if (IsDead())
