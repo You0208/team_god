@@ -69,7 +69,6 @@ void GameScene::Initialize()
 	{
 		// ÉJÉÅÉâ
 		Camera& camera = Camera::Instance();
-		//TODO Ç‡ÇÀ ÉJÉÅÉâí≤êÆ
 		camera_range = 30.0f;
 		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 		camera.SetTarget(camera_target);
@@ -140,8 +139,8 @@ void GameScene::Initialize()
 		angle = 50.0f;
 		r0 = 0.1f;
 
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
-		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
+		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
+		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
 		//rect.center = { 0,0 };
 		//rect = CalcRotateRect(rect.center, { 2,2 }, angle);

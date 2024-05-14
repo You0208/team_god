@@ -54,5 +54,5 @@ private:
     std::set<Seed*>    removes;
 
     //Todo@‚à‚Ë@í‚Ìc‚éŠÔ
-    float seed_limit_time = 15.0f;// í‚Ì§ŒÀŠÔ
+    float seed_limit_time = 13.0f;// í‚Ì§ŒÀŠÔ
 };

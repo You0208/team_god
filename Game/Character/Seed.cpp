@@ -20,8 +20,8 @@ Seed::Seed()
     height = 0.3f;
     rotation.y = DirectX::XMConvertToRadians(90.0f);
 
-    //TODO もね　種エフェクトのサイズ
-    effect_size = 0.1f;
+    //TODO もね　種(バツ)エフェクトのサイズ
+    effect_size = 0.3f;
 
     // 回す
     PlayAnimation(Animation_Index::Throw, true);
