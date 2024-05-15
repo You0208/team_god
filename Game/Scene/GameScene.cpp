@@ -55,7 +55,8 @@ void GameScene::Initialize()
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", chara_ps.GetAddressOf());
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", stage_ps_1.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", stage_ps_2.GetAddressOf());
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", unit_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
@@ -229,7 +230,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		}
 		else
 		{
-			timer += elapsedTime;
+			//timer += elapsedTime;
 		}
 		// プレイヤーの更新
 		player->Update(elapsedTime);
@@ -305,7 +306,7 @@ void GameScene::Render(float elapsedTime)
 	// ポストエフェクトの開始
 	if (enable_post_effect)
 	{
-		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context);
+		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context,0.2f,0.3f,0.5f,1.0f);
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
 	}
 
@@ -319,7 +320,7 @@ void GameScene::Render(float elapsedTime)
 			// 柵描画
 			fence->Render(scale, fbx_gbuffer_ps.GetAddressOf());
 			//ステージ描画
-			StageManager::Instance().Render(1.0f, fbx_gbuffer_ps.GetAddressOf());
+			//StageManager::Instance().Render(1.0f, fbx_gbuffer_ps.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 			// エネミー描画
@@ -336,7 +337,7 @@ void GameScene::Render(float elapsedTime)
 			fence->Render(scale, Try.GetAddressOf());
 
 			// ステージ描画
-			StageManager::Instance().Render(1.0f, Try.GetAddressOf());
+			StageManager::Instance().Render(1.0f, stage_ps_1.GetAddressOf(), stage_ps_2.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, unit_ps.Get());
 			for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)

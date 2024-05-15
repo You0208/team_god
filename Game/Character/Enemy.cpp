@@ -35,7 +35,7 @@ void Enemy::TransitionDeathState()
     velocity.x = velocity.y = velocity.z = 0.0f;
 
     // アニメーションの切り替え
-    if (EnemyType::A || EnemyType::A_2)
+    if (enemy_type == EnemyType::A || enemy_type == EnemyType::A_2)
     {
         PlayAnimation(1, false);
     }

@@ -13,7 +13,8 @@ public:
     virtual void Update(float elapsedTime) = 0;
 
     //ï`âÊèàóù
-    virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
+    //virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
+    virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2) {};
 
     virtual void DrawDebugGui() {}
 

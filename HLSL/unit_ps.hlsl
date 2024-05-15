@@ -40,9 +40,14 @@ float4 main(VS_OUT pin) : SV_TARGET
 
     // 金属度
     float metallic = metalTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+   // return float4(metallic, 0, 0, 1);
     
     // 滑らかさ
     float smoothness = SmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    //return float4(smoothness, 0, 0, 1);
+    // ラフネスのテクスチャがない時の応急処置のため要注意
+    if (smoothness <= 0.005f)
+        smoothness = 0.5f;
     
     // 不透明度
     float opacity = Opacity.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
@@ -140,6 +145,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     }
     
     
-    finalLig = pow(finalLig, 1.0f / GAMMA);
+    //finalLig = pow(finalLig, 1.0f / GAMMA);
     return float4(finalLig, opacity);
 };

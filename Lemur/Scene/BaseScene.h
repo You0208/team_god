@@ -384,6 +384,8 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11PixelShader> Try;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps_1;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps_2;
 
         Microsoft::WRL::ComPtr<ID3D11PixelShader> fbx_gbuffer_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> gltf_gbuffer_ps;

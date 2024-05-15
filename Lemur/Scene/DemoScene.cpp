@@ -35,7 +35,7 @@ void DemoScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 
@@ -70,7 +70,9 @@ void DemoScene::Initialize()
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\cave\\cave.fbx");
+		///test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\plantune.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\tree\\tree.fbx");
+		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
 		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\FlightHelmet\\glTF\\FlightHelmet.gltf");
@@ -84,6 +86,8 @@ void DemoScene::Initialize()
 
 		debugEffect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
 	}
+	//sprite_batches[0] = std::make_unique<SpriteBatch>(graphics.GetDevice(), L".\\resources\\screenshot.jpg", 1);
+
 
 	// ポイントライト・スポットライトの初期位置設定
 	InitializeLight();
@@ -346,7 +350,7 @@ void DemoScene::Render(float elapsedTime)
 	else
 	{
 
-		test_model->Render(1.0f, Try.Get());
+		test_model->Render(1.02f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
 		//test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
@@ -364,6 +368,13 @@ void DemoScene::Render(float elapsedTime)
 		EffectManager::Instance().Render(view, projection);
 
 	}
+
+	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	//sprite_batches[0]->Begin(immediate_context);
+	//sprite_batches[0]->Render(immediate_context, 0, 0, 1280, 720);
+	//sprite_batches[0]->End(immediate_context);
+
 
 	//// ステートの設定
 	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);

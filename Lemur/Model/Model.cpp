@@ -404,8 +404,8 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
 
         //TODO materilŽÀŒ±
         LoadTexture(device, filename, "_MS", true, iterator->second.metalness_smoothness.GetAddressOf(), 0x00FFFF00);
-        LoadTexture(device, filename, "_Metalness", true, iterator->second.metalness.GetAddressOf(), 0x00FFFF00);
-        LoadTexture(device, filename, "_Roughness", true, iterator->second.roughness.GetAddressOf(), 0x00FFFF00);
+        LoadTexture(device, filename, "_Metalness", true, iterator->second.metalness.GetAddressOf(), 0x0000000);
+        LoadTexture(device, filename, "_Roughness", true, iterator->second.roughness.GetAddressOf(), 0xFFFFFFF);
         LoadTexture(device, filename, "_Opacity", true, iterator->second.opacity.GetAddressOf(), 0xFFFFFFFF);
         LoadTexture(device, filename, "_Height", true, iterator->second.height.GetAddressOf(), 0xFFFFFFFF);
     }
@@ -450,7 +450,7 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const XMFLOAT4X
         }
         else
         {
-            immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+          //  immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
         }
 
         constants data;

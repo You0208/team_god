@@ -12,6 +12,7 @@ Texture2D texture_maps[8] : register(t0);
 Texture2D metalSmoothTex : register(t3);
 Texture2D metalTex : register(t4);
 Texture2D SmoothTex : register(t5);
+Texture2D Opacity : register(t6);
 
 
 //Texture2D d_color : register(t20);
@@ -30,31 +31,32 @@ float4 main(VS_OUT pin) : SV_TARGET
 //-----------------------------------------
 // サンプリング
 //-----------------------------------------
+    // 修正
     static const float GAMMA = 2.2;
 
     // 色
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     color.rgb = pow(color.rgb, GAMMA);
     float alpha = color.a;
-
     // 金属度
     float metallic = metalTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    //float metallic = parameters.x;
     
     // 滑らかさ
-    float smoothness = SmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;    
+    float smoothness = SmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
     // ラフネスのテクスチャがない時の応急処置のため要注意
     if (smoothness <= 0.005f)
         smoothness = 0.5f;
-    
+    // 粗さ
+    //float roughness = 1.0f - smoothness;
+    float roughness = smoothness;
+    //return float4(roughness,0,0,1);
+    //float roughness = parameters.y;
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
     
-    // 粗さ
-    float roughness = smoothness;
-    
     // マスク
     float mask = noise_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord).x;
-    
 //-----------------------------------------
 //　ライティング
 //-----------------------------------------   
@@ -90,11 +92,12 @@ float4 main(VS_OUT pin) : SV_TARGET
         //-----------------------------------------   
         float3 directDiffuse = 0, directSpecular = 0;
         float3 L = normalize(directional_light_direction.xyz);
-        
         DirectBDRF(diffuseReflectance, F0, N, V, L,
 			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
+        
+        //return float4(roughness,0,0, 1);
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
@@ -119,26 +122,11 @@ float4 main(VS_OUT pin) : SV_TARGET
         // 最終光に足し合わせる    
         finalLig *= shadow_factor;
         
-        //-----------------------------------------
-        //　リムライト
-        //----------------------------------------- 
-        float3 rimColor = 0, hemiLight = 0;
-        LimHemiLight(pin, normal, N_, T, E, rimColor, hemiLight);
-        // 最終光に足し合わせる     
-        finalLig += (rimColor + hemiLight);
     }
- 
-//-----------------------------------------
-//　ディゾルブ
-//----------------------------------------- 
-    {
-        float dissolve = step(mask, threshold);
-        color.a *= dissolve;
-        // アルファが0以下ならそもそも描画しないようにする
-        clip(color.a - 0.01f);
-    }
-    
-    
-    //finalLig = pow(finalLig, 1.0f / GAMMA);
-    return float4(finalLig, alpha);
+
+// PostEffectのとき切る    
+#if 0
+    finalLig = pow(finalLig, 1.0f / GAMMA);
+#endif
+    return float4(finalLig, color.a);
 };

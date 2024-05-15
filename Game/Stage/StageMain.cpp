@@ -3,8 +3,38 @@
 StageMain::StageMain()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    stage_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\stage_base.fbx");
+    stage_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\plantune.fbx");
+    ground = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ground\\ground.fbx");
+    fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
+    fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
+    fence = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
+    fence2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
+    fence_end = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_end\\fence_end.fbx");
     
+    ido = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido\\ido.fbx");
+    ido_yane = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido_yane\\ido_yane.fbx");
+    cave = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave.fbx");
+    rock = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\rock\\rock.fbx");
+    silo = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\silo\\silo.fbx");
+
+    for (int j = 0; j < 3; j++)
+    {
+        une[j] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\une\\une.fbx");
+        log[j] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\log\\log.fbx");
+    }
+    for (int i = 0; i < 7; i++)
+    {
+        leavs_LV1[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV1\\leavs_LV1.fbx");
+        leavs_LV2[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV2\\leavs_LV2.fbx");
+
+        tree[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\tree\\tree.fbx");
+
+        leavs_LV1[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -15.0f });
+        leavs_LV1[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+
+        leavs_LV2[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -12.0f });
+        leavs_LV2[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+    }
     scale_facter = 1.0f;
     stage_width = { 9,9 };
     scale = { 1.0f,1.0f,1.0f };
@@ -18,6 +48,41 @@ StageMain::StageMain()
         stage_width.x,
         stage_width.y
     };
+
+    // 木
+    tree[0]->GetTransform()->SetPosition({ -9.0f,dec_y,12.0f });
+    tree[1]->GetTransform()->SetPosition({ -6.0f,dec_y,16.0f });
+    tree[2]->GetTransform()->SetPosition({ 6.0f,dec_y,11.0f });
+    tree[3]->GetTransform()->SetPosition({ 11.0f,dec_y,15.0f });
+    tree[4]->GetTransform()->SetPosition({ 13.0f,dec_y,8.0f });
+    tree[5]->GetTransform()->SetPosition({ 16.0f,dec_y,15.0f });
+    tree[6]->GetTransform()->SetPosition({ -12.0f,dec_y,18.0f });
+
+    tree[0]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+    tree[1]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+    tree[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+    tree[3]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+    tree[4]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+    tree[5]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+    tree[6]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
+
+    ido->GetTransform()->SetPositionX(-13.0f);
+    ido->GetTransform()->SetPositionY(dec_y);
+    ido_yane->GetTransform()->SetPositionX(-13.0f);
+    ido_yane->GetTransform()->SetPositionY(dec_y);
+
+    cave->GetTransform()->SetPositionZ(12.0f);
+    cave->GetTransform()->SetPositionY(dec_y);
+    cave->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180.0f));
+
+    silo->GetTransform()->SetPosition({ -14.0f,dec_y,11.0f });
+
+    une[0]->GetTransform()->SetPosition({ 0,dec_y ,-12 });
+    une[1]->GetTransform()->SetPosition({ 0,dec_y ,-15 });
+    une[2]->GetTransform()->SetPosition({ -13,dec_y ,-12 });
+    une[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90.0f));
+
+
 }
 
 StageMain::~StageMain()
@@ -43,9 +108,89 @@ void StageMain::Update(float elapsedTime)
     stage_model->GetTransform()->SetScale(scale);
 }
 
-void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2)
 {
-    stage_model->Render(scale, replaced_pixel_shader);
+    // 地形
+    ground->GetTransform()->SetPositionY(dec_y);
+    ground->Render(scale*2, replaced_pixel_shader);
+    for (int x = 0; x < 3; x++)
+    {
+        for (int y = 0; y < 6; y++)
+        {
+            if (y % 2 == 0)
+            {
+                fild2->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),dec_y,-7.4f + (y * 3.0f) });
+                fild1->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),dec_y,-7.4f + (y * 3.0f) });
+                fild1->Render(scale, replaced_pixel_shader);
+                fild2->Render(scale, replaced_pixel_shader);
+            }
+            else
+            {
+                fild1->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),dec_y,-7.4f + (y * 3.0f) });
+                fild2->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),dec_y,-7.4f + (y * 3.0f) });
+                fild1->Render(scale, replaced_pixel_shader);
+                fild2->Render(scale, replaced_pixel_shader);
+            }
+        }
+    }
+
+    // 柵
+    for (int y = 0; y < 7; y++)
+    {
+        fence2->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+        fence2->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) });
+        fence2->Render(scale, replaced_pixel_shader);
+        if (y == 6)
+        {
+            fence_end->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) - 2.5f });
+            fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(0.0f));
+            fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence_end->Render(scale, replaced_pixel_shader);
+        }
+    }
+    for (int x = 0; x < 7; x++)
+    {
+        fence->GetTransform()->SetPosition({ -8.0f + (x * 2.5f),dec_y,-9.0f });
+        fence->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+        fence->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+        fence->Render(scale, replaced_pixel_shader);
+
+        if (x == 6)
+        {
+            fence_end->GetTransform()->SetPosition({ -8.0f + (x * 2.5f) + 2.5f,dec_y,-9.0f });
+            fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+            fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence_end->Render(scale, replaced_pixel_shader);
+        }
+    }
+    fence->Render(scale, replaced_pixel_shader);
+
+    // その他
+    // 井戸
+    ido->Render(scale, replaced_pixel_shader);
+    ido_yane->Render(scale, replaced_pixel_shader);
+
+    // 岩のオブジェ
+    cave->Render(scale, replaced_pixel_shader);
+
+    // 城
+    silo->Render(scale, replaced_pixel_shader);
+
+    // 木
+    for (int i = 0; i < 7; i++)
+    {
+        tree[i]->Render(scale, replaced_pixel_shader2);
+        // 草
+        leavs_LV1[i]->Render(scale, replaced_pixel_shader);
+        leavs_LV2[i]->Render(scale, replaced_pixel_shader);
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        une[i]->Render(scale, replaced_pixel_shader2);
+    }
+
+
 }
 
 void StageMain::DrawDebugGui()

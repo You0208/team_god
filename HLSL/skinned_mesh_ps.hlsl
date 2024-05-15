@@ -20,7 +20,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     float alpha = color.a;
     
-#if 0
+#if 1
     // Inverse gamma process
     const float GAMMA = 2.2;
     color.rgb = pow(color.rgb, GAMMA);
@@ -44,7 +44,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     float3 diffuse = color.rgb * max(0, dot(N, L));
     float3 V = normalize(camera_position.xyz - pin.world_position.xyz);
     float3 specular = pow(max(0, dot(N, normalize(V + L))), 128);
-
 	// SHADOW
 #if 0
     const float shadow_depth_bias = 0.001;

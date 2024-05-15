@@ -353,6 +353,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		enemy = new Enemy_A(false);
 		SetBasicEnemyStatus(enemy, enemy_A);
 
+		enemy->SetEnemyType(EnemyType::A);
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
@@ -364,6 +365,8 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new Enemy_B(false);
 		SetBasicEnemyStatus(enemy, enemy_B);
+
+		enemy->SetEnemyType(EnemyType::B);
 		enemy->SetMoveTimerMax(mover_timer_max_B);
 		enemy->SetDis(dis_B);
 
@@ -380,6 +383,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		SetBasicEnemyStatus(enemy, enemy_C);
 		enemy->SetSpeedPowerY(speed_power_Y_D);
 
+		enemy->SetEnemyType(EnemyType::C);
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
@@ -389,6 +393,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	break;
 	case EnemyType::D:
 		enemy = new Enemy_D(false);
+		enemy->SetEnemyType(EnemyType::D);
 		SetBasicEnemyStatus(enemy, enemy_D);
 		enemy->SetSpeedPowerY(speed_power_Y_D);
 		enemy->SetDis(dis_D);
@@ -402,6 +407,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	case EnemyType::A_2:
 	{
 		enemy = new Enemy_A(true);
+		enemy->SetEnemyType(EnemyType::A_2);
 		SetBasicEnemyStatus(enemy, enemy_A_2);
 
 		enemy->SetShaft(script.shaft);
@@ -415,6 +421,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new Enemy_B(true);
 		SetBasicEnemyStatus(enemy, enemy_B_2);
+		enemy->SetEnemyType(EnemyType::B_2);
 		enemy->SetMoveTimerMax(mover_timer_max_B_2);
 		enemy->SetDis(dis_B_2);
 
@@ -429,6 +436,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new Enemy_C(true);
 		SetBasicEnemyStatus(enemy, enemy_C_2);
+		enemy->SetEnemyType(EnemyType::C_2);
 		enemy->SetSpeedPowerY(speed_power_Y_D_2);
 
 		enemy->SetShaft(script.shaft);
@@ -442,6 +450,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new Enemy_D(true);
 		SetBasicEnemyStatus(enemy, enemy_D_2);
+		enemy->SetEnemyType(EnemyType::D_2);
 		enemy->SetDis(dis_D_2);
 
 		enemy->SetShaft(script.shaft);
@@ -455,6 +464,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new SummonEnemy(false);
 		SetBasicEnemyStatus(enemy, summon_enemy);
+		enemy->SetEnemyType(EnemyType::Summon);
 
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
@@ -501,6 +511,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 	{
 		enemy = new BossEnemy(false);
 		SetBasicEnemyStatus(enemy, boss_enemy);
+		enemy->SetEnemyType(EnemyType::Boss);
 
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
@@ -514,6 +525,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		enemy = new NuisanceEnemy(false);
 		SetBasicEnemyStatus(enemy, nuisance_enemy);
 
+		enemy->SetEnemyType(EnemyType::Nuisance);
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
@@ -1076,7 +1088,8 @@ void EnemySpawner::InitializeLevel7()
 
 void EnemySpawner::InitializeLevel8()
 {
-	level_8.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { -2.5,6 }));//11
+	//level_8.emplace_back(SetEnemy(1.0f, EnemyType::C, Shaft::Vertical, 14.0f));//11
+	//level_8.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { -2.5,6 }));//11
 }
 
 void EnemySpawner::InitializeLevel9()

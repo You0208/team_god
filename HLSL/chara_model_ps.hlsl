@@ -31,6 +31,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 //-----------------------------------------
 // サンプリング
 //-----------------------------------------
+    // 修正
     static const float GAMMA = 2.2;
 
     // 色
@@ -38,19 +39,23 @@ float4 main(VS_OUT pin) : SV_TARGET
     color.rgb = pow(color.rgb, GAMMA);
     float alpha = color.a;
     // 金属度
-    float metallic = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    float metallic = metalTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    //float metallic = parameters.x;
     
     // 滑らかさ
-    float smoothness = metalSmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).a;
-    
+    float smoothness = SmoothTex.Sample(sampler_states[ANISOTROPIC], pin.texcoord).r;
+    // ラフネスのテクスチャがない時の応急処置のため要注意
+    if (smoothness <= 0.005f)
+        smoothness = 0.5f;
+    // 粗さ
+    //float roughness = 1.0f - smoothness;
+    float roughness =  smoothness;
+    //float roughness = parameters.y;
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
     
-    // 粗さ
-    float roughness = 1.0f - smoothness;
     // マスク
     float mask = noise_map.Sample(sampler_states[ANISOTROPIC], pin.texcoord).x;
-    
 //-----------------------------------------
 //　ライティング
 //-----------------------------------------   
@@ -86,15 +91,16 @@ float4 main(VS_OUT pin) : SV_TARGET
         //-----------------------------------------   
         float3 directDiffuse = 0, directSpecular = 0;
         float3 L = normalize(directional_light_direction.xyz);
-        
         DirectBDRF(diffuseReflectance, F0, N, V, L,
 			directional_light_color.rgb, roughness, directDiffuse, directSpecular);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
+        
+        //return float4(roughness,0,0, 1);
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
-        float3 pointDiffuse = 0, pointSpecular = 0;       
+        float3 pointDiffuse = 0, pointSpecular = 0;
         PointLight(pin, diffuseReflectance, F0, N, V, roughness, pointDiffuse, pointSpecular);
         
         // 最終光に足し合わせる 
@@ -133,7 +139,10 @@ float4 main(VS_OUT pin) : SV_TARGET
         // アルファが0以下ならそもそも描画しないようにする
         clip(color.a - 0.01f);
     }
-    
+
+// PostEffectのとき切る    
+#if 0
     finalLig = pow(finalLig, 1.0f / GAMMA);
+#endif
     return float4(finalLig, color.a);
 };

@@ -8,11 +8,11 @@ void StageManager::update(float elapsedTime)
     }
 }
 
-void StageManager::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void StageManager::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2)
 {
     for (auto& stage : stages)
     {
-        stage->Render(scale, replaced_pixel_shader);
+        stage->Render(scale, replaced_pixel_shader, replaced_pixel_shader2);
     }
 }
 

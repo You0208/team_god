@@ -91,6 +91,7 @@ void Camera::DrawDebug()
         DirectX::XMConvertToRadians(angle_d.y),
         DirectX::XMConvertToRadians(angle_d.y)
     };
+    ImGui::SliderFloat(u8"距離", &range, 0.0f, 60.0f);
 
     ImGui::End();
 }
@@ -217,25 +218,25 @@ void Camera::NonLockOnUpdate(float elapsedTime)
     // X軸のカメラ回転を制限
     angle.x = min(angle.x, maxAngleX);
     angle.x = max(angle.x, minAngleX);
-    //模範解答↓
-    if (angle.x < minAngleX)
-    {
-        angle.x = minAngleX;
-    }
-    if (angle.x > maxAngleX)
-    {
-        angle.x = maxAngleX;
-    }
+    ////模範解答↓
+    //if (angle.x < minAngleX)
+    //{
+    //    angle.x = minAngleX;
+    //}
+    //if (angle.x > maxAngleX)
+    //{
+    //    angle.x = maxAngleX;
+    //}
 
-    // Y軸の回転値を-3.14~3.14に収まるようにする
-    if (angle.y < -DirectX::XM_PI)
-    {
-        angle.y += DirectX::XM_2PI;
-    }
-    if (angle.y > -DirectX::XM_PI)
-    {
-        angle.y -= DirectX::XM_2PI;
-    }
+    //// Y軸の回転値を-3.14~3.14に収まるようにする
+    //if (angle.y < -DirectX::XM_PI)
+    //{
+    //    angle.y += DirectX::XM_2PI;
+    //}
+    //if (angle.y > -DirectX::XM_PI)
+    //{
+    //    angle.y -= DirectX::XM_2PI;
+    //}
 
     ////カメラの視点と注視点を設定
     //SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));

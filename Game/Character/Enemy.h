@@ -97,6 +97,7 @@ protected:
     virtual void UpdateMoveState(float elapsed_time) = 0;
 
 public:
+    void SetEnemyType(int type) { enemy_type = type; }
     void SetMoveTimerMax(float move_timer_max_) { move_timer_max = move_timer_max_; }
     void SetDis(float dis_) { dis = dis_; }
     void SetSpeedPowerY(float speed_power_Y_) { speed_power_Y = speed_power_Y_; }
@@ -152,4 +153,6 @@ protected:
     float       speed_power_Y       = 0.0f;             // 斜めに進むときのスピード
 
     bool        is_power_up         = false;            // パワーアップしたか
+
+    int         enemy_type          = 0;
 };

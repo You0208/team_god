@@ -13,7 +13,7 @@ public:
     void Render(const float& scale, ID3D11PixelShader* replaced_pixel_shader);
     void Render(const float& scale, ID3D11PixelShader** replaced_pixel_shader); 
 
-    void DrawDebug(float i);
+    void DrawDebug(std::string i);
 
     Transform* GetTransform() { return &transform; }
 
