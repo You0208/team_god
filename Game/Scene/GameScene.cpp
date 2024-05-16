@@ -70,14 +70,14 @@ void GameScene::Initialize()
 		// カメラ
 		Camera& camera = Camera::Instance();
 		camera_range = 30.0f;
-		camera_angle = { DirectX::XMConvertToRadians(45),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
+		camera_angle = { DirectX::XMConvertToRadians(40),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
 		camera.SetEyeYOffset(8.0f);
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(2);
+		stage_manager.SetStageLevel(1);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{

@@ -47,7 +47,7 @@ SummonEnemy::SummonEnemy(bool is_minor)
     status[2].attack_power = 3;              //攻撃力
     status[2].attack_interval = 3.0f;        //攻撃間隔
     status[2].health = 3;                    // HP
-    status[2].speed_power = -1.82f;            // 速度
+    status[2].speed_power = -1.79f;            // 速度
     status[2].radius = 0.5f;                 // 半径
     status[2].attack_effect_size = 0.3f;     // 攻撃エフェクトのサイズ
     status[2].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
@@ -56,7 +56,7 @@ SummonEnemy::SummonEnemy(bool is_minor)
     status[3].attack_power = 4;              //攻撃力
     status[3].attack_interval = 3.8f;        //攻撃間隔
     status[3].health = 4;                    // HP
-    status[3].speed_power = -1.77f;           // 速度
+    status[3].speed_power = -1.75f;           // 速度
     status[3].radius = 0.5f;                 // 半径
     status[3].attack_effect_size = 0.3f;     // 攻撃エフェクトのサイズ
     status[3].death_effect_size = 0.5f;      // 死亡エフェクトのサイズ
@@ -96,7 +96,7 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
     timer += elapsed_time;
 
     //TODO もね　攻撃間隔召喚敵　最初(ランダム確率)
-    float interval = 5.5f;
+    float interval = 6.5f;
 
     if (first&& interval<=timer)
     {
