@@ -28,6 +28,7 @@ FbxModelManager::FbxModelManager(ID3D11Device* device, const char* fbx_filename,
     );
 }
 
+
 // •`‰æ
 void FbxModelManager::Render(const float& scale, ID3D11PixelShader* replaced_pixel_shader)
 {

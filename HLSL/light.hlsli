@@ -76,8 +76,7 @@ Texture2D shadow_map, SamplerComparisonState comparison_sampler_state, out float
 {
     float3 L = normalize(-directional_light_direction.xyz);
     float3 SN = normalize(pin.world_normal.xyz);
-         // 接ベクトル
-        
+    // 接ベクトル        
     SN = normalize((normal.x * T) + (normal.y * B) + (normal.z * SN));
     const float shadow_depth_bias = max(0.01 * (1.0 - dot(SN, L)), 0.001);
         
@@ -89,6 +88,12 @@ Texture2D shadow_map, SamplerComparisonState comparison_sampler_state, out float
     float depth = saturate(light_view_position.z - shadow_depth_bias);
         
     shadow_factor = shadow_map.SampleCmpLevelZero(comparison_sampler_state, light_view_texcoord, depth).xxx;
+    
+    // 無理やり感ぱない
+    if (shadow_factor.x <= 0.7f)
+    {    
+        shadow_factor = float3(0.5f, 0.4f, 0.4f);
+    }
 }
 
 //-----------------------ライティングその他------------------------------------------------

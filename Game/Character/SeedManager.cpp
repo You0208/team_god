@@ -57,7 +57,7 @@ void SeedManager::Update(float elapsedTime)
 }
 
 // •`‰æˆ—
-void SeedManager::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
+void SeedManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
     DrawDebugPrimitive();
     for (Seed* seed : seeds)

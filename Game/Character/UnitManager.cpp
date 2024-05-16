@@ -106,10 +106,40 @@ void UnitManager::Initialize()
 void UnitManager::Update(float elapsedTime)
 {
     DebugImGui();
-
     for (Unit* unit : units)
     {
         unit->Update(elapsedTime);
+        if (unit->GetCategory() == UNIT_INDEX::Broccoli)
+        {
+            unit->collision_pos = {
+                0,
+                unit->GetPosition().y,
+                unit->GetPosition().z
+            };
+            unit->collision_scale = {
+                unit->GetScale().x * 6,
+                unit->GetScale().y,
+               0.6f
+            };
+        }
+        else if (unit->GetCategory() == UNIT_INDEX::Cauliflower)
+        {
+            unit->collision_pos = {
+                unit->GetPosition().x,
+                unit->GetPosition().y,
+                0
+            };
+            unit->collision_scale = {
+               0.6f,
+                unit->GetScale().y,
+                unit->GetScale().z * 6
+            };
+        }
+        else
+        {
+            unit->collision_pos = unit->GetPosition();
+            unit->collision_scale = unit->GetScale();
+        }
     }
 
     for (int i = 0; i < GetUnitCount(); i++)
@@ -142,6 +172,15 @@ void UnitManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_sh
     for (Unit* unit : units)
     {
         unit->Render(elapsedTime, replaced_pixel_shader);
+    }
+}
+
+void UnitManager::CollisionRender(float scale, ID3D11PixelShader* replaced_pixel_shader)
+{
+    DrawDebugPrimitive();
+    for (Unit* unit : units)
+    {
+        unit->CollisionRender(scale, replaced_pixel_shader);
     }
 }
 

@@ -27,7 +27,7 @@ void FormationScene::Initialize()
         InitializeMask();
 
         // SHADOW
-        double_speed_z = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
+        shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 
         create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
@@ -338,7 +338,7 @@ void FormationScene::Render(float elapsedTime)
         // ノイズ
         immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
         // シャドウ
-        immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
+        immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
         //　深度値
         immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
     }

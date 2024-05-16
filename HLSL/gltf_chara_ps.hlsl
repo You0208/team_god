@@ -79,7 +79,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     float3 finalLig = 0;
     {
         // 入射光のうち拡散反射になる割合
-        float3 diffuseReflectance = lerp(basecolor_factor.rgb, 0.02f, metallic_factor);
+        float3 diffuseReflectance = lerp(basecolor_factor.rgb, 0.0f, metallic_factor);
        
         // 垂直反射時のフレネル反射率
         float3 F0 = lerp(0.04, basecolor_factor.rgb, metallic_factor);
@@ -114,7 +114,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 			directional_light_color.rgb, roughness_factor, directDiffuse, directSpecular);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
-        
+
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
@@ -165,6 +165,6 @@ float4 main(VS_OUT pin) : SV_TARGET
         //return float4(threshold, 0, 0, 1);
     }
     
-    finalLig.rgb = pow(finalLig.rgb, 1.0f / GAMMA);
+    //finalLig.rgb = pow(finalLig.rgb, 1.0f / GAMMA);
     return float4(finalLig, basecolor_factor.a);
 };

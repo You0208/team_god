@@ -67,6 +67,16 @@ void Lemur::Scene::BaseScene::DebugImgui()
 		ImGui::SliderFloat("bloom_intensity", &bloomer->bloom_intensity, +0.0f, +5.0f);
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("shadow"))
+	{
+		ImGui::Image(reinterpret_cast<void*>(shadow_map->shader_resource_view.Get()), ImVec2(shadowmap_width / 5.0f, shadowmap_height / 5.0f));
+		ImGui::SliderFloat("shadow_depth_bias", &scene_constant.shadow_depth_bias, 0.1f, 0.01f);
+		ImGui::SliderFloat("light_view_distance", &light_view_distance, 1.0f, +100.0f);
+		ImGui::SliderFloat("light_view_size", &light_view_size, 1.0f, +100.0f);
+		ImGui::SliderFloat("light_view_near_z", &light_view_near_z, 1.0f, light_view_far_z - 1.0f);
+		ImGui::SliderFloat("light_view_far_z", &light_view_far_z, light_view_near_z + 1.0f, +100.0f);
+		ImGui::TreePop();
+	}
 	// ポイントライト
 	if (ImGui::TreeNode("points"))
 	{
@@ -595,7 +605,7 @@ void Lemur::Scene::BaseScene::InitializeFramebuffer()
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
 	//BLOOM
-	bloomer = std::make_unique<Bloom>(graphics.GetDevice(), 1920, 1080);
+	bloomer = std::make_unique<Bloom>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// 輪郭線
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)] = std::make_unique<Framebuffer>(graphics.GetDevice(), SCREEN_WIDTH, SCREEN_HEIGHT, true);
@@ -614,9 +624,9 @@ void Lemur::Scene::BaseScene::InitializePS()
 	// ポストエフェクト最終
 	create_ps_from_cso(graphics.GetDevice(), "Shader/final_pass_ps.cso", pixel_shaders[static_cast<size_t>(PS::FINAL)].GetAddressOf());
 	// SKYMAP
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/skymap_ps.cso", pixel_shaders[static_cast<size_t>(PS::SKY)].GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "Shader/skymap_ps.cso", pixel_shaders[static_cast<size_t>(PS::SKY)].GetAddressOf());
 	// DEFERRED
-	create_ps_from_cso(graphics.GetDevice(), "./Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
+	create_ps_from_cso(graphics.GetDevice(), "Shader/deferred_rendering_ps.cso", pixel_shaders[static_cast<size_t>(PS::DEFFERED)].GetAddressOf());
 
 }
 
@@ -639,9 +649,7 @@ void Lemur::Scene::BaseScene::SetUpRendering()
 	FLOAT color[]{ 0.2f, 0.2f, 0.2f, 1.0f };
 	// キャンバス全体を指定した色に塗りつぶす
 	immediate_context->ClearRenderTargetView(render_target_view, color);
-
 	if (!enable_fog)immediate_context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
 	// これから描くキャンバスを指定する
 	immediate_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
 
@@ -655,10 +663,20 @@ void Lemur::Scene::BaseScene::SetUpRendering()
 	// FOG
 	immediate_context->PSSetSamplers(6, 1, sampler_states[static_cast<size_t>(SAMPLER_STATE::LINEAR_CLAMP)].GetAddressOf());
 
-	Camera& camera = Camera::Instance();
+}
+
+void Lemur::Scene::BaseScene::SetUpConstantBuffer()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
 	// 計算
 	{
+		Camera& camera = Camera::Instance();
+
 		D3D11_VIEWPORT viewport;
 		UINT num_viewports{ 1 };
 		immediate_context->RSGetViewports(&num_viewports, &viewport);
@@ -821,15 +839,16 @@ void Lemur::Scene::BaseScene::ExePostEffct()
 
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
 	ID3D11ShaderResourceView* final_pass_shader_resource_views[] =
 	{
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->shader_resource_views[0].Get(),
 		bloomer->ShaderResourceView(),
-		framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)]->shader_resource_views[0].Get(),
-		framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->shader_resource_views[0].Get(),
+		//framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)]->shader_resource_views[0].Get(),
+		//framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->shader_resource_views[0].Get(),
 	};
-	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0, _countof(final_pass_shader_resource_views), pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
+	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0,2, pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
 }
 
 void Lemur::Scene::BaseScene::LightUpdate()
@@ -861,6 +880,31 @@ void Lemur::Scene::BaseScene::LightUpdate()
 		spot_light[i].direction.y = spDirection.y;
 		spot_light[i].direction.z = spDirection.z;
 	}
+}
+
+void Lemur::Scene::BaseScene::SetUpShadowMap()
+{
+	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+
+	ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+	ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+	Camera& camera = Camera::Instance();
+
+	using namespace DirectX;
+
+	const float aspect_ratio = shadow_map->viewport.Width / shadow_map->viewport.Height;
+
+	XMVECTOR F{ camera.GetFocus() };
+	XMVECTOR E{ F - XMVector3Normalize(XMLoadFloat4(&directional_light_direction)) * light_view_distance };
+	XMVECTOR U{ XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) };
+	XMMATRIX V{ XMMatrixLookAtLH(E, F, U) };
+	XMMATRIX P{ XMMatrixOrthographicLH(light_view_size * aspect_ratio, light_view_size, light_view_near_z, light_view_far_z) };
+
+	DirectX::XMStoreFloat4x4(&scene_constant.view_projection, V * P);
+	scene_constant.light_view_projection = scene_constant.view_projection;
+	immediate_context->UpdateSubresource(constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].Get(), 0, 0, &scene_constant, 0, 0);
+	immediate_context->VSSetConstantBuffers(static_cast<size_t>(CONSTANT_BUFFER_R::SCENE), 1, constant_buffers[static_cast<size_t>(CONSTANT_BUFFER::SCENE)].GetAddressOf());
 }
 
 void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_)

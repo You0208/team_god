@@ -179,7 +179,7 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
     // –Ø
     for (int i = 0; i < 7; i++)
     {
-        tree[i]->Render(scale, replaced_pixel_shader2);
+        tree[i]->Render(scale, replaced_pixel_shader);
         // ‘
         leavs_LV1[i]->Render(scale, replaced_pixel_shader);
         leavs_LV2[i]->Render(scale, replaced_pixel_shader);
@@ -187,7 +187,7 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
 
     for (int i = 0; i < 3; i++)
     {
-        une[i]->Render(scale, replaced_pixel_shader2);
+        une[i]->Render(scale, replaced_pixel_shader);
     }
 
 

@@ -20,7 +20,6 @@ float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD) : SV_TARG
     const float weight[3] = { 0.2270270270, 0.3162162162, 0.0702702703 };
 
     float4 sampled_color = hdr_color_buffer_texture.Sample(sampler_states[LINEAR_BORDER_BLACK], texcoord) * weight[0];
-    
     for (int i = 1; i < 3; i++)
     {
         sampled_color += hdr_color_buffer_texture.Sample(sampler_states[LINEAR_BORDER_BLACK], texcoord + float2(offset[i] / width, 0.0)) * weight[i];

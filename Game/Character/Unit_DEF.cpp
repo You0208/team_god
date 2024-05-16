@@ -213,6 +213,9 @@ Broccoli::Broccoli()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb",true);
+
+    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\rect.fbx");
+
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
@@ -238,19 +241,19 @@ Broccoli::Broccoli()
 
 void Broccoli::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    DirectX::XMFLOAT3 attack_rect_size = {
-        (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
-        0.5f,
-        (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
-    };
-    DirectX::XMFLOAT3 attack_rect_center = {
-        attack_rect.left_up.x + attack_rect_size.x,
-        0,
-        attack_rect.right_down.y + attack_rect_size.z
-    };
+    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    //DirectX::XMFLOAT3 attack_rect_size = {
+    //    (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
+    //    0.5f,
+    //    (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
+    //};
+    //DirectX::XMFLOAT3 attack_rect_center = {
+    //    attack_rect.left_up.x + attack_rect_size.x,
+    //    0,
+    //    attack_rect.right_down.y + attack_rect_size.z
+    //};
 
-    debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
+    //debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
 }
 
 void Broccoli::Update(float elapsed_time)
@@ -372,6 +375,8 @@ Cauliflower::Cauliflower()
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
+    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\rect.fbx");
+
     attack_times = 5;    // UŒ‚‰ñ”
     attack_power = 1;    // UŒ‚—Í
     attack_width = 1.0f;    // UŒ‚•
@@ -393,19 +398,19 @@ Cauliflower::Cauliflower()
 
 void Cauliflower::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    DirectX::XMFLOAT3 attack_rect_size = {
-        (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
-        0.5f,
-        (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
-    };
-    DirectX::XMFLOAT3 attack_rect_center = {
-        attack_rect.left_up.x + attack_rect_size.x,
-        0,
-        attack_rect.right_down.y + attack_rect_size.z
-    };
+    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    //DirectX::XMFLOAT3 attack_rect_size = {
+    //    (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
+    //    0.5f,
+    //    (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
+    //};
+    //DirectX::XMFLOAT3 attack_rect_center = {
+    //    attack_rect.left_up.x + attack_rect_size.x,
+    //    0,
+    //    attack_rect.right_down.y + attack_rect_size.z
+    //};
 
-    debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
+    //debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
 }
 
 void Cauliflower::Update(float elapsed_time)

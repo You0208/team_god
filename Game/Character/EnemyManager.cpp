@@ -58,7 +58,7 @@ void EnemyManager::PowerUpEnemy()
 }
 
 // •`‰æˆ—
-void EnemyManager::Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader)
+void EnemyManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
     for (Enemy* enemy : enemies)
     {

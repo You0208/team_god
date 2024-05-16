@@ -9,6 +9,8 @@ Chili::Chili()
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Chili.fbx");
 
+    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\circle.fbx");
+
 
     attack_effect = new Effect(".\\resources\\Effect\\UNIT1\\UNIT1.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
@@ -35,9 +37,9 @@ Chili::Chili()
 
 void Chili::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    //debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Chili::UpdateIdleState(float elapsed_time)
@@ -155,6 +157,10 @@ Shishito::Shishito()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Shishito.fbx");
+
+    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\circle.fbx");
+    collision_scale_facter = 2.0f;
+
     attack_effect = new Effect(".\\resources\\Effect\\UNIT4_BUFF\\UNIT4_BUFF.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
@@ -175,9 +181,9 @@ Shishito::Shishito()
 
 void Shishito::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+   //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+   //debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
+   //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Shishito::UpdateIdleState(float elapsed_time)

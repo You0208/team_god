@@ -160,7 +160,7 @@ void Seed::DisDirection()
     }
 }
 
-void Seed::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
+void Seed::Render(float scale, ID3D11PixelShader* replaced_pixel_shader)
 {
     Character::Render(scale, replaced_pixel_shader);
 }

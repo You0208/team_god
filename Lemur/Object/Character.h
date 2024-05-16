@@ -15,6 +15,8 @@ public:
     void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
     void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
 
+    void CollisionRender(float scale, ID3D11PixelShader* replaced_pixel_shader);
+
     // Imgui
     void DrawDebugGUI(std::string name,int i);
     virtual void DrawDebugGUI() {}
@@ -199,8 +201,10 @@ private:
     std::shared_ptr<FbxModelManager> model = nullptr;                           // FBXモデル
     std::shared_ptr<GltfModelManager> gltf_model = nullptr;                     // Gltfモデル
 
-    public:
-        //std::shared_ptr<FbxModelManager> collision_model = nullptr;                           // FBXモデル
+public:
+    std::shared_ptr<FbxModelManager> collision_model = nullptr;                           // FBXモデル
+    DirectX::XMFLOAT3   collision_pos = { 0, 0, 0 };                 // 位置
+    DirectX::XMFLOAT3   collision_scale = { 1.0f, 1.0f, 1.0f };        // スケール
 protected:
     //----------モデル関連------------------------------------------------
     Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    = nullptr;                     // ピクセルシェーダー
@@ -215,6 +219,7 @@ protected:
     DirectX::XMFLOAT4   material_color              = { 1, 1, 1, 1 };              // 色
     DirectX::XMFLOAT3   direction                   = { 0,0,1 };                   // 方向
     float               model_scale                 = 1.0f;
+    float               collision_scale_facter             = 1.0f;
 
     //----------ゲーム関連------------------------------------------------
     float   radius                 = 1.0f;          // 半径
@@ -241,6 +246,7 @@ protected:
     float	airControl             = 0.3f;          // 空気抵抗
 
     bool    isGround               = false;         // 着地フラグ
+    int     category               = 0;             // ユニットのカテゴリー
 
     //----------アニメーション関連------------------------------------------------
     bool    animation_loop_flag     = true;         // ループフラグ

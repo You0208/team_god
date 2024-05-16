@@ -21,7 +21,7 @@ Player::Player()
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
     // ユニットカテゴリーの初期化
-    unit_category = UnitManager::UNIT_INDEX::GreenPumpkin;
+    unit_category = UnitManager::UNIT_INDEX::Broccoli;
 
     //TODO もね　ゲーム画面 案山子
     {

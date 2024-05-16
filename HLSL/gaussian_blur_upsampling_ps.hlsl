@@ -1,7 +1,5 @@
 // BLOOM
 #include "ConstantBuffer.hlsli"
-
-
 #define POINT 0
 #define LINEAR 1
 #define ANISOTROPIC 2
@@ -20,6 +18,5 @@ float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD) : SV_TARG
     {
         sampled_color += downsampled_textures[downsampled_index].Sample(sampler_states[LINEAR], texcoord).xyz;
     }
-    
     return float4(sampled_color * bloom_intensity, 1);
 }

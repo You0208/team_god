@@ -48,11 +48,12 @@ void GameScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
 		// SHADOW
-		double_speed_z = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
+		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", stage_ps_1.GetAddressOf());
@@ -272,10 +273,42 @@ void GameScene::Render(float elapsedTime)
 	ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
 	camera.SetPerspectiveFov(immediate_context);
-	
+
 	// 描画の設定
 	SetUpRendering();
 
+	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+
+	// スケール
+	const float scale = 0.015f;
+
+	SetUpShadowMap();
+
+	shadow_map->Clear(immediate_context);
+	shadow_map->Activate(immediate_context);
+
+	ID3D11PixelShader* null_pixel_shader{ NULL };
+	// プレイヤー描画
+	player->Render(scale, &null_pixel_shader);
+
+	//// ステージ描画
+	StageManager::Instance().Render(1.0f, &null_pixel_shader, &null_pixel_shader);
+	// ユニット描画
+	UnitManager::Instance().Render(scale, null_pixel_shader);
+	for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+	{
+		//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
+	}
+	// エネミー描画
+	EnemyManager::Instance().Render(scale, null_pixel_shader);
+	// 種描画
+	SeedManager::Instance().Render(0.1f, null_pixel_shader);
+
+	shadow_map->Deactivate(immediate_context);
+
+	SetUpConstantBuffer();
 	// エッジ検出
 	{
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Clear(immediate_context);
@@ -293,16 +326,16 @@ void GameScene::Render(float elapsedTime)
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
+
 	// テクスチャをセット
 	{
 		// ノイズ
 		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());//TODO
 		// シャドウ
-		immediate_context->PSSetShaderResources(8, 1, double_speed_z->shader_resource_view.GetAddressOf());
+		immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
 		//　深度値
 		immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
 	}
-
 	// ポストエフェクトの開始
 	if (enable_post_effect)
 	{
@@ -312,7 +345,6 @@ void GameScene::Render(float elapsedTime)
 
 	//3D描画
 	{
-		const float scale = 0.015f;
 		if (enable_deferred)
 		{
 			// プレイヤー描画
@@ -324,9 +356,9 @@ void GameScene::Render(float elapsedTime)
 			// ユニット描画
 			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 			// エネミー描画
-			EnemyManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
+			EnemyManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 			// 種描画
-			SeedManager::Instance().Render(scale, fbx_gbuffer_ps.GetAddressOf());
+			SeedManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 		}
 		else
 		{
@@ -340,14 +372,15 @@ void GameScene::Render(float elapsedTime)
 			StageManager::Instance().Render(1.0f, stage_ps_1.GetAddressOf(), stage_ps_2.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, unit_ps.Get());
+			UnitManager::Instance().CollisionRender(scale, collision.Get());
 			for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
 			{
 				//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
 			}
 			// エネミー描画
-			EnemyManager::Instance().Render(scale, enemy_ps.GetAddressOf());
+			EnemyManager::Instance().Render(scale, enemy_ps.Get());
 			// 種描画
-			SeedManager::Instance().Render(0.1f, Try.GetAddressOf());
+			SeedManager::Instance().Render(0.1f, Try.Get());
 		}
 	}
 

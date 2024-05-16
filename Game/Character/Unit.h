@@ -62,6 +62,7 @@ public:
     float       GetAttackRadiusIn() { return attack_radius_in; }
     Effect*     GetSetEffect() { return set_effect; };
     float       GetSetEffectSize() { return set_effect_size; }
+    float       GetAttackWidth() { return attack_width; }
 
     // Setter
     void SetCategory(int category_) { category = category_; }
@@ -124,7 +125,6 @@ protected:
     float       dec_pos                     = 0.0f;             // 種がユニットに跳ね返される距離
     bool        is_attack                   = false;            // 攻撃中かどうか
     bool        is_streng                   = false;            // 強化中かどうか
-    int         category                    = 0;                // ユニットのカテゴリー
     int         attack_times                = 0;                // 攻撃回数
     int         streng_attack_power         = 0;                // 強化攻撃力
     int         original_attack_power       = 0;                // 強化前 攻撃力

@@ -22,13 +22,17 @@ float4 main(VS_OUT pin) : SV_TARGET
 #include "ConstantBuffer.hlsli"
 
 Texture2D color_map : register(t0);
-SamplerState color_sampler_state : register(s0);
 Texture2D mask_texture : register(t10);
+
+SamplerState point_sampler_state : register(s0);
+SamplerState linear_sampler_state : register(s1);
+SamplerState anisotropic_sampler_state : register(s2);
+
 float4 main(VS_OUT pin) : SV_TARGET
 {
     
-    float4 color = color_map.Sample(color_sampler_state, pin.texcoord) * pin.color;
-    float mask_value = mask_texture.Sample(color_sampler_state, pin.texcoord);
+    float4 color = color_map.Sample(anisotropic_sampler_state, pin.texcoord);
+    float mask_value = mask_texture.Sample(point_sampler_state, pin.texcoord);
     //color.a *= mask_value;
 #if 1
     // Inverse gamma process
@@ -38,6 +42,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     // stepŠÖ”‚ğ—p‚¢‚Ä“§‰ß’l‚ğ0/1‚É‚·‚é
     float alpha = step(parameters.x, mask_value);
     color.a *= alpha;
-    return color;
+    return float4(color.rgb, alpha) * pin.color;
 }
 #endif

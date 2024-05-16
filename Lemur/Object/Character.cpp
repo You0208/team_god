@@ -90,6 +90,12 @@ void Character::Render(float scale_, ID3D11PixelShader** replaced_pixel_shader)
     }
 }
 
+void Character::CollisionRender(float scale_, ID3D11PixelShader* replaced_pixel_shader)
+{
+    if (collision_model)collision_model->Render(scale_ * collision_scale_facter, replaced_pixel_shader);
+}
+
+
 void Character::Move(float vx, float vz, float speed)
 {
     // 移動方向ベクトルを設定
@@ -431,18 +437,32 @@ void Character::UpdateTransform()
     // 計算したワールド行列を取り出す。
     DirectX::XMStoreFloat4x4(&transform, W);
 #else
+
     if (!is_gltf)
     {
         model->GetTransform()->SetPosition(position);
         model->GetTransform()->SetScale(scale);
         model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
 
+        if (collision_model)
+        {
+            collision_model->GetTransform()->SetPosition(collision_pos);
+            collision_model->GetTransform()->SetScale(collision_scale);
+            collision_model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+        }
     }
     else 
     {
         gltf_model->GetTransform()->SetPosition(position);
         gltf_model->GetTransform()->SetScale(scale);
         gltf_model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+
+        if (collision_model)
+        {
+            collision_model->GetTransform()->SetPosition(collision_pos);
+            collision_model->GetTransform()->SetScale(collision_scale);
+            collision_model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+        }
     }
 
 

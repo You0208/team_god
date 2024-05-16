@@ -399,10 +399,17 @@ float3 DiffuseBRDF(float VdotH, float3 fresnelF0, float3 diffuseReflectance)
 // roughness : ëeÇ≥
 float CalcNormalDistributionFunction(float NdotH, float roughness)
 {
+// Ç±Ç±èCê≥ÇµÇΩ
+ #if 0
     float alpha = roughness * roughness;
     float alpha2 = alpha * alpha;
     float denom = (NdotH * NdotH) * (alpha2 - 1.0f) + 1.0f;
     return alpha2 / (PI * denom * denom);
+#endif
+    
+    float a = roughness * roughness;
+    float b = (NdotH * NdotH) * (a - 1.0f) + 1.0f;
+    return a / (PI * b * b);
 }
 //--------------------------------------------
 // äÙâΩå∏êäçÄÇÃéZèo
@@ -440,7 +447,7 @@ float3 SpecularBRDF(float NdotV, float NdotL, float NdotH, float VdotH, float3 f
     float G = CalcGeometryFunction(NdotL, NdotV, roughness);
     // FçÄ(ÉtÉåÉlÉãîΩéÀ)
     float3 F = CalcFresnel(fresnelF0, VdotH);
-    return (D * F * G) / max(0.0001f, 4 * NdotL * NdotV);
+    return D * G * F / (NdotL * NdotV * 4.0f);
 }
 
 //--------------------------------------------

@@ -8,6 +8,7 @@
 
 Bloom::Bloom(ID3D11Device* device, uint32_t width, uint32_t height)
 {
+
 	bit_block_transfer = std::make_unique<FullscreenQuad>(device);
 
 	glow_extraction = std::make_unique<Framebuffer>(device, width, height, false);

@@ -14,7 +14,7 @@ public:
     void DisDirection();
 
     // •`‰æˆ—
-    void Render(float scale, ID3D11PixelShader** replaced_pixel_shader);
+    void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
 
     void DrawDebugGUI();
 

@@ -33,7 +33,6 @@ float4 main(VS_OUT pin) : SV_TARGET
 //-----------------------------------------
     // 修正
     static const float GAMMA = 2.2;
-
     // 色
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     color.rgb = pow(color.rgb, GAMMA);
@@ -118,9 +117,10 @@ float4 main(VS_OUT pin) : SV_TARGET
         //----------------------------------------- 
         float3 shadow_factor = 1.0f;
         Shadow(pin, normal, T, B, shadow_map, comparison_sampler_state, shadow_factor);
+        
         // 最終光に足し合わせる    
         finalLig *= shadow_factor;
-        
+        //return float4(shadow_factor, 1);
         //-----------------------------------------
         //　リムライト
         //----------------------------------------- 
@@ -144,5 +144,5 @@ float4 main(VS_OUT pin) : SV_TARGET
 #if 0
     finalLig = pow(finalLig, 1.0f / GAMMA);
 #endif
-    return float4(finalLig, color.a);
+    return float4(finalLig * 2, color.a);
 };

@@ -50,6 +50,9 @@ namespace Lemur::Scene
         // レンダリング前設定
         void SetUpRendering();
 
+        // 定数バッファー更新
+        void SetUpConstantBuffer();
+
         // ディファードレンダリングの初期化
         void InitializeDeffered(int textureWidth, int textureHeight);
 
@@ -71,8 +74,11 @@ namespace Lemur::Scene
         // ポストエフェクトの実行
         void ExePostEffct();
 
+        // ライトの更新
         void LightUpdate();
 
+        // シャドウマップの準備
+        void SetUpShadowMap();
 
         // 遷移
         DirectX::XMFLOAT2 mask_pos;
@@ -309,7 +315,7 @@ namespace Lemur::Scene
         lightConstants lights{};
 
         DirectX::XMFLOAT4 ambient_color{ 0.2f, 0.2f, 0.2f, 0.2f };
-        DirectX::XMFLOAT4 directional_light_direction{ 1.0f, -1.0f, 1.0f, 1.0f };
+        DirectX::XMFLOAT4 directional_light_direction{ -0.6f, -1.0f, 1.0f, 1.0f };
         DirectX::XMFLOAT4 directional_light_color{ 1.0f, 1.0f, 1.0f, 1.0f };
         pointLights point_light[8];
         spotLights spot_light[8];
@@ -382,6 +388,7 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11PixelShader> zelda_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> Wall;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> Try;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> collision;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps_1;
@@ -396,12 +403,12 @@ namespace Lemur::Scene
         // SHADOW
         const uint32_t shadowmap_width = 2048;
         const uint32_t shadowmap_height = 2048;
-        std::unique_ptr<ShadowMap> double_speed_z;
+        std::unique_ptr<ShadowMap> shadow_map;
         DirectX::XMFLOAT4 light_view_focus{ 0, 0, 0, 1 };
-        float light_view_distance{ 10.0f };
-        float light_view_size{ 12.0f };
-        float light_view_near_z{ 2.0f };
-        float light_view_far_z{ 18.0f };
+        float light_view_distance{ 23.0f };
+        float light_view_size{ 45.0f };
+        float light_view_near_z{ -10.0f };
+        float light_view_far_z{ 40.0f };
 
         bool enable_shadow = true;
         bool enable_skymap = false;
