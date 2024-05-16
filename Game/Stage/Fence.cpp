@@ -44,10 +44,10 @@ Fence::Fence()
     {
 
     case 0:// ƒŒƒxƒ‹‚P
-        health = 40;
+        health = 60;
         break;
     case 1:// ƒŒƒxƒ‹‚Q
-        health = 45;
+        health = 60;
         break;
     case 2:// ƒŒƒxƒ‹‚R
         health = 45;
