@@ -140,5 +140,5 @@ float4 main(VS_OUT pin) : SV_TARGET
     
     
     //finalLig = pow(finalLig, 1.0f / GAMMA);
-    return float4(finalLig, alpha);
+    return float4(finalLig*2, alpha);
 };

@@ -301,6 +301,7 @@ void DemoScene::Render(float elapsedTime)
 	camera.SetPerspectiveFov(immediate_context);
 	// 描画の設定
 	SetUpRendering();
+	SetUpConstantBuffer();
 
 	// エッジ検出
 	{

@@ -53,16 +53,12 @@ void GameScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO ÀŒ±—p
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", stage_ps_1.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", stage_ps_2.GetAddressOf());
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", unit_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
-
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
@@ -276,6 +272,7 @@ void GameScene::Render(float elapsedTime)
 
 	// •`‰æ‚Ìİ’è
 	SetUpRendering();
+	SetUpConstantBuffer();
 
 	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
@@ -366,7 +363,7 @@ void GameScene::Render(float elapsedTime)
 			player->Render(scale, enemy_ps.GetAddressOf());
 
 			// ò•`‰æ
-			fence->Render(scale, Try.GetAddressOf());
+			//fence->Render(scale, Try.GetAddressOf());
 
 			// ƒXƒe[ƒW•`‰æ
 			StageManager::Instance().Render(1.0f, stage_ps_1.GetAddressOf(), stage_ps_2.GetAddressOf());
@@ -380,7 +377,7 @@ void GameScene::Render(float elapsedTime)
 			// ƒGƒlƒ~[•`‰æ
 			EnemyManager::Instance().Render(scale, enemy_ps.Get());
 			// í•`‰æ
-			SeedManager::Instance().Render(0.1f, Try.Get());
+			SeedManager::Instance().Render(0.1f, enemy_ps.Get());
 		}
 	}
 

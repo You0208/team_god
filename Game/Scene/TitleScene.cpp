@@ -70,6 +70,7 @@ void TitleScene::Render(float elapsedTime)
 
     SetUpRendering();
 
+    SetUpConstantBuffer();
     // ノイズ
     immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
 

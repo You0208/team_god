@@ -146,5 +146,5 @@ float4 main(VS_OUT pin) : SV_TARGET
     
     
     //finalLig = pow(finalLig, 1.0f / GAMMA);
-    return float4(finalLig, opacity);
+    return float4(finalLig*2, opacity);
 };

@@ -71,6 +71,7 @@ void LoadingScene::Render(float elapsedTime)
     camera.SetPerspectiveFov(immediate_context);
 
     SetUpRendering();
+    SetUpConstantBuffer();
     // 2D•`‰æ
     {
         // sprite•`‰æ

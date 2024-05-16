@@ -218,6 +218,7 @@ void SelectScene::Render(float elapsedTime)
 
     // 描画の設定
     SetUpRendering();
+    SetUpConstantBuffer();
 
     // ステートの設定
     immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
