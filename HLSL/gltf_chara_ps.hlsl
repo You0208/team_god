@@ -36,7 +36,6 @@ float4 main(VS_OUT pin) : SV_TARGET
         sampled.rgb = pow(sampled.rgb, GAMMA);
         basecolor_factor *= sampled;
     }
-    
     // 法線マップ
     float3 normal = material_textures[NORMAL_TEXTURE].Sample(sampler_states[LINEAR], pin.texcoord);
     
@@ -114,7 +113,6 @@ float4 main(VS_OUT pin) : SV_TARGET
 			directional_light_color.rgb, roughness_factor, directDiffuse, directSpecular);
         // 最終光に足し合わせる
         finalLig += (directDiffuse + directSpecular);
-
         //-----------------------------------------
         // ポイントライトのPBR
         //-----------------------------------------  
@@ -134,10 +132,10 @@ float4 main(VS_OUT pin) : SV_TARGET
         //　シャドウ
         //----------------------------------------- 
     
-        float3 shadow_factor = 1.0f;
-        Shadow(pin, normal, T, B, shadow_map, comparison_sampler_state, shadow_factor);
-        // 最終光に足し合わせる    
-        finalLig *= shadow_factor;
+        //float3 shadow_factor = 1.0f;
+        //Shadow(pin, normal, T, B, shadow_map, comparison_sampler_state, shadow_factor);
+        //// 最終光に足し合わせる    
+        //finalLig *= shadow_factor;
         
         // エミッシブ
         finalLig += emmisive_factor;
@@ -165,6 +163,6 @@ float4 main(VS_OUT pin) : SV_TARGET
         //return float4(threshold, 0, 0, 1);
     }
     
-    //finalLig.rgb = pow(finalLig.rgb, 1.0f / GAMMA);
+    finalLig.rgb = pow(finalLig.rgb, 1.0f / GAMMA);
     return float4(finalLig, basecolor_factor.a);
 };

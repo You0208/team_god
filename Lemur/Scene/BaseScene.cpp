@@ -845,10 +845,10 @@ void Lemur::Scene::BaseScene::ExePostEffct()
 	{
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->shader_resource_views[0].Get(),
 		bloomer->ShaderResourceView(),
-		//framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)]->shader_resource_views[0].Get(),
-		//framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->shader_resource_views[0].Get(),
+		framebuffers[static_cast<size_t>(FRAME_BUFFER::FOG)]->shader_resource_views[0].Get(),
+		framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->shader_resource_views[0].Get(),
 	};
-	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0,2, pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
+	fullscreenQuad->Blit(immediate_context, final_pass_shader_resource_views, 0, _countof(final_pass_shader_resource_views), pixel_shaders[static_cast<size_t>(PS::FINAL)].Get());
 }
 
 void Lemur::Scene::BaseScene::LightUpdate()

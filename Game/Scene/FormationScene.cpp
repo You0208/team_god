@@ -26,9 +26,6 @@ void FormationScene::Initialize()
         // マスクの初期化
         InitializeMask();
 
-        // SHADOW
-        shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
-
         create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
@@ -101,6 +98,8 @@ void FormationScene::Initialize()
 
         // マスクを呼ぶ
         CallTransition(false);
+        // ポストエフェクト最終
+        create_ps_from_cso(graphics.GetDevice(), "Shader/formation_final_pass.cso", pixel_shaders[static_cast<size_t>(PS::FINAL)].GetAddressOf());
     }
 
     // ポイントライト・スポットライトの初期位置設定
@@ -339,10 +338,16 @@ void FormationScene::Render(float elapsedTime)
         // ノイズ
         immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
         // シャドウ
-        immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
+        //immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
         //　深度値
         immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
     }
+
+    //ステートの設定
+    immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+    immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+    immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+
 
 
     // ポストエフェクトの開始

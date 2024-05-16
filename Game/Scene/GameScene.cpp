@@ -57,6 +57,7 @@ void GameScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", stage_ps_2.GetAddressOf());
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", unit_ps.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/scarecrow.cso", scarecrow_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
 
@@ -67,7 +68,7 @@ void GameScene::Initialize()
 	{
 		// ƒJƒƒ‰
 		Camera& camera = Camera::Instance();
-		camera_range = 30.0f;
+		camera_range = 33.0f;
 		camera_angle = { DirectX::XMConvertToRadians(40),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
@@ -401,7 +402,7 @@ void GameScene::Render(float elapsedTime)
 		else
 		{
 			// ƒvƒŒƒCƒ„[•`‰æ
-			player->Render(scale, enemy_ps.GetAddressOf());
+			player->Render(0.025f, scarecrow_ps.GetAddressOf());
 
 			// ò•`‰æ
 			//fence->Render(scale, Try.GetAddressOf());

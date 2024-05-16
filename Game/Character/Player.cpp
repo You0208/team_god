@@ -30,7 +30,7 @@ Player::Player()
         // 種の射出速度
         seed_throw_speed = 21.0f;
         // 案山子が柵から離れる距離
-        sub_pos_z_puls = 0.55f;
+        sub_pos_z_puls = 0.75f;
         // 案山子の移動速度
         moveSpeed = 5.1f;
         // 案山子から種の最短距離

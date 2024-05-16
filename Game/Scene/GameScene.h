@@ -51,6 +51,7 @@ private:// ゲーム
 private:// シェーダー
     Microsoft::WRL::ComPtr<ID3D11PixelShader> unit_ps;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> enemy_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> scarecrow_ps;
 
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];
