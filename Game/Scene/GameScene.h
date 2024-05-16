@@ -79,4 +79,8 @@ private:// シェーダー
     DirectX::XMFLOAT2 c_p;
     float c_r;
     float angle;
+    // 爆発アニメーション付きパーティクルシステム
+    std::unique_ptr<ParticleSystem> particle_bomb;
+
+
 };

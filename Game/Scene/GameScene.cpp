@@ -118,7 +118,7 @@ void GameScene::Initialize()
 
 		// プレイヤーの初期化
 		player = new Player;
-
+		
 		fence = new Fence;
 
 		// 敵スポーン制御装置の初期化
@@ -145,6 +145,18 @@ void GameScene::Initialize()
 		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
+		// パーティクルシステム準備
+		{
+			D3D11_TEXTURE2D_DESC texture2d_desc;
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
+			// パーティクル用画像ロード
+			LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Particle\\particle256x256.png",
+				shader_resource_view.GetAddressOf(), &texture2d_desc);
+			// パーティクルシステム生成
+			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
+
+		}
+		//hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_parts.efk");
 		//rect.center = { 0,0 };
 		//rect = CalcRotateRect(rect.center, { 2,2 }, angle);
 		//rect.width = { 2,2 };
@@ -251,7 +263,37 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// デバッグ
 	{
-
+		// パーティクルシステム更新
+		if (particle_system)
+		{
+			if (::GetAsyncKeyState('A') & 0x8000)
+			{
+				DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3((
+					rand() % 30 - 15) * 0.1f,
+					rand() % 30 * 0.1f + 20,
+					(rand() % 30 - 15) * 0.1f + 3);
+				int max = 100;
+				for (int i = 0; i < max; i++)
+				{
+					// 発生位置
+					DirectX::XMFLOAT3 p = { 0,0,0 };
+					p.x = pos.x + (rand() % 10001 - 5000) * 0.01f;
+					p.y = pos.y;
+					p.z = pos.z + (rand() % 10001 - 5000) * 0.01f;
+					// 発生方向
+					DirectX::XMFLOAT3 v = { 0,0,0 };
+					v.y = -(rand() % 10001) * 0.0005f - 0.002f;
+					// 力
+					DirectX::XMFLOAT3 f = { 0,0,0 };
+					f.x = (rand() % 10001) * 0.0001f + 0.1f;
+					f.z = (rand() % 10001 - 5000) * 0.00001f;
+					// 大きさ
+					DirectX::XMFLOAT2 s = { .2f,.2f };
+					particle_system->Set(12, 5, p, v, f, s);
+				}
+			}
+			particle_system->Update(elapsedTime);
+		}
 	}
 
 	// Imgui
@@ -408,6 +450,15 @@ void GameScene::Render(float elapsedTime)
 
 		// エフェクト再生
 		EffectManager::Instance().Render(view, projection);
+		
+		// ブレンドステート設定
+		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+		// 深度ステンシルステート設定
+		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_OFF)].Get(), 0);
+		// ラスタライザーステート設定
+		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+		if (particle_bomb)	particle_bomb->Render(immediate_context);
+		if (particle_system)	particle_system->Render(immediate_context);
 	}
 
 	// マスクの描画
