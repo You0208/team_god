@@ -92,6 +92,7 @@ void Camera::DrawDebug()
         DirectX::XMConvertToRadians(angle_d.y)
     };
     ImGui::SliderFloat(u8"距離", &range, 0.0f, 60.0f);
+    ImGui::SliderFloat3(u8"ターゲット", &target.x , -30.0f, 30.0f);
 
     ImGui::End();
 }

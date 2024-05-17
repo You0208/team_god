@@ -84,7 +84,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(7);
+		stage_manager.SetStageLevel(3);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -92,13 +92,13 @@ void GameScene::Initialize()
 			time_limit = 80.0f;// ここで制限時間を調整
 			break;
 		case 1:// レベル２
-			time_limit = 95.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 2:// レベル３
 			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
-			time_limit = 95.0f;// ここで制限時間を調整
+			time_limit = 85.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
 			time_limit = 100.0f;// ここで制限時間を調整
@@ -370,6 +370,8 @@ void GameScene::Render(float elapsedTime)
 
 	// スケール
 	const float scale = 0.015f;
+	// TODO もね　えねみーの大きさ
+	const float enemy_scale = 0.016f;
 
 	SetUpShadowMap();
 
@@ -389,7 +391,7 @@ void GameScene::Render(float elapsedTime)
 		//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
 	}
 	// エネミー描画
-	EnemyManager::Instance().Render(scale, null_pixel_shader);
+	EnemyManager::Instance().Render(enemy_scale, null_pixel_shader);
 	// 種描画
 	SeedManager::Instance().Render(0.1f, null_pixel_shader);
 
@@ -443,7 +445,7 @@ void GameScene::Render(float elapsedTime)
 			// ユニット描画
 			UnitManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 			// エネミー描画
-			EnemyManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
+			EnemyManager::Instance().Render(enemy_scale, fbx_gbuffer_ps.Get());
 			// 種描画
 			SeedManager::Instance().Render(scale, fbx_gbuffer_ps.Get());
 		}
@@ -465,7 +467,7 @@ void GameScene::Render(float elapsedTime)
 				//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
 			}
 			// エネミー描画
-			EnemyManager::Instance().Render(scale, enemy_ps.Get());
+			EnemyManager::Instance().Render(enemy_scale, enemy_ps.Get());
 			// 種描画
 			SeedManager::Instance().Render(0.1f, enemy_ps.Get());
 		}

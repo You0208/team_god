@@ -40,7 +40,7 @@ void UnitManager::Initialize()
         );
         unit_status[UNIT_INDEX::Shishito].attack_radius = 3.0f;                 // UŒ‚”¼Œa
         unit_status[UNIT_INDEX::Shishito].timer_max = 7.0f;                 // oŒ»ŠÔ
-        unit_status[UNIT_INDEX::Shishito].streng_width = 2;                    // UŒ‚—Í‚Ìã‚è•
+        unit_status[UNIT_INDEX::Shishito].streng_width = 3;                    // UŒ‚—Í‚Ìã‚è•
 
         //OrangePumpkin
         InitializeBasic(unit_status[UNIT_INDEX::OrangePumpkin],
