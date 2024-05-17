@@ -75,7 +75,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(2);
+		stage_manager.SetStageLevel(3);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -89,7 +89,7 @@ void GameScene::Initialize()
 			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
-			time_limit = 95.0f;// ここで制限時間を調整
+			time_limit = 85.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
 			time_limit = 100.0f;// ここで制限時間を調整

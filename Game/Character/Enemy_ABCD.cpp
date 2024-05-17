@@ -28,7 +28,7 @@ Enemy_A::Enemy_A(bool is_minor)
 
 void Enemy_A::DrawDebugPrimitive()
 {
-    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
@@ -222,7 +222,7 @@ void Enemy_B::UpdateMoveState(float elapsed_time)
 void Enemy_B::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-   // debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+   //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 //------EnemyC-----------------------------------------------------------------
@@ -254,7 +254,7 @@ Enemy_C::Enemy_C(bool is_minor)
 void Enemy_C::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-   // debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Enemy_C::DrawDebugGUI(int n)

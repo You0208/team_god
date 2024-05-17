@@ -79,7 +79,7 @@ SummonEnemy::SummonEnemy(bool is_minor)
 void SummonEnemy::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void SummonEnemy::DrawDebugGUI(int n)
@@ -247,7 +247,7 @@ BossEnemy::BossEnemy(bool is_minor)
 void BossEnemy::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 void BossEnemy::DrawDebugGUI(int n)
 {
@@ -332,7 +332,7 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
 void NuisanceEnemy::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-   // debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void NuisanceEnemy::DrawDebugGUI(int n)

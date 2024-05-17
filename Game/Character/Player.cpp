@@ -23,7 +23,7 @@ Player::Player()
     // ユニットカテゴリーの初期化
     unit_category = UnitManager::UNIT_INDEX::Broccoli;
 
-    //TODO もね　ゲーム画面 案山子
+    // TODO もね　ゲーム画面 案山子
     {
         // はじく強さ
         flip_speed = 2.0f;
