@@ -135,7 +135,7 @@ void UnitManager::Update(float elapsedTime)
                 unit->GetScale().z * 6
             };
         }
-        else if (unit->GetCategory() == UNIT_INDEX::GreenPumpkin)
+        else if (unit->GetCategory() == UNIT_INDEX::OrangePumpkin)
         {
             unit->collision_pos = unit->GetPosition();
             unit->collision_scale = {

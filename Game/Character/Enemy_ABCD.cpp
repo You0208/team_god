@@ -25,10 +25,8 @@ Enemy_A::Enemy_A(bool is_minor)
     height          = 1.0f;     // デバッグ用
     speed_power     = -1.0f;    // 速度
 
-    //scaleFactor = scale.x = scale.y = scale.z = 0.0f;
-    //easing_scale.value = 0.0f;
-    //easing_scale.CallValueEasing(1.0f, easing_scale.value, EasingFunction::EasingType::InSine,0.5f);
-
+    // スケールのイージング
+    EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -70,9 +68,6 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
 
 void Enemy_A::UpdateMoveState(float elapsed_time)
 {
-    //scaleFactor = easing_scale.value;
-    //easing_scale.EasingValue(elapsed_time);
-
     if (shaft == Shaft::Side) rotation.y = DirectX::XMConvertToRadians(-90);
     else if (shaft == Shaft::Vertical)rotation.y = DirectX::XMConvertToRadians(180);
 
@@ -124,6 +119,8 @@ Enemy_B::Enemy_B(bool is_minor)
 
     health          = 10;       // HP
 
+    // スケールのイージング
+    EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, false);
 }
@@ -263,6 +260,8 @@ Enemy_C::Enemy_C(bool is_minor)
     speed_power     = -1.0f;     // 速度
     health          = 10;        // HP
 
+    // スケールのイージング
+    EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -602,6 +601,8 @@ Enemy_D::Enemy_D(bool is_minor)
 
     health          = 10;       // HP
 
+    // スケールのイージング
+    EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }

@@ -315,29 +315,26 @@ OrangePumpkin::OrangePumpkin()
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
-    attack_times           = 5;    // 攻撃回数
-    attack_power           = 1;    // 攻撃力
-    attack_interval        = 0.5f; // 攻撃間隔
+    attack_times = 5;    // 攻撃回数
+    attack_power = 1;    // 攻撃力
+    attack_interval = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    height                 = 0.5f; // デバッグ用
-    dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-
     radius = 0.4f; // 半径
+    height = 0.5f; // デバッグ用
+    dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
 
     // 三角
     t_height               = 1.0f;// 高さ
     t_base                 = 1.0f;// 底辺
 
-    // triangle_1=奥、triangle_2=手前
     // 頂点をユニットのポジションに
-    triangle_1.A           = triangle_2.A = { position.x,position.z };
-    // 左側の頂点
-    triangle_1.B           = { triangle_1.A.x - (t_base * 0.5f),triangle_1.A.y + t_height };
-    triangle_2.B           = { triangle_2.A.x - (t_base * 0.5f),triangle_2.A.y - t_height };
-    // 右側の頂点
-    triangle_1.C           = { triangle_1.A.x + (t_base * 0.5f),triangle_1.A.y + t_height };
-    triangle_2.C           = { triangle_2.A.x + (t_base * 0.5f),triangle_2.A.y - t_height };
-
+    triangle_1.A = triangle_2.A = { position.x,position.z };
+    // 左奥側の頂点
+    triangle_1.B = { triangle_1.A.x - t_height,triangle_1.A.y + (t_base * 0.5f) };
+    triangle_2.B = { triangle_2.A.x + t_height,triangle_2.A.y + (t_base * 0.5f) };
+    // 右手前側の頂点
+    triangle_1.C = { triangle_1.A.x - t_height,triangle_1.A.y - (t_base * 0.5f) };
+    triangle_2.C = { triangle_2.A.x + t_height,triangle_2.A.y - (t_base * 0.5f) };
 
     UpdateTransform();
 
@@ -363,15 +360,15 @@ void OrangePumpkin::DrawDebugPrimitive()
 
 void OrangePumpkin::Update(float elapsed_time)
 {
-    // triangle_1   =奥、triangle_2=手前
     // 頂点をユニットのポジションに
     triangle_1.A = triangle_2.A = { position.x,position.z };
-    // 左側の頂点
-    triangle_1.B = { triangle_1.A.x - (t_base * 0.5f),triangle_1.A.y + t_height };
-    triangle_2.B = { triangle_2.A.x - (t_base * 0.5f),triangle_2.A.y - t_height };
-    // 右側の頂点
-    triangle_1.C = { triangle_1.A.x + (t_base * 0.5f),triangle_1.A.y + t_height };
-    triangle_2.C = { triangle_2.A.x + (t_base * 0.5f),triangle_2.A.y - t_height };
+    // 左奥側の頂点
+    triangle_1.B = { triangle_1.A.x - t_height,triangle_1.A.y + (t_base * 0.5f) };
+    triangle_2.B = { triangle_2.A.x + t_height,triangle_2.A.y + (t_base * 0.5f) };
+    // 右手前側の頂点
+    triangle_1.C = { triangle_1.A.x - t_height,triangle_1.A.y - (t_base * 0.5f) };
+    triangle_2.C = { triangle_2.A.x + t_height,triangle_2.A.y - (t_base * 0.5f) };
+
 
     Unit::Update(elapsed_time);
 }
@@ -392,7 +389,7 @@ void OrangePumpkin::UpdateIdleState(float elapsed_time)
         if (enemy->IsDead())continue;
 
         // 敵がユニットの攻撃範囲に入っているとき
-        // 奥三角
+        // 左三角
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_1,
@@ -402,7 +399,7 @@ void OrangePumpkin::UpdateIdleState(float elapsed_time)
         {
             TransitionAttackState();
         }
-        // 手前三角
+        // 右三角
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_2,
@@ -451,7 +448,6 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
                 enemy->GetRadius()                           // 敵の当たり判定
             ))
             {
-                // 敵とかぶったフラグをON
                 is_intersected = true;
                 if (is_attack)
                 {
@@ -471,8 +467,8 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
                 enemy->GetRadius()                           // 敵の当たり判定
             ))
             {
-                // 敵とかぶったフラグをON
                 is_intersected = true;
+
                 if (is_attack)
                 {
                     // アニメーションの切り替え
@@ -480,7 +476,7 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_handle=attack_effect->Play(position, attack_effect_size);
+                    attack_handle = attack_effect->Play(position, attack_effect_size);
                 }
             }
         }

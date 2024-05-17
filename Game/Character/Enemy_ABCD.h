@@ -17,7 +17,6 @@ private:
     void UpdateMoveState(float elapsed_time)override;
 private:
     float timer;// タイマー
-    EasingFunction easing_scale;
 };
 
 class Enemy_B :public Enemy

@@ -40,6 +40,7 @@ private:// ゲーム
     float   time_limit;
     bool    time_up = false;
 
+    float timer_angle = 0.0f;
     // コントローラー用
     std::shared_ptr<Sprite> timer_hands;
     std::shared_ptr<Sprite> timer_ui_base;

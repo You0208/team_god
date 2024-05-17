@@ -99,6 +99,7 @@ bool Enemy::ApplyDamage(int damage)
 
 void Enemy::Update(float elapsed_time)
 {
+    EasingScaleUpdate(elapsed_time);
     switch (state)
     {
     case State::Move:

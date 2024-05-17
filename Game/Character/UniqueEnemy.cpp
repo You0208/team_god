@@ -12,6 +12,10 @@ SummonEnemy::SummonEnemy(bool is_minor)
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
+
     attack_power = 1;        // 攻撃力
     attack_interval = 7.0f;     // 攻撃間隔
 
@@ -73,6 +77,8 @@ SummonEnemy::SummonEnemy(bool is_minor)
     // 半径の調整
     radius = 1.0f;     // 半径
 
+    // スケールのイージング
+    EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Attack, false);
 }
@@ -230,6 +236,10 @@ BossEnemy::BossEnemy(bool is_minor)
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
+
     attack_power = 1;        // 攻撃力
     attack_interval = 3.0f;     // 攻撃間隔
 
@@ -241,6 +251,8 @@ BossEnemy::BossEnemy(bool is_minor)
     // TODO もね　モデル大きさ
     model_scale = 2.0f;
 
+    // スケールのイージング
+    EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -319,6 +331,10 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
 
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
+
     health = 10;            // HP
     radius = 1.0f;          // 半径
     height = 1.0f;          // デバッグ用
@@ -326,6 +342,8 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
     // TODO もね　動かない敵大きさ
      model_scale = 2.3f;
 
+     // スケールのイージング
+     EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }

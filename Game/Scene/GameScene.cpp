@@ -155,6 +155,7 @@ void GameScene::Initialize()
 
 		// タイマーの初期化
 		timer = 0.0f;
+		timer_angle = 360 * (timer / time_limit);
 		
 		// ステージ初期化
 		StageMain* stage_main = new StageMain;
@@ -281,7 +282,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		}
 		else
 		{
-			//timer += elapsedTime;
+			timer_angle = 360 * (timer / time_limit);
+			timer += elapsedTime;
 		}
 		// プレイヤーの更新
 		player->Update(elapsedTime);
@@ -513,6 +515,9 @@ void GameScene::Render(float elapsedTime)
 	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT*2, SCREEN_WIDTH, SCREEN_HEIGHT);
 	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT*3, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	timer_ui_base->Render(immediate_context, sprite_ui.Get(), 50, 50, 214, 273, 0.0f);
+	timer_hands->RenderCenter(immediate_context, sprite_ui.Get(), 50 + 107, 50 + 167, 4, 180, timer_angle);
+	
 	// マスクの描画
 	RenderTransitionMask(elapsedTime);
 }

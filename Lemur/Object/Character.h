@@ -4,7 +4,7 @@
 #include "../Model/FbxModelManager.h"
 #include "../Model/GltfModelManager.h"
 #include "../Resource/ResourceManager.h"
-
+#include "../Math/EasingFunction.h"
 class Character
 {
 public:
@@ -147,6 +147,18 @@ protected:
         if (is_gltf)return gltf_model->GetIsDissolve();
         else return  model->GetIsDissolve();
     }
+
+    void EasingScale()
+    {
+        easing_scale.value = 0.0f;
+        scaleFactor = scale.x = scale.y = scale.z = easing_scale.value;
+        easing_scale.CallValueEasing(1.0f, easing_scale.value, EasingFunction::EasingType::InSine, 0.5f);
+    }
+    void EasingScaleUpdate(float elapsed_time)
+    {
+        scaleFactor = easing_scale.value;
+        easing_scale.EasingValue(elapsed_time);
+    }
 public:
     //---------Getter--------------------------------------------------------------------------
     
@@ -216,6 +228,7 @@ protected:
     DirectX::XMFLOAT3   position                    = { 0, 0, 0 };                 // 位置
     DirectX::XMFLOAT3   scale                       = { 1.0f, 1.0f, 1.0f };        // スケール
     float               scaleFactor                 = 1.0f;                        // スケールのまとめ
+    EasingFunction      easing_scale                = {};                          // イージンスケール
     DirectX::XMFLOAT3   rotation                    = { 0, 0, 0 };                 //　回転
     DirectX::XMFLOAT4   material_color              = { 1, 1, 1, 1 };              // 色
     DirectX::XMFLOAT3   direction                   = { 0,0,1 };                   // 方向

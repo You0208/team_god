@@ -185,7 +185,7 @@ void Seed::DrawDebugGUI()
 void Seed::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, radius, height, { 1,0,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 1,0,0,1 });
 }
 
 void Seed::DecisionPos()

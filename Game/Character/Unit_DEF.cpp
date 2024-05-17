@@ -20,22 +20,25 @@ GreenPumpkin::GreenPumpkin()
     attack_power = 1;    // 攻撃力
     attack_interval = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius = 0.4f; // 半径
     height = 0.5f; // デバッグ用
     dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+
+    radius = 0.4f; // 半径
 
     // 三角
     t_height = 1.0f;// 高さ
     t_base = 1.0f;// 底辺
 
+    // triangle_1=奥、triangle_2=手前
     // 頂点をユニットのポジションに
     triangle_1.A = triangle_2.A = { position.x,position.z };
-    // 左奥側の頂点
-    triangle_1.B = { triangle_1.A.x - t_height,triangle_1.A.y + (t_base * 0.5f) };
-    triangle_2.B = { triangle_2.A.x + t_height,triangle_2.A.y + (t_base * 0.5f) };
-    // 右手前側の頂点
-    triangle_1.C = { triangle_1.A.x - t_height,triangle_1.A.y - (t_base * 0.5f) };
-    triangle_2.C = { triangle_2.A.x + t_height,triangle_2.A.y - (t_base * 0.5f) };
+    // 左側の頂点
+    triangle_1.B = { triangle_1.A.x - (t_base * 0.5f),triangle_1.A.y + t_height };
+    triangle_2.B = { triangle_2.A.x - (t_base * 0.5f),triangle_2.A.y - t_height };
+    // 右側の頂点
+    triangle_1.C = { triangle_1.A.x + (t_base * 0.5f),triangle_1.A.y + t_height };
+    triangle_2.C = { triangle_2.A.x + (t_base * 0.5f),triangle_2.A.y - t_height };
+
 
     UpdateTransform();
 
@@ -62,15 +65,15 @@ void GreenPumpkin::DrawDebugPrimitive()
 
 void GreenPumpkin::Update(float elapsed_time)
 {
+    // triangle_1   =奥、triangle_2=手前
     // 頂点をユニットのポジションに
     triangle_1.A = triangle_2.A = { position.x,position.z };
-    // 左奥側の頂点
-    triangle_1.B = { triangle_1.A.x - t_height,triangle_1.A.y + (t_base * 0.5f) };
-    triangle_2.B = { triangle_2.A.x + t_height,triangle_2.A.y + (t_base * 0.5f) };
-    // 右手前側の頂点
-    triangle_1.C = { triangle_1.A.x - t_height,triangle_1.A.y - (t_base * 0.5f) };
-    triangle_2.C = { triangle_2.A.x + t_height,triangle_2.A.y - (t_base * 0.5f) };
-
+    // 左側の頂点
+    triangle_1.B = { triangle_1.A.x - (t_base * 0.5f),triangle_1.A.y + t_height };
+    triangle_2.B = { triangle_2.A.x - (t_base * 0.5f),triangle_2.A.y - t_height };
+    // 右側の頂点
+    triangle_1.C = { triangle_1.A.x + (t_base * 0.5f),triangle_1.A.y + t_height };
+    triangle_2.C = { triangle_2.A.x + (t_base * 0.5f),triangle_2.A.y - t_height };
 
     Unit::Update(elapsed_time);
 }
@@ -91,7 +94,7 @@ void GreenPumpkin::UpdateIdleState(float elapsed_time)
         if (enemy->IsDead())continue;
 
         // 敵がユニットの攻撃範囲に入っているとき
-        // 左三角
+        // 奥三角
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_1,
@@ -101,7 +104,7 @@ void GreenPumpkin::UpdateIdleState(float elapsed_time)
         {
             TransitionAttackState();
         }
-        // 右三角
+        // 手前三角
         if (Collision::IntersectTriangleVsCircle
         (
             triangle_2,
@@ -150,6 +153,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                 enemy->GetRadius()                           // 敵の当たり判定
             ))
             {
+                // 敵とかぶったフラグをON
                 is_intersected = true;
                 if (is_attack)
                 {
@@ -158,7 +162,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_handle = attack_effect->Play_R(position, attack_effect_size, DirectX::XMConvertToRadians(90.0f));
+                    attack_handle = attack_effect->Play(position, attack_effect_size);
                 }
             }
             // 右三角
@@ -169,8 +173,8 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                 enemy->GetRadius()                           // 敵の当たり判定
             ))
             {
+                // 敵とかぶったフラグをON
                 is_intersected = true;
-
                 if (is_attack)
                 {
                     // アニメーションの切り替え
@@ -178,7 +182,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                     // 攻撃フラグがONならダメージ処理
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
-                    attack_handle = attack_effect->Play_R(position, attack_effect_size, DirectX::XMConvertToRadians(90.0f));
+                    attack_handle = attack_effect->Play(position, attack_effect_size);
                 }
             }
         }
