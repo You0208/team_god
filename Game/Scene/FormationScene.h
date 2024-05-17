@@ -48,17 +48,22 @@ private:
         Cauliflower,
         J
     };
+    static const int UNIT_MAX = 7;
 
     EasingFunction      button                  = {};       // ボタンのイージング
     EasingFunction      line_y                  = {};       // ラインのイージング
+    EasingFunction      line_x                  = {};       // ラインのイージング
+    EasingFunction      line_add                = {};     // ユニット７用のやつ
+    bool                enable_lineblue[4] = {};
+    float               lineblue_pos_x[4];
 
     bool                once_only               = true;     
 
     int                 choose_num              = 0;        // 現在選ばれているユニット番号
     int                 all_unit_num            = 0;        // 選択されたユニットの数
-    bool                enable_units[6]         = {};       // ユニットが使われたか
-    float               units_rotation[6]       = {};       // ユニットの角度
-    DirectX::XMFLOAT3   units_position[6]       = {};       // ユニットの位置
+    bool                enable_units[UNIT_MAX]         = {};       // ユニットが使われたか
+    float               units_rotation[UNIT_MAX]       = {};       // ユニットの角度
+    DirectX::XMFLOAT3   units_position[UNIT_MAX]       = {};       // ユニットの位置
 
     float               interval_timer          = 0.0f;     // コントローラ時間
     float               interval_timer_max      = 0.15f;    // コントローラー最大時間
@@ -67,8 +72,10 @@ private:
     bool                enable_controllers[4]   = {};       // どのボタンが選ばれているか
     int                 cont_num[4]             = {};       // ボタンにどのユニットが登録されているか
     bool                select_button           = false;    // ボタンが選択されているか
+    bool                first_touch             = true;     // ボタン長押しの最初の一押しか
 
     float               effect_scale            = 0.3f;     // エフェクトのサイズ
+
 
     // 各場所の位置と角度
     DirectX::XMFLOAT3 position[4] = {
@@ -84,27 +91,25 @@ private:
         DirectX::XMConvertToRadians(22.0f)
     };
 
-    int status[6][2] =
+    int status[UNIT_MAX][2] =
     {
+        {2,4},
+        {3,2},
+        {4,1},
+        {4,1},
         {1,1},
-        {1,1},
-        {1,1},
-        {1,1},
-        {1,1},
-        {1,1}
+        {1,3},
+        {2,2},
     };
 
 private:
     // テクスチャ
     std::shared_ptr<Sprite> back;
+    std::shared_ptr<Sprite> front;
     std::shared_ptr<Sprite> line_1;
     std::shared_ptr<Sprite> line_2;
-    std::shared_ptr<Sprite> unit_1;
-    std::shared_ptr<Sprite> unit_2;
-    std::shared_ptr<Sprite> unit_3;
-    std::shared_ptr<Sprite> unit_4;
-    std::shared_ptr<Sprite> unit_5;
-    std::shared_ptr<Sprite> unit_6;
+    std::shared_ptr<Sprite> line_blue;
+    std::shared_ptr<Sprite> unit_line[UNIT_MAX];
     std::shared_ptr<Sprite> Button;
     std::shared_ptr<Sprite> base;
     std::shared_ptr<Sprite> Controller_UI[4];
@@ -113,7 +118,7 @@ private:
     std::shared_ptr<Sprite> mark_2;
     std::shared_ptr<Sprite> mark_2_2;
 
-    std::unique_ptr<GltfModelManager> gltf_unit[6];
+    std::unique_ptr<GltfModelManager> gltf_unit[UNIT_MAX];
 
     // デバッグ用の床表示
     std::unique_ptr<GltfModelManager> debug_;

@@ -163,14 +163,16 @@ void Character::UpdateVelocity(float elapsed_time)
     // 経過フレーム
     float elapsed_frame = 60.0f * elapsed_time;
 
-    // 垂直速力更新処理
-    UpdataVerticalVelocity(elapsed_frame);
+    if (!is_fly)
+    {
+        // 垂直速力更新処理
+        UpdataVerticalVelocity(elapsed_frame);
 
+        // 垂直移動更新処理
+        UpdateVerticalMove(elapsed_time);
+    }
     // 水平速力更新処理
     UpdataHorizontalVelocity(elapsed_frame);
-
-    // 垂直移動更新処理
-    UpdateVerticalMove(elapsed_time);
 
     // 水平移動更新処理
     UpdateHorizontalMove(elapsed_time);

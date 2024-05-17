@@ -31,7 +31,7 @@ void LoadingScene::Initialize()
     }
     // ƒQ[ƒ€•”•ª
     {
-        spr_back = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Formation_scene.png");
+        spr_back = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\Loading.png");
 
         CallTransition(false);
     }

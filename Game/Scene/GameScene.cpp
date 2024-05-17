@@ -53,6 +53,7 @@ void GameScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_ui.cso", sprite_ui.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", stage_ps_1.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", stage_ps_2.GetAddressOf());
 
@@ -63,6 +64,13 @@ void GameScene::Initialize()
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
+	}
+	// スプライト読み込み
+	{
+		timer_hands = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_hands.png");
+		timer_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
+		button_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
+		button_ui_chara =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
 	}
 	// ゲーム部分
 	{
@@ -109,6 +117,42 @@ void GameScene::Initialize()
 			break;
 		}
 
+		// ワールドごとのライティング、色調補正
+		// 朝
+		if (StageManager::Instance().GetStageLevel() == 1 ||
+			StageManager::Instance().GetStageLevel() == 2 ||
+			StageManager::Instance().GetStageLevel() == 3)
+		{
+			point_light[1].range = 100;
+			directional_light_direction = { 0.737f,-1.00f,-0.795f,0.0f };
+			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
+			option_constant.rgb_adjustment = { 1.0f,1.0f,1.15f,1.0f };
+			option_constant.parameters.y = 0.5f;
+		}
+		// 昼
+		if (StageManager::Instance().GetStageLevel() == 3 ||
+			StageManager::Instance().GetStageLevel() == 4 ||
+			StageManager::Instance().GetStageLevel() == 5)
+		{
+			directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
+			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
+			option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
+			option_constant.parameters.y = 0.5f;
+		}
+		// 夜
+		if (StageManager::Instance().GetStageLevel() == 6 ||
+			StageManager::Instance().GetStageLevel() == 7 ||
+			StageManager::Instance().GetStageLevel() == 8)
+		{
+			point_light[0].position = { 0.0f,3.0f,0.0f,1.0f };
+			point_light[0].range = 40;
+			point_light[1].range = 0;
+			directional_light_direction = { 0.111f,-1.00f,-0.676f,0.0f };
+			option_constant.hsv_adjustment = { 1.0f,1.1f,1.0f,1.0f };
+			option_constant.rgb_adjustment = { 1.0f,1.0f,1.2f,1.0f };
+			option_constant.parameters.y = 0.2f;
+		}
+
 		// タイマーの初期化
 		timer = 0.0f;
 		
@@ -127,8 +171,6 @@ void GameScene::Initialize()
 		UnitManager::Instance().Initialize();
 		// エネミーマネージャーの初期化
 		EnemyManager::Instance().Initialize();
-
-		ohajiki = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\おはじき.png");
 
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
@@ -434,14 +476,6 @@ void GameScene::Render(float elapsedTime)
 	// バッファーの変更
 	RenderingDeffered();
 
-	// ポストエフェクトの実行
-	if (enable_post_effect)
-	{
-		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
-		ExePostEffct();
-	}
-
-
 
 	//TODO debug
 	{
@@ -454,7 +488,7 @@ void GameScene::Render(float elapsedTime)
 
 		// エフェクト再生
 		EffectManager::Instance().Render(view, projection);
-		
+
 		// ブレンドステート設定
 		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 		// 深度ステンシルステート設定
@@ -464,6 +498,20 @@ void GameScene::Render(float elapsedTime)
 		if (particle_bomb)	particle_bomb->Render(immediate_context);
 		if (particle_system)	particle_system->Render(immediate_context);
 	}
+	// ポストエフェクトの実行
+	if (enable_post_effect)
+	{
+		framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
+		ExePostEffct();
+	}
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	// 2D描画
+	button_ui_base->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0);
+	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A], SCREEN_HEIGHT*0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B], SCREEN_HEIGHT*1, SCREEN_WIDTH, SCREEN_HEIGHT);
+	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT*2, SCREEN_WIDTH, SCREEN_HEIGHT);
+	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT*3, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// マスクの描画
 	RenderTransitionMask(elapsedTime);

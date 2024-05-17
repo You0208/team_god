@@ -97,6 +97,12 @@ protected:
     virtual void UpdateMoveState(float elapsed_time) = 0;
 
 public:
+    void PlaySetEffect(DirectX::XMFLOAT3 pos, float size) {
+        set_handle = set_effect->Play(pos, size);
+    }
+
+    float GetSetEffectSize() { return set_effect_size; }
+
     void SetEnemyType(int type) { enemy_type = type; }
     void SetMoveTimerMax(float move_timer_max_) { move_timer_max = move_timer_max_; }
     void SetDis(float dis_) { dis = dis_; }
@@ -133,15 +139,18 @@ protected:
 
     State       state               = State::Move;      // ステート
 
+    Effect*     set_effect          = nullptr;          // 設置エフェクト
     Effect*     attack_effect       = nullptr;          // 攻撃エフェクト
     Effect*     death_effect        = nullptr;          // 死亡エフェクト
     Effect*     hit_effect          = nullptr;          // 被弾エフェクト
 
+    Effekseer::Handle set_handle    = 0;                // 設置エフェクト
     Effekseer::Handle attack_handle = 0;                // 攻撃エフェクト
     Effekseer::Handle hit_handle    = 0;                // 被弾エフェクト
     Effekseer::Handle death_handle  = 0;                // 死亡エフェクト
 
 
+    float       set_effect_size     = 0.0f;             // 設置エフェクトサイズ
     float       attack_effect_size  = 0.0f;             // 攻撃エフェクトサイズ
     float       death_effect_size   = 0.0f;             // 死亡エフェクトサイズ
     float       hit_effect_size     = 0.0f;             // 設置エフェクトサイズ
@@ -155,4 +164,5 @@ protected:
     bool        is_power_up         = false;            // パワーアップしたか
 
     int         enemy_type          = 0;
+
 };

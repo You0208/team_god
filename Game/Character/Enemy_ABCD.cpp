@@ -13,6 +13,9 @@ Enemy_A::Enemy_A(bool is_minor)
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
 
     attack_power    = 1;        // çUåÇóÕ
     attack_interval = 3.0f;     // çUåÇä‘äu
@@ -21,6 +24,10 @@ Enemy_A::Enemy_A(bool is_minor)
     radius          = 1.0f;     // îºåa
     height          = 1.0f;     // ÉfÉoÉbÉOóp
     speed_power     = -1.0f;    // ë¨ìx
+
+    //scaleFactor = scale.x = scale.y = scale.z = 0.0f;
+    //easing_scale.value = 0.0f;
+    //easing_scale.CallValueEasing(1.0f, easing_scale.value, EasingFunction::EasingType::InSine,0.5f);
 
     // Ç∆ÇËÇ†Ç¶Ç∏ÉAÉjÉÅÅ[ÉVÉáÉì
     PlayAnimation(Animation::Move, true);
@@ -63,6 +70,9 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
 
 void Enemy_A::UpdateMoveState(float elapsed_time)
 {
+    //scaleFactor = easing_scale.value;
+    //easing_scale.EasingValue(elapsed_time);
+
     if (shaft == Shaft::Side) rotation.y = DirectX::XMConvertToRadians(-90);
     else if (shaft == Shaft::Vertical)rotation.y = DirectX::XMConvertToRadians(180);
 
@@ -97,6 +107,9 @@ Enemy_B::Enemy_B(bool is_minor)
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
 
     attack_power    = 1;        // çUåÇóÕ
     attack_interval = 3.0f;     // çUåÇä‘äu
@@ -236,6 +249,9 @@ Enemy_C::Enemy_C(bool is_minor)
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
 
     attack_power    = 1;         // çUåÇóÕÅ@
     attack_interval = 3.0f;      // çUåÇä‘äu
@@ -567,6 +583,9 @@ Enemy_D::Enemy_D(bool is_minor)
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+
+    set_effect_size = 0.3f;
 
     attack_power    = 1;        // çUåÇóÕ
     attack_interval = 3.0f;     // çUåÇä‘äu

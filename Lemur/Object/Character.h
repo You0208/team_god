@@ -248,7 +248,7 @@ protected:
 
     bool    isGround               = false;         // 着地フラグ
     int     category               = 0;             // ユニットのカテゴリー
-
+    bool    is_fly                 = false;         // trueの時垂直更新しない
     //----------アニメーション関連------------------------------------------------
     bool    animation_loop_flag     = true;         // ループフラグ
     bool    end_animation           = false;        // アニメーション終了フラグ

@@ -68,6 +68,7 @@ void EnemyManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_s
 
 void EnemyManager::Register(Enemy* enemy)
 {
+    enemy->PlaySetEffect(enemy->GetPosition(), enemy->GetSetEffectSize());
     enemies.emplace_back(enemy);
 }
 

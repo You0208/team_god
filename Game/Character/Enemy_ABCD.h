@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include "Lemur/Math/EasingFunction.h"
 class Enemy_A :public Enemy
 {
 public:
@@ -16,6 +17,7 @@ private:
     void UpdateMoveState(float elapsed_time)override;
 private:
     float timer;// タイマー
+    EasingFunction easing_scale;
 };
 
 class Enemy_B :public Enemy

@@ -191,6 +191,10 @@ void Shishito::UpdateIdleState(float elapsed_time)
     UnitManager& unitManager = UnitManager::Instance();
     int unitCount = unitManager.GetUnitCount();
 
+    // 攻撃ステートに切り替え
+    PlayAnimation(Animation::Attack, true);
+    TransitionAttackState();
+
     attack_timer += elapsed_time;// 攻撃タイマー
 
     // 強制的にアタックに

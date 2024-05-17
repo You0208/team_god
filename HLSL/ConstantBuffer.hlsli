@@ -67,6 +67,8 @@ cbuffer FOG_CONSTANT_BUFFER : register(b2)
 cbuffer OPTION_CONSTANT_BUFFER : register(b3)
 {
     float4 parameters; // x : ディゾルブ適応量、z：UVスクロール、yw : 空き
+    float4 rgb_adjustment;
+    float4 hsv_adjustment;
 };
 
 

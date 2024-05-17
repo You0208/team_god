@@ -54,6 +54,8 @@ void Unit::TransitionDeathState()
     PlayAnimation(Animation::Out, false);
     // エフェクトの再生
     death_handle = death_effect->Play(position, death_effect_size);
+    // 攻撃範囲を消す
+    collision_model->GetTransform()->SetScaleFactor(0.0f);
     // ステート切り替え
     state = State::Death;
 }

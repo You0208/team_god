@@ -144,5 +144,5 @@ float4 main(VS_OUT pin) : SV_TARGET
 #if 0
     finalLig = pow(finalLig, 1.0f / GAMMA);
 #endif
-    return float4(finalLig * 2, color.a);
+    return float4(finalLig, color.a);
 };

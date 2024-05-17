@@ -35,7 +35,7 @@ void Enemy::TransitionDeathState()
     velocity.x = velocity.y = velocity.z = 0.0f;
 
     // アニメーションの切り替え
-    if (enemy_type == EnemyType::A || enemy_type == EnemyType::A_2)
+    if (enemy_type == EnemyType::A || enemy_type == EnemyType::A_2 || enemy_type == EnemyType::Boss)
     {
         PlayAnimation(1, false);
     }
@@ -124,6 +124,9 @@ void Enemy::Update(float elapsed_time)
 
     // モデルアニメーション更新
     UpdateAnimation(elapsed_time);
+
+    // さいずの更新
+    UpdateScale();
 
     DrawDebugPrimitive();
 }

@@ -8,6 +8,8 @@ void Lemur::Scene::BaseScene::DebugImgui()
 	ImGui::Begin("Shader");
 
 	ImGui::SliderFloat4("parameters", &option_constant.parameters.x, 0.0f, +1.0f);
+	ImGui::SliderFloat4("rgb_adjustment", &option_constant.rgb_adjustment.x, 0.0f, +3.0f);
+	ImGui::SliderFloat4("hsv_adjustment", &option_constant.hsv_adjustment.x, 0.0f, +3.0f);
 
 	ImGui::Separator();
 	ImGui::ColorEdit3("sky_color", &sky_color.x);
@@ -477,8 +479,22 @@ void Lemur::Scene::BaseScene::InitializeMask()
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/transition_mask_ps.cso", transition_mask_ps.GetAddressOf());
 
 	spr_transition_mask_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\back.png");
-	spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\tomato_mask.png");
-
+	
+	switch (rand()%3)
+	{
+	case 0:
+		spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\tomato_mask.png");
+		break;
+	case 1:
+		spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\iris_eggplant.png");
+		break;
+	case 2:
+		spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\iris_sunflower.png");
+		break;
+	default:
+		spr_transition_mask = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Transition\\tomato_mask.png");
+		break;
+	}
 	//LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\Transition\\transition_mask.png", transition_mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
 }
 
@@ -912,9 +928,9 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 	if (in)
 	{
 		mask_angle = 0.0f;
-		mask_scale.value = 4.0f;
+		mask_scale.value = 10.0f;
 		mask_pos = mask_pos_;
-		mask_scale.CallValueEasing(0.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
+		mask_scale.CallValueEasing(0.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.6f);
 		is_in = true;
 	}
 	else
@@ -922,7 +938,7 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 		mask_angle = 0.0f;
 		mask_scale.value = 0.0f;
 		mask_pos = mask_pos_;
-		mask_scale.CallValueEasing(4.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
+		mask_scale.CallValueEasing(10.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.6f);
 	}
 	start_transition = true;
 }
@@ -931,11 +947,11 @@ void Lemur::Scene::BaseScene::TransitionMask(float elapsed_time)
 {
 	if (start_transition)
 	{
+		mask_scale.EasingValue(elapsed_time);
 		if (!mask_scale.is_easing && start_transition)
 		{
 			start_transition = false;
 		}
-		mask_scale.EasingValue(elapsed_time);
 		mask_angle += elapsed_time * 300.0f;
 	}
 }
@@ -954,7 +970,7 @@ void Lemur::Scene::BaseScene::RenderTransitionMask(float elapsed_time)
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
 	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
-	spr_transition_mask->RenderCenter(immediate_context, mask_pos.x, mask_pos.y, 591 * mask_scale.value, 525 * mask_scale.value,mask_angle);
+	spr_transition_mask->RenderCenter(immediate_context, mask_pos.x, mask_pos.y, 1920 * mask_scale.value, 1080 * mask_scale.value,mask_angle);
 	framebuffers[static_cast<size_t>(FRAME_BUFFER::MASK)]->Deactivate(immediate_context);
 
 	//　MASK
@@ -964,174 +980,3 @@ void Lemur::Scene::BaseScene::RenderTransitionMask(float elapsed_time)
 	else if (start_transition)spr_transition_mask_back->Render(immediate_context, transition_mask_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f);
 }
 
-
-void Lemur::Scene::BaseScene::EasingFunction::EasingValue(float elapsed_time)
-{
-	if (is_easing)
-	{
-		if (timer > time_max)
-		{
-			timer = time_max;
-			value = target_value;
-			is_easing = false;
-			timer = 0.0f;
-			return;
-		}
-
-		if (easing_type != EasingType::OutBounce)
-		{
-			if (target_value >= start_value)
-			{
-				if (value >= target_value) {
-					value = target_value;
-					is_easing = false;
-					timer = 0.0f;
-					return;
-				}
-			}
-			else if (target_value >= start_value)
-			{
-				if (value <= target_value) {
-					value = target_value;
-					is_easing = false;
-					timer = 0.0f;
-					return;
-				}
-			}
-		}
-		timer += elapsed_time;
-
-		switch (easing_type)
-		{
-		case EasingType::InSine:
-			value = {
-			Easing::InSine(timer, time_max, target_value, start_value)
-			};
-			break;
-		case EasingType::OutSine:
-			value = {
-			Easing::OutSine(timer, time_max, target_value, start_value)
-			};
-			break;
-		case EasingType::OutBounce:
-			value = {
-			Easing::OutBounce(timer, time_max, target_value, start_value)
-			};
-			break;
-		}
-	}
-}
-
-void Lemur::Scene::BaseScene::EasingFunction::ContinueEasing(float elapsed_time)
-{
-	if (!is_easing && is_continue_easing)
-	{
-		switch (continue_state)
-		{
-		case 0:// Up
-			// 時間切れ
-			if (timer > continue_time_max)
-			{
-				timer = continue_time_max;// 超過した時間を戻す
-				value = continue_target_value;// スケールを調整
-				timer = 0.0f;// タイマーを初期化
-
-				// ダウンスケールの準備
-				continue_start_scale = value;// スタートスケールの設定
-				continue_target_value = continue_min;// ターゲットスケールの設定
-				continue_state = 1;// ステートを次へ
-				break;
-			}
-			if (value >= continue_target_value)
-			{
-				value = continue_target_value;// スケールを調整
-				timer = 0.0f;// タイマーを初期化
-
-				// ダウンスケールの準備
-				continue_start_scale = value;// スタートスケールの設定
-				continue_target_value = continue_min;// ターゲットスケールの設定
-				continue_state = 1;// ステートを次へ
-				break;
-			}
-
-			timer += elapsed_time;
-
-			switch (easing_type_up)
-			{
-			case EasingType::InSine:
-				value = {
-				Easing::InSine(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			case EasingType::OutSine:
-				value = {
-				Easing::OutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			case EasingType::InOutSine:
-				value = {
-				Easing::InOutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			case EasingType::OutBounce:
-				value = {
-				Easing::InBounce(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			}
-			break;
-
-		case 1:// Down
-			if (timer > continue_time_max)
-			{
-				timer = continue_time_max;
-				value = continue_target_value;
-				timer = 0.0f;
-
-				// アップスケールの準備
-				continue_start_scale = value;// スタートスケールの設定
-				continue_target_value = continue_max;// ターゲットスケールの設定
-				continue_state = 0;// ステートを前へ
-				break;
-			}
-
-			if (value <= continue_target_value) {
-				value = continue_target_value;// スケールを調整
-				timer = 0.0f;// タイマーを初期化
-
-				// アップスケールの準備
-				continue_start_scale = value;// スタートスケールの設定
-				continue_target_value = continue_max;// ターゲットスケールの設定
-				continue_state = 0;// ステートを前へ
-				break;
-			}
-
-			timer += high_resolution_timer::Instance().time_interval();
-
-			switch (easing_type_down)
-			{
-			case EasingType::InSine:
-				value = {
-				Easing::InSine(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			case EasingType::OutSine:
-				value = {
-				Easing::OutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			case EasingType::InOutSine:
-				value = {
-				Easing::InOutSine(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			case EasingType::OutBounce:
-				value = {
-				Easing::InBounce(timer, continue_time_max, continue_target_value, continue_start_scale)
-				};
-				break;
-			}
-			break;
-		}
-	}
-}

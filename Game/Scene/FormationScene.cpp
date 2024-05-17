@@ -39,14 +39,17 @@ void FormationScene::Initialize()
     {
         // 2D
         back             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene.png");
+        front            = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_front.png");
         line_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_1.png");
         line_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_2.png");
-        unit_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_1.png");
-        unit_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_2.png");
-        unit_3           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_3.png");
-        unit_4           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_4.png");
-        unit_5           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_5.png");
-        unit_6           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_6.png");
+        line_blue        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_3.png");
+        unit_line[0]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_1.png");
+        unit_line[1]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_2.png");
+        unit_line[2]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_3.png");
+        unit_line[3]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_4.png");
+        unit_line[4]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_5.png");
+        unit_line[5]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_6.png");
+        unit_line[6]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_7.png");
         Button           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Button.png");
         base             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Base.png");
         Controller_UI[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_A.png");
@@ -65,6 +68,7 @@ void FormationScene::Initialize()
         gltf_unit[3]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\GreenPumpkin.glb", true);
         gltf_unit[4]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb", true);
         gltf_unit[5]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb", true);
+        gltf_unit[6]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Mustard.glb", true);
    
         // エフェクト
         effect           = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
@@ -79,14 +83,13 @@ void FormationScene::Initialize()
         // 並行ライト
         directional_light_direction = { 0.0f,-0.3f,-1.0f,1.0f };
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < UNIT_MAX; i++)
         {
             // アニメーションの再生
             gltf_unit[i]->PlayAnimation(0, true);
             // 透明度のクリア
             gltf_unit[i]->ClearThreshold();
         }
-
         // ブルームの調整
         bloomer->bloom_extraction_threshold = 0.05f;
         bloomer->bloom_intensity = 0.15f;
@@ -95,6 +98,8 @@ void FormationScene::Initialize()
 
         line_y.value = -1080.0f;
         button.value = 0.9f;
+        line_x.value = (660 + 210 * choose_num);
+        line_add.value = 0.0f;
 
         // マスクを呼ぶ
         CallTransition(false);
@@ -163,7 +168,7 @@ void FormationScene::UpdateUnit(float elapsedTime)
 {
     // ユニットの更新
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < UNIT_MAX; i++)
         {
             gltf_unit[i]->UpdateAnimation(elapsedTime);
 
@@ -183,7 +188,8 @@ void FormationScene::UpdateOperate(float elapsedTime)
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     button.EasingValue(elapsedTime);
-
+    line_x.EasingValue(elapsedTime);
+    line_add.EasingValue(elapsedTime);
     if (!start_transition && is_in)
     {
         // 次のシーンへ
@@ -219,14 +225,11 @@ void FormationScene::UpdateOperate(float elapsedTime)
     // ボタンを選択していない時
     if (!select_button)
     {
-        // イージングを更新
-        button.EasingValue(elapsedTime);
-
         // 全部初期化
-        if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_TRIGGER)
+        if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER|| gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER)
         {
             bool is = false;
-            for (int n = 0; n < 6; n++)
+            for (int n = 0; n < UNIT_MAX; n++)
             {
                 if (gltf_unit[n]->GetIsDissolve())
                 {
@@ -234,7 +237,7 @@ void FormationScene::UpdateOperate(float elapsedTime)
                 }
             }
             if (is)return;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < UNIT_MAX; i++)
             {
                 enable_units[i] = {};
                 units_rotation[i] = {};
@@ -244,12 +247,13 @@ void FormationScene::UpdateOperate(float elapsedTime)
             {
                 enable_controllers[j] = {};
                 cont_num[j] = {};
+                enable_lineblue[j] = false;
+                lineblue_pos_x[j] = {};
             }
-            choose_num = 0;
             all_unit_num = 0;
             select_button = false;
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < UNIT_MAX; i++)
             {
                 // 透明度のクリア
                 gltf_unit[i]->ClearThreshold();
@@ -257,7 +261,7 @@ void FormationScene::UpdateOperate(float elapsedTime)
         }
 
         // 下を選択する時
-        if (gamePad.GetAxisLY() <= -1.0f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+        if (gamePad.GetAxisLY() <= -1.0f || gamePad.GetAxisRY() <= -1.0f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
         {
             select_button = true;
             interval_timer = 0.0f;
@@ -269,51 +273,119 @@ void FormationScene::UpdateOperate(float elapsedTime)
         // ユニットの選択
         {
             // 右
-            if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
-            {
-                if (choose_num < 6)choose_num++;
-            }
-            // 左
-            else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)
-            {
-                if (choose_num > 0)choose_num--;
-            }
-            // 右
-            else if (gamePad.GetAxisLX() >= 0.5f)
+            if (gamePad.GetAxisLX() >= 0.5f|| gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
             {
                 // インターバルを考慮してカウントを動かす
                 interval_timer += elapsedTime;
-                if (choose_num < 5 && interval_timer_max <= interval_timer)
+
+                // ユニット５を選択中まではこれ
+                if (first_touch && choose_num < UNIT_MAX - 2)
                 {
                     choose_num++;
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                    first_touch = false;
+                }
+                else if (choose_num < UNIT_MAX - 2 && interval_timer_max <= interval_timer)
+                {
+                    choose_num++;
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                }
+                // ユニット6選択中は次の画面に行くので変える
+                else if (first_touch && choose_num == UNIT_MAX - 2)
+                {
+                    choose_num++;
+                    line_add.CallValueEasing(-210, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                    first_touch = false;
+                }
+                else if (choose_num == UNIT_MAX - 2 && interval_timer_max <= interval_timer)
+                {
+                    choose_num++;
+                    line_add.CallValueEasing(-210, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
                     interval_timer = 0.0f;
                 }
             }
             // 左
-            else if (gamePad.GetAxisLX() <= -0.5f)
+            else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)
             {
                 // インターバルを考慮してカウントを動かす
                 interval_timer += elapsedTime;
-                if (choose_num > 0 && interval_timer_max <= interval_timer)
+                // 次の画面に行ってるので
+                if (first_touch && choose_num == 1 && line_add.value < -200.0f)
                 {
                     choose_num--;
+                    line_add.CallValueEasing(0, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                    first_touch = false;
+                }
+                if (choose_num == 1 && interval_timer_max <= interval_timer && line_add.value < -200.0f)
+                {
+                    choose_num--;
+                    line_add.CallValueEasing(0, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
                     interval_timer = 0.0f;
                 }
+                else if (first_touch && choose_num > 0)
+                {
+                    choose_num--;
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                    first_touch = false;
+                }
+                else if (choose_num > 0 && interval_timer_max <= interval_timer)
+                {
+                    choose_num--;
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                }
+            }
+            else
+            {
+                first_touch = true;
             }
         }
 
         // ユニットが全員選ばれていない時
-        if (all_unit_num < 4)
+        if (all_unit_num < 4 && choose_num < UNIT_MAX)
         {
             // ユニットが選べる状態の時
             if (!enable_units[choose_num])
             {
-                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_A, gamePad.A);
-                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_B, gamePad.B);
-                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_X, gamePad.X);
-                SelectUnit(gamePad.GetButtonDown()& gamePad.BTN_Y, gamePad.Y);
+                SelectUnit(gamePad.GetButtonDown() & gamePad.BTN_A, gamePad.A);
+                SelectUnit(gamePad.GetButtonDown() & gamePad.BTN_B, gamePad.B);
+                SelectUnit(gamePad.GetButtonDown() & gamePad.BTN_X, gamePad.X);
+                SelectUnit(gamePad.GetButtonDown() & gamePad.BTN_Y, gamePad.Y);
             }
         }
+    }
+}
+
+void FormationScene::SelectUnit(bool BTN, int button_num)
+{
+    if (BTN && !enable_controllers[button_num])
+    {
+        // 青ラインを下ろす
+        lineblue_pos_x[all_unit_num] = (660 + 210 * choose_num);
+        enable_lineblue[all_unit_num] = true;
+        // ユニットの設定
+        units_position[choose_num] = position[button_num];
+        units_rotation[choose_num] = rotation[button_num];
+        enable_units[choose_num] = true;
+        all_unit_num++;
+
+        // コントローラー
+        enable_controllers[button_num] = true;
+        // 何番目のユニットがAボタンに選ばれたか
+        cont_num[button_num] = choose_num;
+
+        // エフェクトの再生
+        effect->Play(position[button_num], effect_scale);
+        gltf_unit[choose_num]->SetIsDissolve(true);
     }
 }
 
@@ -349,8 +421,7 @@ void FormationScene::Render(float elapsedTime)
     immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
 
-
-    // ポストエフェクトの開始
+    // ２Dの書き込み開始
     if (enable_post_effect)
     {
         framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Clear(immediate_context);
@@ -364,28 +435,43 @@ void FormationScene::Render(float elapsedTime)
         immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
         immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
+        // 背景
         back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        for (int i = 0; i < 6; i++)
+        // ユニット裏のライン
+        for (int i = 0; i < UNIT_MAX; i++)
         {
-            line_1->Render(immediate_context, (660 + 210 * i), line_y.value, 210, SCREEN_HEIGHT);
+            line_1->Render(immediate_context, (660 + 210 * i)+ line_add.value, line_y.value, 210, SCREEN_HEIGHT);
         }
-        line_2->Render(immediate_context, (660 + 210 * choose_num), line_y.value, 210, SCREEN_HEIGHT);
+        // 赤ライン
+        line_2->Render(immediate_context, line_x.value+ line_add.value, line_y.value, 210, SCREEN_HEIGHT);
 
-        unit_1->Render(immediate_context,(660 + 210 * 0), line_y.value, 210, SCREEN_HEIGHT);
-        unit_2->Render(immediate_context,(660 + 210 * 1), line_y.value, 210, SCREEN_HEIGHT);
-        unit_3->Render(immediate_context,(660 + 210 * 2), line_y.value, 210, SCREEN_HEIGHT);
-        unit_4->Render(immediate_context,(660 + 210 * 3), line_y.value, 210, SCREEN_HEIGHT);
-        unit_5->Render(immediate_context,(660 + 210 * 4), line_y.value, 210, SCREEN_HEIGHT);
-        unit_6->Render(immediate_context,(660 + 210 * 5), line_y.value, 210, SCREEN_HEIGHT);
+        for (int l = 0; l < 4; l++)
+        {
+            if (enable_lineblue[l])line_blue->Render(immediate_context, lineblue_pos_x[l] + line_add.value, 0.0f, 210, SCREEN_HEIGHT);
+        }
+        for (int n = 0; n < UNIT_MAX; n++)
+        {  
+            // ２Dユニット
+            unit_line[n]->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, SCREEN_HEIGHT);
+        }
+
+        // 前に置くやつ
+        front->Render(immediate_context, 0, 0, 660, SCREEN_HEIGHT);
 
         for (int j = 0; j < 4; j++)
         {
+            // マーク１
+            if (j < status[choose_num][0])mark_1->Render(immediate_context, 100 + float(110 * j), 740, 100, 100);
+            else mark_1_1->Render(immediate_context, 100 + float(110 * j), 740, 100, 100);
+            // マーク２
+            if (j < status[choose_num][1])mark_2->Render(immediate_context, 100 + float(110 * j), 900, 100, 100);
+            else mark_2_2->Render(immediate_context, 100 + float(110 * j), 900, 100, 100);
+            // 島
             base->Render(immediate_context, (691.5f + 300 * j), 680, 300, 300);
         }
     }
-
-    // ポストエフェクトの実行
+    // 書き込み終了
     if (enable_post_effect)
     {
         framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Deactivate(immediate_context);
@@ -403,7 +489,7 @@ void FormationScene::Render(float elapsedTime)
         immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
         immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < UNIT_MAX; i++)
         {
             if (enable_units[i])           gltf_unit[i]->Render(1.0f, gltf_ps.Get());
         }
@@ -457,25 +543,4 @@ void FormationScene::InitializeLight()
 
     BaseScene::InitializeLight();
 
-}
-
-void FormationScene::SelectUnit(bool BTN, int button_num)
-{
-    if (BTN && !enable_controllers[button_num])
-    {
-        // ユニットの設定
-        units_position[choose_num] = position[button_num];
-        units_rotation[choose_num] = rotation[button_num];
-        enable_units[choose_num] = true;
-        all_unit_num++;
-
-        // コントローラー
-        enable_controllers[button_num] = true;
-        // 何番目のユニットがAボタンに選ばれたか
-        cont_num[button_num] = choose_num;
-
-        // エフェクトの再生
-        effect->Play(position[button_num], effect_scale);
-        gltf_unit[choose_num]->SetIsDissolve(true);
-    }
 }

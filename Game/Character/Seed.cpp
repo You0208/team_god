@@ -114,7 +114,13 @@ void Seed::Update(float elapsedTime)
                 // 設置エフェクトを再生
                 unit->PlaySetEffect(unit->GetPosition(), unit->GetSetEffectSize());
 
+                // 適当な角度にする
+                unit->SetAngle({ 0.0f,DirectX::XMConvertToRadians(rand() % 360),0.0f });
+
                 // 姿勢を更新しておく
+                unit->collision_pos = unit->GetPosition();
+                unit->collision_scale = unit->GetScale();
+                //unit->collision_rotation = unit->GetAngle();
                 unit->Update(elapsedTime);
 
                 // Managerにセット

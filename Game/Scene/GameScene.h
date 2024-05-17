@@ -41,17 +41,17 @@ private:// ゲーム
     bool    time_up = false;
 
     // コントローラー用
-    float s_l;
-    float timer_s;
-    float s_l_max;
-    float f_d = 0;
-    std::shared_ptr<Sprite> ohajiki;
+    std::shared_ptr<Sprite> timer_hands;
+    std::shared_ptr<Sprite> timer_ui_base;
+    std::shared_ptr<Sprite> button_ui_base;
+    std::shared_ptr<Sprite> button_ui_chara;
 
     std::unique_ptr<GltfModelManager> gltf_test_model;
 private:// シェーダー
     Microsoft::WRL::ComPtr<ID3D11PixelShader> unit_ps;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> enemy_ps;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> scarecrow_ps;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> sprite_ui;
 
     // shader
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[8];

@@ -68,7 +68,8 @@ SummonEnemy::SummonEnemy(bool is_minor)
     dis_B             = 3.0f;     // 一気に進む距離
 
     // TODO もね　summon召喚物大きさ
-    model_scale = 9.0f;
+    model_scale = 10.0f;
+
     // 半径の調整
     radius = 1.0f;     // 半径
 
@@ -266,7 +267,7 @@ void BossEnemy::UpdateAttackState(float elapsed_time)
         if (Fence::Instance().ApplyDamage(attack_power))
         {
             //TODO これはアニメーションがきたら要変更
-            PlayAnimation(Animation::Attack, false);
+            PlayAnimation(2, false);
             attack_handle = attack_effect->Play(position, attack_effect_size);
             // タイマーをに
             timer = 0.0f;
@@ -323,7 +324,7 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
     height = 1.0f;          // デバッグ用
 
     // TODO もね　動かない敵大きさ
-     model_scale = 1.3f;
+     model_scale = 2.3f;
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
@@ -332,7 +333,7 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
 void NuisanceEnemy::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-   // debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void NuisanceEnemy::DrawDebugGUI(int n)
