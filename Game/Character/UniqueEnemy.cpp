@@ -6,8 +6,8 @@
 SummonEnemy::SummonEnemy(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear.fbx");
-    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear2.fbx");
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_Sphere.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Mushroom.fbx");
 
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
@@ -68,7 +68,7 @@ SummonEnemy::SummonEnemy(bool is_minor)
     dis_B             = 3.0f;     // àÍãCÇ…êiÇﬁãóó£
 
     // TODO Ç‡ÇÀÅ@summonè¢ä´ï®ëÂÇ´Ç≥
-    model_scale = 0.9f;
+    model_scale = 9.0f;
     // îºåaÇÃí≤êÆ
     radius = 1.0f;     // îºåa
 
@@ -311,8 +311,8 @@ void BossEnemy::UpdateMoveState(float elapsed_time)
 NuisanceEnemy::NuisanceEnemy(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
-    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer2.fbx");
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Mushroom.fbx");
+    else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Mushroom.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");

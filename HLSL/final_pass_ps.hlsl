@@ -66,6 +66,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     fragment_color = reinhard_tone_mapping(fragment_color);
     
 	// Gamma correction
+    //fragment_color.b *= 1.3f;
     const float INV_GAMMA = 1.0 / 2.2;
     fragment_color = pow(fragment_color, INV_GAMMA);
     return float4(fragment_color, alpha);

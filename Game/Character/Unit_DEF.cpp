@@ -10,6 +10,8 @@ GreenPumpkin::GreenPumpkin()
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\GreenPumpkin.fbx");
 
+    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\triangle_collision.fbx");
+
     attack_effect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
@@ -44,18 +46,18 @@ GreenPumpkin::GreenPumpkin()
 
 void GreenPumpkin::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 
-    // ¶ŽOŠp
-    debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
+    //// ¶ŽOŠp
+    //debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
 
-    // ‰EŽOŠp
-    debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
+    //// ‰EŽOŠp
+    //debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
 }
 
 void GreenPumpkin::Update(float elapsed_time)

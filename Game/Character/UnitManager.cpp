@@ -135,6 +135,20 @@ void UnitManager::Update(float elapsedTime)
                 unit->GetScale().z * 6
             };
         }
+        else if (unit->GetCategory() == UNIT_INDEX::GreenPumpkin)
+        {
+            unit->collision_pos = unit->GetPosition();
+            unit->collision_scale = {
+                unit->GetScale().x,
+                unit->GetScale().y,
+                unit->GetScale().z
+            };
+            unit->collision_rotation = {
+                0.0f,
+                DirectX::XMConvertToRadians(90.0f),
+                0.0f
+            };
+        }
         else
         {
             unit->collision_pos = unit->GetPosition();
@@ -180,7 +194,22 @@ void UnitManager::CollisionRender(float scale, ID3D11PixelShader* replaced_pixel
     DrawDebugPrimitive();
     for (Unit* unit : units)
     {
-        unit->CollisionRender(scale, replaced_pixel_shader);
+        if (unit->GetCategory() == UNIT_INDEX::GreenPumpkin)
+        {
+            unit->CollisionRender(scale * 70, replaced_pixel_shader);
+        }
+        else if (unit->GetCategory() == UNIT_INDEX::OrangePumpkin)
+        {
+            unit->CollisionRender(scale * 70, replaced_pixel_shader);
+        }
+        else if (unit->GetCategory() == UNIT_INDEX::J)
+        {
+            unit->CollisionRender(scale * 70, replaced_pixel_shader);
+        }
+        else
+        {
+            unit->CollisionRender(scale, replaced_pixel_shader);
+        }
     }
 }
 

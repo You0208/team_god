@@ -206,9 +206,13 @@ void EnemySpawner::Update(float elapsed_time)
 		{stage_pos.x + stage_width.x + stage_to_shaft},
 		{stage_pos.y + stage_width.y + stage_to_shaft}
 	};
-
-
-	if (EnemyManager::Instance().GetEnemyCount() == 0 && !EnemyManager::Instance().GetTimeUp())timer += elapsed_time * timer_speed;
+	
+	int n = EnemyManager::Instance().GetEnemyCount();
+	bool b = EnemyManager::Instance().GetTimeUp();
+	if (EnemyManager::Instance().GetEnemyCount() == 0 && !EnemyManager::Instance().GetTimeUp())
+	{
+		timer += elapsed_time * timer_speed;
+	}
 	else timer += elapsed_time;
 
 	switch (StageManager::Instance().GetStageLevel())

@@ -76,7 +76,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(1);
+		stage_manager.SetStageLevel(7);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -156,7 +156,7 @@ void GameScene::Initialize()
 			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
 		}
-		//hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_parts.efk");
+		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_parts.efk");
 		//rect.center = { 0,0 };
 		//rect = CalcRotateRect(rect.center, { 2,2 }, angle);
 		//rect.width = { 2,2 };
@@ -263,37 +263,41 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// デバッグ
 	{
-		// パーティクルシステム更新
-		if (particle_system)
+		if (::GetAsyncKeyState('A') & 0x8000)
 		{
-			if (::GetAsyncKeyState('A') & 0x8000)
-			{
-				DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3((
-					rand() % 30 - 15) * 0.1f,
-					rand() % 30 * 0.1f + 20,
-					(rand() % 30 - 15) * 0.1f + 3);
-				int max = 100;
-				for (int i = 0; i < max; i++)
-				{
-					// 発生位置
-					DirectX::XMFLOAT3 p = { 0,0,0 };
-					p.x = pos.x + (rand() % 10001 - 5000) * 0.01f;
-					p.y = pos.y;
-					p.z = pos.z + (rand() % 10001 - 5000) * 0.01f;
-					// 発生方向
-					DirectX::XMFLOAT3 v = { 0,0,0 };
-					v.y = -(rand() % 10001) * 0.0005f - 0.002f;
-					// 力
-					DirectX::XMFLOAT3 f = { 0,0,0 };
-					f.x = (rand() % 10001) * 0.0001f + 0.1f;
-					f.z = (rand() % 10001 - 5000) * 0.00001f;
-					// 大きさ
-					DirectX::XMFLOAT2 s = { .2f,.2f };
-					particle_system->Set(12, 5, p, v, f, s);
-				}
-			}
-			particle_system->Update(elapsedTime);
+			hitEffect->Play({ 0,0,0 },0.3f);
 		}
+		//// パーティクルシステム更新
+		//if (particle_system)
+		//{
+		//	if (::GetAsyncKeyState('A') & 0x8000)
+		//	{
+		//		DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3((
+		//			rand() % 30 - 15) * 0.1f,
+		//			rand() % 30 * 0.1f + 20,
+		//			(rand() % 30 - 15) * 0.1f + 3);
+		//		int max = 100;
+		//		for (int i = 0; i < max; i++)
+		//		{
+		//			// 発生位置
+		//			DirectX::XMFLOAT3 p = { 0,0,0 };
+		//			p.x = pos.x + (rand() % 10001 - 5000) * 0.01f;
+		//			p.y = pos.y;
+		//			p.z = pos.z + (rand() % 10001 - 5000) * 0.01f;
+		//			// 発生方向
+		//			DirectX::XMFLOAT3 v = { 0,0,0 };
+		//			v.y = -(rand() % 10001) * 0.0005f - 0.002f;
+		//			// 力
+		//			DirectX::XMFLOAT3 f = { 0,0,0 };
+		//			f.x = (rand() % 10001) * 0.0001f + 0.1f;
+		//			f.z = (rand() % 10001 - 5000) * 0.00001f;
+		//			// 大きさ
+		//			DirectX::XMFLOAT2 s = { .2f,.2f };
+		//			particle_system->Set(12, 5, p, v, f, s);
+		//		}
+		//	}
+		//	particle_system->Update(elapsedTime);
+		//}
 	}
 
 	// Imgui
@@ -353,7 +357,7 @@ void GameScene::Render(float elapsedTime)
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Clear(immediate_context);
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Activate(immediate_context);
 		ID3D11PixelShader* null_pixel_shader{ NULL };
-		//EnemyManager::Instance().Render(0.1f, null_pixel_shader);
+		player->Render(0.025f, &null_pixel_shader);
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Deactivate(immediate_context);
 	}
 

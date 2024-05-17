@@ -448,7 +448,7 @@ void Character::UpdateTransform()
         {
             collision_model->GetTransform()->SetPosition(collision_pos);
             collision_model->GetTransform()->SetScale(collision_scale);
-            collision_model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+            collision_model->GetTransform()->SetRotation({ collision_rotation.x,collision_rotation.y,collision_rotation.z,0 });
         }
     }
     else 
@@ -461,7 +461,7 @@ void Character::UpdateTransform()
         {
             collision_model->GetTransform()->SetPosition(collision_pos);
             collision_model->GetTransform()->SetScale(collision_scale);
-            collision_model->GetTransform()->SetRotation({ rotation.x,rotation.y,rotation.z,0 });
+            collision_model->GetTransform()->SetRotation({ collision_rotation.x,collision_rotation.y,collision_rotation.z,0 });
         }
     }
 

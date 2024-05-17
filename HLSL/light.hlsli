@@ -19,6 +19,8 @@ struct VS_OUT
     float4 color : COLOR;
     
     float3 binormal : BINORMAL;
+    
+    float4 posInProj : TEXCOORD1;
     //float3 view_tan : TEXCOORD2;
 };
 

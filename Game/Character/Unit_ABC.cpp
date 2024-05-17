@@ -305,6 +305,8 @@ OrangePumpkin::OrangePumpkin()
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\OrangePumpkin.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\OrangePumpkin.fbx");
 
+    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\triangle_collision.fbx");
+
     attack_effect = new Effect(".\\resources\\Effect\\UNIT2_ATK\\UNIT2_ATK.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
@@ -341,18 +343,18 @@ OrangePumpkin::OrangePumpkin()
 
 void OrangePumpkin::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 
-    // ‰œŽOŠp
-    debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
+    //// ‰œŽOŠp
+    //debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
 
-    // Žè‘OŽOŠp
-    debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
-    debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
+    //// Žè‘OŽOŠp
+    //debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
+    //debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
 }
 
 void OrangePumpkin::Update(float elapsed_time)

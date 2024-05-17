@@ -205,6 +205,7 @@ public:
     std::shared_ptr<FbxModelManager> collision_model = nullptr;                           // FBXモデル
     DirectX::XMFLOAT3   collision_pos = { 0, 0, 0 };                 // 位置
     DirectX::XMFLOAT3   collision_scale = { 1.0f, 1.0f, 1.0f };        // スケール
+    DirectX::XMFLOAT3   collision_rotation = { 0.0f, 0.0f, 0.0f };        // スケール
 protected:
     //----------モデル関連------------------------------------------------
     Microsoft::WRL::ComPtr<ID3D11PixelShader> PS    = nullptr;                     // ピクセルシェーダー

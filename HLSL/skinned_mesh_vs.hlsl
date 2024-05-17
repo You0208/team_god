@@ -52,6 +52,9 @@ VS_OUT main(VS_IN vin)
 #endif
     vout.binormal = normalize(cross(vout.world_normal.xyz, vout.world_tangent.xyz));
     
+    // step-4 頂点の正規化スクリーン座標系の座標をピクセルシェーダーに渡す
+    vout.posInProj = vout.position;
+    vout.posInProj.xy /= vout.posInProj.w;
     
     //// Calculate view direction in world space
     //float3 viewDirection = normalize(camera_position.xyz - mul(world, float4(vin.position.xyz, 1.0f)).xyz);

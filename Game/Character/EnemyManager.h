@@ -59,5 +59,5 @@ private:
     DirectX::XMFLOAT2   shaft_pos = {};    // ŠeŽ²‚ÌˆÊ’u
 
     int add_attack = 2;
-    bool time_up = true;
+    bool time_up = false;
 };
