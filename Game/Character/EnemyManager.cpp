@@ -29,7 +29,8 @@ void EnemyManager::Update(float elapsedTime)
     for (int i = 0; i < GetEnemyCount(); i++)
     {
         Enemy* enemy = enemies.at(i);
-        enemy->DrawDebugGUI(i);
+        //TODO ImGuiÁ‚·
+        //enemy->DrawDebugGUI(i);
     }
 
     // ”jŠüˆ—

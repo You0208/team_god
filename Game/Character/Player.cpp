@@ -69,8 +69,9 @@ void Player::Update(float elapsedTime)
         // 行列更新処理
         UpdateTransform();
 
+        // TODO ImGui消す
         // Imgui
-        DrawDebugGUI();
+        //DrawDebugGUI();
     }
 
     // 入力処理
@@ -100,6 +101,7 @@ void Player::Update(float elapsedTime)
 // Imgui
 void Player::DrawDebugGUI()
 {
+
     ImGui::Begin(u8"案山子とか");
 
     ImGui::SliderFloat(u8"移動速度", &moveSpeed, 0.0f, 10.0f);

@@ -105,7 +105,8 @@ void UnitManager::Initialize()
 // XVˆ—
 void UnitManager::Update(float elapsedTime)
 {
-    DebugImGui();
+    //TODO ImGuiÁ‚·
+    //DebugImGui();
     for (Unit* unit : units)
     {
         unit->Update(elapsedTime);
@@ -159,7 +160,8 @@ void UnitManager::Update(float elapsedTime)
     for (int i = 0; i < GetUnitCount(); i++)
     {
         Unit* unit = units.at(i);
-        unit->DrawDebugGUI(i);
+        //TODO ImGuiÁ‚·
+        //unit->DrawDebugGUI(i);
     }
 
     // ”jŠüˆ—

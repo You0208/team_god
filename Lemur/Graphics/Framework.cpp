@@ -19,6 +19,7 @@
 // Effect
 #include "../Effekseer/EffekseerManager.h"
 
+//TODO もね　FALSE→ウィンドウ　TRUE→フルスクリーン
 Framework::Framework(HWND hwnd) 
 	: hwnd(hwnd),
 	graphics(hwnd, FALSE),
@@ -50,8 +51,8 @@ bool Framework::Initialize()
 	// シーン初期化
 	//TODO もね　シーン FormationScene
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
-	//Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
+	//Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
 
 	return true;
 }

@@ -345,7 +345,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// Imgui
-	DebugImgui();
+        //TODO ImGuiè¡Ç∑
+	//DebugImgui();
 }
 
 void GameScene::Render(float elapsedTime)
