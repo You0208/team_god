@@ -21,6 +21,7 @@
 #include "../Character/Unit_DEF.h"
 #include "../Character/SeedManager.h"
 #include "../Character/EnemySpawner.h"
+#include "../Scene/SelectScene.h"
 
 #include "Lemur/Graphics/DebugRenderer.h"
 
@@ -71,6 +72,10 @@ void GameScene::Initialize()
 		timer_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
 		button_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
 		button_ui_chara =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
+		
+		pause_main =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
+		pause_text_continue =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
+		pause_text_select =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
 	}
 	// ゲーム部分
 	{
@@ -173,6 +178,12 @@ void GameScene::Initialize()
 		// エネミーマネージャーの初期化
 		EnemyManager::Instance().Initialize();
 
+		// ポーズ画面
+		is_pause = false;
+		is_bloom = true;
+		pause_text_continue_scale.value = 1.0f;
+		pause_text_select_scale.value = 1.0f;
+
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
 	}
@@ -262,6 +273,18 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// マスクの更新
 	TransitionMask(elapsedTime);
+
+	if (gamePad.GetButtonUp() & gamePad.BTN_BACK)
+	{
+		is_pause = !is_pause;
+		pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+	}
+	if (is_pause)
+	{
+		PauseUpdate(elapsedTime);
+		return;
+	}
+	else is_bloom = true;
 
 	// 遷移演出の最中はこれより下に行かない
 	if (start_transition)return;
@@ -509,17 +532,34 @@ void GameScene::Render(float elapsedTime)
 		ExePostEffct();
 	}
 
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	// 2D描画
-	button_ui_base->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0);
-	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A], SCREEN_HEIGHT*0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B], SCREEN_HEIGHT*1, SCREEN_WIDTH, SCREEN_HEIGHT);
-	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT*2, SCREEN_WIDTH, SCREEN_HEIGHT);
-	button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH*Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT*3, SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (is_bloom)
+	{
+		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-	timer_ui_base->Render(immediate_context, sprite_ui.Get(), 50, 50, 214, 273, 0.0f);
-	timer_hands->RenderCenter(immediate_context, sprite_ui.Get(), 50 + 107, 50 + 167, 4, 180, timer_angle);
-	
+		GamePad& gamePad = Input::Instance().GetGamePad();
+		// 2D描画
+		button_ui_base->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A], SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B], SCREEN_HEIGHT * 1, SCREEN_WIDTH, SCREEN_HEIGHT);
+		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT);
+		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT * 3, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+		timer_ui_base->Render(immediate_context, sprite_ui.Get(), 50, 50, 214, 273, 0.0f);
+		timer_hands->RenderCenter(immediate_context, sprite_ui.Get(), 50 + 107, 50 + 167, 4, 180, timer_angle);
+	}
+	else
+	{
+		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+
+		pause_main->Render(immediate_context, SCREEN_WIDTH - 820, 0, 820, SCREEN_HEIGHT);
+		pause_text_continue->RenderCenter(immediate_context, 1520, 550, 500* pause_text_continue_scale.value, 120* pause_text_continue_scale.value);
+		pause_text_select->RenderCenter(immediate_context,  1520, 700, 500* pause_text_select_scale.value, 120* pause_text_select_scale.value);
+
+	}
 	// マスクの描画
 	RenderTransitionMask(elapsedTime);
 }
@@ -557,4 +597,47 @@ void GameScene::InitializeLight()
 	point_light[1].color = { 1, 1, 1, 1 };
 	ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
 	ZeroMemory(&spot_light[4], sizeof(spotLights) * 4);
+}
+
+void GameScene::PauseUpdate(float elapsedTime)
+{
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	is_bloom = false;
+
+	switch (pause_num)
+	{
+	case 0:
+		pause_text_continue_scale.ContinueEasing(elapsedTime);
+		pause_text_select_scale.EasingValue(elapsedTime);
+		if (gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+		{
+			pause_text_select_scale.CallValueContinue(1.0f, 1.1f, pause_text_select_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+			pause_text_continue_scale.CallValueEasing(1.0f, pause_text_continue_scale.value, EasingFunction::EasingType::InSine);
+			pause_num++;
+		}
+		else if(gamePad.GetButtonDown() & gamePad.BTN_B)
+		{
+			is_bloom = true;
+			pause_num = 0;
+			is_pause = false;
+		}
+		break;
+	case 1:
+		pause_text_select_scale.ContinueEasing(elapsedTime);
+		pause_text_continue_scale.EasingValue(elapsedTime);
+		if (gamePad.GetButtonDown() & gamePad.BTN_UP)
+		{
+			pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+			pause_text_select_scale.CallValueEasing(1.0f, pause_text_select_scale.value, EasingFunction::EasingType::InSine);
+			pause_num--;
+		}
+		else if (gamePad.GetButtonDown() & gamePad.BTN_B)
+		{
+			is_bloom = true;
+			pause_num = 0;
+			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+		}
+		break;
+	}
 }

@@ -70,8 +70,8 @@ void DemoScene::Initialize()
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
-		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Mustard.glb");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Mustard.fbx");
+		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
 		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
 
@@ -162,7 +162,6 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 			//test_model->PlayAnimation(1, true);
 		}
 	}
-
 	// パーティクルシステム更新
 	if (particle_system)
 	{
@@ -357,7 +356,7 @@ void DemoScene::Render(float elapsedTime)
 	{
 		//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 		//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
-		test_model->Render(0.1f, Try.Get());
+		test_model->Render(0.05f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
 		//test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");

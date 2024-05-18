@@ -29,6 +29,8 @@ public:
 
     // 光源の初期化
     void InitializeLight()override;
+
+    void PauseUpdate(float elapsedTime);
 private:// ゲーム
     Stage* stage = nullptr;
 
@@ -36,9 +38,14 @@ private:// ゲーム
 
     Fence* fence = nullptr;
 
-    float   timer = 0.0f;
-    float   time_limit;
-    bool    time_up = false;
+    float   timer = 0.0f;// タイマー
+    float   time_limit;// タイムリミット
+    bool    time_up = false;// タイムアップ
+
+    bool    is_pause                         = false;
+    int     pause_num                            = 0;
+    EasingFunction pause_text_continue_scale = {};
+    EasingFunction pause_text_select_scale   = {};
 
     float timer_angle = 0.0f;
     // コントローラー用
@@ -46,6 +53,10 @@ private:// ゲーム
     std::shared_ptr<Sprite> timer_ui_base;
     std::shared_ptr<Sprite> button_ui_base;
     std::shared_ptr<Sprite> button_ui_chara;
+
+    std::shared_ptr<Sprite> pause_main;
+    std::shared_ptr<Sprite> pause_text_continue;
+    std::shared_ptr<Sprite> pause_text_select;
 
     std::unique_ptr<GltfModelManager> gltf_test_model;
 private:// シェーダー

@@ -16,6 +16,7 @@
 #include "../imgui/ImGuiCtrl.h"
 
 #include "../Graphics/ParticleSystem.h"
+#include "../Graphics/GaussianBlur.h"
 
 namespace Lemur::Scene
 {
@@ -308,6 +309,11 @@ namespace Lemur::Scene
         std::unique_ptr<Bloom> bloomer;
         // 画面用
         std::unique_ptr<FullscreenQuad> fullscreenQuad;
+
+
+        bool is_bloom = true;// ブルームかけますか？
+        std::unique_ptr<GaussianBlur> gaussian_blur;
+
     protected:
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> transition_mask_texture;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
