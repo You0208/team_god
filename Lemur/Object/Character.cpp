@@ -170,12 +170,13 @@ void Character::UpdateVelocity(float elapsed_time)
 
         // 垂直移動更新処理
         UpdateVerticalMove(elapsed_time);
-    }
-    // 水平速力更新処理
-    UpdataHorizontalVelocity(elapsed_frame);
 
-    // 水平移動更新処理
-    UpdateHorizontalMove(elapsed_time);
+        // 水平速力更新処理
+        UpdataHorizontalVelocity(elapsed_frame);
+
+        // 水平移動更新処理
+        UpdateHorizontalMove(elapsed_time);
+    }
 }
 
 void Character::HitStopON(float hit_stop_time_)

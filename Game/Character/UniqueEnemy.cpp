@@ -11,7 +11,6 @@ SummonEnemy::SummonEnemy(bool is_minor)
 
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
     hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
-
     set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
 
     set_effect_size = 0.3f;
@@ -81,12 +80,16 @@ SummonEnemy::SummonEnemy(bool is_minor)
     EasingScale();
     // とりあえずアニメーション
     PlayAnimation(Animation::Attack, false);
+
+    // イージングを呼ぶ
+    is_fly = true;
+    easing_pos_y.CallValueContinue(0.5f, 1.0f, position.y, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::OutSine);
 }
 
 void SummonEnemy::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void SummonEnemy::DrawDebugGUI(int n)
@@ -100,6 +103,9 @@ void SummonEnemy::UpdateAttackState(float elapsed_time)
 
 void SummonEnemy::UpdateMoveState(float elapsed_time)
 {
+    easing_pos_y.ContinueEasing(elapsed_time);
+    position.y = easing_pos_y.value;
+
     timer += elapsed_time;
     //TODO もね　攻撃間隔召喚敵　最初(ランダム確率)
     float interval = 6.5f;

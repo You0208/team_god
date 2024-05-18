@@ -84,7 +84,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(3);
+		stage_manager.SetStageLevel(7);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -252,7 +252,6 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	using namespace DirectX;
 	Camera& camera = Camera::Instance();
 	GamePad& gamePad = Input::Instance().GetGamePad();
-
 	// カメラ
 	{
 		camera.Update(elapsedTime);
@@ -404,6 +403,7 @@ void GameScene::Render(float elapsedTime)
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Activate(immediate_context);
 		ID3D11PixelShader* null_pixel_shader{ NULL };
 		player->Render(0.025f, &null_pixel_shader);
+		UnitManager::Instance().CollisionRender(scale, null_pixel_shader);
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Deactivate(immediate_context);
 	}
 

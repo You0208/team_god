@@ -13,14 +13,14 @@ StageMain::StageMain()
     
     ido = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido\\ido.fbx");
     ido_yane = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido_yane\\ido_yane.fbx");
-    cave = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave.fbx");
+    cave = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
     rock = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\rock\\rock.fbx");
     silo = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\silo\\silo.fbx");
+    log = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\log\\log_set.fbx");
 
     for (int j = 0; j < 3; j++)
     {
         une[j] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\une\\une.fbx");
-        log[j] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\log\\log.fbx");
     }
     for (int i = 0; i < 7; i++)
     {
@@ -52,8 +52,8 @@ StageMain::StageMain()
     // –Ø
     tree[0]->GetTransform()->SetPosition({ -9.0f,dec_y,12.0f });
     tree[1]->GetTransform()->SetPosition({ -6.0f,dec_y,16.0f });
-    tree[2]->GetTransform()->SetPosition({ 6.0f,dec_y,11.0f });
-    tree[3]->GetTransform()->SetPosition({ 11.0f,dec_y,15.0f });
+    tree[2]->GetTransform()->SetPosition({ 6.0f,dec_y,17.0f });
+    tree[3]->GetTransform()->SetPosition({ 10.0f,dec_y,13.0f });
     tree[4]->GetTransform()->SetPosition({ 13.0f,dec_y,8.0f });
     tree[5]->GetTransform()->SetPosition({ 16.0f,dec_y,15.0f });
     tree[6]->GetTransform()->SetPosition({ -12.0f,dec_y,18.0f });
@@ -82,7 +82,8 @@ StageMain::StageMain()
     une[2]->GetTransform()->SetPosition({ -13,dec_y ,-12 });
     une[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90.0f));
 
-
+    log->GetTransform()->SetPosition({ 14.0f,dec_y ,2.0f });
+    log->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-14.0f));
 }
 
 StageMain::~StageMain()
@@ -184,13 +185,12 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
         leavs_LV1[i]->Render(scale, replaced_pixel_shader);
         leavs_LV2[i]->Render(scale, replaced_pixel_shader);
     }
-
     for (int i = 0; i < 3; i++)
     {
         une[i]->Render(scale, replaced_pixel_shader);
     }
 
-
+    log->Render(scale, replaced_pixel_shader);
 }
 
 void StageMain::DrawDebugGui()

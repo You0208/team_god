@@ -25,6 +25,8 @@ private:
     bool first = true;
     float child_scale = 1.0f;
     float child_radius = 1.0f;
+
+    EasingFunction easing_pos_y = {};
 };
 
 class BossEnemy :public Enemy

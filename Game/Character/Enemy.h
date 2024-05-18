@@ -111,7 +111,7 @@ public:
     void SetAttackEffectSize(float attack_effect_size_) { attack_effect_size = attack_effect_size_; }
     void SetDeathEffectSize(float death_effect_size_) { death_effect_size = death_effect_size_; }
     void SetHitEffectSize(float hit_effect_size_) { hit_effect_size = hit_effect_size_; }
-
+    void SetEasingValue(float value) { rotation_y.value = value; }
     // ダメージを与える
     bool ApplyDamage(int damage);
 
@@ -160,6 +160,7 @@ protected:
     float       move_timer_max      = 0.0f;             // 移動間隔
     float       dis                 = 0.0f;             // 進む距離
     float       speed_power_Y       = 0.0f;             // 斜めに進むときのスピード
+    EasingFunction rotation_y       = {};// 方向転換用のイージング
 
     bool        is_power_up         = false;            // パワーアップしたか
 

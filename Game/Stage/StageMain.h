@@ -31,7 +31,7 @@ private:
     std::shared_ptr<FbxModelManager>   leavs_LV1[7] = {};
     std::shared_ptr<FbxModelManager>   leavs_LV2[7] = {};
     std::shared_ptr<FbxModelManager>   une[3] = {};
-    std::shared_ptr<FbxModelManager>   log[3] = {};
+    std::shared_ptr<FbxModelManager>   log = {};
     std::shared_ptr<FbxModelManager>   tree[7] = {};
 
     float dec_y = -0.5f;

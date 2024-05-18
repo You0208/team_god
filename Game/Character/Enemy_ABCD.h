@@ -134,4 +134,5 @@ private:
     bool    is_last_touched = false;                  // ‘O‰ñ‚ÌˆÚ“®‚Åò‚ÉG‚ê‚½‚©
 
     float   attack_timer    = 1.0f;                   // UŒ‚ŠÔŠu
+
 };

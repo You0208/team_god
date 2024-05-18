@@ -653,42 +653,49 @@ void Enemy_D::UpdateMoveState_S(float elapsed_time)
 {
     switch (move_state)
     {
-    case Move::Straight:
-        rotation.y = DirectX::XMConvertToRadians(-90);
+    case Move::Straight:// まっすぐ進む
+        rotation.y = DirectX::XMConvertToRadians(rotation_y.value);
         // 横移動
         velocity.x = speed_power;
         // 移動量を記録
         dis += abs(speed_power) * elapsed_time;
-        // 移動量が規定値を超えたら
+        // 移動量が規定値を超えたら斜め移動へ
         if (dis >= dis_max)
         {
             dis = 0.0f;                             // 移動量を初期化
             if (is_last_touched)direction_state = 0;// 前回柵に触れて居たら移動方向を固定
             else direction_state = rand() % 2;      // 次回の方向を決定
+
+            // 方向転換が必要な場合イージングを呼ぶ
+            if (direction_state == Direction::Under)
+                rotation_y.CallValueEasing(-135.0f, rotation_y.value, EasingFunction::InSine,0.2f);
+            else
+                rotation_y.CallValueEasing(-45.0f, rotation_y.value, EasingFunction::InSine);
+
             is_last_touched = false;                // 初期化
-            move_state = 1;                         // 移動状態を変化
+            move_state = Move::Diagonal;                         // 移動状態を変化
         }
         break;
-    case Move::Diagonal:
-        rotation.y = DirectX::XMConvertToRadians(-45);
+    case Move::Diagonal:// 斜めに進む（２方向）
+        rotation.y = DirectX::XMConvertToRadians(rotation_y.value);
         // 横移動
         velocity.x = speed_power;
         // 移動量を記録
         dis += abs(speed_power) * elapsed_time;
 
-        // 移動量が規定値を超えたらor後ろに行ききったら
+        // 移動量が規定値を超えたらor後ろに行ききったらまっすぐ移動へ
         if (dis >= dis_max || is_last_touched)
         {
             dis = 0.0f;       // 移動量を初期化
             velocity.z = 0.0f;// 速度を初期化
-            move_state = 0;   // 移動状態を変化
+            rotation_y.CallValueEasing(-90.0f, rotation_y.value, EasingFunction::InSine,0.2f);
+            move_state = Move::Straight;   // 移動状態を変化
         }
 
-        // 縦移動
+        // 移動方向によって処理を変える
         switch (direction_state)
         {
         case Direction::Under:
-            rotation.y = DirectX::XMConvertToRadians(45);
             velocity.z = speed_power_Y;// 縦移動
 
             // 後ろ方向に振り切っていたら
@@ -723,22 +730,33 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
     {
     case Move::Straight:
         // 角度調整
-        rotation.y = DirectX::XMConvertToRadians(180);
+        rotation.y = DirectX::XMConvertToRadians(rotation_y.value);
+
         // 縦移動
         velocity.z = speed_power;
         // 移動量を記録
         dis += abs(speed_power) * elapsed_time;
-        // 移動量が規定値を超えたら
+
+        // 移動量が規定値を超えたら斜め移動へ
         if (dis >= dis_max)
         {
             dis = 0.0f;                             // 移動量を初期化
             if (is_last_touched)direction_state = 0;// 前回柵に触れて居たら移動方向を固定
             else direction_state = rand() % 2;      // 次回の方向を決定
+
+            // 方向転換が必要な場合イージングを呼ぶ
+            if (direction_state == Direction::Under)
+                rotation_y.CallValueEasing(225.0f, rotation_y.value, EasingFunction::InSine, 0.2f);
+            else
+                rotation_y.CallValueEasing(135.0f, rotation_y.value, EasingFunction::InSine);
+
             is_last_touched = false;                // 初期化
             move_state = Move::Diagonal;            // 移動状態を変化
         }
         break;
-    case Move::Diagonal:
+    case Move::Diagonal:// 斜めに進む（２方向）
+        rotation.y = DirectX::XMConvertToRadians(rotation_y.value);
+
         // 縦移動
         velocity.z = speed_power;
         // 移動量を記録
@@ -749,6 +767,7 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
         {
             dis = 0.0f;                     // 移動量を初期化
             velocity.x = 0.0f;              // 速度を初期化
+            rotation_y.CallValueEasing(180.0f, rotation_y.value, EasingFunction::InSine, 0.2f);
             move_state = Move::Straight;    // 移動状態を変化
         }
 
@@ -756,7 +775,6 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
         switch (direction_state)
         {
         case Direction::Under:// 右側
-            rotation.y = DirectX::XMConvertToRadians(225);
 
             velocity.x = speed_power_Y;// 右斜め移動
 
@@ -767,7 +785,6 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
             }
             break;
         case Direction::Up:// 左側
-            rotation.y = DirectX::XMConvertToRadians(135);
 
             velocity.x = -speed_power_Y;// 縦移動
 
@@ -796,6 +813,8 @@ void Enemy_D::UpdateMoveState(float elapsed_time)
     {
         TransitionAttackState();
     }
+
+    rotation_y.EasingValue(elapsed_time);
 
     if (shaft == Shaft::Side)UpdateMoveState_S(elapsed_time);
     else    UpdateMoveState_V(elapsed_time);

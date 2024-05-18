@@ -215,136 +215,138 @@ void EnemySpawner::Update(float elapsed_time)
 	}
 	else timer += elapsed_time;
 
-	switch (StageManager::Instance().GetStageLevel())
+	if (!EnemyManager::Instance().GetTimeUp())
 	{
-	case 0:
-	{
-		int count = level_1.size();
-		if (index < count)
+		switch (StageManager::Instance().GetStageLevel())
 		{
-			EnemyScript& script = level_1.at(index);
-			if (timer >= script.second)
-			{
-				EnemySpawn(script);
-				index++;
-			}
-		}
-		break;
-	}
-	case 1:
-	{
-		int count = level_2.size();
-		if (index < count)
+		case 0:
 		{
-			EnemyScript& script = level_2.at(index);
-			if (timer >= script.second)
+			int count = level_1.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_1.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 2:
-	{
-		int count = level_3.size();
-		if (index < count)
+		case 1:
 		{
-			EnemyScript& script = level_3.at(index);
-			if (timer >= script.second)
+			int count = level_2.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_2.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 3:
-	{
-		int count = level_4.size();
-		if (index < count)
+		case 2:
 		{
-			EnemyScript& script = level_4.at(index);
-			if (timer >= script.second)
+			int count = level_3.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_3.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 4:
-	{
-		int count = level_5.size();
-		if (index < count)
+		case 3:
 		{
-			EnemyScript& script = level_5.at(index);
-			if (timer >= script.second)
+			int count = level_4.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_4.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 5:
-	{
-		int count = level_6.size();
-		if (index < count)
+		case 4:
 		{
-			EnemyScript& script = level_6.at(index);
-			if (timer >= script.second)
+			int count = level_5.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_5.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 6:
-	{
-		int count = level_7.size();
-		if (index < count)
+		case 5:
 		{
-			EnemyScript& script = level_7.at(index);
-			if (timer >= script.second)
+			int count = level_6.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_6.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 7:
-	{
-		int count = level_8.size();
-		if (index < count)
+		case 6:
 		{
-			EnemyScript& script = level_8.at(index);
-			if (timer >= script.second)
+			int count = level_7.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_7.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
-	}
-	case 8:
-	{
-		int count = level_9.size();
-		if (index < count)
+		case 7:
 		{
-			EnemyScript& script = level_9.at(index);
-			if (timer >= script.second)
+			int count = level_8.size();
+			if (index < count)
 			{
-				EnemySpawn(script);
-				index++;
+				EnemyScript& script = level_8.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
 			}
+			break;
 		}
-		break;
+		case 8:
+		{
+			int count = level_9.size();
+			if (index < count)
+			{
+				EnemyScript& script = level_9.at(index);
+				if (timer >= script.second)
+				{
+					EnemySpawn(script);
+					index++;
+				}
+			}
+			break;
+		}
+		}
 	}
-	}
-
 }
 
 void EnemySpawner::EnemySpawn(EnemyScript script)
@@ -404,6 +406,12 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 
 		enemy->SetShaft(script.shaft);
 		enemy->SetPosition(script.pos);
+
+		if (script.shaft == Shaft::Side)// ‰¡‚©‚ço‚Ä‚«‚½‚Æ‚«‚ÌŠp“x
+			enemy->SetEasingValue(-90.0f);
+		else if(script.shaft==Shaft::Vertical)// c‚©‚ço‚Ä‚«‚½‚Æ‚«‚ÌŠp“x
+			enemy->SetEasingValue(180.0f);
+
 		enemy->UpdateTransform();
 		// ƒŠƒXƒg‚É’Ç‰Á
 		EnemyManager::Instance().Register(enemy);
@@ -458,6 +466,12 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 		enemy->SetDis(dis_D_2);
 
 		enemy->SetShaft(script.shaft);
+
+		if (script.shaft == Shaft::Side)// ‰¡‚©‚ço‚Ä‚«‚½‚Æ‚«‚ÌŠp“x
+			enemy->SetEasingValue(-90.0f);
+		else if (script.shaft == Shaft::Vertical)// c‚©‚ço‚Ä‚«‚½‚Æ‚«‚ÌŠp“x
+			enemy->SetEasingValue(180.0f);
+
 		enemy->SetPosition(script.pos);
 		enemy->UpdateTransform();
 		// ƒŠƒXƒg‚É’Ç‰Á
