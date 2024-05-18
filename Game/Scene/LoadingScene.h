@@ -31,9 +31,15 @@ private:
     BaseScene* nextScene = nullptr;
     std::thread* thread = nullptr;
     std::unique_ptr<Sprite> spr_back;
+    std::unique_ptr<Sprite> loading_text;
+    std::unique_ptr<Sprite> point_1_text;
+    std::unique_ptr<Sprite> point_2_text;
+    std::unique_ptr<Sprite> point_3_text;
 
     DirectX::XMFLOAT2 poo;
 
     bool once_only = true;
+    bool enable_posint[3] = {};
     float time;
+    float time_interval;
 };

@@ -32,8 +32,14 @@ void LoadingScene::Initialize()
     // ÉQÅ[ÉÄïîï™
     {
         spr_back = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\Loading.png");
+        loading_text = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\loadion_text.png");
+        point_1_text = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\loading_1.png");
+        point_2_text = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\loading_2.png");
+        point_3_text = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\loading_3.png");
 
         CallTransition(false);
+
+        time_interval = 0.4f;
     }
 }
 
@@ -58,6 +64,16 @@ void LoadingScene::Update(HWND hwnd, float elapsedTime)
         CallTransition(true);
     }
     TransitionMask(elapsedTime);
+
+    time += elapsedTime;
+
+    enable_posint[0] = (time >= time_interval) ? true : false;
+    enable_posint[1] = (time >= time_interval * 2.0f) ? true : false;
+    enable_posint[2] = (time >= time_interval * 3.0f) ? true : false;
+    if (time >= time_interval*4.0f)
+    {
+        time = 0.0f;
+    }
 }
 
 void LoadingScene::Render(float elapsedTime)
@@ -80,6 +96,10 @@ void LoadingScene::Render(float elapsedTime)
             immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
             immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
             spr_back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+            loading_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+            if(enable_posint[0])point_1_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+            if (enable_posint[1])point_2_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+            if (enable_posint[2])point_3_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
 
             RenderTransitionMask(elapsedTime);
         }
