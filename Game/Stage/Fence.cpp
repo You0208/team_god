@@ -83,11 +83,6 @@ Fence::~Fence()
 
 void Fence::Update(float elapsedTime)
 {
-    if (health <= 0)
-    {
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
-    }
-
     Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision();
 
     left_rect = {

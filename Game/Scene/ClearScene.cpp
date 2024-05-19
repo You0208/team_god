@@ -47,7 +47,6 @@ void ClearScene::Initialize()
     }
     // ÉQÅ[ÉÄ
     {
-        CallTransition(false);
         select.value = 1.0f;
         again.value = 1.0f;
         next.value = 1.0f;
@@ -57,6 +56,7 @@ void ClearScene::Initialize()
         interval_1 = 0.0f;
         interval_2 = 0.3f;
         interval_3 = 0.6f;
+        CallTransition(false);
     }
 }
 

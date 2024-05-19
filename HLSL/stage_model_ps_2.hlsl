@@ -6,7 +6,7 @@
 #define LINEAR_BORDER_BLACK 3
 #define LINEAR_BORDER_WHITE 4
 
-SamplerState sampler_states[3] : register(s0);
+SamplerState sampler_states[5] : register(s0);
 Texture2D texture_maps[8] : register(t0);
 
 Texture2D metalSmoothTex : register(t3);
@@ -25,6 +25,9 @@ Texture2D noise_map : register(t9); // 先生ノイズは3D
 SamplerComparisonState comparison_sampler_state : register(s5);
 Texture2D shadow_map : register(t8);
 
+// PROJECTION_MAPPING
+Texture2D projection_mapping_texture : register(t15);
+
 
 float4 main(VS_OUT pin) : SV_TARGET
 {
@@ -33,7 +36,6 @@ float4 main(VS_OUT pin) : SV_TARGET
 //-----------------------------------------
     // 修正
     static const float GAMMA = 2.2;
-
     // 色
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC], pin.texcoord);
     color.rgb = pow(color.rgb, GAMMA);
@@ -50,7 +52,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     // 粗さ
     //float roughness = 1.0f - smoothness;
     float roughness = smoothness;
-    //return float4(roughness,0,0,1);
     //float roughness = parameters.y;
     // 法線マップ
     float3 normal = texture_maps[1].Sample(sampler_states[LINEAR], pin.texcoord);
@@ -119,14 +120,45 @@ float4 main(VS_OUT pin) : SV_TARGET
         //----------------------------------------- 
         float3 shadow_factor = 1.0f;
         Shadow(pin, normal, T, B, shadow_map, comparison_sampler_state, shadow_factor);
+        
         // 最終光に足し合わせる    
         finalLig *= shadow_factor;
-        
+        //return float4(shadow_factor, 1);
+        //-----------------------------------------
+        //　リムライト
+        //----------------------------------------- 
+        float3 rimColor = 0, hemiLight = 0;
+        LimHemiLight(pin, normal, N_, T, E, rimColor, hemiLight);
+        // 最終光に足し合わせる     
+        finalLig += (rimColor + hemiLight);
+    }
+ 
+//-----------------------------------------
+//　ディゾルブ
+//----------------------------------------- 
+    {
+        float dissolve = step(mask, threshold);
+        color.a *= dissolve;
+        // アルファが0以下ならそもそも描画しないようにする
+        clip(color.a - 0.01f);
+    }
+    
+	// PROJECTION_MAPPING
+    const float projection_mapping_color_intensity = 10;
+    float3 projection_mapping_color = 0;
+    float4 projection_texture_position = mul(pin.world_position, projection_mapping_transform);
+    projection_texture_position /= projection_texture_position.w;
+    projection_texture_position.x = projection_texture_position.x * 0.5 + 0.5;
+    projection_texture_position.y = -projection_texture_position.y * 0.5 + 0.5;
+    if (saturate(projection_texture_position.z) == projection_texture_position.z)
+    {
+        float4 projection_texture_color = projection_mapping_texture.Sample(sampler_states[LINEAR_BORDER_BLACK], projection_texture_position.xy);
+        projection_mapping_color = projection_texture_color.rgb * projection_texture_color.a * projection_mapping_color_intensity;
     }
 
 // PostEffectのとき切る    
 #if 0
     finalLig = pow(finalLig, 1.0f / GAMMA);
 #endif
-    return float4(finalLig, color.a);
+    return float4(finalLig + projection_mapping_color/*PROJECTION_MAPPING*/, color.a);
 };

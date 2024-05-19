@@ -2,6 +2,7 @@
 #include "Lemur/Object/Character.h"
 #include "../Stage/Fence.h"
 #include "Lemur/Effekseer/Effect.h"
+#include "Lemur/Effekseer/EffekseerManager.h"
 
 
 enum EnemyType
@@ -40,28 +41,32 @@ class Enemy :public Character
 public:
     Enemy() {}
     ~Enemy() {
-        attack_effect->Stop(attack_handle);
-        death_effect->Stop(death_handle);
-        hit_effect->Stop(hit_handle);
-        attack_handle = 0;
-        death_handle = 0;
-        hit_handle = 0;
+        if (set_effect != nullptr)
+        {
+            set_effect->Stop(set_handle);
+            delete set_effect;
+            set_effect = nullptr;
+        }
         // エフェクト終了
         if (attack_effect != nullptr)
         {
+            attack_effect->Stop(attack_handle);
             delete attack_effect;
             attack_effect = nullptr;
         }
         if (hit_effect != nullptr)
         {
+            hit_effect->Stop(hit_handle);
             delete hit_effect;
             hit_effect = nullptr;
         }
         if (death_effect != nullptr)
         {
+            death_effect->Stop(death_handle);
             delete death_effect;
             death_effect = nullptr;
         }
+        EffectManager::Instance().Update(0.01f);
     }
 
     // 更新処理

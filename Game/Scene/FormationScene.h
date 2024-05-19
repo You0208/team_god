@@ -125,4 +125,5 @@ private:
     std::unique_ptr<FbxModelManager> test_model_2;
 
     Effect* effect = nullptr;          // 攻撃エフェクト
+    Effekseer::Handle effect_handle = 0;          // 攻撃エフェクト
 };

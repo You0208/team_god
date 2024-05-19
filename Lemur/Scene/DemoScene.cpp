@@ -35,7 +35,7 @@ void DemoScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/skinned_mesh_ps.cso", Try.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 
@@ -70,7 +70,9 @@ void DemoScene::Initialize()
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Mustard.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\projection\\terrain\\terrain.fbx");
+		fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
+		fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
 		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
@@ -116,6 +118,9 @@ void DemoScene::Initialize()
 
 	// デバッグ
 	{
+		D3D11_TEXTURE2D_DESC texture2d_desc;
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\magic circle.png", projection_mapping_texture.GetAddressOf(), &texture2d_desc);
+
 		directional_light_direction = { 1,-1,-1,0 };
 		gltf_test_model->PlayAnimation(0, false);
 		test_model->PlayAnimation(0, false);
@@ -251,6 +256,19 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		particle_bomb->Update(elapsedTime);
 	}
 
+
+	// PROJECTION_MAPPING
+	using namespace DirectX;
+	projection_mapping_rotation += elapsedTime * 180;
+	XMStoreFloat4x4(&projection_mapping_transform,
+		XMMatrixLookAtLH(
+			XMLoadFloat3(&projection_mapping_eye),
+			XMLoadFloat3(&projection_mapping_focus),
+			XMVector3Transform(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(projection_mapping_rotation), 0)))*
+		XMMatrixPerspectiveFovLH(XMConvertToRadians(projection_mapping_fovy), 1.0f, 1.0f, 500.0f)
+	);
+
+
 	// ライトの更新
 	LightUpdate();
 
@@ -262,27 +280,17 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		Camera::Instance().DrawDebug();
 		ImGui::Begin("ImGUI");
 
-		if (gltf_test_model->IsPlayAnimation())
-		{
-			ImGui::Text("Play");
-		}
-		else
-		{
-			ImGui::Text("End");
-		}
+		// PROJECTION_MAPPING
+		ImGui::DragFloat("projection_mapping_eye.x", &projection_mapping_eye.x);
+		ImGui::DragFloat("projection_mapping_eye.y", &projection_mapping_eye.y);
+		ImGui::DragFloat("projection_mapping_eye.z", &projection_mapping_eye.z);
 
-		//ImGui::SliderFloat("fbx_animation_blend_time", &test_model->animation_blend_time, 0.0f, 1.00f);
+		ImGui::DragFloat("projection_mapping_focus.x", &projection_mapping_focus.x);
+		ImGui::DragFloat("projection_mapping_focus.y", &projection_mapping_focus.y);
+		ImGui::DragFloat("projection_mapping_focus.z", &projection_mapping_focus.z);
 
-		ImGui::SliderFloat("animation_blend_time", &gltf_test_model->animation_blend_time, 0.0f, 10.00f);
-		ImGui::SliderFloat("blend_rate", &gltf_test_model->blend_rate, 0.0f, 1.00f);
+		ImGui::SliderFloat("projection_mapping_fovy", &projection_mapping_fovy, 10.0f, 180.0f);
 
-		// STATIC_BATCHING
-		if (ImGui::TreeNode("shadow"))
-		{
-			ImGui::Image(reinterpret_cast<void*>(shadow_map->shader_resource_view.Get()), ImVec2(shadowmap_width / 5.0f, shadowmap_height / 5.0f));
-			ImGui::SliderFloat("shadow_depth_bias", &scene_constant.shadow_depth_bias, 0.1f, 0.01f);
-			ImGui::TreePop();
-		}
 		ImGui::End();
 	}
 }
@@ -328,6 +336,8 @@ void DemoScene::Render(float elapsedTime)
 		immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
 		//　深度値
 		immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
+		// PROJECTION_MAPPING
+		immediate_context->PSSetShaderResources(15, 1, projection_mapping_texture.GetAddressOf());
 	}
 
 	// ポストエフェクトの開始
@@ -356,13 +366,34 @@ void DemoScene::Render(float elapsedTime)
 	{
 		//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 		//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
-		test_model->Render(0.05f, Try.Get());
+		//test_model->Render(0.01f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
 		//test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
 		//gltf_test_model->GetTransform()->SetPositionY(1.0f);
 		//gltf_test_model->Render(1.0f, gltf_ps.Get());
 		//gltf_test_model_2->Render(100.0f, gltf_ps.Get());
+
+		for (int x = 0; x < 3; x++)
+		{
+			for (int y = 0; y < 6; y++)
+			{
+				if (y % 2 == 0)
+				{
+					fild2->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+					fild1->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+					fild1->Render(1.0f, Try.Get());
+					fild2->Render(1.0f, Try.Get());
+				}
+				else
+				{
+					fild1->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+					fild2->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+					fild1->Render(1.0f, Try.Get());
+					fild2->Render(1.0f, Try.Get());
+				}
+			}
+		}
 	}
 	// デバッグ
 	{

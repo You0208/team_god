@@ -26,7 +26,7 @@ Enemy_A::Enemy_A(bool is_minor)
     speed_power     = -1.0f;    // 速度
 
     // スケールのイージング
-    EasingScale();
+    EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -120,7 +120,7 @@ Enemy_B::Enemy_B(bool is_minor)
     health          = 10;       // HP
 
     // スケールのイージング
-    EasingScale();
+    EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, false);
 }
@@ -260,8 +260,10 @@ Enemy_C::Enemy_C(bool is_minor)
     speed_power     = -1.0f;     // 速度
     health          = 10;        // HP
 
+    velocity = {};
+
     // スケールのイージング
-    EasingScale();
+    EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -318,8 +320,17 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
         // 移動
         HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
             speed_power, Move::Straight, Move::Avoid, velocity.x, is_touched_unit, elapsed_time);
-        //
-        JudgeUnit(true);
+
+        if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
+        {
+            is_limit = true;
+        }
+        else if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+        {
+            is_limit = true;
+        }
+        else is_limit = false;
+        if(!is_touched_unit&&!is_limit)JudgeUnit(false);
     }
     else
     {
@@ -329,7 +340,16 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
         HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
             speed_power, Move::Straight, Move::Avoid, velocity.z, is_touched_unit, elapsed_time);
         //
-        JudgeUnit(false);
+        if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
+        {
+            is_limit = true;
+        }
+        else if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+        {
+            is_limit = true;
+        }
+        else is_limit = false;
+        if (!is_touched_unit && !is_limit)JudgeUnit(true);
     }
 
     if (IsDead())
@@ -349,7 +369,7 @@ void Enemy_C::JudgeUnit(bool isVertical)
         Unit* unit = unitManager.GetUnit(j);
 
         // 円
-        if (unit->GetCategory() == 0 || unit->GetCategory() == 3) 
+        if (unit->GetCategory() == UnitManager::UNIT_INDEX::Chili || unit->GetCategory() == UnitManager::UNIT_INDEX::Shishito)
         {
             if (Collision::IntersectCircleVsCircle(
                 { unit->GetPosition().x, unit->GetPosition().z }, // ユニットの位置(XZ平面)
@@ -375,15 +395,15 @@ void Enemy_C::JudgeUnit(bool isVertical)
                 }
             }
         }
-        else if (unit->GetCategory() == 1) // 三角形
+        else if (unit->GetCategory() == UnitManager::UNIT_INDEX::GreenPumpkin) // 三角形（縦）
         {
             if (isVertical)
             {
                 // 敵がユニットの攻撃範囲に触れたとき
-                // 右三角
+                // 奥三角
                 if (Collision::IntersectTriangleVsCircle
                 (
-                    unit->GetTriangle2(),
+                    unit->GetTriangle1(),
                     { position.x,position.z },                         // 敵の位置(XZ平面)
                     radius                                             // 敵の当たり判定
                 ))
@@ -399,25 +419,9 @@ void Enemy_C::JudgeUnit(bool isVertical)
             else if (!isVertical )
             {
                 // 敵がユニットの攻撃範囲に触れたとき
-                if (Collision::IntersectTriangleVsCircle// 左三角
+                if (Collision::IntersectTriangleVsCircle// 奥三角
                 (
                     unit->GetTriangle1(),
-                    { position.x,position.z },                         // 敵の位置(XZ平面)
-                    radius                                             // 敵の当たり判定
-                ))
-                {
-                    is_touched_unit = true;// ユニットに触れた
-                    // 目的地を決定する
-                    destination = {
-                        // ユニット左三角形の底辺方向に避ける
-                        unit->GetPosition().x - unit->GetRadius() - radius - unit->GetTriangleHeight(),
-                        unit->GetPosition().z
-                    };
-                }
-                // 敵がユニットの攻撃範囲に触れたとき
-                else if (Collision::IntersectTriangleVsCircle// 右三角
-                (
-                    unit->GetTriangle2(),
                     { position.x,position.z },                         // 敵の位置(XZ平面)
                     radius                                             // 敵の当たり判定
                 ))
@@ -430,14 +434,30 @@ void Enemy_C::JudgeUnit(bool isVertical)
                         unit->GetPosition().z
                     };
                 }
+                // 敵がユニットの攻撃範囲に触れたとき
+                else if (Collision::IntersectTriangleVsCircle// 手前三角
+                (
+                    unit->GetTriangle2(),
+                    { position.x,position.z },                         // 敵の位置(XZ平面)
+                    radius                                             // 敵の当たり判定
+                ))
+                {
+                    is_touched_unit = true;// ユニットに触れた
+                    // 目的地を決定する
+                    destination = {
+                        // ユニット左三角形の底辺方向に避ける
+                        unit->GetPosition().x - unit->GetRadius() - radius - unit->GetTriangleHeight(),
+                        unit->GetPosition().z
+                    };
+                }
             }
         }
-        else if (unit->GetCategory() == 2)
+        else if (unit->GetCategory() == UnitManager::UNIT_INDEX::OrangePumpkin)
         {
             if (isVertical)
             {
                 // 敵がユニットの攻撃範囲に触れたとき
-          // 奥三角
+                // 左三角
                 if (Collision::IntersectTriangleVsCircle
                 (
                     unit->GetTriangle1(),
@@ -449,11 +469,11 @@ void Enemy_C::JudgeUnit(bool isVertical)
                     // 目的地を決定する
                     destination = {
                         unit->GetPosition().x,
-                        unit->GetPosition().z + unit->GetRadius() + radius + unit->GetTriangleHeight()
+                        unit->GetPosition().z - unit->GetRadius() - radius - unit->GetTriangleHeight()
                     };
                 }
                 // 敵がユニットの攻撃範囲に触れたとき
-                // 手前三角
+                // 右三角
                 else if (Collision::IntersectTriangleVsCircle
                 (
                     unit->GetTriangle2(),
@@ -465,16 +485,16 @@ void Enemy_C::JudgeUnit(bool isVertical)
                     // 目的地を決定する
                     destination = {
                         unit->GetPosition().x,
-                        unit->GetPosition().z - unit->GetRadius() - radius - unit->GetTriangleHeight()
+                        unit->GetPosition().z + unit->GetRadius() + radius + unit->GetTriangleHeight()
                     };
                 }
             }
             else if (!isVertical)
             {
                 // 敵がユニットの攻撃範囲に触れたとき
-                if (Collision::IntersectTriangleVsCircle// 奥三角
+                if (Collision::IntersectTriangleVsCircle// 右三角
                 (
-                    unit->GetTriangle1(),
+                    unit->GetTriangle2(),
                     { position.x,position.z },                         // 敵の位置(XZ平面)
                     radius                                             // 敵の当たり判定
                 ))
@@ -489,7 +509,7 @@ void Enemy_C::JudgeUnit(bool isVertical)
                 }
             }
         }
-        else if (unit->GetCategory() == 4 && isVertical) // 長方形
+        else if (unit->GetCategory() == UnitManager::UNIT_INDEX::Broccoli && !isVertical) // 長方形
         {
             // 敵がユニットの攻撃範囲に触れたとき
             if (Collision::IntersectRectVsCircle
@@ -502,12 +522,12 @@ void Enemy_C::JudgeUnit(bool isVertical)
                 is_touched_unit = true;// ユニットに触れた
                 // 目的地を決定する
                 destination = {
-                    unit->GetPosition().x,
-                    unit->GetPosition().z + unit->GetRadius() + radius
+                    position.x,
+                    unit->GetPosition().z + unit->GetAttackWidth() + radius
                 };
             }
         }
-        else if (unit->GetCategory() == 5 && !isVertical)
+        else if (unit->GetCategory() == UnitManager::UNIT_INDEX::Cauliflower && isVertical)
         {
             // 敵がユニットの攻撃範囲に触れたとき
             if (Collision::IntersectRectVsCircle
@@ -520,7 +540,7 @@ void Enemy_C::JudgeUnit(bool isVertical)
                 is_touched_unit = true;// ユニットに触れた
                 // 目的地を決定する
                 destination = {
-                    unit->GetPosition().x - unit->GetRadius() - radius,
+                    unit->GetPosition().x - unit->GetAttackWidth() - radius,
                     unit->GetPosition().z
                 };
             }
@@ -557,6 +577,14 @@ void Enemy_C::HandleMovementState(const Rect& rect1, const Rect& rect2, float sp
 
 void Enemy_C::MoveToDestination(float elapsed_time, Move nextState)
 {
+    if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
+    {
+        ResetMovementState(nextState);
+    }
+    else if (Collision::IntersectRectVsCircle(Fence::Instance().GetBackRect(), { position.x,position.z }, radius))
+    {
+        ResetMovementState(nextState);
+    }
     DirectX::XMFLOAT2 destVec = { destination.x - position.x, destination.y - position.z };
     destVec = Normalize(destVec);
 
@@ -602,7 +630,7 @@ Enemy_D::Enemy_D(bool is_minor)
     health          = 10;       // HP
 
     // スケールのイージング
-    EasingScale();
+    EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -778,7 +806,7 @@ void Enemy_D::UpdateMoveState_V(float elapsed_time)
 
             velocity.x = speed_power_Y;// 右斜め移動
 
-            // 後ろ方向に振り切っていたら
+            // 右方向に振り切っていたら
             if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
             {
                 is_last_touched = true;

@@ -48,6 +48,7 @@ public:
     void    DecNumber() { number--; }
 
     Effect* error_effect = nullptr;
+    Effekseer::Handle error_effect_handle = 0;
 private:
     enum Animation_Index
     {

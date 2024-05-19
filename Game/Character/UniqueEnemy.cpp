@@ -77,7 +77,7 @@ SummonEnemy::SummonEnemy(bool is_minor)
     radius = 1.0f;     // 半径
 
     // スケールのイージング
-    EasingScale();
+    EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Attack, false);
 
@@ -258,7 +258,7 @@ BossEnemy::BossEnemy(bool is_minor)
     model_scale = 2.0f;
 
     // スケールのイージング
-    EasingScale();
+    EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }
@@ -349,7 +349,7 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
      model_scale = 2.3f;
 
      // スケールのイージング
-     EasingScale();
+     EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
 }

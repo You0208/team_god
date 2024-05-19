@@ -1,4 +1,3 @@
-
 #pragma once
 #include "./Lemur/Scene/BaseScene.h"
 
@@ -22,18 +21,24 @@ public:
 
     void DebugImgui()override;
 private:
-private:
-    std::shared_ptr<Sprite> title;
-
-    // MASK
-    struct option_constants {
-        DirectX::XMFLOAT4 parameters{ 1.0f,0.0f,0.0f,0.0f }; // x : ディゾルブ適応量、yzw : 空き
+    enum Type
+    {
+        LEFT,
+        RIGHT,
+        RIGHT_2,
+        LOGO,
+        LOGO_2
     };
-    float dissolve_value{ 0.0f };
-    option_constants option_constant;
-    Microsoft::WRL::ComPtr<ID3D11Buffer> option_constant_buffer;
+    // ステージ                                    
+    std::shared_ptr<Sprite> title_back = nullptr;
+    std::shared_ptr<Sprite> title_left = nullptr;
+    std::shared_ptr<Sprite> title_right = nullptr;
+    std::shared_ptr<Sprite> title_logo = nullptr;
 
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture;
+    EasingFunction left_scale = {};
+    EasingFunction right_scale = {};
+    EasingFunction logo_scale = {};
 
-
+    bool is_direction = true;
+    int direction_num = 0;
 };

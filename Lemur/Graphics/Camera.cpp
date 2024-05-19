@@ -53,12 +53,6 @@ void Camera::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
-    if (gamePad.GetButtonDown() & GamePad::BTN_LEFT_SHOULDER||
-        gamePad.GetButtonDown() & GamePad::BTN_RIGHT_SHOULDER||
-        mouse.GetButtonDown()&Mouse::BTN_MIDDLE)
-    {
-        InputLockOn();
-    }
 
     ScreenVibrationUpdate();
 
@@ -159,17 +153,6 @@ void Camera::NonLockOnUpdate(float elapsedTime)
         }
     }
 
-    //TODO Debug
-    if (game_pad.GetButton() & game_pad.BTN_B)
-    {
-        angle.x -= wx * speed;
-        angle.y += wy * speed;
-    }
-    else
-    {
-        angle.x += wx * speed;
-        angle.y -= wy * speed;
-    }
 
     //angle.x -= ax * speed;
     //angle.y += ay * speed;
@@ -241,7 +224,6 @@ void Camera::NonLockOnUpdate(float elapsedTime)
 
     ////ÉJÉÅÉâÇÃéãì_Ç∆íçéãì_Çê›íË
     //SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
-
 }
 
 void Camera::ScreenVibrate(float volume, float effectTime)

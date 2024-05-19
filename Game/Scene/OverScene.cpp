@@ -8,7 +8,7 @@
 #include "TitleScene.h"
 #include "SelectScene.h"
 #include "LoadingScene.h"
-#include "GameScene.h"
+#include "FormationScene.h"
 
 void OverScene::Initialize()
 {
@@ -175,7 +175,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
         if (!start_transition && is_in)
         {
             // 次のシーンへ
-            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
+            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
         }
         break;
 
@@ -208,7 +208,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
         if (!start_transition && is_in)
         {
             // 次のシーンへ
-            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
+            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new FormationScene));
         }
         break;
     }
@@ -266,10 +266,5 @@ void OverScene::Render(float elapsedTime)
 void OverScene::DebugImgui()
 {
     ImGui::Begin("ImGUI");
-
-    if (ImGui::Button(u8"ゲームに戻る"))
-    {
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
-    }
     ImGui::End();
 }

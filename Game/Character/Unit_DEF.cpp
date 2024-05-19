@@ -49,15 +49,15 @@ GreenPumpkin::GreenPumpkin()
 
 void GreenPumpkin::DrawDebugPrimitive()
 {
-    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 
-    //// ¶ŽOŠp
+    //// ‰œŽOŠp
     //debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
     //debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
     //debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
 
-    //// ‰EŽOŠp
+    //// Žè‘OŽOŠp
     //debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
     //debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
     //debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });

@@ -51,6 +51,9 @@ cbuffer SCENE_CONSTANT_BUFFER : register(b1)
     // particle
     row_major float4x4 view_matrix;
     row_major float4x4 projection_matrix;
+    
+	// PROJECTION_MAPPING
+    row_major float4x4 projection_mapping_transform;
 };
 
 cbuffer FOG_CONSTANT_BUFFER : register(b2)

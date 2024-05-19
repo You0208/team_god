@@ -92,6 +92,7 @@ private:
     float   timer                       = 0.0f;      // タイマー
     int     move_state                  = Straight;  // 移動ステート
     bool    is_touched_unit             = false;     // ユニットに触れたか
+    bool    is_limit             = false;     // ユニットに触れたか
     DirectX::XMFLOAT2   destination     = { 0,0 };   // 目的地
 };
 

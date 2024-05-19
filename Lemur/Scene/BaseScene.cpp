@@ -720,6 +720,9 @@ void Lemur::Scene::BaseScene::SetUpConstantBuffer()
 		// ジオメトリシェーダーにてビルボード計算するため各行列を納入
 		DirectX::XMStoreFloat4x4(&scene_constant.view_matrix, V);
 		DirectX::XMStoreFloat4x4(&scene_constant.projection_matrix, P);
+
+		// PROJECTION_MAPPING
+		scene_constant.projection_mapping_transform = projection_mapping_transform;
 	}
 
 
@@ -950,7 +953,7 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 		mask_angle = 0.0f;
 		mask_scale.value = 0.0f;
 		mask_pos = mask_pos_;
-		mask_scale.CallValueEasing(10.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.6f);
+		mask_scale.CallValueEasing(10.0f, 0.0f, EasingFunction::EasingType::OutSine, 0.6f);
 	}
 	start_transition = true;
 }
@@ -960,7 +963,7 @@ void Lemur::Scene::BaseScene::TransitionMask(float elapsed_time)
 	if (start_transition)
 	{
 		mask_scale.EasingValue(elapsed_time);
-		if (!mask_scale.is_easing && start_transition)
+		if (!mask_scale.is_easing)
 		{
 			start_transition = false;
 		}

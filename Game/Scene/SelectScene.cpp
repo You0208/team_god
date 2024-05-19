@@ -1,5 +1,6 @@
 #include "SelectScene.h"
 #include "FormationScene.h"
+#include "TitleScene.h"
 #include "./Lemur/Graphics/Camera.h"
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
@@ -9,7 +10,6 @@
 
 void SelectScene::Initialize()
 {
-
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // シェーダー関連
@@ -59,7 +59,6 @@ void SelectScene::Initialize()
 
     // ゲーム
     {
-        CallTransition(false);
         transition_angle.value = 140.0f;
         transition_line1_angle.value = 90.0f;
         transition_line2_angle.value = 110.0f;
@@ -70,6 +69,7 @@ void SelectScene::Initialize()
         transition_line3_angle_2.value =90.0f;
 
         switch_direction = false;
+        CallTransition(false);
     }
 }
 
@@ -86,6 +86,8 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     camera.Update(elapsed_time);
 
     TransitionMask(elapsed_time);
+
+    if (start_transition)return;
 
     // イージングを更新
     transition_angle.EasingValue(elapsed_time);
@@ -192,15 +194,22 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     }
 
     // ステージ決定
+    if (gamePad.GetButtonDown() & gamePad.BTN_B)
+    {
+        next_scene = 0;
+        CallTransition(true, stage_mask_pos[stage_num]);
+    }
     if (gamePad.GetButtonDown() & gamePad.BTN_A)
     {
-        CallTransition(true, stage_mask_pos[stage_num]);
+        next_scene = 1;
+        CallTransition(true);
     }
     if (!start_transition && is_in)
     {
         StageManager::Instance().SetStageLevel(set_level[world_num][stage_num]);
         // 次のシーンへ
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new FormationScene));
+        if(next_scene==0)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new FormationScene));
+        if(next_scene==1)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TitleScene));
     }
 }
 

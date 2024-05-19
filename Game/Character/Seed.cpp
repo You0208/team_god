@@ -7,6 +7,8 @@
 #include "Unit_HIJ.h"
 #include "../Stage/Fence.h"
 
+#include "Lemur/Effekseer/EffekseerManager.h"
+
 #include <random>
 
 Seed::Seed()
@@ -29,6 +31,9 @@ Seed::Seed()
 
 Seed::~Seed()
 {
+    error_effect->Stop(error_effect_handle);
+
+    EffectManager::Instance().Update(0.01f);
 }
 
 void Seed::Update(float elapsedTime)
@@ -155,7 +160,7 @@ void Seed::DisDirection()
     if (position.z >= distination_position.z)
     {
         PlayAnimation(Animation_Index::Jump, true);
-        error_effect->Play(position, effect_size);
+        error_effect_handle = error_effect->Play(position, effect_size);
         velocity.z = 0;
         death = true;
         is_dis_direction = false;
@@ -241,7 +246,7 @@ void Seed::DecisionPos()
         Fence::Instance().GetFrontRect().left_up.y + seed_fence_dis >= outPosition.y // Žè‘O
         )
     {
-        error_effect->Play(position, effect_size);
+        error_effect_handle = error_effect->Play(position, effect_size);
         death = true;// Ží‚ð”j‰ó
     }
     // “–‚½‚ç‚È‚©‚Á‚½‚ç
@@ -263,7 +268,7 @@ void Seed::DecisionPos()
     {
         outPosition = {};
 
-        error_effect->Play(position, effect_size);
+        error_effect_handle = error_effect->Play(position, effect_size);
         death = true;// Ží‚ð”j‰ó
     }
 }

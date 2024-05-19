@@ -196,6 +196,9 @@ namespace Lemur::Scene
             // ジオメトリシェーダーにてビルボード計算するため
             DirectX::XMFLOAT4X4 view_matrix;
             DirectX::XMFLOAT4X4 projection_matrix;
+
+            // PROJECTION_MAPPING
+            DirectX::XMFLOAT4X4 projection_mapping_transform;
         };
         scene_constants scene_constant;
 
@@ -311,6 +314,14 @@ namespace Lemur::Scene
         std::unique_ptr<FullscreenQuad> fullscreenQuad;
 
 
+        // PROJECTION_MAPPING
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> projection_mapping_texture;
+        DirectX::XMFLOAT4X4 projection_mapping_transform;
+        DirectX::XMFLOAT3 projection_mapping_eye = { 0, 50, 0 };
+        DirectX::XMFLOAT3 projection_mapping_focus = { 0, 0, 0 };
+        float projection_mapping_rotation = 0.0f;
+        float projection_mapping_fovy = 10.0f;
+
         bool is_bloom = true;// ブルームかけますか？
         std::unique_ptr<GaussianBlur> gaussian_blur;
 
@@ -364,6 +375,7 @@ namespace Lemur::Scene
         float mask_angle = 0.0f;
         bool start_transition = false;
         bool is_in = false;
+        int next_scene = 0;
     private:
         bool ready = false;
     };

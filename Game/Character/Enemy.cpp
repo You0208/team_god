@@ -4,29 +4,32 @@
 
 void Enemy::Destroy()
 {
-    attack_effect->Stop(attack_handle);
-    death_effect->Stop(death_handle);
-    hit_effect->Stop(hit_handle);
-    attack_handle = 0;
-    death_handle = 0;
-    hit_handle = 0;
+    if (set_effect != nullptr)
+    {
+        set_effect->Stop(set_handle);
+        delete set_effect;
+        set_effect = nullptr;
+    }
     // エフェクト終了
     if (attack_effect != nullptr)
     {
+        attack_effect->Stop(attack_handle);
         delete attack_effect;
         attack_effect = nullptr;
     }
     if (hit_effect != nullptr)
     {
+        hit_effect->Stop(hit_handle);
         delete hit_effect;
         hit_effect = nullptr;
     }
     if (death_effect != nullptr)
     {
+        death_effect->Stop(death_handle);
         delete death_effect;
         death_effect = nullptr;
     }
-    EnemyManager::Instance().Remove(this);
+    EffectManager::Instance().Update(0.01f);
 }
 
 void Enemy::TransitionDeathState()
@@ -46,6 +49,8 @@ void Enemy::TransitionDeathState()
 
     death_handle = death_effect->Play(position, death_effect_size);
 
+    // イージング
+    EasingScaleOut();
 
     // ステート切り替え
     state = State::Death;
@@ -53,7 +58,7 @@ void Enemy::TransitionDeathState()
 
 void Enemy::UpdateDeathState(float elapsed_time)
 {
-    if(!IsPlayAnimation())
+    if (!IsPlayAnimation() && !easing_scale.is_easing)
     {
         EnemyManager::Instance().Remove(this);
     }

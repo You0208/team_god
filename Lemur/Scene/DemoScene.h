@@ -57,12 +57,16 @@ private:
     std::unique_ptr<FbxModelManager> test_model;
     std::unique_ptr<FbxModelManager> test_model_2;
 
+    std::shared_ptr<FbxModelManager>   fild1 = nullptr;
+    std::shared_ptr<FbxModelManager>   fild2 = nullptr;
+
     std::unique_ptr<GltfModelManager> gltf_test_model;
     std::unique_ptr<GltfModelManager> gltf_test_model_2;
 
     //DemoPlayer
     DemoPlayer* player = nullptr;
     DemoEnemy* enemy = nullptr;
+
 
 
 

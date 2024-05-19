@@ -1,34 +1,39 @@
 #pragma once
 #include "Lemur/Object/Character.h"
 #include "Lemur/Effekseer/Effect.h"
+#include "Lemur/Effekseer/EffekseerManager.h"
 #include "Lemur/Math/MathHelper.h"
 
 
 class Unit :public Character
 {
 public:
-    Unit() {}
+    Unit() {
+        EasingScaleIn(0.1f);
+    }
     ~Unit() {
-        set_effect->Stop(set_handle);
-        attack_effect->Stop(attack_handle);
-        death_effect->Stop(death_handle);
 
         // エフェクト終了
         if (attack_effect != nullptr)
         {
+            attack_effect->Stop(attack_handle);
             delete attack_effect;
             attack_effect = nullptr;
         }
         if (set_effect != nullptr)
         {
+            set_effect->Stop(set_handle);
             delete set_effect;
             set_effect = nullptr;
         }
         if (death_effect != nullptr)
         {
+            death_effect->Stop(death_handle);
             delete death_effect;
             death_effect = nullptr;
-        }    
+        }   
+
+        EffectManager::Instance().Update(0.01f);
     }
 
     // 更新処理

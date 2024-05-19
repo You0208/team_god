@@ -33,6 +33,7 @@ Chili::Chili()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+
 }
 
 void Chili::DrawDebugPrimitive()

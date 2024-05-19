@@ -14,6 +14,7 @@
 #include "./Game/Scene/SelectScene.h"
 #include "./Game/Scene/FormationScene.h"
 #include "./Game/Scene/ClearScene.h"
+#include "./Game/Scene/TutorialScene.h"
 
 
 // Effect
@@ -49,6 +50,7 @@ bool Framework::Initialize()
 
 	// シーン初期化
 	//TODO もね　シーン FormationScene
+	//Lemur::Scene::SceneManager::Instance().ChangeScene(new TitleScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
 	Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));

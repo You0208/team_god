@@ -148,11 +148,17 @@ protected:
         else return  model->GetIsDissolve();
     }
 
-    void EasingScale()
+    void EasingScaleIn(float time = 0.5f)
     {
         easing_scale.value = 0.0f;
         scaleFactor = scale.x = scale.y = scale.z = easing_scale.value;
-        easing_scale.CallValueEasing(1.0f, easing_scale.value, EasingFunction::EasingType::InSine, 0.5f);
+        easing_scale.CallValueEasing(1.0f, easing_scale.value, EasingFunction::EasingType::InSine, time);
+    }
+    void EasingScaleOut(float time = 0.5f)
+    {
+        easing_scale.value = 1.0f;
+        scaleFactor = scale.x = scale.y = scale.z = easing_scale.value;
+        easing_scale.CallValueEasing(0.0f, easing_scale.value, EasingFunction::EasingType::InSine, time);
     }
     void EasingScaleUpdate(float elapsed_time)
     {

@@ -25,6 +25,8 @@ public:
     int anime_x = 0;
     int anime_y = 0;
 
+    float timer = 0.0f;
+
     // 頂点フォーマット（自由に作れる）
     struct vertex
     {
@@ -63,6 +65,13 @@ public:
     void RenderCenter(ID3D11DeviceContext* immediate_context, ID3D11PixelShader* replaced_pixel_shader, float dx, float dy, float dw, float dh, float angle);
 
 
+    void RenderLeftDown(ID3D11DeviceContext*,
+        float dx, float dy,// 矩形の左上の座標（スクリーン座標系）
+        float dw, float dh, // 矩形のサイズ（スクリーン座標系）
+        float r, float g, float b, float a,
+        float angle/*degree*/,
+        float sx, float sy, float sw, float sh);
+
     void RenderRightDown(ID3D11DeviceContext*,
         float dx, float dy,// 矩形の左上の座標（スクリーン座標系）
         float dw, float dh, // 矩形のサイズ（スクリーン座標系）
@@ -77,6 +86,7 @@ public:
         float angle/*degree*/,
         float sx, float sy, float sw, float sh);
 
+    void RenderLeftDown(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);
     void RenderRightDown(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);
     void RenderRightUp(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);
 
@@ -89,5 +99,7 @@ public:
     void Animation(ID3D11DeviceContext* immediate_context, DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4 color,
         float angle, DirectX::XMFLOAT2 texsize, int last, bool loop = true, bool stop = false);
 
-    float timer;
+    void Animation(ID3D11DeviceContext* immediate_context, float elapsed_time,float speed,DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4 color,
+        float angle, DirectX::XMFLOAT2 texsize, int last, bool loop = true, bool stop = false);
+
 };

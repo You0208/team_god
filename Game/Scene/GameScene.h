@@ -42,6 +42,8 @@ private:// ゲーム
     float   time_limit;// タイムリミット
     bool    time_up = false;// タイムアップ
 
+    bool    preparation_next = false;
+    int     next_scene                         = 0;
     bool    is_pause                         = false;
     int     pause_num                            = 0;
     EasingFunction pause_text_continue_scale = {};
@@ -86,7 +88,7 @@ private:// シェーダー
     std::unique_ptr<FbxModelManager> test_model;
     std::unique_ptr<FbxModelManager> test_model_2;
     Effect* hitEffect;
-
+    Effekseer::Handle handle;
     // デバッグ
     Rect rect;
     DirectX::XMFLOAT2 c_p;

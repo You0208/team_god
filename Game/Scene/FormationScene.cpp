@@ -116,10 +116,12 @@ void FormationScene::Finalize()
     // エフェクト終了
     if (effect != nullptr)
     {
+        effect->Stop(effect_handle);
         delete effect;
         effect = nullptr;
     }
 
+    EffectManager::Instance().Update(0.01f);
 }
 
 void FormationScene::Update(HWND hwnd, float elapsedTime)
@@ -210,7 +212,7 @@ void FormationScene::UpdateOperate(float elapsedTime)
         }
 
         // Aボタンを押したら
-        if (gamePad.GetButtonDown() & gamePad.BTN_A && all_unit_num >= 4)
+        if (gamePad.GetButtonDown() & gamePad.BTN_B && all_unit_num >= 4)
         {
             Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A] = cont_num[gamePad.A];
             Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B] = cont_num[gamePad.B];
@@ -384,7 +386,7 @@ void FormationScene::SelectUnit(bool BTN, int button_num)
         cont_num[button_num] = choose_num;
 
         // エフェクトの再生
-        effect->Play(position[button_num], effect_scale);
+        effect_handle = effect->Play(position[button_num], effect_scale);
         gltf_unit[choose_num]->SetIsDissolve(true);
     }
 }
