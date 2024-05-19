@@ -191,7 +191,7 @@ namespace Lemur::Scene
             // 影用
             DirectX::XMFLOAT4X4 light_view_projection;// 光のビュー行列
             float shadow_depth_bias;
-            float pads2[3];
+            DirectX::XMFLOAT3 shadow_color = { 0.5f, 0.4f, 0.4f };
 
             // ジオメトリシェーダーにてビルボード計算するため
             DirectX::XMFLOAT4X4 view_matrix;

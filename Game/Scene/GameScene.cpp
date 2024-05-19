@@ -77,6 +77,7 @@ void GameScene::Initialize()
 		pause_main =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
 		pause_text_continue =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
 		pause_text_select =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_Sphere.fbx");
 	}
 	// ゲーム部分
 	{
@@ -90,8 +91,8 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		//stage_manager.SetStageLevel(0);
-		stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
+		stage_manager.SetStageLevel(7);
+		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
 		switch (stage_manager.GetStageLevel())
@@ -411,31 +412,50 @@ void GameScene::Render(float elapsedTime)
 	// TODO もね　えねみーの大きさ
 	const float enemy_scale = 0.016f;
 
-	SetUpShadowMap();
-
-	shadow_map->Clear(immediate_context);
-	shadow_map->Activate(immediate_context);
-
-	ID3D11PixelShader* null_pixel_shader{ NULL };
-	// プレイヤー描画
-	player->Render(scale, &null_pixel_shader);
-
-	//// ステージ描画
-	StageManager::Instance().Render(1.0f, &null_pixel_shader, &null_pixel_shader);
-	// ユニット描画
-	UnitManager::Instance().Render(scale, null_pixel_shader);
-	for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+	// 影
 	{
-		UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
+		SetUpShadowMap();
+
+		shadow_map->Clear(immediate_context);
+		shadow_map->Activate(immediate_context);
+
+		ID3D11PixelShader* null_pixel_shader{ NULL };
+
+		// ●影
+		for (int i=0;i<EnemyManager::Instance().GetEnemyCount();i++)
+		{
+			test_model->GetTransform()->SetPosition({ EnemyManager::Instance().GetEnemy(i)->GetPosition().x,-0.3f, EnemyManager::Instance().GetEnemy(i)->GetPosition().z });
+			test_model->Render(scale * 13.0f, &null_pixel_shader);
+		}
+
+		// プレイヤー描画
+		player->Render(scale, &null_pixel_shader);
+
+		//// ステージ描画
+		StageManager::Instance().Render(1.0f, &null_pixel_shader, &null_pixel_shader);
+		// ユニット描画
+		//UnitManager::Instance().Render(scale, null_pixel_shader);
+		// ●影
+		for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+		{
+			test_model->GetTransform()->SetPosition({ UnitManager::Instance().GetUnit(i)->GetPosition().x,-0.3f, UnitManager::Instance().GetUnit(i)->GetPosition().z });
+			test_model->Render(scale * 13.0f, &null_pixel_shader);
+		}
+		for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+		{
+			UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
+		}
+		// エネミー描画
+		//EnemyManager::Instance().Render(enemy_scale, null_pixel_shader);
+		// 種描画
+		SeedManager::Instance().Render(0.1f, null_pixel_shader);
+
+		shadow_map->Deactivate(immediate_context);
 	}
-	// エネミー描画
-	EnemyManager::Instance().Render(enemy_scale, null_pixel_shader);
-	// 種描画
-	SeedManager::Instance().Render(0.1f, null_pixel_shader);
 
-	shadow_map->Deactivate(immediate_context);
-
+	// 定数バッファーの更新
 	SetUpConstantBuffer();
+
 	// エッジ検出
 	{
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Clear(immediate_context);
@@ -588,12 +608,8 @@ void GameScene::DebugImgui()
 	ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
 	ImGui::End();
 
-	ImGui::Begin("debug");
-	ImGui::SliderFloat2("rect_center", &rect.center.x, -10.0f, 10.0f);
-	ImGui::SliderFloat2("rect_width", &rect.width.x, 0.0f, 10.0f);
-	ImGui::SliderFloat("angle", &angle, 0.0f, 360.0f);
-	ImGui::SliderFloat2("c_p", &c_p.x, -10.0f, 10.0f);
-	ImGui::SliderFloat("c_r", &c_r, -10.0f, 10.0f);
+	ImGui::Begin("shadow_color");
+	ImGui::SliderFloat3("shadow_color", &scene_constant.shadow_color.x, 0.0f, 1.0f);
 	ImGui::End();
 
 	BaseScene::DebugImgui();

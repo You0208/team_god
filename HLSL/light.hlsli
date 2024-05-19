@@ -94,7 +94,7 @@ Texture2D shadow_map, SamplerComparisonState comparison_sampler_state, out float
     // –³—‚â‚èŠ´‚Ï‚È‚¢
     if (shadow_factor.x <= 0.7f)
     {    
-        shadow_factor = float3(0.5f, 0.4f, 0.4f);
+        shadow_factor = shadow_color;
     }
 }
 

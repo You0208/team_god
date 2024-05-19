@@ -46,7 +46,7 @@ cbuffer SCENE_CONSTANT_BUFFER : register(b1)
     // SHADOW
     row_major float4x4 light_view_projection;
     float shadow_depth_bias;
-    float3 pads2;
+    float3 shadow_color;
     
     // particle
     row_major float4x4 view_matrix;
