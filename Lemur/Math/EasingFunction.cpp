@@ -130,7 +130,8 @@ void EasingFunction::ContinueEasing(float elapsed_time)
 				break;
 			}
 
-			if (value <= continue_target_value) {
+			if (value <= continue_target_value) 
+			{
 				value = continue_target_value;// スケールを調整
 				timer = 0.0f;// タイマーを初期化
 

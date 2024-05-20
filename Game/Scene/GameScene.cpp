@@ -433,20 +433,12 @@ void GameScene::Render(float elapsedTime)
 
 		//// ステージ描画
 		StageManager::Instance().Render(1.0f, &null_pixel_shader, &null_pixel_shader);
-		// ユニット描画
-		//UnitManager::Instance().Render(scale, null_pixel_shader);
 		// ●影
 		for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
 		{
 			test_model->GetTransform()->SetPosition({ UnitManager::Instance().GetUnit(i)->GetPosition().x,-0.3f, UnitManager::Instance().GetUnit(i)->GetPosition().z });
 			test_model->Render(scale * 13.0f, &null_pixel_shader);
 		}
-		for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
-		{
-			UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
-		}
-		// エネミー描画
-		//EnemyManager::Instance().Render(enemy_scale, null_pixel_shader);
 		// 種描画
 		SeedManager::Instance().Render(0.1f, null_pixel_shader);
 

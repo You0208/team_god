@@ -1,5 +1,6 @@
 #pragma once
 #include"Easing.h"
+
 struct EasingFunction
 {
 public:
@@ -26,6 +27,7 @@ public:
         easing_type = easing_type_;
     }
 
+    void ContinueEasing(float elapsed_time);
     void CallValueContinue(float continue_min_, float continue_max_, float start_scale_, int easing_type_up_, int easing_type_down_, float t = 0.5f)
     {
         timer = 0.0f;
@@ -33,6 +35,7 @@ public:
         continue_max = continue_max_;
         continue_min = continue_min_;
         continue_start_scale = start_scale_;
+        start_value = start_scale_;
 
         if (start_value >= continue_min)
         {
@@ -49,15 +52,16 @@ public:
         easing_type_up = easing_type_up_;
         easing_type_down = easing_type_down_;
     }
-    void ContinueEasing(float elapsed_time);
+
 
 private:
-
     float timer = 0.0f;
     float time_max = 0.2f;
     float target_value = 0.0f;
     float start_value = 0.0f;
 
+    int loop_count = 0;
+    bool is_loop = true;
     bool is_continue_easing = false;
     float continue_time_max = 0.2f;
     float continue_max = 0.0f;

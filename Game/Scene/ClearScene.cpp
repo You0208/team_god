@@ -286,7 +286,7 @@ void ClearScene::Render(float elapsedTime)
 
     // 2DŠî–{
     {
-        clear_back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        clear_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 1);
         if (is_continue)continue_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 3, false);
 
         result_cover->RenderRightUp(immediate_context, SCREEN_WIDTH, 0, 1200, SCREEN_HEIGHT, 0.0f);

@@ -193,13 +193,11 @@ void Shishito::UpdateIdleState(float elapsed_time)
     int unitCount = unitManager.GetUnitCount();
 
     // 攻撃ステートに切り替え
-    PlayAnimation(Animation::Attack, true);
+    PlayAnimation(Animation::Attack, false);
     TransitionAttackState();
 
     attack_timer += elapsed_time;// 攻撃タイマー
 
-    // 強制的にアタックに
-    TransitionAttackState();
 
     //TODO モーションが来たらまた変える
     // ユニットの総当たり
@@ -246,6 +244,12 @@ void Shishito::UpdateAttackState(float elapsed_time)
     int unitCount = unitManager.GetUnitCount();
     bool is_intersected = false;
 
+    if (!IsPlayAnimation())
+    {
+        PlayAnimation(Animation::Attack, false);
+        attack_handle = attack_effect->Play(position, attack_effect_size);
+    }
+
     //TODO モーションが来たらまた変える
     // ユニットの総当たり
     for (int j = 0; j < unitCount; ++j)
@@ -269,11 +273,7 @@ void Shishito::UpdateAttackState(float elapsed_time)
             // 強化状態をtrueに
             unit->SetBuff(true);
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
-            if (!IsPlayAnimation())
-            {
-                PlayAnimation(Animation::Attack, false);
-                attack_handle = attack_effect->Play(position, attack_effect_size);
-            }
+
         }
         else// 範囲内にいない
         {
