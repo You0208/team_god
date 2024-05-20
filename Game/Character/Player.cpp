@@ -30,7 +30,7 @@ Player::Player()
         // 種の射出速度
         seed_throw_speed = 21.0f;
         // 案山子が柵から離れる距離
-        sub_pos_z_puls = 1.0f;
+        sub_pos_z_puls = 1.5f;
         // 案山子の移動速度
         moveSpeed = 5.1f;
         // 案山子から種の最短距離
@@ -252,10 +252,10 @@ void Player::ChangeCategory()
     //Cauliflower（横）
     //ｊ（ドーナツ）
 
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Broccoli;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
-    Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]= UnitManager::UNIT_INDEX::Chili;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Broccoli;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
+    //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
 
 
     if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];

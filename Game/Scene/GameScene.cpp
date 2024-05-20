@@ -84,7 +84,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(3);
+		stage_manager.SetStageLevel(7);
 		//TODO もね 制限時間 ステージ選択
 		switch (StageManager::Instance().GetStageLevel())
 		{
@@ -116,7 +116,7 @@ void GameScene::Initialize()
 			time_limit = 200.0f;// ここで制限時間を調整
 			break;
 		}
-
+		//TODO もね　朝昼夜
 		// ワールドごとのライティング、色調補正
 		// 朝
 		if (StageManager::Instance().GetStageLevel() == 1 ||
@@ -152,6 +152,11 @@ void GameScene::Initialize()
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.2f,1.0f };
 			option_constant.parameters.y = 0.2f;
 		}
+
+		directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
+		option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
+		option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
+		option_constant.parameters.y = 0.5f;
 
 		// タイマーの初期化
 		timer = 0.0f;
@@ -249,6 +254,8 @@ void GameScene::Finalize()
 
 void GameScene::Update(HWND hwnd, float elapsedTime)
 {
+	option_constant.parameters.y = 0.5f;
+
 	using namespace DirectX;
 	Camera& camera = Camera::Instance();
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -345,7 +352,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// Imgui
-        //TODO ImGui消す
+        //TODO もね　ImGui消す 
 	//DebugImgui();
 }
 
