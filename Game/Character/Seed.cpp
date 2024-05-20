@@ -52,8 +52,8 @@ void Seed::Update(float elapsedTime)
         // 行列更新処理
         UpdateTransform();
 
-        // Imgui
-        DrawDebugGUI();
+        // Imgui消す
+        //DrawDebugGUI();
     }
 
     if (is_direction)// 種の演出

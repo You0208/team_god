@@ -30,7 +30,7 @@ Player::Player()
         // 種の射出速度
         seed_throw_speed = 21.0f;
         // 案山子が柵から離れる距離
-        sub_pos_z_puls = 1.0f;
+        sub_pos_z_puls = 1.5f;
         // 案山子の移動速度
         moveSpeed = 5.1f;
         // 案山子から種の最短距離
@@ -69,8 +69,9 @@ void Player::Update(float elapsedTime)
         // 行列更新処理
         UpdateTransform();
 
+        // TODO ImGui消す
         // Imgui
-        DrawDebugGUI();
+        //DrawDebugGUI();
     }
 
     // 入力処理
@@ -100,6 +101,7 @@ void Player::Update(float elapsedTime)
 // Imgui
 void Player::DrawDebugGUI()
 {
+
     ImGui::Begin(u8"案山子とか");
 
     ImGui::SliderFloat(u8"移動速度", &moveSpeed, 0.0f, 10.0f);

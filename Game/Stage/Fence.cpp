@@ -109,7 +109,8 @@ void Fence::Update(float elapsedTime)
     // s—ñXVˆ—
     UpdateTransform();
 
-    DrawDebugGui();
+    //TODO ImGuiÁ‚·
+    //DrawDebugGui();
 }
 
 void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)

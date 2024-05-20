@@ -190,7 +190,8 @@ void EnemySpawner::Finalize()
 
 void EnemySpawner::Update(float elapsed_time)
 {
-	DebugImGui();
+	//TODO ImGuiÁ‚·
+	//DebugImGui();
 
 	stage_pos = {
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().x,
@@ -1200,7 +1201,15 @@ void EnemySpawner::InitializeLevel7()
 
 void EnemySpawner::InitializeLevel8()
 {
-	//level_8.emplace_back(SetEnemy(1.0f, EnemyType::C, Shaft::Vertical, 14.0f));//11
+	/*level_8.emplace_back(SetEnemy(30.0f, EnemyType::Nuisance, { 0,6 }));
+	level_8.emplace_back(SetEnemy(30.0f, EnemyType::Nuisance, { 0,3 }));
+	level_8.emplace_back(SetEnemy(30.0f, EnemyType::Nuisance, { 0,0 }));
+	level_8.emplace_back(SetEnemy(30.0f, EnemyType::Nuisance, { 0,-3 }));
+	level_8.emplace_back(SetEnemy(30.0f, EnemyType::Nuisance, { 0,-6 }));*/
+	level_8.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Vertical, 12.0f));//11
+	level_8.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Vertical, 15.0f));//11
+	level_8.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Side, 12.0f));//11
+	level_8.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Side, 15.0f));//11
 	//level_8.emplace_back(SetEnemy(1.0f, EnemyType::Summon, { -2.5,6 }));//11
 }
 

@@ -126,7 +126,6 @@ void GameScene::Initialize()
 			break;
 		}
 
-
 		// タイマーの初期化
 		timer = 0.0f;
 		timer_angle = 360 * (timer / time_limit);
@@ -251,6 +250,8 @@ void GameScene::Finalize()
 
 void GameScene::Update(HWND hwnd, float elapsedTime)
 {
+	option_constant.parameters.y = 0.5f;
+
 	using namespace DirectX;
 	Camera& camera = Camera::Instance();
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -384,7 +385,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// Imgui
-	DebugImgui();
+        //TODO もね　ImGui消す 
+	//DebugImgui();
 }
 
 void GameScene::Render(float elapsedTime)

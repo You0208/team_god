@@ -92,7 +92,8 @@ StageMain::~StageMain()
 
 void StageMain::Update(float elapsedTime)
 {
-    DrawDebugGui();
+    //TODO ImGui消す
+    //DrawDebugGui();
     scale.x = scale.y = scale.z = scale_facter;
 
     // 可変のステージ幅をスケーリング

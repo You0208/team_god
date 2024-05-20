@@ -53,7 +53,12 @@ void Camera::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
-
+    //if (gamePad.GetButtonDown() & GamePad::BTN_LEFT_SHOULDER||
+    //    gamePad.GetButtonDown() & GamePad::BTN_RIGHT_SHOULDER||
+    //    mouse.GetButtonDown()&Mouse::BTN_MIDDLE)
+    //{
+    //    InputLockOn();
+    //
     ScreenVibrationUpdate();
 
     if (is_lockOn) LockOnUpdate(elapsedTime);
