@@ -52,7 +52,7 @@ void UnitManager::Initialize()
             0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::OrangePumpkin].t_height = 1.7f;             // 三角形の高さ
-        unit_status[UNIT_INDEX::OrangePumpkin].t_base = 1.59f;             // 三角形の底辺長
+        unit_status[UNIT_INDEX::OrangePumpkin].t_base = 1.67f;             // 三角形の底辺長
 
         //GreenPumpkin
         InitializeBasic(unit_status[UNIT_INDEX::GreenPumpkin],
@@ -64,7 +64,7 @@ void UnitManager::Initialize()
             0.3f // 設置エフェクトサイズ
         );
         unit_status[UNIT_INDEX::GreenPumpkin].t_height = 1.7f;                // 三角形の高さ
-        unit_status[UNIT_INDEX::GreenPumpkin].t_base   = 1.59f;                // 三角形の底辺長
+        unit_status[UNIT_INDEX::GreenPumpkin].t_base   = 1.67f;                // 三角形の底辺長
 
         //Broccoli
         InitializeBasic(unit_status[UNIT_INDEX::Broccoli],

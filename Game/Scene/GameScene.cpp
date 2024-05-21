@@ -91,7 +91,7 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(7);
+		stage_manager.SetStageLevel(5);
 		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
@@ -110,7 +110,7 @@ void GameScene::Initialize()
 			time_limit = 85.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
-			time_limit = 100.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 5:// レベル6
 			time_limit = 100.0f;// ここで制限時間を調整
@@ -152,7 +152,7 @@ void GameScene::Initialize()
 		pause_text_continue_scale.value = 1.0f;
 		pause_text_select_scale.value = 1.0f;
 
-
+		//TODO もねライティング
 		// ワールドごとのライティング、色調補正
 		// 朝
 		if (stage_manager.GetStageLevel() == 0 ||
@@ -188,6 +188,8 @@ void GameScene::Initialize()
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.2f,1.0f };
 			option_constant.parameters.y = 0.2f;
 		}
+
+		
 
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
