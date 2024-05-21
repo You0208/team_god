@@ -53,11 +53,11 @@ Fence::Fence()
         health = 50;
         break;
     case 4:// ƒŒƒxƒ‹‚T
-        health = 45;
+        health = 50;
         break;
 
     case 5:// ƒŒƒxƒ‹6
-        health = 45;
+        health = 50;
         break;
     case 6:// ƒŒƒxƒ‹7
         health = 200;
