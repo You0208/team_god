@@ -91,7 +91,18 @@ void GameScene::Initialize()
 		camera.SetAngle(camera_angle);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(5);
+
+		//0 1-1
+		//1 1-2
+		//2 1-3
+		//3 2-1
+		//4 2-2
+		//5 2-3
+		//6 3-1
+		//7 3-2
+		//8 3-3
+
+		stage_manager.SetStageLevel(3);
 		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
@@ -107,22 +118,22 @@ void GameScene::Initialize()
 			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 3:// レベル４
-			time_limit = 85.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 4:// レベル５
 			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 5:// レベル6
-			time_limit = 100.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 6:// レベル7
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 7:// レベル8
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		case 8:// レベル9
-			time_limit = 200.0f;// ここで制限時間を調整
+			time_limit = 90.0f;// ここで制限時間を調整
 			break;
 		}
 
