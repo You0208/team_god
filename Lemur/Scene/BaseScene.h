@@ -18,6 +18,8 @@
 #include "../Graphics/ParticleSystem.h"
 #include "../Graphics/GaussianBlur.h"
 
+#include "../Audio/AudioManager.h"
+
 namespace Lemur::Scene
 {
     // ベースシーン

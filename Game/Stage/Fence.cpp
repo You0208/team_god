@@ -10,9 +10,6 @@ Fence::Fence()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
-    // モデルの初期化
-    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Stage\\Fence.fbx");
-
     rotation.y = DirectX::XMConvertToRadians(270.0f);
     scale.x = scale.y = scale.z = 50.0f;
     rect_width = 1.0f;
@@ -72,7 +69,7 @@ Fence::Fence()
         health = 200;
         break;
     }
-
+    max_health = health;
     
     instance = this;
 }
@@ -84,6 +81,7 @@ Fence::~Fence()
 void Fence::Update(float elapsedTime)
 {
     Rect stage_size = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision();
+    GamePad& gamePad = Input::Instance().GetGamePad();
 
     left_rect = {
         { stage_size.left_up.x - rect_width,stage_size.left_up.y},
@@ -106,8 +104,14 @@ void Fence::Update(float elapsedTime)
     };
 
 
-    // 行列更新処理
-    UpdateTransform();
+    health_prsent = health / max_health;
+
+    if (health_prsent <= 0.5f)fence_state = FENCE_STATE::FANCE_1;
+
+    //if (gamePad.GetButtonDown() & gamePad.BTN_B)
+    //{
+    //    fence_state++;
+    //}
 
     //TODO ImGui消す
     //DrawDebugGui();
@@ -115,7 +119,7 @@ void Fence::Update(float elapsedTime)
 
 void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
 {
-    DrawDebugPrimitive();
+    //DrawDebugPrimitive();
     // かかしモデル描画
     //model->Render(scale, replaced_pixel_shader);
 }

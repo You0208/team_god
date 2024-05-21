@@ -160,7 +160,7 @@ namespace Lemur::Audio
 	void Audio::Play(const bool isLoop)
 	{
 		HRESULT hr;
-
+		Stop();
 		XAUDIO2_VOICE_STATE voiceState = {};
 		source_voice->GetState(&voiceState);
 

@@ -1,6 +1,7 @@
 #include "Enemy_ABCD.h"
 #include "EnemyManager.h"
 #include "UnitManager.h"
+#include "Lemur/Audio/AudioManager.h"
 
 //------EnemyA-----------------------------------------------------------------
 
@@ -53,6 +54,7 @@ void Enemy_A::UpdateAttackState(float elapsed_time)
          // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
             attack_handle = attack_effect->Play(position, attack_effect_size);
             PlayAnimation(2, false);
             // タイマーをに

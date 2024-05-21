@@ -30,7 +30,7 @@ void EnemyManager::Update(float elapsedTime)
     {
         Enemy* enemy = enemies.at(i);
         //TODO ImGuiÁ‚·
-        //enemy->DrawDebugGUI(i);
+        enemy->DrawDebugGUI(i);
     }
 
     // ”jŠüˆ—
@@ -104,6 +104,15 @@ void EnemyManager::DrawDebugPrimitive()
     {
         enemy->DrawDebugPrimitive();
     }
+}
+
+bool EnemyManager::NonEnemy()
+{
+    for (Enemy* enemy : enemies)
+    {
+        if (enemy->GetEnemyType() != EnemyType::Nuisance)return false;
+    }
+    return true;
 }
 
 void EnemyManager::Remove(Enemy* enemy)

@@ -107,6 +107,7 @@ public:
     }
 
     float GetSetEffectSize() { return set_effect_size; }
+    int GetEnemyType() { return enemy_type; }
 
     void SetEnemyType(int type) { enemy_type = type; }
     void SetMoveTimerMax(float move_timer_max_) { move_timer_max = move_timer_max_; }

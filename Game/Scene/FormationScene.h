@@ -35,7 +35,7 @@ public:
     // ライトの初期化
     void InitializeLight()override;
 
-    void SelectUnit(bool BYN, int button_num);
+    void SelectUnit( int button_num);
 private:
     // ボタンの番号
     enum UNIT
@@ -125,5 +125,5 @@ private:
     std::unique_ptr<FbxModelManager> test_model_2;
 
     Effect* effect = nullptr;          // 攻撃エフェクト
-    Effekseer::Handle effect_handle = 0;          // 攻撃エフェクト
+    Effekseer::Handle effect_handle[4] = {};          // 攻撃エフェクト
 };

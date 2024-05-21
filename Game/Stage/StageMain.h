@@ -19,7 +19,11 @@ private:
     std::shared_ptr<FbxModelManager>   fild1 = nullptr;
     std::shared_ptr<FbxModelManager>   fild2 = nullptr;
     std::shared_ptr<FbxModelManager>   fence = nullptr;
+    std::shared_ptr<FbxModelManager>   fence_type1 = nullptr;
+    std::shared_ptr<FbxModelManager>   fence_type2 = nullptr;
     std::shared_ptr<FbxModelManager>   fence2 = nullptr;
+    std::shared_ptr<FbxModelManager>   fence2_type1 = nullptr;
+    std::shared_ptr<FbxModelManager>   fence2_type2 = nullptr;
     std::shared_ptr<FbxModelManager>   fence_end = nullptr;
 
 

@@ -18,6 +18,7 @@
 #include "../Character/Unit_DEF.h"
 #include "../Character/SeedManager.h"
 #include "../Character/EnemySpawner.h"
+#include "../Character/UniqueEnemy.h"
 #include "../Scene/SelectScene.h"
 
 
@@ -75,6 +76,8 @@ void TutorialScene::Initialize()
 		tutorial_glf[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\4.png");
 		tutorial_glf[4] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\5.png");
 		tutorial_glf[5] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\6.png");
+		tutorial_glf[6] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\7.png");
+		tutorial_glf[7] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\8.png");
 	}
 	// ゲーム部分
 	{
@@ -119,6 +122,10 @@ void TutorialScene::Initialize()
 		is_bloom = true;
 		pause_text_continue_scale.value = 1.0f;
 		pause_text_select_scale.value = 1.0f;
+
+		// チュートリアル
+		tutorial_state = 0;
+		tutorial_gif_num = 0;
 
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
@@ -192,11 +199,58 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 
 		if (gamePad.GetButtonUp() & gamePad.BTN_RIGHT)
 		{
-			if (tutorial_num < 5)tutorial_num++;
+			if (tutorial_gif_num < 7)tutorial_gif_num++;
 		}
 		if (gamePad.GetButtonUp() & gamePad.BTN_LEFT)
 		{
-			if (tutorial_num > 0)tutorial_num--;
+			if (tutorial_gif_num > 0)tutorial_gif_num--;
+		}
+
+
+		if (gamePad.GetButtonUp() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonUp() & gamePad.BTN_RIGHT_SHOULDER)
+		{
+			UnitManager::Instance().Clear();
+			SeedManager::Instance().Clear();
+		}
+
+		if (EnemyManager::Instance().GetEnemyCount() <= 0&& tutorial_state!= MISSION::attack)
+		{
+			Enemy* new_enemy = new NuisanceEnemy(false);
+			new_enemy->SetHealth(1);
+			EnemyManager::Instance().Register(new_enemy);
+		}
+
+		switch (tutorial_state)
+		{
+		case MISSION::throw_seed:// 種を飛ばす
+			if (SeedManager::Instance().GetSeedCount() > 0)
+			{
+				tutorial_state = MISSION::move_player;
+				player_current_position = player->GetPosition();
+			}
+			break;
+		case MISSION::move_player:// かかしを動かす
+			if (!Equal(player_current_position.x, player->GetPosition().x) || !Equal(player_current_position.z, player->GetPosition().z))
+			{
+				unit_category = player->GetCategory();
+				tutorial_state = MISSION::change_unit;
+			}
+			break;
+		case MISSION::change_unit:// ユニットを変える
+			if (player->GetCategory() != unit_category)
+			{
+				tutorial_state = MISSION::attack;
+			}
+			break;
+		case MISSION::attack:// 攻撃する
+			if (EnemyManager::Instance().GetEnemyCount() <= 0)
+			{
+				tutorial_state = MISSION::clear;
+			}
+			break;
+		case MISSION::clear:
+
+			break;
 		}
 	}
 
@@ -365,8 +419,7 @@ void TutorialScene::Render(float elapsedTime)
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT);
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT * 3, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
-		tutorial_glf[tutorial_num]->Animation(immediate_context, elapsedTime, 0.05f, { 40,10 }, { 576 ,432 }, { 1,1,1,1 }, 0.0f, { 576 ,432 }, 2);
-	
+		tutorial_glf[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.05f, { 40,10 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
 	}
 	else
 	{
@@ -385,6 +438,26 @@ void TutorialScene::Render(float elapsedTime)
 
 void TutorialScene::DebugImgui()
 {
+	ImGui::Begin("tutorial_state");
+	switch (tutorial_state)
+	{
+	case MISSION::throw_seed:
+		ImGui::Text("throw_seed");
+		break;
+	case MISSION::change_unit:
+		ImGui::Text("change_unit");
+		break;
+	case MISSION::move_player:
+		ImGui::Text("move_player");
+		break;
+	case MISSION::clear:
+		ImGui::Text("clear");
+		break;
+	case MISSION::attack:
+		ImGui::Text("attack");
+		break;
+	}
+	ImGui::End();
 	BaseScene::DebugImgui();
 	Camera::Instance().DrawDebug();
 }

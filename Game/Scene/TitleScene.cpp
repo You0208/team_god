@@ -37,12 +37,17 @@ void TitleScene::Initialize()
     // ÉQÅ[ÉÄ
     {
         left_scale.CallValueEasing(1.2f, left_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
-        CallTransition(false);
+        Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::TITLE, true);
+        //CallTransition(false);
     }
 }
 
 void TitleScene::Finalize()
 {
+    // BGMèIóπ
+    // BGM
+    Lemur::Audio::AudioManager::Instance().StopAllBGM();
+    Lemur::Audio::AudioManager::Instance().StopAllSE();
 }
 
 void TitleScene::Update(HWND hwnd, float elapsedTime)
@@ -109,6 +114,7 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
 
     if (gamePad.GetButton() & gamePad.BTN_B)
     {
+        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
         if (!is_in)CallTransition(true);
     }
 

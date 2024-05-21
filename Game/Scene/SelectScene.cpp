@@ -69,12 +69,18 @@ void SelectScene::Initialize()
         transition_line3_angle_2.value =90.0f;
 
         switch_direction = false;
+
+        Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::SELECT, true);
+
         CallTransition(false);
     }
 }
 
 void SelectScene::Finalize()
 {
+    // BGM終了
+    Lemur::Audio::AudioManager::Instance().StopAllBGM();
+    Lemur::Audio::AudioManager::Instance().StopAllSE();
 }
 
 void SelectScene::Update(HWND hwnd, float elapsed_time)
@@ -158,11 +164,19 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     // ステージ選択
     if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
     {
-        if (stage_num < 2)stage_num++;
+        if (stage_num < 2)
+        {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+            stage_num++;
+        }
     }
     else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)
     {
-        if (stage_num > 0)stage_num--;
+        if (stage_num > 0)
+        {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+            stage_num--;
+        }
     }
 
     // ワールド選択
@@ -170,6 +184,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     {
         if (world_num < 2)
         {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
             switch_direction = true;
             add = true;
             transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
@@ -183,6 +198,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     {
         if (world_num > 0)
         {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
             switch_direction = true;
             minus = true;
             transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
@@ -196,6 +212,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     // ステージ決定
     if (gamePad.GetButtonDown() & gamePad.BTN_B)
     {
+        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
         next_scene = 0;
         CallTransition(true, stage_mask_pos[stage_num]);
     }

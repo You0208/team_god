@@ -73,7 +73,13 @@ void GameScene::Initialize()
 		timer_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
 		button_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
 		button_ui_chara =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
-		
+
+		start_text_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\1.png");
+		start_text_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\2.png");
+		start_text_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\3.png");
+		start_text_start = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\START.png");
+		start_text_clear = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\CLEAR.png");
+
 		pause_main =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
 		pause_text_continue =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
 		pause_text_select =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
@@ -84,11 +90,14 @@ void GameScene::Initialize()
 		// カメラ
 		Camera& camera = Camera::Instance();
 		camera_range = 33.0f;
-		camera_angle = { DirectX::XMConvertToRadians(40),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
+		camera_angle = { DirectX::XMConvertToRadians(rotation_camera_x.value),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
 		camera.SetEyeYOffset(8.0f);
 		camera.SetAngle(camera_angle);
+
+		// イージングを呼ぶ
+		rotation_camera_x.CallValueEasing(40.0f, rotation_camera_x.value, EasingFunction::EasingType::OutSine, 1.0f);
 
 		StageManager& stage_manager = StageManager::Instance();
 
@@ -162,6 +171,7 @@ void GameScene::Initialize()
 		is_bloom = true;
 		pause_text_continue_scale.value = 1.0f;
 		pause_text_select_scale.value = 1.0f;
+		clear_direction_state = 0;
 
 		//TODO もねライティング
 		// ワールドごとのライティング、色調補正
@@ -175,6 +185,10 @@ void GameScene::Initialize()
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.15f,1.0f };
 			option_constant.parameters.y = 0.5f;
+			// BGM
+			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_MORNING, true);
+			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_MORNING_SE, true);
+
 		}
 		// 昼
 		if (stage_manager.GetStageLevel() == 3 ||
@@ -185,6 +199,11 @@ void GameScene::Initialize()
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 			option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
 			option_constant.parameters.y = 0.5f;
+		 
+		// BGM
+		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
+		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON_SE, true);
+		 
 		}
 		// 夜
 		if (stage_manager.GetStageLevel() == 6 ||
@@ -196,18 +215,23 @@ void GameScene::Initialize()
 			point_light[1].range = 0;
 			directional_light_direction = { 0.111f,-1.00f,-0.676f,0.0f };
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.0f,1.0f };
-			option_constant.rgb_adjustment = { 1.0f,1.0f,1.2f,1.0f };
+			option_constant.rgb_adjustment = { 1.0f,1.0f,1.3f,1.0f };
 			option_constant.parameters.y = 0.2f;
+			// BGM
+			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT, true);
+			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT_SE, true);
+
 		}
-
-		
-
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
+
+		EnemyManager::Instance().SetTimeUp(false);
 	}
 
 	// デバッグ
 	{
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), graphics.GetTexture2D());
+
 		// パーティクルシステム準備
 		{
 			D3D11_TEXTURE2D_DESC texture2d_desc;
@@ -219,12 +243,26 @@ void GameScene::Initialize()
 			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
 		}
-		hitEffect = new Effect(".\\resources\\Effect\\UNIT4_BUFF\\UNIT4_BUFF.efk");
+		hitEffect = new Effect(".\\resources\\Effect\\UNIT5_ATK\\UNIT5_ATK_ALL.efk");
+
+		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
+		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
+		//option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
+		//option_constant.parameters.y = 0.5f;
+
+		//// BGM
+		//Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
+
 	}
 }
 
 void GameScene::Finalize()
 {
+	// BGM終了
+	// BGM
+	Lemur::Audio::AudioManager::Instance().StopAllBGM();
+	Lemur::Audio::AudioManager::Instance().StopAllSE();
+
 	// デバッグ
 	// エフェクト終了
 	if (hitEffect != nullptr)
@@ -273,51 +311,72 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		camera.Update(elapsedTime);
 	}
 
+	//if (::GetAsyncKeyState('C') & 0x8000)
+	//{
+	//	handle = hitEffect->Play({ 0,0,0 }, 0.3f);
+	//}
 	// ライトの更新
 	LightUpdate();
 
 	// マスクの更新
 	TransitionMask(elapsedTime);
 
-	if (preparation_next&&!start_transition && is_in)
+	// 遷移処理
 	{
-		// 次のシーンへ
-		if (next_scene == 0)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new ClearScene));
-		if (next_scene == 1)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new OverScene));
+		if (preparation_next && !start_transition && is_in)
+		{
+			// 次のシーンへ
+			if (next_scene == 0)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new OverScene));
+			if (next_scene == 1)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new ClearScene));
+		}
+		// 遷移演出の最中はこれより下に行かない
+		if (start_transition)return;
+		if (preparation_next)return;
 	}
-	// 遷移演出の最中はこれより下に行かない
-	if (start_transition)return;
-	if (preparation_next)return;
-
-
-	// ゲームクリア、オーバーの判定
-	// タイムアップかつ敵が全て死んだら
-	if (EnemyManager::Instance().GetEnemyCount() <= 0 && time_up)
+	// スタート演出
+	if(start_direction)
 	{
-		next_scene = 0;
-		preparation_next = true;
-		CallTransition(true);
-	}
-	else if (fence->GetHealth() <= 0)
-	{
-		next_scene = 1;
-		preparation_next = true;
-		CallTransition(true);
-	}
-
-
-	if (gamePad.GetButtonUp() & gamePad.BTN_BACK)
-	{
-		is_pause = !is_pause;
-		pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
-	}
-	if (is_pause)
-	{
-		PauseUpdate(elapsedTime);
+		//start_direction = false;
+		StartDirectionUpdate(elapsedTime);
 		return;
 	}
-	else is_bloom = true;
-
+	else if (over_direction)
+	{
+		OverDirectionUpdate(elapsedTime);
+		return;
+	}
+	else if (clear_direction)
+	{
+		ClearDirectionUpdate(elapsedTime);
+		return;
+	}
+	// ゲームクリア、オーバーの判定
+	{
+		// タイムアップかつ敵が全て死んだら
+		if (EnemyManager::Instance().NonEnemy() && time_up)
+		{
+			clear_direction = true;
+		}
+		else if (fence->GetHealth() <= 0)
+		{
+			fence->fence_state = fence->FANCE_2;
+			over_direction = true;
+		}
+	}
+	// ポーズ画面
+	{
+		if (gamePad.GetButtonUp() & gamePad.BTN_START)
+		{
+			is_pause = !is_pause;
+			pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+		}
+		if (is_pause)
+		{
+			PauseUpdate(elapsedTime);
+			return;
+		}
+		else is_bloom = true;
+	}
 	// ゲーム
 	{
 		if (timer >= time_limit)
@@ -352,6 +411,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 		// スポーン
 		EnemySpawner::Instance().Update(elapsedTime);
+		EnemySpawner::Instance().DebugImGui();
 	}
 
 	// デバッグ
@@ -399,7 +459,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// Imgui
         //TODO もね　ImGui消す 
-	//DebugImgui();
+	DebugImgui();
 }
 
 void GameScene::Render(float elapsedTime)
@@ -490,6 +550,8 @@ void GameScene::Render(float elapsedTime)
 		immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
 		//　深度値
 		immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
+		// PROJECTION_MAPPING
+		immediate_context->PSSetShaderResources(15, 1, projection_mapping_texture.GetAddressOf());
 	}
 	// ポストエフェクトの開始
 	if (enable_post_effect)
@@ -575,12 +637,12 @@ void GameScene::Render(float elapsedTime)
 		ExePostEffct();
 	}
 
-	if (is_bloom)
-	{
-		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+	immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
+	if (is_bloom && !is_pause)
+	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
 		// 2D描画
 		button_ui_base->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
@@ -591,16 +653,40 @@ void GameScene::Render(float elapsedTime)
 
 		timer_ui_base->Render(immediate_context, sprite_ui.Get(), 50, 50, 214, 273, 0.0f);
 		timer_hands->RenderCenter(immediate_context, sprite_ui.Get(), 50 + 107, 50 + 167, 4, 180, timer_angle);
-	}
-	else
-	{
-		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
+		if (start_direction)
+		{
+			if (start_direction_state == START_DIRECTION::Three || start_direction_state == START_DIRECTION::Three_End)
+			{
+				start_text_3->RenderCenter(immediate_context, 960.0f, 540.0f, SCREEN_WIDTH * scale_start_direction.value, SCREEN_HEIGHT * scale_start_direction.value);
+			}
+			else if (start_direction_state == START_DIRECTION::Two || start_direction_state == START_DIRECTION::Two_End)
+			{
+				start_text_2->RenderCenter(immediate_context, 960.0f, 540.0f, SCREEN_WIDTH * scale_start_direction.value, SCREEN_HEIGHT * scale_start_direction.value);
+			}
+			else if (start_direction_state == START_DIRECTION::One || start_direction_state == START_DIRECTION::One_End)
+			{
+				start_text_1->RenderCenter(immediate_context, 960.0f, 540.0f, SCREEN_WIDTH * scale_start_direction.value, SCREEN_HEIGHT * scale_start_direction.value);
+			}
+			else if (start_direction_state == START_DIRECTION::START || start_direction_state == START_DIRECTION::START_End)
+			{
+				start_text_start->RenderCenter(immediate_context, 960.0f, 540.0f, SCREEN_WIDTH * scale_start_direction.value, SCREEN_HEIGHT * scale_start_direction.value);
+			}
+		}
+
+	}
+	else if (!is_bloom && !is_pause)
+	{
+		if (clear_direction)
+		{
+			start_text_clear->RenderCenter(immediate_context, 960.0f, 540.0f, SCREEN_WIDTH * clear_text_scale.value, SCREEN_HEIGHT * clear_text_scale.value);
+		}
+	}
+	else if(!is_bloom && is_pause)
+	{
 		pause_main->Render(immediate_context, SCREEN_WIDTH - 820, 0, 820, SCREEN_HEIGHT);
-		pause_text_continue->RenderCenter(immediate_context, 1520, 550, 500* pause_text_continue_scale.value, 120* pause_text_continue_scale.value);
-		pause_text_select->RenderCenter(immediate_context,  1520, 700, 500* pause_text_select_scale.value, 120* pause_text_select_scale.value);
+		pause_text_continue->RenderCenter(immediate_context, 1520, 550, 500 * pause_text_continue_scale.value, 120 * pause_text_continue_scale.value);
+		pause_text_select->RenderCenter(immediate_context, 1520, 700, 500 * pause_text_select_scale.value, 120 * pause_text_select_scale.value);
 
 	}
 	// マスクの描画
@@ -678,5 +764,141 @@ void GameScene::PauseUpdate(float elapsedTime)
 			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
 		}
 		break;
+	}
+}
+
+void GameScene::StartDirectionUpdate(float elapsedTime)
+{
+	Camera& camera = Camera::Instance();
+
+	scale_start_direction.EasingValue(elapsedTime);
+
+	switch (start_direction_state)
+	{
+	case START_DIRECTION::Camera_direction:// カメラ移動
+		rotation_camera_x.EasingValue(elapsedTime);
+		camera_angle = { DirectX::XMConvertToRadians(rotation_camera_x.value),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
+		camera.SetAngle(camera_angle);
+
+		if (!rotation_camera_x.is_easing)
+		{
+			scale_start_direction.CallValueEasing(1.0f, scale_start_direction.value, EasingFunction::EasingType::OutSine, start_in_time);
+			start_direction_state = START_DIRECTION::Three;
+		}
+		break;
+	case START_DIRECTION::Three:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			scale_start_direction.CallValueEasing(0.0f, scale_start_direction.value, EasingFunction::EasingType::InSine, start_out_time);
+			start_direction_state = START_DIRECTION::Three_End;
+		}
+
+		break;
+	case START_DIRECTION::Three_End:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			scale_start_direction.CallValueEasing(1.0f, scale_start_direction.value, EasingFunction::EasingType::OutSine, start_in_time);
+			start_direction_state = START_DIRECTION::Two;
+		}
+
+		break;
+	case START_DIRECTION::Two:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			scale_start_direction.CallValueEasing(0.0f, scale_start_direction.value, EasingFunction::EasingType::InSine, start_out_time);
+			start_direction_state = START_DIRECTION::Two_End;
+		}
+		break;
+	case START_DIRECTION::Two_End:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			scale_start_direction.CallValueEasing(1.0f, scale_start_direction.value, EasingFunction::EasingType::OutSine, start_in_time);
+			start_direction_state = START_DIRECTION::One;
+		}
+
+		break;
+	case START_DIRECTION::One:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			scale_start_direction.CallValueEasing(0.0f, scale_start_direction.value, EasingFunction::EasingType::InSine, start_out_time);
+			start_direction_state = START_DIRECTION::One_End;
+		}
+		break;
+	case START_DIRECTION::One_End:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			scale_start_direction.CallValueEasing(1.0f, scale_start_direction.value, EasingFunction::EasingType::InSine, 1.0f);
+			start_direction_state = START_DIRECTION::START;
+		}
+		break;
+	case START_DIRECTION::START:// 文字３
+		if (!scale_start_direction.is_easing)
+		{
+			start_direction_state = START_DIRECTION::START_End;
+		}
+		break;
+	case  START_DIRECTION::START_End:
+		start_timer += elapsedTime;
+		if (start_timer >= 0.5f)start_direction = false;
+		break;
+	}
+
+}
+
+void GameScene::OverDirectionUpdate(float elapsedTime)
+{
+	next_scene = 0;
+	preparation_next = true;
+	CallTransition(true);
+}
+
+void GameScene::ClearDirectionUpdate(float elapsedTime)
+{
+	StageManager& stage_manager = StageManager::Instance();
+
+	clear_text_scale.EasingValue(elapsedTime);
+	switch (clear_direction_state)
+	{
+	case 0:
+		is_bloom = false;
+		if (stage_manager.GetStageLevel() <= 2)
+		{
+		}
+		else if (stage_manager.GetStageLevel() <= 5)
+		{
+		}
+		else if (stage_manager.GetStageLevel() <= 8)
+		{
+		}
+		clear_direction_state++;
+		break;
+	case 1:
+		clear_timer += elapsedTime;
+
+		if (clear_timer >= 1.0f)
+		{
+			clear_text_scale.CallValueEasing(1.0f, clear_text_scale.value, EasingFunction::EasingType::OutBounce, 1.0f);
+			clear_timer = 0;
+			clear_direction_state++;
+		}
+		break;
+	case 2:
+		clear_timer += elapsedTime;
+
+		if (clear_timer >= 1.0f)
+		{
+			clear_direction_state++;
+		}
+		break;
+	case 3:
+		if (!clear_text_scale.is_easing)
+		{
+			is_bloom = false;
+			next_scene = 1;
+			preparation_next = true;
+			CallTransition(true);
+		}
+		break;
+
 	}
 }

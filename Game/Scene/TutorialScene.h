@@ -46,9 +46,22 @@ private:// ƒQ[ƒ€
     std::shared_ptr<Sprite> pause_text_continue;
     std::shared_ptr<Sprite> pause_text_select;
 
-    std::shared_ptr<Sprite> tutorial_glf[6];
+    std::shared_ptr<Sprite> tutorial_glf[8];
+    int tutorial_glf_num_x[8] = {2,0,5,0,9,9,9,4};// ˆê”Ô‰º‚Ìƒ‰ƒCƒ“‚Ì‚Æ‚±
 
-    int tutorial_num = 0;
+    int tutorial_gif_num = 0;
+
+    int tutorial_state = 0;
+    int unit_category = 0;
+    DirectX::XMFLOAT3 player_current_position = {};
+    enum MISSION
+    {
+        throw_seed,
+        move_player,
+        change_unit,
+        attack,
+        clear
+    };
 
     Fence* fence = nullptr;
 

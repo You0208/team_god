@@ -31,8 +31,7 @@ void ClearScene::Initialize()
 
     // テクスチャ
     {
-        continue_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\GameOver\\continue.png");
-
+        clear_start_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\start_back.png");
         clear_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\result_back.png");
         result_cover = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Result_scene.png");
         star1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Star_1.png");
@@ -56,12 +55,18 @@ void ClearScene::Initialize()
         interval_1 = 0.0f;
         interval_2 = 0.3f;
         interval_3 = 0.6f;
+
+        Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::CLEAR, true);
+
         CallTransition(false);
     }
 }
 
 void ClearScene::Finalize()
 {
+    // BGM終了
+    Lemur::Audio::AudioManager::Instance().StopAllBGM();
+    Lemur::Audio::AudioManager::Instance().StopAllSE();
 }
 
 void ClearScene::Update(HWND hwnd, float elapsed_time)
@@ -178,7 +183,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
             }
         }
         // アイリスインを呼ぶ
-        if (continue_back->is_anime_end && is_continue && !is_in)  CallTransition(true);
+        if (clear_start_back->is_anime_end && is_continue && !is_in)  CallTransition(true);
         if (!start_transition && is_in)
         {
             // ステージのレベルを加算
@@ -220,7 +225,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
             }
         }
         // アイリスインを呼ぶ
-        if (continue_back->is_anime_end && is_continue && !is_in)  CallTransition(true);
+        if (clear_start_back->is_anime_end && is_continue && !is_in)  CallTransition(true);
         if (!start_transition && is_in)
         {
             // 次のシーンへ
@@ -251,7 +256,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
             }
         }
         // アイリスインを呼ぶ
-        if (continue_back->is_anime_end && is_continue && !is_in)  CallTransition(true);
+        if (clear_start_back->is_anime_end && is_continue && !is_in)  CallTransition(true);
         if (!start_transition && is_in)
         {
             // 次のシーンへ
@@ -286,8 +291,8 @@ void ClearScene::Render(float elapsedTime)
 
     // 2D基本
     {
-        clear_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 1);
-        if (is_continue)continue_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 3, false);
+        if(!clear_start_back->is_anime_end)clear_start_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 3, false);
+        else clear_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 1);
 
         result_cover->RenderRightUp(immediate_context, SCREEN_WIDTH, 0, 1200, SCREEN_HEIGHT, 0.0f);
 

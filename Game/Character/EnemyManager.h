@@ -9,7 +9,7 @@ class EnemyManager
 {
 private:
     EnemyManager() {}
-    ~EnemyManager() {}
+    ~EnemyManager() {    }
 public:
     // 唯一のインスタンス取得
     static EnemyManager& Instance()
@@ -42,6 +42,8 @@ public:
 
     // エネミー取得
     Enemy* GetEnemy(int index) { return enemies.at(index); }
+
+    bool NonEnemy();
 
     // エネミー削除
     void Remove(Enemy* enemy);

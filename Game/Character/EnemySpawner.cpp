@@ -7,6 +7,24 @@
 
 void EnemySpawner::Initialize()
 {
+	level_1 = {};    // レベル１
+	level_2 = {};    // レベル１
+	level_3 = {};    // レベル１
+	level_4 = {};    // レベル１
+	level_5 = {};    // レベル１
+	level_6 = {};    // レベル１
+	level_7 = {};    // レベル１
+	level_8 = {};    // レベル１
+	level_9 = {};    // レベル１
+
+	index = 0.0f;
+	timer = 0.0f;  // タイマー
+	timer_speed = 3.0f;  // タイマーの早くする倍
+	stage_to_shaft = 1.0f;  // ステージと軸の離れ具合
+	shaft_pos = {};    // 各軸の位置
+	stage_pos = { 0,0 };    // ステージ位置の保存
+	stage_width = { 5,5 };    // ステージ幅の保存
+
 	stage_pos = {
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().x,
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().z
@@ -23,8 +41,6 @@ void EnemySpawner::Initialize()
 		{stage_pos.y + stage_width.y + stage_to_shaft}
 	};
 	// タイマーの初期化
-	timer = 0.0f;
-	index = 0;
 
 	// レベル１の初期化
 	InitializeLevel1();
@@ -191,7 +207,7 @@ void EnemySpawner::Finalize()
 void EnemySpawner::Update(float elapsed_time)
 {
 	//TODO ImGui消す
-	//DebugImGui();
+	DebugImGui();
 
 	stage_pos = {
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().x,
@@ -210,7 +226,7 @@ void EnemySpawner::Update(float elapsed_time)
 	
 	int n = EnemyManager::Instance().GetEnemyCount();
 	bool b = EnemyManager::Instance().GetTimeUp();
-	if (EnemyManager::Instance().GetEnemyCount() == 0 && !EnemyManager::Instance().GetTimeUp())
+	if (EnemyManager::Instance().NonEnemy() && !EnemyManager::Instance().GetTimeUp())
 	{
 		timer += elapsed_time * timer_speed;
 	}

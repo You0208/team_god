@@ -64,12 +64,18 @@ void OverScene::Initialize()
             text_y[i].value = -100.0f;
         }
 
+
+        Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::OVER, true);
+
         CallTransition(false);
     }
 }
 
 void OverScene::Finalize()
 {
+    // BGMèIóπ
+    Lemur::Audio::AudioManager::Instance().StopAllBGM();
+    Lemur::Audio::AudioManager::Instance().StopAllSE();
 }
 
 void OverScene::Update(HWND hwnd, float elapsed_time)
