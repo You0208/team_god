@@ -300,10 +300,10 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		camera.Update(elapsedTime);
 	}
 
-	if (::GetAsyncKeyState('C') & 0x8000)
-	{
-		handle = hitEffect->Play({ 0,0,0 }, 0.3f);
-	}
+	//if (::GetAsyncKeyState('C') & 0x8000)
+	//{
+	//	handle = hitEffect->Play({ 0,0,0 }, 0.3f);
+	//}
 	// ライトの更新
 	LightUpdate();
 

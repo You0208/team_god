@@ -108,10 +108,10 @@ void Fence::Update(float elapsedTime)
 
     if (health_prsent <= 0.5f)fence_state = FENCE_STATE::FANCE_1;
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)
-    {
-        fence_state++;
-    }
+    //if (gamePad.GetButtonDown() & gamePad.BTN_B)
+    //{
+    //    fence_state++;
+    //}
 
     //TODO ImGuiÁ‚·
     //DrawDebugGui();
