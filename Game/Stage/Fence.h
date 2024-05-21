@@ -32,11 +32,20 @@ public:
     Rect GetBackRect() { return back_rect; }
     Rect GetRightRect() { return right_rect; }
 
+    int fence_state = 0;
+    enum FENCE_STATE
+    {
+        FANCE_0,
+        FANCE_1,
+        FANCE_2,
+    };
 private:    
     // デバッグ用に四角使ってる
     Rect left_rect      = {};
     Rect front_rect     = {};
     Rect back_rect      = {};   // 柵はないけど当たり判定用に
     Rect right_rect     = {};   // 柵はないけど当たり判定用に
-    float rect_width    = 0.0f;
+    float rect_width    = 0.0f; 
+    float health_prsent = 0.0f;
+
 };

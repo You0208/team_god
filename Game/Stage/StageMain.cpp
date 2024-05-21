@@ -1,4 +1,5 @@
 #include "StageMain.h"
+#include "Fence.h"
 
 StageMain::StageMain()
 {
@@ -8,7 +9,11 @@ StageMain::StageMain()
     fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
     fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
     fence = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
+    fence_type1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken1\\fence_broken1.fbx");
+    fence_type2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
     fence2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
+    fence2_type1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken1\\fence_broken1.fbx");
+    fence2_type2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
     fence_end = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_end\\fence_end.fbx");
     
     ido = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido\\ido.fbx");
@@ -135,38 +140,108 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
             }
         }
     }
-
-    // çÚ
-    for (int y = 0; y < 7; y++)
+    
+    
+    switch (Fence::Instance().fence_state)
     {
-        fence2->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
-        fence2->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) });
-        fence2->Render(scale, replaced_pixel_shader);
-        if (y == 6)
+    case 0:
+        // çÚ
+        for (int y = 0; y < 7; y++)
         {
-            fence_end->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) - 2.5f });
-            fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(0.0f));
-            fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
-            fence_end->Render(scale, replaced_pixel_shader);
+            fence2->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence2->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) });
+            fence2->Render(scale, replaced_pixel_shader);
+            if (y == 6)
+            {
+                fence_end->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) - 2.5f });
+                fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(0.0f));
+                fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+                fence_end->Render(scale, replaced_pixel_shader);
+            }
         }
-    }
-    for (int x = 0; x < 7; x++)
-    {
-        fence->GetTransform()->SetPosition({ -8.0f + (x * 2.5f),dec_y,-9.0f });
-        fence->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
-        fence->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+        for (int x = 0; x < 7; x++)
+        {
+            fence->GetTransform()->SetPosition({ -8.0f + (x * 2.5f),dec_y,-9.0f });
+            fence->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+            fence->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence->Render(scale, replaced_pixel_shader);
+
+            if (x == 6)
+            {
+                fence_end->GetTransform()->SetPosition({ -8.0f + (x * 2.5f) + 2.5f,dec_y,-9.0f });
+                fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+                fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+                fence_end->Render(scale, replaced_pixel_shader);
+            }
+        }
         fence->Render(scale, replaced_pixel_shader);
-
-        if (x == 6)
+        break;
+    case 1:
+        // çÚ
+        for (int y = 0; y < 7; y++)
         {
-            fence_end->GetTransform()->SetPosition({ -8.0f + (x * 2.5f) + 2.5f,dec_y,-9.0f });
-            fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
-            fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
-            fence_end->Render(scale, replaced_pixel_shader);
+            fence2_type1->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence2_type1->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) });
+            fence2_type1->Render(scale, replaced_pixel_shader);
+            if (y == 6)
+            {
+                fence_end->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) - 2.5f });
+                fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(0.0f));
+                fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+                fence_end->Render(scale, replaced_pixel_shader);
+            }
         }
-    }
-    fence->Render(scale, replaced_pixel_shader);
+        for (int x = 0; x < 7; x++)
+        {
+            fence_type1->GetTransform()->SetPosition({ -8.0f + (x * 2.5f),dec_y,-9.0f });
+            fence_type1->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+            fence_type1->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence_type1->Render(scale, replaced_pixel_shader);
 
+            if (x == 6)
+            {
+                fence_end->GetTransform()->SetPosition({ -8.0f + (x * 2.5f) + 2.5f,dec_y,-9.0f });
+                fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+                fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+                fence_end->Render(scale, replaced_pixel_shader);
+            }
+        }
+        fence_type1->Render(scale, replaced_pixel_shader);
+        break;
+    case 2:
+        // çÚ
+        for (int y = 0; y < 7; y++)
+        {
+            fence2_type2->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence2_type2->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) });
+            fence2_type2->Render(scale, replaced_pixel_shader);
+            if (y == 6)
+            {
+                fence_end->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) - 2.5f });
+                fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(0.0f));
+                fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+                fence_end->Render(scale, replaced_pixel_shader);
+            }
+        }
+        for (int x = 0; x < 7; x++)
+        {
+            fence_type2->GetTransform()->SetPosition({ -8.0f + (x * 2.5f),dec_y,-9.0f });
+            fence_type2->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+            fence_type2->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+            fence_type2->Render(scale, replaced_pixel_shader);
+
+            if (x == 6)
+            {
+                fence_end->GetTransform()->SetPosition({ -8.0f + (x * 2.5f) + 2.5f,dec_y,-9.0f });
+                fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
+                fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
+                fence_end->Render(scale, replaced_pixel_shader);
+            }
+        }
+        fence_type2->Render(scale, replaced_pixel_shader);
+        break;
+
+    }
     // ÇªÇÃëº
     // à‰åÀ
     ido->Render(scale, replaced_pixel_shader);

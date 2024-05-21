@@ -49,7 +49,7 @@ private:
     std::vector<EnemyScript>    level_8 = {};    // レベル１
     std::vector<EnemyScript>    level_9 = {};    // レベル１
 
-    int index;
+    int                         index          = 0.0f;
     float                       timer          = 0.0f;  // タイマー
     float                       timer_speed    = 3.0f;  // タイマーの早くする倍
     float                       stage_to_shaft = 1.0f;  // ステージと軸の離れ具合

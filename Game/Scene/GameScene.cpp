@@ -100,7 +100,7 @@ void GameScene::Initialize()
 		rotation_camera_x.CallValueEasing(40.0f, rotation_camera_x.value, EasingFunction::EasingType::OutSine, 1.0f);
 
 		StageManager& stage_manager = StageManager::Instance();
-		stage_manager.SetStageLevel(7);
+		stage_manager.SetStageLevel(0);
 		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
@@ -213,6 +213,8 @@ void GameScene::Initialize()
 		}
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
+
+		EnemyManager::Instance().SetTimeUp(false);
 	}
 
 	// デバッグ
@@ -230,7 +232,7 @@ void GameScene::Initialize()
 			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
 		}
-		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_main.efk");
+		hitEffect = new Effect(".\\resources\\Effect\\UNIT5_ATK\\UNIT5_ATK_ALL.efk");
 
 		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
 		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
@@ -300,7 +302,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	if (::GetAsyncKeyState('C') & 0x8000)
 	{
-		handle = hitEffect->Play({ 0,0,0 }, 0.1f);
+		handle = hitEffect->Play({ 0,0,0 }, 0.3f);
 	}
 	// ライトの更新
 	LightUpdate();
@@ -323,8 +325,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	// スタート演出
 	if(start_direction)
 	{
-		start_direction = false;
-		//StartDirectionUpdate(elapsedTime);
+		//start_direction = false;
+		StartDirectionUpdate(elapsedTime);
 		return;
 	}
 	else if (over_direction)
@@ -346,6 +348,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		}
 		else if (fence->GetHealth() <= 0)
 		{
+			fence->fence_state = fence->FANCE_2;
 			over_direction = true;
 		}
 	}

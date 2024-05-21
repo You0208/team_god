@@ -202,13 +202,13 @@ bool Collision::IntersectRotateRectVsCircle(const Rect& rect, const DirectX::XMF
 
 bool Collision::IntersectDonutVsCircle(const DirectX::XMFLOAT2& donut_pos, const float radius_out, const float radius_in, const DirectX::XMFLOAT2& position, const float radius)
 {
-    if (IntersectCircleVsCircle(donut_pos, radius_in, position, radius))
-    {
-        return false;
-    }
-    else if (IntersectCircleVsCircle(donut_pos, radius_out, position, radius))
+    if (IntersectCircleVsCircle(donut_pos, radius_out, position, radius))
     {
         return true;
+    }
+    else if (IntersectCircleVsCircle(donut_pos, radius_in, position, radius))
+    {
+        return false;
     }
 
     return false;
