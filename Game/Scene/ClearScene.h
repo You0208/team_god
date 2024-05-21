@@ -56,7 +56,7 @@ private:
     int select_num = 0;
 private:
     std::shared_ptr<Sprite> clear_back = nullptr;              // ƒNƒŠƒAŠî–{‚Ì”wŒi
-    std::shared_ptr<Sprite> continue_back = nullptr;              // ‘I‘ð‚³‚ê‚½Žž‚Ì”wŒi
+    std::shared_ptr<Sprite> clear_start_back = nullptr;              // ‘I‘ð‚³‚ê‚½Žž‚Ì”wŒi
 
     std::shared_ptr<Sprite> result_cover = nullptr;              // ‚à‚¤ˆê“x
     std::shared_ptr<Sprite> star1 = nullptr;              // ”¨‚É–ß‚é

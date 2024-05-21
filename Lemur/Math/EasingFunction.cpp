@@ -171,3 +171,12 @@ void EasingFunction::ContinueEasing(float elapsed_time)
 		}
 	}
 }
+
+void EasingFunction::TwiceEasing(float elapsed_time)
+{
+	if (!is_easing && is_twice_easing)
+	{
+
+	}
+
+}

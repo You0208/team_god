@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Lemur/Graphics/Graphics.h"
 #include "EnemyManager.h"
+#include "Lemur/Audio/AudioManager.h"
 
 void Enemy::Destroy()
 {
@@ -46,6 +47,8 @@ void Enemy::TransitionDeathState()
     {
         PlayAnimation(Animation::Out, false);
     }
+
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DEATH, false);
 
     death_handle = death_effect->Play(position, death_effect_size);
 

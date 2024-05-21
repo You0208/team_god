@@ -31,6 +31,11 @@ public:
     void InitializeLight()override;
 
     void PauseUpdate(float elapsedTime);
+
+    // スタート前の演出
+    void StartDirectionUpdate(float elapsedTime);
+    void OverDirectionUpdate(float elapsedTime);
+    void ClearDirectionUpdate(float elapsedTime);
 private:// ゲーム
     Stage* stage = nullptr;
 
@@ -49,6 +54,36 @@ private:// ゲーム
     EasingFunction pause_text_continue_scale = {};
     EasingFunction pause_text_select_scale   = {};
 
+    // スタート演出
+    EasingFunction rotation_camera_x = {};
+    EasingFunction scale_start_direction = {};
+    float start_timer = 0.0f;
+    bool start_direction = true;
+    int start_direction_state = 0;
+    float start_in_time = 0.5f;
+    float start_out_time = 0.5f;
+    enum START_DIRECTION
+    {
+        Camera_direction,
+        Three,
+        Three_End,
+        Two,
+        Two_End,
+        One,
+        One_End,
+        START,
+        START_End
+    };
+
+
+    bool over_direction = false;
+    float over_timer = 0.0f;
+
+    bool clear_direction = false;
+    int clear_direction_state = 0;
+    float clear_timer = 0.0f;
+    EasingFunction clear_text_scale = {};
+
     float timer_angle = 0.0f;
     // コントローラー用
     std::shared_ptr<Sprite> timer_hands;
@@ -59,6 +94,13 @@ private:// ゲーム
     std::shared_ptr<Sprite> pause_main;
     std::shared_ptr<Sprite> pause_text_continue;
     std::shared_ptr<Sprite> pause_text_select;
+
+    std::shared_ptr<Sprite> start_text_3;
+    std::shared_ptr<Sprite> start_text_2;
+    std::shared_ptr<Sprite> start_text_1;
+    std::shared_ptr<Sprite> start_text_start;
+    std::shared_ptr<Sprite> start_text_clear;
+
 
     std::unique_ptr<GltfModelManager> gltf_test_model;
 private:// シェーダー

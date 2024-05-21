@@ -1,7 +1,7 @@
 #include "Unit_ABC.h"
 #include "EnemyManager.h"
 #include "UnitManager.h"
-
+#include "Lemur/Audio/AudioManager.h"
 //--------Chili--------------------------------------------------
 Chili::Chili()
 {
@@ -113,6 +113,7 @@ void Chili::UpdateAttackState(float elapsed_time)
                 is_intersected = true;
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::UNIT_ATTACK, false);
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理

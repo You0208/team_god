@@ -43,6 +43,8 @@ public:
     // エネミー取得
     Enemy* GetEnemy(int index) { return enemies.at(index); }
 
+    bool NonEnemy();
+
     // エネミー削除
     void Remove(Enemy* enemy);
 

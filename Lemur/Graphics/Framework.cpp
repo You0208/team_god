@@ -23,7 +23,7 @@
 //TODO もね　FALSE→ウィンドウ　TRUE→フルスクリーン
 Framework::Framework(HWND hwnd) 
 	: hwnd(hwnd),
-	graphics(hwnd, TRUE),
+	graphics(hwnd, FALSE),
 	input(hwnd)
 {
 	input.GetMouse().SetScreenWidth(SCREEN_WIDTH);
@@ -57,8 +57,8 @@ bool Framework::Initialize()
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
-	//Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
+	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
 
 	return true;
 }

@@ -17,6 +17,8 @@ public:
 
     // インスタンス取得
     static Player& Instance();
+
+    int GetCategory() { return unit_category; }
 private:
     // 入力処理
     void InputProcess();

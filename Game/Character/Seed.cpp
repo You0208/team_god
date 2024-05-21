@@ -31,9 +31,9 @@ Seed::Seed()
 
 Seed::~Seed()
 {
-    error_effect->Stop(error_effect_handle);
+    //error_effect->Stop(error_effect_handle);
 
-    EffectManager::Instance().Update(0.01f);
+    //EffectManager::Instance().Update(0.01f);
 }
 
 void Seed::Update(float elapsedTime)

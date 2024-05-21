@@ -7,6 +7,7 @@
 // Effect
 #include "../Effekseer/EffekseerManager.h"
 
+
 //#define USE_DEFEFFERD
 //#define POST_EFFECT
 //#define DEFEFFERD_POST_EFFECT
@@ -35,7 +36,7 @@ void DemoScene::Initialize()
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
-		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", Try.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", Try.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
 
@@ -68,11 +69,11 @@ void DemoScene::Initialize()
 
 		//gltf_models[0] = std::make_unique<GltfModel>(graphics.GetDevice(),
 		//	".\\resources_2\\Chili_24_0303_01\\Chili_24_0303_01.glb");
-		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\Jummo\\Jummo.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\circle.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.fbx");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\projection\\terrain\\terrain.fbx");
-		fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
-		fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
+		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\projection\\terrain\\terrain.fbx");
+		//fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
+		//fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
 		//test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
 		//test_model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\grid.fbx");
@@ -119,7 +120,7 @@ void DemoScene::Initialize()
 	// デバッグ
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc;
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\magic circle.png", projection_mapping_texture.GetAddressOf(), &texture2d_desc);
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), &texture2d_desc);
 
 		directional_light_direction = { 1,-1,-1,0 };
 		gltf_test_model->PlayAnimation(0, false);
@@ -147,6 +148,26 @@ void DemoScene::Update(HWND hwnd, float elapsedTime)
 		camera.SetTarget(camera_target);
 		camera.SetRange(camera_range);
 	}
+
+	if (gamePad.GetButtonDown() & gamePad.BTN_A)
+	{
+		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::BARD, false);
+	}
+	if (gamePad.GetButtonDown() & gamePad.BTN_B)
+	{
+		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::BARD, false);
+	}
+
+	if (gamePad.GetButtonDown() & gamePad.BTN_X)
+	{
+		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::BARD, false);
+	}
+
+	if (gamePad.GetButtonDown() & gamePad.BTN_Y)
+	{
+		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::BARD, false);
+	}
+
 
 	{
 		gltf_test_model->gltf_model->DebugThreshold();
@@ -366,7 +387,7 @@ void DemoScene::Render(float elapsedTime)
 	{
 		//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 		//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
-		//test_model->Render(0.01f, Try.Get());
+		test_model->Render(0.01f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
 		//test_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
@@ -374,26 +395,26 @@ void DemoScene::Render(float elapsedTime)
 		//gltf_test_model->Render(1.0f, gltf_ps.Get());
 		//gltf_test_model_2->Render(100.0f, gltf_ps.Get());
 
-		for (int x = 0; x < 3; x++)
-		{
-			for (int y = 0; y < 6; y++)
-			{
-				if (y % 2 == 0)
-				{
-					fild2->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
-					fild1->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
-					fild1->Render(1.0f, Try.Get());
-					fild2->Render(1.0f, Try.Get());
-				}
-				else
-				{
-					fild1->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
-					fild2->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
-					fild1->Render(1.0f, Try.Get());
-					fild2->Render(1.0f, Try.Get());
-				}
-			}
-		}
+		//for (int x = 0; x < 3; x++)
+		//{
+		//	for (int y = 0; y < 6; y++)
+		//	{
+		//		if (y % 2 == 0)
+		//		{
+		//			fild2->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+		//			fild1->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+		//			fild1->Render(1.0f, Try.Get());
+		//			fild2->Render(1.0f, Try.Get());
+		//		}
+		//		else
+		//		{
+		//			fild1->GetTransform()->SetPosition({ -7.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+		//			fild2->GetTransform()->SetPosition({ -4.4f + (x * 2 * 3.0f),0.5f,-7.4f + (y * 3.0f) });
+		//			fild1->Render(1.0f, Try.Get());
+		//			fild2->Render(1.0f, Try.Get());
+		//		}
+		//	}
+		//}
 	}
 	// デバッグ
 	{

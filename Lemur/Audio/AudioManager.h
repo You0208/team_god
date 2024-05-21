@@ -11,24 +11,40 @@ namespace Lemur::Audio
 {
     enum class BGM
     {
-        BOSS,
-        GAMBLE,
+        TITLE,
+        SELECT,
+        FORMATION,
+        GAME_MORNING,
+        GAME_MORNING_SE,
+        GAME_NOON,
+        GAME_NOON_SE,
+        GAME_NIGHT,
+        GAME_NIGHT_SE,
         CLEAR,
         OVER,
-        PLAY,
-        TITLE,
         BGM_Max        
     };
     enum class SE
     {
-        ARROW,
-        AVOID,
-        CONTER,
-        DAMAGE,
+        CHANGE_IN,
+        CHANGE_OUT,
         DECISION,
-        HIT,
-        SENI,
-        SWING,
+        WORLD_CHANGE,
+        CHARACTER_SET,
+        STICK,
+        DEATH,
+        UNIT_ATTACK,
+        FENCE_ATTACK,
+        CLEAR,
+        CHICKEN,
+        BARD,
+        OWL,
+        FANCE_BREAK,
+        CHEER,
+        SPOWN,
+        APPEARANCE,
+        STANDUP,
+
         SE_Max
     };
     

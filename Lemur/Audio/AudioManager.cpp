@@ -2,27 +2,40 @@
 
 namespace Lemur::Audio
 {
-
     void AudioManager::LoadAudio()
     {
         {
-            bgm[static_cast<int>(BGM::BOSS)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/BGM/Boss.wav");
-            bgm[static_cast<int>(BGM::GAMBLE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/BGM/Gambling.wav");
-            bgm[static_cast<int>(BGM::CLEAR)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/BGM/GameClear.wav");
-            bgm[static_cast<int>(BGM::OVER)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/BGM/GameOver.wav");
-            bgm[static_cast<int>(BGM::PLAY)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/BGM/Play.wav");
-            bgm[static_cast<int>(BGM::TITLE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/BGM/Title.wav");
+            bgm[static_cast<int>(BGM::TITLE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/1_title.wav");
+            bgm[static_cast<int>(BGM::SELECT)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/2_stageselect.wav");
+            bgm[static_cast<int>(BGM::FORMATION)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/3_select.wav");
+            bgm[static_cast<int>(BGM::GAME_MORNING)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/4_game_morning.wav");
+            bgm[static_cast<int>(BGM::GAME_MORNING_SE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/5_morningSE.wav");
+            bgm[static_cast<int>(BGM::GAME_NOON)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/4_game_noon.wav");
+            bgm[static_cast<int>(BGM::GAME_NOON_SE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/5_nonnSE.wav");
+            bgm[static_cast<int>(BGM::GAME_NIGHT)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/4_game_night.wav");
+            bgm[static_cast<int>(BGM::GAME_NIGHT_SE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/5_nightSE.wav");
+            bgm[static_cast<int>(BGM::CLEAR)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/6_gameclear.wav");
+            bgm[static_cast<int>(BGM::OVER)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/BGM/7_gameover.wav");
 
-            se[static_cast<int>(SE::ARROW)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/arrow_se.wav");
-            se[static_cast<int>(SE::AVOID)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/avoid.wav");
-            se[static_cast<int>(SE::CONTER)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/counter.wav");
-            se[static_cast<int>(SE::DAMAGE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/damage.wav");
-            se[static_cast<int>(SE::DECISION)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/decision.wav");
-            se[static_cast<int>(SE::HIT)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/Hit.wav");
-            se[static_cast<int>(SE::SENI)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/Seni.wav");
-            se[static_cast<int>(SE::SWING)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources_2/Sound/SE/swing.wav");
+            se[static_cast<int>(SE::CHANGE_IN)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/1_scenechange_up.wav");
+            se[static_cast<int>(SE::CHANGE_OUT)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/2_scenechange_down.wav");
+            se[static_cast<int>(SE::DECISION)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/3_decision.wav");
+            se[static_cast<int>(SE::WORLD_CHANGE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/5_worldchange.wav");
+            se[static_cast<int>(SE::CHARACTER_SET)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/6_character_controller.wav");
+            se[static_cast<int>(SE::STICK)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/7_stick.wav");
+            se[static_cast<int>(SE::DEATH)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/8_death.wav");
+            se[static_cast<int>(SE::UNIT_ATTACK)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/9_unit_attack.wav");
+            se[static_cast<int>(SE::FENCE_ATTACK)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/10_fence_attack.wav");
+            se[static_cast<int>(SE::CLEAR)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/11_clear.wav");
+            se[static_cast<int>(SE::CHICKEN)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/12_chicken.wav");
+            se[static_cast<int>(SE::BARD)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/13_bard.wav");
+            se[static_cast<int>(SE::OWL)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/14_owl.wav");
+            se[static_cast<int>(SE::FANCE_BREAK)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/15_fence_break.wav");
+            se[static_cast<int>(SE::CHEER)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/16_cheer.wav");
+            se[static_cast<int>(SE::SPOWN)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/17_spown.wav");
+            se[static_cast<int>(SE::APPEARANCE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/18_appearance.wav");
+            se[static_cast<int>(SE::STANDUP)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/19_standup .wav");
         }
-    
     }
     void AudioManager::PlayBgm(const BGM& bgm_, const bool isloop)
     {
