@@ -111,7 +111,7 @@ void GameScene::Initialize()
 		//7 3-2
 		//8 3-3
 
-		stage_manager.SetStageLevel(3);
+		//stage_manager.SetStageLevel(3);
 		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択

@@ -779,8 +779,8 @@ void EnemySpawner::InitializeLevel1()
 	level_1.emplace_back(SetEnemy(150.0f, EnemyType::A, Shaft::Side, 6.0f));
 	level_1.emplace_back(SetEnemy(150.0f, EnemyType::A, Shaft::Vertical, 17.5f));//20
 
-	//level_1.emplace_back(SetEnemy(70.0f, EnemyType::A, Shaft::Side, 15.0f));
-	//level_1.emplace_back(SetEnemy(70.0f, EnemyType::A, Shaft::Side, 17.0f));
+	level_1.emplace_back(SetEnemy(170.0f, EnemyType::A, Shaft::Side, 15.0f));
+	level_1.emplace_back(SetEnemy(170.0f, EnemyType::A, Shaft::Side, 17.0f));
 	//level_1.emplace_back(SetEnemy(70.0f, EnemyType::A, Shaft::Vertical, 17.5f));//A4
 
 	//level_1.emplace_back(SetEnemy(73.0f, EnemyType::A, Shaft::Side, 9.0f));
@@ -1155,11 +1155,11 @@ void EnemySpawner::InitializeLevel5()
 	level_5.emplace_back(SetEnemy(19.0f, EnemyType::A, Shaft::Side, 13.0f));//2
 
 	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { 8, 3 }));
-	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { 6, 3 }));
+	//level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { 6, 3 }));
 	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { 4, 3 }));
-	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { 0, 3 }));
+	//level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { 0, 3 }));
 	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { -4, 3 }));
-	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { -6, 3 }));
+	//level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { -6, 3 }));
 	level_5.emplace_back(SetEnemy(19.0f, EnemyType::Nuisance, { -8, 3 }));
 
 	//level_5.emplace_back(SetEnemy(19.0f, EnemyType::Summon, { 0, 6 }));
@@ -1178,6 +1178,10 @@ void EnemySpawner::InitializeLevel5()
 	level_5.emplace_back(SetEnemy(34.0f, EnemyType::C, Shaft::Vertical, 4.0f));
 	level_5.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 9.0f));//5
 
+	level_4.emplace_back(SetEnemy(36.0f, EnemyType::A, Shaft::Side, 8.0f));
+	level_4.emplace_back(SetEnemy(36.0f, EnemyType::A, Shaft::Side, 7.0f));
+	level_4.emplace_back(SetEnemy(36.0f, EnemyType::A, Shaft::Side, 9.0f));
+	level_4.emplace_back(SetEnemy(36.0f, EnemyType::A, Shaft::Side, 8.0f));
 
 	/*level_5.emplace_back(SetEnemy(37.0f, EnemyType::Nuisance, { -6.5, 3 }));
 	level_5.emplace_back(SetEnemy(37.0f, EnemyType::Nuisance, { -3.5, 3 }));
@@ -1185,15 +1189,15 @@ void EnemySpawner::InitializeLevel5()
 	level_5.emplace_back(SetEnemy(37.0f, EnemyType::Nuisance, { 3.5, 3 }));
 	level_5.emplace_back(SetEnemy(37.0f, EnemyType::Nuisance, { 6.5, 3 }));*/
 
-	level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { -4.5, 6 }));
-	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { -2.5, 6 }));
-	level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 0, 6 }));
-	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 2.5, 6 }));
-	level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 4.5, 6 }));
+	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { -4.5, 6 }));
+	////level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { -2.5, 6 }));
+	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 0, 6 }));
+	////level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 2.5, 6 }));
+	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 4.5, 6 }));
 
 	level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { -4.5, 0 }));
 	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { -2.5, 0 }));
-	level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 0, 0 }));
+	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 0, 0 }));
 	//level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 2.5, 0 }));
 	level_5.emplace_back(SetEnemy(38.0f, EnemyType::Nuisance, { 4.5, 0 }));
 	
@@ -1262,6 +1266,12 @@ void EnemySpawner::InitializeLevel6()
 	level_6.emplace_back(SetEnemy(22.0f, EnemyType::C, Shaft::Side, 9.0f));//5
 	level_6.emplace_back(SetEnemy(22.0f, EnemyType::A, Shaft::Side, 10.0f));//5
 
+	level_6.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { -5, 6 }));
+	level_6.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { -3, 6 }));
+	level_6.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 0, 6 }));
+	level_6.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 3, 6 }));
+	level_6.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 6, 6 }));
+
 	level_6.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 10.0f));//5
 	level_6.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 11.0f));//5
 	level_6.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 12.0f));//5
@@ -1272,6 +1282,12 @@ void EnemySpawner::InitializeLevel6()
 	level_6.emplace_back(SetEnemy(30.0f, EnemyType::A, Shaft::Vertical, 8.0f));
 
 	level_6.emplace_back(SetEnemy(33.0f, EnemyType::Summon, { 6, 6 }));
+
+	level_6.emplace_back(SetEnemy(33.0f, EnemyType::Nuisance, { -8, -6 }));
+	level_6.emplace_back(SetEnemy(33.0f, EnemyType::Nuisance, { -5, -6 }));
+	level_6.emplace_back(SetEnemy(33.0f, EnemyType::Nuisance, { 0, -6 }));
+	level_6.emplace_back(SetEnemy(33.0f, EnemyType::Nuisance, { 5, -6 }));
+	level_6.emplace_back(SetEnemy(33.0f, EnemyType::Nuisance, { 8, -6 }));
 
 	level_6.emplace_back(SetEnemy(36.0f, EnemyType::C, Shaft::Vertical, 13.0f));//6
 	level_6.emplace_back(SetEnemy(36.0f, EnemyType::D, Shaft::Side, 6.0f));
@@ -1307,10 +1323,21 @@ void EnemySpawner::InitializeLevel6()
 	level_6.emplace_back(SetEnemy(73.0f, EnemyType::C, Shaft::Vertical, 8.0f));
 	level_6.emplace_back(SetEnemy(73.0f, EnemyType::A, Shaft::Vertical, 10.0f));
 
+	level_6.emplace_back(SetEnemy(73.0f, EnemyType::Nuisance, { -7, -6 }));
+	level_6.emplace_back(SetEnemy(73.0f, EnemyType::Nuisance, { -8, -7 }));
+	level_6.emplace_back(SetEnemy(73.0f, EnemyType::Nuisance, { -7, -8 }));
+	level_6.emplace_back(SetEnemy(73.0f, EnemyType::Nuisance, { -6, -7 }));
+	//level_6.emplace_back(SetEnemy(33.0f, EnemyType::Nuisance, { 8, -6 }));
+
 	level_6.emplace_back(SetEnemy(74.0f, EnemyType::A, Shaft::Vertical, 5.0f));
 	level_6.emplace_back(SetEnemy(76.0f, EnemyType::A, Shaft::Vertical, 4.0f));
 	level_6.emplace_back(SetEnemy(76.0f, EnemyType::A, Shaft::Vertical, 6.0f));
 	level_6.emplace_back(SetEnemy(78.0f, EnemyType::A, Shaft::Vertical, 5.0f));
+
+	level_6.emplace_back(SetEnemy(78.0f, EnemyType::Nuisance, { 7, 6 }));
+	level_6.emplace_back(SetEnemy(78.0f, EnemyType::Nuisance, { 8, 7 }));
+	level_6.emplace_back(SetEnemy(78.0f, EnemyType::Nuisance, { 7, 8 }));
+	level_6.emplace_back(SetEnemy(78.0f, EnemyType::Nuisance, { 6, 7 }));
 
 	level_6.emplace_back(SetEnemy(78.0f, EnemyType::A, Shaft::Side, 5.0f));
 	level_6.emplace_back(SetEnemy(80.0f, EnemyType::A, Shaft::Side, 4.0f));
@@ -1333,9 +1360,86 @@ void EnemySpawner::InitializeLevel6()
 
 void EnemySpawner::InitializeLevel7()
 {
-	level_7.emplace_back(SetEnemy(1.0f, EnemyType::Summon, {-2.5,6}));//11
-	level_7.emplace_back(SetEnemy(1.0f, EnemyType::Summon, {2.5,6}));//11
-	level_7.emplace_back(SetEnemy(1.0f, EnemyType::C, Shaft::Vertical, 14.0f));//11
+	level_7.emplace_back(SetEnemy(1.0f, EnemyType::A, Shaft::Side, 5.0f));
+	level_7.emplace_back(SetEnemy(1.0f, EnemyType::A, Shaft::Vertical, 3.0f));
+	level_7.emplace_back(SetEnemy(3.0f, EnemyType::B, Shaft::Vertical, 13.0f));//1
+
+	level_7.emplace_back(SetEnemy(18.0f, EnemyType::B, Shaft::Side, 3.0f));
+	level_7.emplace_back(SetEnemy(19.0f, EnemyType::B, Shaft::Vertical, 6.0f));//2
+
+	level_7.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 2, 2 }));//1
+	level_7.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 4, 2 }));//2
+	level_7.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 2, 4 }));//8
+	level_7.emplace_back(SetEnemy(22.0f, EnemyType::Nuisance, { 4, 4 }));//8
+
+	level_7.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 8.0f));
+	level_7.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 9.0f));
+	level_7.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 10.0f));//3
+
+	level_7.emplace_back(SetEnemy(29.0f, EnemyType::B, Shaft::Vertical, 5.0f));
+	level_7.emplace_back(SetEnemy(29.0f, EnemyType::B, Shaft::Vertical, 12.0f));
+	level_7.emplace_back(SetEnemy(33.0f, EnemyType::B, Shaft::Vertical, 7.0f));//4
+
+	//level_7.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 3.0f));
+	level_7.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 15.0f));
+
+	level_7.emplace_back(SetEnemy(36.0f, EnemyType::A, Shaft::Side, 6.0f));
+	level_7.emplace_back(SetEnemy(36.0f, EnemyType::A, Shaft::Side, 12.0f));//3
+
+	level_7.emplace_back(SetEnemy(40.0f, EnemyType::Nuisance, { -6, 6 }));
+	level_7.emplace_back(SetEnemy(40.0f, EnemyType::Nuisance, { -4, 6 }));
+	level_7.emplace_back(SetEnemy(40.0f, EnemyType::Nuisance, { -5, 5 }));
+
+	level_7.emplace_back(SetEnemy(45.0f, EnemyType::Nuisance, { 3, 4 }));//1
+	level_7.emplace_back(SetEnemy(45.0f, EnemyType::Nuisance, { 4, 3 }));//2
+	level_7.emplace_back(SetEnemy(45.0f, EnemyType::Nuisance, { 3, 2 }));//8
+	level_7.emplace_back(SetEnemy(45.0f, EnemyType::Summon, { 2, 3 }));//5
+
+	level_7.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Side, 8.0f));
+	level_7.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Side, 9.0f));
+	level_7.emplace_back(SetEnemy(50.0f, EnemyType::A, Shaft::Side, 10.0f));//3
+
+	//level_7.emplace_back(SetEnemy(52.0f, EnemyType::B, Shaft::Vertical, 15.5f));//6
+
+	level_7.emplace_back(SetEnemy(54.0f, EnemyType::A, Shaft::Side, 8.5f));
+	level_7.emplace_back(SetEnemy(54.0f, EnemyType::A, Shaft::Side, 9.5f));
+	level_7.emplace_back(SetEnemy(54.0f, EnemyType::A, Shaft::Side, 10.5f));//3
+
+	level_7.emplace_back(SetEnemy(55.0f, EnemyType::B, Shaft::Vertical, 13.5f));//6
+
+	level_7.emplace_back(SetEnemy(60.0f, EnemyType::A, Shaft::Side, 8.0f));
+	level_7.emplace_back(SetEnemy(60.0f, EnemyType::A, Shaft::Side, 9.0f));
+	level_7.emplace_back(SetEnemy(60.0f, EnemyType::A, Shaft::Side, 10.0f));//3
+
+	level_7.emplace_back(SetEnemy(65.0f, EnemyType::Boss, Shaft::Side, 9.0f));
+
+	level_7.emplace_back(SetEnemy(69.0f, EnemyType::Nuisance, { -4, 3 }));
+	level_7.emplace_back(SetEnemy(69.0f, EnemyType::Nuisance, { -3, 4 }));
+	//level_7.emplace_back(SetEnemy(69.0f, EnemyType::Summon, { -3, 2 }));
+	level_7.emplace_back(SetEnemy(69.0f, EnemyType::Nuisance, { -2, 3 }));
+
+	/*level_7.emplace_back(SetEnemy(69.0f, EnemyType::Summon, { 4, -3 }));
+	level_7.emplace_back(SetEnemy(69.0f, EnemyType::Summon, { 3, -4 }));
+	level_7.emplace_back(SetEnemy(69.0f, EnemyType::Summon, { 3, -2 }));
+	level_7.emplace_back(SetEnemy(69.0f, EnemyType::Summon, { 2, -3 }));*/
+
+	level_7.emplace_back(SetEnemy(73.0f, EnemyType::Nuisance, { -3, 6 }));
+	level_7.emplace_back(SetEnemy(73.0f, EnemyType::Nuisance, { 3, 6 }));
+
+	level_7.emplace_back(SetEnemy(82.0f, EnemyType::B, Shaft::Vertical, 8.5f));//6
+	level_7.emplace_back(SetEnemy(82.0f, EnemyType::B, Shaft::Vertical, 15.5f));//6
+
+	level_7.emplace_back(SetEnemy(90.0f, EnemyType::B, Shaft::Vertical, 1.0f));
+	level_7.emplace_back(SetEnemy(90.0f, EnemyType::A, Shaft::Side, 11.0f));
+
+	level_7.emplace_back(SetEnemy(95.0f, EnemyType::A, Shaft::Vertical, 1.0f));
+	//level_7.emplace_back(SetEnemy(95.0f, EnemyType::A, Shaft::Side, 1.0f));
+	level_7.emplace_back(SetEnemy(96.0f, EnemyType::B, Shaft::Side, 4.0f));
+	level_7.emplace_back(SetEnemy(96.0f, EnemyType::A, Shaft::Vertical, 9.0f));//5
+
+	level_7.emplace_back(SetEnemy(110.0f, EnemyType::B, Shaft::Side, 8.0f));
+	level_7.emplace_back(SetEnemy(110.0f, EnemyType::A, Shaft::Vertical, 1.0f));
+	
 }
 
 void EnemySpawner::InitializeLevel8()
@@ -1361,7 +1465,7 @@ void EnemySpawner::InitializeLevel8()
 
 void EnemySpawner::InitializeLevel9()
 {
-	level_9.emplace_back(SetEnemy(1.0f, EnemyType::B, Shaft::Vertical, 5.0f));
+	level_9.emplace_back(SetEnemy(1.0f, EnemyType::B_2, Shaft::Vertical, 5.0f));
 	level_9.emplace_back(SetEnemy(2.0f, EnemyType::C, Shaft::Side, 8.0f));//1
 
 	level_9.emplace_back(SetEnemy(4.0f, EnemyType::D, Shaft::Vertical, 15.0f));
@@ -1373,7 +1477,7 @@ void EnemySpawner::InitializeLevel9()
 	level_9.emplace_back(SetEnemy(7.0f, EnemyType::Summon, { 8, 3 }));
 
 	level_9.emplace_back(SetEnemy(10.0f, EnemyType::C, Shaft::Side, 17.5f));
-	level_9.emplace_back(SetEnemy(11.0f, EnemyType::A, Shaft::Vertical, 10.0f));
+	level_9.emplace_back(SetEnemy(11.0f, EnemyType::A_2, Shaft::Vertical, 10.0f));
 	//level_9.emplace_back(SetEnemy(11.0f, EnemyType::A, Shaft::Side, 16.0f));//4
 
 	level_9.emplace_back(SetEnemy(13.0f, EnemyType::A, Shaft::Side, 8.0f));
@@ -1406,12 +1510,12 @@ void EnemySpawner::InitializeLevel9()
 	level_9.emplace_back(SetEnemy(18.0f, EnemyType::A, Shaft::Side, 10.0f));//5
 	level_9.emplace_back(SetEnemy(22.0f, EnemyType::Boss, Shaft::Side, 9.0f));//3
 	//level_9.emplace_back(SetEnemy(26.0f, EnemyType::D, Shaft::Vertical, 2.0f));
-	level_9.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Vertical, 15.0f));
+	//level_9.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Vertical, 15.0f));
 
 	level_9.emplace_back(SetEnemy(29.0f, EnemyType::C, Shaft::Vertical, 15.0f));//6
-	level_9.emplace_back(SetEnemy(29.0f, EnemyType::D, Shaft::Side, 5.0f));
+	level_9.emplace_back(SetEnemy(29.0f, EnemyType::D_2, Shaft::Side, 5.0f));
 	level_9.emplace_back(SetEnemy(33.0f, EnemyType::C, Shaft::Side, 17.0f));
-	level_9.emplace_back(SetEnemy(33.0f, EnemyType::A, Shaft::Vertical, 16.0f));//7
+	level_9.emplace_back(SetEnemy(33.0f, EnemyType::A_2, Shaft::Vertical, 16.0f));//7
 
 	level_9.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 5.0f));
 	level_9.emplace_back(SetEnemy(34.0f, EnemyType::A, Shaft::Side, 4.0f));
@@ -1439,7 +1543,7 @@ void EnemySpawner::InitializeLevel9()
 
 	level_9.emplace_back(SetEnemy(42.0f, EnemyType::Summon, { 3, 3 }));
 
-	level_9.emplace_back(SetEnemy(46.0f, EnemyType::A, Shaft::Side, 8.0f));
+	level_9.emplace_back(SetEnemy(46.0f, EnemyType::A_2, Shaft::Side, 8.0f));
 	//level_9.emplace_back(SetEnemy(46.0f, EnemyType::B, Shaft::Side, 15.0f));
 	level_9.emplace_back(SetEnemy(46.0f, EnemyType::A, Shaft::Side, 2.0f));
 	//level_9.emplace_back(SetEnemy(46.5f, EnemyType::B, Shaft::Side, 10.0f));
@@ -1481,7 +1585,7 @@ void EnemySpawner::InitializeLevel9()
 
 	level_9.emplace_back(SetEnemy(73.0f, EnemyType::D, Shaft::Vertical, 2.0f));
 	level_9.emplace_back(SetEnemy(74.0f, EnemyType::A, Shaft::Vertical, 16.0f));
-	level_9.emplace_back(SetEnemy(80.0f, EnemyType::C, Shaft::Side, 1.5f));//10
+	level_9.emplace_back(SetEnemy(80.0f, EnemyType::C_2, Shaft::Side, 1.5f));//10
 
 	level_9.emplace_back(SetEnemy(82.0f, EnemyType::C, Shaft::Vertical, 14.0f));//11
 	level_9.emplace_back(SetEnemy(85.0f, EnemyType::D, Shaft::Side, 13.0f));
