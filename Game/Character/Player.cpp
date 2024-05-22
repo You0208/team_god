@@ -25,7 +25,7 @@ Player::Player()
     // ユニットカテゴリーの初期化
     unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
 
-    // TODO もね　ゲーム画面 案山子
+    // TODO もね　
     {
         // はじく強さ
         flip_speed = 2.0f;
@@ -245,7 +245,7 @@ void Player::ChangeCategory()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    // TODO もね　ユニットのボタン設定
+    // TODO もね　
     //Chili (丸)
     //Shishito（バフ）
     //OrangePumpkin（縦三角）

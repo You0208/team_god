@@ -53,6 +53,6 @@ private:
     std::vector<Seed*> seeds;
     std::set<Seed*>    removes;
 
-    //Todo　もね　種の残る時間
+    //Todo　もね　
     float seed_limit_time = 13.0f;// 種の制限時間
 };

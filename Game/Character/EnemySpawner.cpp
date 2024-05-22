@@ -1507,10 +1507,16 @@ void EnemySpawner::InitializeLevel8()
 	level_8.emplace_back(SetEnemy(9.0f, EnemyType::A, Shaft::Side, 9.0f));
 
 	level_8.emplace_back(SetEnemy(12.0f, EnemyType::A, Shaft::Vertical, 1.0f));
-	level_8.emplace_back(SetEnemy(14.0f, EnemyType::A, Shaft::Vertical, 1.0f));
-	level_8.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Vertical, 1.0f));
-	level_8.emplace_back(SetEnemy(18.0f, EnemyType::A, Shaft::Vertical, 1.0f));
-	level_8.emplace_back(SetEnemy(20.0f, EnemyType::A, Shaft::Vertical, 1.0f));
+	level_8.emplace_back(SetEnemy(14.0f, EnemyType::A, Shaft::Vertical, 3.0f));
+	level_8.emplace_back(SetEnemy(16.0f, EnemyType::A, Shaft::Vertical, 5.0f));
+	level_8.emplace_back(SetEnemy(18.0f, EnemyType::A, Shaft::Vertical, 7.0f));
+	level_8.emplace_back(SetEnemy(18.0f, EnemyType::A, Shaft::Side, 9.0f));
+	level_8.emplace_back(SetEnemy(20.0f, EnemyType::A, Shaft::Vertical, 9.0f));
+
+	level_8.emplace_back(SetEnemy(20.0f, EnemyType::A, Shaft::Side, 12.0f));
+	level_8.emplace_back(SetEnemy(22.0f, EnemyType::A, Shaft::Side, 14.0f));
+	level_8.emplace_back(SetEnemy(24.0f, EnemyType::A, Shaft::Side, 16.0f));
+	level_8.emplace_back(SetEnemy(26.0f, EnemyType::A, Shaft::Side, 18.0f));
 
 	level_8.emplace_back(SetEnemy(20.0f, EnemyType::A, Shaft::Side, 4.0f));//1
 
