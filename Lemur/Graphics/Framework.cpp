@@ -57,7 +57,7 @@ bool Framework::Initialize()
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new OverScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene);
-	//Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
 	Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));

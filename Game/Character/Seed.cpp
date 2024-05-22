@@ -18,11 +18,13 @@ Seed::Seed()
     error_effect = new Effect(".\\resources\\Effect\\SEED_ERROR\\SEED_ERROR.efk");
 
     scaleFactor = 0.1f;
-    radius = 0.3f;
-    height = 0.3f;
+
+    //TODO　もね
+    radius = 0.28f;
+    height = 0.28f;
     rotation.y = DirectX::XMConvertToRadians(90.0f);
 
-    //TODO もね　種(バツ)エフェクトのサイズ
+    //TODO もね　
     effect_size = 0.3f;
 
     // 回す

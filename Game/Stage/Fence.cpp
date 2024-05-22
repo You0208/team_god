@@ -60,13 +60,13 @@ Fence::Fence()
         health = 50;
         break;
     case 6:// ƒŒƒxƒ‹7
-        health = 200;
+        health = 60;
         break;
     case 7:// ƒŒƒxƒ‹8
-        health = 200;
+        health = 60;
         break;
     case 8:// ƒŒƒxƒ‹9
-        health = 200;
+        health = 60;
         break;
     }
     max_health = health;

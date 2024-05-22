@@ -949,7 +949,8 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 		mask_angle = 0.0f;
 		mask_scale.value = 10.0f;
 		mask_pos = mask_pos_;
-		mask_scale.CallValueEasing(0.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.6f);
+		//TODOÅ@Ç‡ÇÀ
+		mask_scale.CallValueEasing(0.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.9f);
 		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CHANGE_IN, false);
 		is_in = true;
 	}
@@ -958,7 +959,8 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 		mask_angle = 0.0f;
 		mask_scale.value = 0.0f;
 		mask_pos = mask_pos_;
-		mask_scale.CallValueEasing(10.0f, 0.0f, EasingFunction::EasingType::OutSine, 0.6f);
+		//TODOÅ@Ç‡ÇÀ
+		mask_scale.CallValueEasing(10.0f, 0.0f, EasingFunction::EasingType::OutSine, 0.9f);
 		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CHANGE_OUT,false);
 	}
 	start_transition = true;
