@@ -78,6 +78,7 @@ private:// ÉQÅ[ÉÄ
 
     bool over_direction = false;
     float over_timer = 0.0f;
+    int over_state = 0;;
 
     bool clear_direction = false;
     int clear_direction_state = 0;

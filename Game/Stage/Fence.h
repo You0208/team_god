@@ -18,6 +18,10 @@ public:
     //•`‰æˆ—
     void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader);
 
+    void FenceShake(float elapsedTime);
+    void CallFenceShake();
+    void StopFenceShake();
+
     // Imgui
     void DrawDebugGui();
 
@@ -32,7 +36,10 @@ public:
     Rect GetBackRect() { return back_rect; }
     Rect GetRightRect() { return right_rect; }
 
+    float health_prsent = 0.0f;
     int fence_state = 0;
+    EasingFunction fence1_pos = {};
+    EasingFunction fence2_pos = {};
     enum FENCE_STATE
     {
         FANCE_0,
@@ -46,6 +53,5 @@ private:
     Rect back_rect      = {};   // ò‚Í‚È‚¢‚¯‚Ç“–‚½‚è”»’è—p‚É
     Rect right_rect     = {};   // ò‚Í‚È‚¢‚¯‚Ç“–‚½‚è”»’è—p‚É
     float rect_width    = 0.0f; 
-    float health_prsent = 0.0f;
 
 };

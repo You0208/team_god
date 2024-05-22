@@ -111,7 +111,7 @@ void GameScene::Initialize()
 		//7 3-2
 		//8 3-3
 
-		stage_manager.SetStageLevel(3);
+		stage_manager.SetStageLevel(0);
 		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
@@ -243,7 +243,7 @@ void GameScene::Initialize()
 			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
 		}
-		hitEffect = new Effect(".\\resources\\Effect\\UNIT5_ATK\\UNIT5_ATK_ALL.efk");
+		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_main.efk");
 
 		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
 		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
@@ -311,10 +311,12 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		camera.Update(elapsedTime);
 	}
 
-	//if (::GetAsyncKeyState('C') & 0x8000)
-	//{
-	//	handle = hitEffect->Play({ 0,0,0 }, 0.3f);
-	//}
+	if (::GetAsyncKeyState('C') & 0x8000)
+	{
+		//fence->CallFenceShake();
+		//over_direction = true;
+		handle = hitEffect->Play({ 0,0,0 }, 1.0f);
+	}
 	// ライトの更新
 	LightUpdate();
 
@@ -336,17 +338,18 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	// スタート演出
 	if(start_direction)
 	{
-		//start_direction = false;
 		StartDirectionUpdate(elapsedTime);
 		return;
 	}
 	else if (over_direction)
 	{
+		fence->CallFenceShake();
 		OverDirectionUpdate(elapsedTime);
 		return;
 	}
 	else if (clear_direction)
 	{
+		StageManager::Instance().result_health_parsent = fence->health_prsent;
 		ClearDirectionUpdate(elapsedTime);
 		return;
 	}
@@ -847,9 +850,32 @@ void GameScene::StartDirectionUpdate(float elapsedTime)
 
 void GameScene::OverDirectionUpdate(float elapsedTime)
 {
-	next_scene = 0;
-	preparation_next = true;
-	CallTransition(true);
+	over_timer += elapsedTime;
+
+	switch (over_state)
+	{
+	case 0:
+		fence->FenceShake(elapsedTime);
+
+		if (over_timer >= 1.0f)
+		{
+			fence->StopFenceShake();
+
+			fence->fence_state = fence->FANCE_2;
+			over_timer = 0.0f;
+			over_state++;
+		}
+
+		break;
+	case 1:
+		if (over_timer >= 0.5f)
+		{
+			next_scene = 0;
+			preparation_next = true;
+			CallTransition(true);
+		}
+		break;
+	}
 }
 
 void GameScene::ClearDirectionUpdate(float elapsedTime)

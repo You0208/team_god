@@ -70,14 +70,43 @@ void TutorialScene::Initialize()
 		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
 		pause_text_select = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
 
-		tutorial_glf[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\1.png");
-		tutorial_glf[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\2.png");
-		tutorial_glf[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\3.png");
-		tutorial_glf[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\4.png");
-		tutorial_glf[4] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\5.png");
-		tutorial_glf[5] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\6.png");
-		tutorial_glf[6] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\7.png");
-		tutorial_glf[7] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\8.png");
+		tutorial_gif[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\1.png");
+		tutorial_gif[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\2.png");
+		tutorial_gif[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\3.png");
+		tutorial_gif[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\4.png");
+		tutorial_gif[4] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\5.png");
+		tutorial_gif[5] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\6.png");
+		tutorial_gif[6] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\7.png");
+		tutorial_gif[7] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\8.png");
+
+		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
+		pause_text_select = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
+
+
+	
+		button[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Abutton.png");
+		button[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Bbutton.png");
+		button[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Xbutton.png");
+		button[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Ybutton.png");
+
+
+		mission_text[MISSION::throw_seed] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\たねをとばす.png");
+		mission_text[MISSION::change_unit] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\ユニットをかえる.png");
+		mission_text[MISSION::move_player] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\かかしをうごかす.png");
+		mission_text[MISSION::attack] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\きのこにこうげき.png");
+		
+		menu_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\MENUでステージセレクト.png");
+		reset_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Reset.png");
+		Frame_tutorial = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Frame_tutorial.png");
+		
+		button_beside = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Button_beside.png");
+		button_up = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Button_up.png");
+		
+		left_row = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Leftarrow.png");
+		right_row = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Rightarrow.png");
+	
+		left_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Left.png");
+		right_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Right.png");
 	}
 	// ゲーム部分
 	{
@@ -126,6 +155,10 @@ void TutorialScene::Initialize()
 		// チュートリアル
 		tutorial_state = 0;
 		tutorial_gif_num = 0;
+		// BGM
+		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
+		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON_SE, true);
+
 
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
@@ -134,6 +167,11 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Finalize()
 {
+	// BGM終了
+	// BGM
+	Lemur::Audio::AudioManager::Instance().StopAllBGM();
+	Lemur::Audio::AudioManager::Instance().StopAllSE();
+
 	//プレイヤー終了
 	if (player != nullptr)
 	{
@@ -220,11 +258,18 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 			EnemyManager::Instance().Register(new_enemy);
 		}
 
+		// ０番GIF終わったら１番に
+		if (tutorial_gif_num == 0 && tutorial_gif[0]->is_anime_end)
+		{
+			tutorial_gif[0]->is_anime_end = false;
+			tutorial_gif_num = 1;
+		}
 		switch (tutorial_state)
 		{
 		case MISSION::throw_seed:// 種を飛ばす
 			if (SeedManager::Instance().GetSeedCount() > 0)
 			{
+				tutorial_gif_num = 2;
 				tutorial_state = MISSION::move_player;
 				player_current_position = player->GetPosition();
 			}
@@ -232,6 +277,7 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 		case MISSION::move_player:// かかしを動かす
 			if (!Equal(player_current_position.x, player->GetPosition().x) || !Equal(player_current_position.z, player->GetPosition().z))
 			{
+				tutorial_gif_num = 3;
 				unit_category = player->GetCategory();
 				tutorial_state = MISSION::change_unit;
 			}
@@ -249,7 +295,10 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 			}
 			break;
 		case MISSION::clear:
-
+			if (gamePad.GetButtonDown() & gamePad.BTN_START)
+			{
+				Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+			}
 			break;
 		}
 	}
@@ -419,7 +468,39 @@ void TutorialScene::Render(float elapsedTime)
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT);
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT * 3, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
-		tutorial_glf[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.05f, { 40,10 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
+		if(tutorial_gif_num!=0)tutorial_gif[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.05f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
+		else tutorial_gif[0]->Animation(immediate_context, elapsedTime, 0.05f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[0],false);
+
+		Frame_tutorial->Render(immediate_context, 0, 0, 700, SCREEN_HEIGHT);
+		mission_text[tutorial_state]->Render(immediate_context, 40, 600, 600, 200);
+
+		if(tutorial_gif_num!=7)right_row->Render(immediate_context, 600, 240, 100, 100);
+		if(tutorial_gif_num!=0)left_row->Render(immediate_context, -20, 240, 100, 100);
+
+		reset_text->Render(immediate_context, 1600, 960, 300, 100);
+
+
+		switch (tutorial_state)
+		{
+		case MISSION::move_player:
+			button_beside->Animation(immediate_context, elapsedTime, 0.2f, { 330,750 }, { 300 ,300 }, { 1,1,1,1 }, 0.0f, { 300 ,300 }, 3);
+			left_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			break;
+		case MISSION::attack:
+			button_up->Animation(immediate_context, elapsedTime, 0.2f, { 330,750 }, { 300 ,300 }, { 1,1,1,1 }, 180.0f, { 300 ,300 }, 6);
+			right_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			break;
+		case MISSION::throw_seed:
+			button_up->Animation(immediate_context, elapsedTime, 0.2f, { 330,750 }, { 300 ,300 }, { 1,1,1,1 }, 180.0f, { 300 ,300 }, 6);
+			right_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			break;
+		case MISSION::change_unit:
+			for (int i = 0; i < 4; i++)
+			{
+				button[i]->Render(immediate_context, 55+(140*i), 830, 150, 150);
+			}
+			break;
+		}
 	}
 	else
 	{

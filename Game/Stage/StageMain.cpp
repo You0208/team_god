@@ -149,11 +149,11 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
         for (int y = 0; y < 7; y++)
         {
             fence2->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
-            fence2->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) });
+            fence2->GetTransform()->SetPosition({ -9.0f + Fence::Instance().fence1_pos.value,dec_y,8.0f - (y * 2.5f) + Fence::Instance().fence2_pos.value });
             fence2->Render(scale, replaced_pixel_shader);
             if (y == 6)
             {
-                fence_end->GetTransform()->SetPosition({ -9.0f,dec_y,8.0f - (y * 2.5f) - 2.5f });
+                fence_end->GetTransform()->SetPosition({ -9.0f + Fence::Instance().fence1_pos.value,dec_y,8.0f - (y * 2.5f) - 2.5f + Fence::Instance().fence2_pos.value });
                 fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(0.0f));
                 fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
                 fence_end->Render(scale, replaced_pixel_shader);
@@ -161,14 +161,14 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
         }
         for (int x = 0; x < 7; x++)
         {
-            fence->GetTransform()->SetPosition({ -8.0f + (x * 2.5f),dec_y,-9.0f });
+            fence->GetTransform()->SetPosition({ -8.0f + Fence::Instance().fence2_pos.value + (x * 2.5f),dec_y,-9.0f + Fence::Instance().fence1_pos.value });
             fence->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
             fence->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
             fence->Render(scale, replaced_pixel_shader);
 
             if (x == 6)
             {
-                fence_end->GetTransform()->SetPosition({ -8.0f + (x * 2.5f) + 2.5f,dec_y,-9.0f });
+                fence_end->GetTransform()->SetPosition({ -8.0f + Fence::Instance().fence2_pos.value + (x * 2.5f) + 2.5f,dec_y,-9.0f + Fence::Instance().fence2_pos.value });
                 fence_end->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-90.0f));
                 fence_end->GetTransform()->SetRotationZ(DirectX::XMConvertToRadians(20.0f));
                 fence_end->Render(scale, replaced_pixel_shader);

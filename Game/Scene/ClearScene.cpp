@@ -8,6 +8,8 @@
 #include "Game/Scene/GameScene.h"
 #include "Game/Scene/LoadingScene.h"
 #include "Game/Stage/StageManager.h"
+#include "Game/Stage/Fence.h"
+
 
 void ClearScene::Initialize()
 {
@@ -55,6 +57,23 @@ void ClearScene::Initialize()
         interval_1 = 0.0f;
         interval_2 = 0.3f;
         interval_3 = 0.6f;
+
+        is_star_1 = false;
+        is_star_2 = false;
+        is_star_3 = false;
+
+        if (StageManager::Instance().result_health_parsent <= 0.3f)
+        {
+            is_star_1 = true;
+        }
+        else if (StageManager::Instance().result_health_parsent <= 0.9f)
+        {
+            is_star_2 = true;
+        }
+        else 
+        {
+            is_star_3 = true;
+        }
 
         Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::CLEAR, true);
 
@@ -313,6 +332,7 @@ void ClearScene::Render(float elapsedTime)
     }
     // ƒ}ƒXƒN
     RenderTransitionMask(elapsedTime);
+
 }
 
 void ClearScene::DebugImgui()

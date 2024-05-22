@@ -675,6 +675,8 @@ void Sprite::Animation( ID3D11DeviceContext* immediate_context, float elapsed_ti
     }
     if (anime_x == last && anime_y == anime_y_max && !loop)
     {
+        anime_x = 0;
+        anime_y = 0;
         is_anime_end = true;
     }
 

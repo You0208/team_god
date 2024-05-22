@@ -13,6 +13,7 @@ public:
     };
     float value = 0.0f;
     bool is_easing = false;
+    bool is_continue_easing = false;
 
 public:
     void EasingValue(float elapsed_time);
@@ -89,7 +90,6 @@ private:
 
     int loop_count = 0;
     bool is_loop = true;
-    bool is_continue_easing = false;
     bool is_twice_easing = false;
     float continue_time_max = 0.2f;
     float continue_max = 0.0f;

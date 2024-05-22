@@ -124,6 +124,24 @@ void Fence::Render(float scale, ID3D11PixelShader** replaced_pixel_shader)
     //model->Render(scale, replaced_pixel_shader);
 }
 
+void Fence::FenceShake(float elapsedTime)
+{
+    fence1_pos.ContinueEasing(elapsedTime);
+    fence2_pos.ContinueEasing(elapsedTime);
+}
+
+void Fence::CallFenceShake()
+{
+    fence1_pos.CallValueContinue(-0.04f, 0.04f, fence1_pos.value, EasingFunction::EasingType::InSine, EasingFunction::EasingType::InSine, 0.05f);
+    fence2_pos.CallValueContinue(-0.04f, 0.04f, fence1_pos.value, EasingFunction::EasingType::InSine, EasingFunction::EasingType::InSine, 0.05f);
+}
+
+void Fence::StopFenceShake()
+{
+    fence1_pos.is_continue_easing = false;
+    fence2_pos.is_continue_easing = false;
+}
+
 void Fence::DrawDebugGui()
 {
     ImGui::Begin(u8"çÚÇ§");

@@ -31,11 +31,18 @@ void TitleScene::Initialize()
         title_left = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Title_left.png");
         title_right = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Title_right.png");
         title_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Title_scene.png");
+        title_back2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Title_scene.png");
         title_logo = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Titlelogo.png");
+        title_credit = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Credit.png");
+        title_menu = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Credit_menu.png");
+        title_start = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Start.png");
     }
 
     // ゲーム
     {
+        credit_y.value = -1080.0f;
+        title_x_2 = 3840.0f;
+        start_scale.value = 1.0f;
         left_scale.CallValueEasing(1.2f, left_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
         Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::TITLE, true);
         //CallTransition(false);
@@ -67,55 +74,80 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
         left_scale.EasingValue(elapsedTime);
         right_scale.EasingValue(elapsedTime);
         logo_scale.EasingValue(elapsedTime);
+        credit_y.EasingValue(elapsedTime);
+        start_scale.ContinueEasing(elapsedTime);
     }
 
-    switch (direction_num)
+    // タイトル流し
+    title_x_1 -= elapsedTime*100;
+    title_x_2 -= elapsedTime*100;
+    if (title_x_1 < -3840.0f)title_x_1 = 3840.0f;
+    if (title_x_2 < -3840.0f)title_x_2 = 3840.0f;
+
+    if (is_direction)
     {
-    case LEFT:
-        if (!left_scale.is_easing)
+        switch (direction_num)
         {
-            left_scale.CallValueEasing(1.0f, left_scale.value, EasingFunction::EasingType::InSine, 0.3f);
-            right_scale.CallValueEasing(1.2f, right_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
-            direction_num = RIGHT;
-        }
-        break;
-    case RIGHT:
+        case LEFT:
+            if (!left_scale.is_easing)
+            {
+                left_scale.CallValueEasing(1.0f, left_scale.value, EasingFunction::EasingType::InSine, 0.3f);
+                right_scale.CallValueEasing(1.2f, right_scale.value, EasingFunction::EasingType::OutSine, 0.8f);
+                direction_num = RIGHT;
+            }
+            break;
+        case RIGHT:
 
-        if (!right_scale.is_easing)
-        {
-            right_scale.CallValueEasing(1.0f, right_scale.value, EasingFunction::EasingType::InSine, 0.3f);
-            direction_num = RIGHT_2;
-        }
-        break;
-    case RIGHT_2:
+            if (!right_scale.is_easing)
+            {
+                right_scale.CallValueEasing(1.0f, right_scale.value, EasingFunction::EasingType::InSine, 0.3f);
+                direction_num = RIGHT_2;
+            }
+            break;
+        case RIGHT_2:
 
-        if (!right_scale.is_easing)
-        {
-            logo_scale.CallValueEasing(1.2f, logo_scale.value, EasingFunction::EasingType::InSine, 0.5f);
-            direction_num = LOGO;
+            if (!right_scale.is_easing)
+            {
+                logo_scale.CallValueEasing(1.2f, logo_scale.value, EasingFunction::EasingType::InSine, 0.5f);
+                direction_num = LOGO;
+            }
+            break;
+        case LOGO:
+            if (!logo_scale.is_easing)
+            {
+                logo_scale.CallValueEasing(1.0f, logo_scale.value, EasingFunction::EasingType::OutBounce, 0.5f);
+                direction_num = LOGO_2;
+            }
+            break;
+        case LOGO_2:
+            if (!logo_scale.is_easing)
+            {
+                start_scale.CallValueContinue(1.0f, 1.2f, start_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.6f);
+                is_direction = false;
+            }
+            break;
         }
-        break;
-    case LOGO:
-        if (!logo_scale.is_easing)
-        {
-            logo_scale.CallValueEasing(1.0f, logo_scale.value, EasingFunction::EasingType::OutBounce, 0.5f);
-            direction_num = LOGO_2;
-        }
-        break;
-    case LOGO_2:
-        if (!logo_scale.is_easing)
-        {
-            is_direction = false;
-        }
-        break;
     }
 
     if (is_direction)return;
 
-    if (gamePad.GetButton() & gamePad.BTN_B)
+    if (gamePad.GetButton() & gamePad.BTN_B&&!is_credit)
     {
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
         if (!is_in)CallTransition(true);
+    }
+    if (gamePad.GetButton() & gamePad.BTN_START)
+    {
+        if (is_credit)
+        {
+            is_credit = false;
+            credit_y.CallValueEasing(-1920.0f, credit_y.value, EasingFunction::EasingType::InSine, 1.0f);
+        }
+        else
+        {
+            is_credit = true;
+            credit_y.CallValueEasing(0.0f, credit_y.value, EasingFunction::EasingType::OutBounce, 1.0f);
+        }
     }
 
     // アイリスインを呼ぶ
@@ -144,11 +176,16 @@ void TitleScene::Render(float elapsedTime)
     immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
     immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-    title_back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    title_back->Render(immediate_context, title_x_1, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT);
+    title_back2->Render(immediate_context, title_x_2, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT);
     //title_left->RenderCenter(immediate_context, left_x.value,left_y.value, 1010 * left_scale.value, SCREEN_HEIGHT * left_scale.value);
     title_left->RenderLeftDown(immediate_context, 0, 1080.0f, 1010 * left_scale.value, SCREEN_HEIGHT * left_scale.value, 0.0f);
-    title_right->RenderRightDown(immediate_context, 1920.0f, 1080.0f, 1010 * right_scale.value, SCREEN_HEIGHT * right_scale.value, 0.0f);
+    title_right->RenderRightDown(immediate_context, 1920.0f, 1080.0f, 955 * right_scale.value, SCREEN_HEIGHT * right_scale.value, 0.0f);
     title_logo->RenderCenter(immediate_context, 1000, 190, 1100 * logo_scale.value, 300 * logo_scale.value);
+
+    title_menu->RenderRightDown(immediate_context, 1920, 1080, 400, 100, 0.0f);
+    title_start->RenderCenter(immediate_context, 905, 975, 400* start_scale.value, 120* start_scale.value);
+    title_credit->Render(immediate_context, 0, credit_y.value, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // マスク
     RenderTransitionMask(elapsedTime);

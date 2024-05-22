@@ -223,8 +223,11 @@ Broccoli::Broccoli()
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\rect.fbx");
 
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
+    attack_effect = new Effect(".\\resources\\Effect\\UNIT5_ATK\\UNIT5_ATK_ALL.efk");
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+
+    attack_effect_size = 1.0f;
 
     attack_times = 5;    // 攻撃回数
     attack_power = 1;    // 攻撃力
@@ -341,6 +344,8 @@ void Broccoli::UpdateAttackState(float elapsed_time)
                 {
                     PlayAnimation(Animation::Attack, false);
                     enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_handle = attack_effect->Play_R(position, attack_effect_size,DirectX::XMConvertToRadians(90.0f));
                 }
             }
         }

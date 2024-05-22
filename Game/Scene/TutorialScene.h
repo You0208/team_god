@@ -46,7 +46,21 @@ private:// ƒQ[ƒ€
     std::shared_ptr<Sprite> pause_text_continue;
     std::shared_ptr<Sprite> pause_text_select;
 
-    std::shared_ptr<Sprite> tutorial_glf[8];
+    std::shared_ptr<Sprite> tutorial_gif[8];
+
+    std::shared_ptr<Sprite> button[4] = {};
+    std::shared_ptr<Sprite> mission_text[4] = {};
+    std::shared_ptr<Sprite> menu_text = {};
+    std::shared_ptr<Sprite> reset_text = {};
+    std::shared_ptr<Sprite> button_beside = {};
+    std::shared_ptr<Sprite> button_up = {};
+    std::shared_ptr<Sprite> left_row = {};
+    std::shared_ptr<Sprite> right_row = {};
+    std::shared_ptr<Sprite> Frame_tutorial = {};
+    std::shared_ptr<Sprite> left_text = {};
+    std::shared_ptr<Sprite> right_text = {};
+
+
     int tutorial_glf_num_x[8] = {2,0,5,0,9,9,9,4};// ˆê”Ô‰º‚Ìƒ‰ƒCƒ“‚Ì‚Æ‚±
 
     int tutorial_gif_num = 0;
