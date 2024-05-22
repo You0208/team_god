@@ -111,7 +111,7 @@ void GameScene::Initialize()
 		//7 3-2
 		//8 3-3
 
-		stage_manager.SetStageLevel(0);
+		stage_manager.SetStageLevel(7);
 		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
@@ -173,9 +173,9 @@ void GameScene::Initialize()
 		pause_text_select_scale.value = 1.0f;
 		clear_direction_state = 0;
 
-		//TODO もねライティング
-		// ワールドごとのライティング、色調補正
-		// 朝
+		////TODO もねライティング
+		//// ワールドごとのライティング、色調補正
+		//// 朝
 		if (stage_manager.GetStageLevel() == 0 ||
 			stage_manager.GetStageLevel() == 1 ||
 			stage_manager.GetStageLevel() == 2)
@@ -222,6 +222,8 @@ void GameScene::Initialize()
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT_SE, true);
 
 		}
+
+
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
 
@@ -461,7 +463,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	// Imgui
         //TODO もね　ImGui消す 
-	DebugImgui();
+	//DebugImgui();
 }
 
 void GameScene::Render(float elapsedTime)
@@ -486,7 +488,7 @@ void GameScene::Render(float elapsedTime)
 
 	// スケール
 	const float scale = 0.015f;
-	// TODO もね　えねみーの大きさ
+	// TODO もね　
 	const float enemy_scale = 0.016f;
 
 	// 影
