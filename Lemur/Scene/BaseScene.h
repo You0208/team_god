@@ -170,6 +170,8 @@ namespace Lemur::Scene
             DirectX::XMFLOAT4 hsv_adjustment{ 1.0f,1.0f,1.0f,1.0f }; // hsv•â³
             DirectX::XMFLOAT4 attack_color{ 1.0f,1.0f,1.0f,1.0f }; // UŒ‚”ÍˆÍF
             DirectX::XMFLOAT4 edge_color{ 1.0f,1.0f,1.0f,1.0f }; // UŒ‚”ÍˆÍ˜gF
+            DirectX::XMFLOAT4 attack_color2{ 1.0f,1.0f,1.0f,1.0f }; // UŒ‚”ÍˆÍF
+            DirectX::XMFLOAT4 edge_color2{ 1.0f,1.0f,1.0f,1.0f }; // UŒ‚”ÍˆÍ˜gF
         };
         option_constants option_constant;
 
@@ -342,6 +344,7 @@ namespace Lemur::Scene
         Microsoft::WRL::ComPtr<ID3D11PixelShader> Wall;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> Try;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> collision;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> collision_2;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> chara_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> stage_ps_1;

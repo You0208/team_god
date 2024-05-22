@@ -10,6 +10,10 @@ void Lemur::Scene::BaseScene::DebugImgui()
 	ImGui::SliderFloat4("parameters", &option_constant.parameters.x, 0.0f, +1.0f);
 	ImGui::SliderFloat4("rgb_adjustment", &option_constant.rgb_adjustment.x, 0.0f, +3.0f);
 	ImGui::SliderFloat4("hsv_adjustment", &option_constant.hsv_adjustment.x, 0.0f, +3.0f);
+	ImGui::SliderFloat4("attack_color", &option_constant.attack_color.x, 0.0f, +1.0f);
+	ImGui::SliderFloat4("edge_color", &option_constant.edge_color.x, 0.0f, +1.0f);
+	ImGui::SliderFloat4("attack_color2", &option_constant.attack_color2.x, 0.0f, +1.0f);
+	ImGui::SliderFloat4("edge_color2", &option_constant.edge_color2.x, 0.0f, +1.0f);
 
 	ImGui::Separator();
 	ImGui::ColorEdit3("sky_color", &sky_color.x);

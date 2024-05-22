@@ -26,7 +26,7 @@ public:
 
     // •`‰æˆ—
     void Render(float scale, ID3D11PixelShader* replaced_pixel_shader);
-    void CollisionRender(float scale, ID3D11PixelShader* replaced_pixel_shader);
+    void CollisionRender(float scale, ID3D11PixelShader* replaced_pixel_shader, ID3D11PixelShader* replaced_pixel_shader2);
 
     // ƒ†ƒjƒbƒg“o˜^
     void Register(Unit* unit);

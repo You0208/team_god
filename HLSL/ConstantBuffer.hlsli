@@ -74,6 +74,8 @@ cbuffer OPTION_CONSTANT_BUFFER : register(b3)
     float4 hsv_adjustment;
     float4 attack_color;
     float4 edge_color;
+    float4 attack_color2;
+    float4 edge_color2;
 };
 
 

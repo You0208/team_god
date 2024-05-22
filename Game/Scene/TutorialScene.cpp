@@ -59,6 +59,7 @@ void TutorialScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/scarecrow.cso", scarecrow_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps_2.cso", collision_2.GetAddressOf());
 
 	}
 	// スプライト読み込み
@@ -363,7 +364,7 @@ void TutorialScene::Render(float elapsedTime)
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Activate(immediate_context);
 		ID3D11PixelShader* null_pixel_shader{ NULL };
 		player->Render(0.025f, &null_pixel_shader);
-		UnitManager::Instance().CollisionRender(scale, null_pixel_shader);
+		UnitManager::Instance().CollisionRender(scale, null_pixel_shader, null_pixel_shader);
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Deactivate(immediate_context);
 	}
 
@@ -419,7 +420,7 @@ void TutorialScene::Render(float elapsedTime)
 			StageManager::Instance().Render(1.0f, stage_ps_1.GetAddressOf(), stage_ps_2.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, unit_ps.Get());
-			UnitManager::Instance().CollisionRender(scale, collision.Get());
+			UnitManager::Instance().CollisionRender(scale, collision.Get(), collision_2.Get());
 			// エネミー描画
 			EnemyManager::Instance().Render(enemy_scale, enemy_ps.Get());
 			// 種描画

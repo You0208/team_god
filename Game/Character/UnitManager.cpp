@@ -191,12 +191,16 @@ void UnitManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_sh
     }
 }
 
-void UnitManager::CollisionRender(float scale, ID3D11PixelShader* replaced_pixel_shader)
+void UnitManager::CollisionRender(float scale, ID3D11PixelShader* replaced_pixel_shader, ID3D11PixelShader* replaced_pixel_shader2)
 {
     DrawDebugPrimitive();
     for (Unit* unit : units)
     {
-        if (unit->GetCategory() == UNIT_INDEX::GreenPumpkin)
+        if (unit->GetCategory() == UNIT_INDEX::Shishito)
+        {
+            unit->CollisionRender(scale, replaced_pixel_shader2);
+        }
+        else if (unit->GetCategory() == UNIT_INDEX::GreenPumpkin)
         {
             unit->CollisionRender(scale * 70, replaced_pixel_shader);
         }

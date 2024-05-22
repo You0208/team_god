@@ -57,7 +57,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     
     
     //return float4(1.0f, 1.0f, 0.9f, 0.2f);// ゼルダホワイト
-    return float4(1.0f, 0.5f, 0.0f, 0.1f);
+    return float4(attack_color.x, attack_color.y, attack_color.z, attack_color.w);
 }
 
 

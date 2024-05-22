@@ -63,6 +63,7 @@ void GameScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/scarecrow.cso", scarecrow_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
+		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps_2.cso", collision_2.GetAddressOf());
 
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
@@ -185,6 +186,13 @@ void GameScene::Initialize()
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.15f,1.0f };
 			option_constant.parameters.y = 0.5f;
+
+			option_constant.attack_color = { 0.0f,1.0f,1.0f,0.11f };
+			option_constant.edge_color = { 0.0f,1.0f,1.0f,0.6f };
+
+			option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
+			option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+
 			// BGM
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_MORNING, true);
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_MORNING_SE, true);
@@ -199,11 +207,17 @@ void GameScene::Initialize()
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 			option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
 			option_constant.parameters.y = 0.5f;
-		 
-		// BGM
-		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
-		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON_SE, true);
-		 
+
+			option_constant.attack_color = { 0.0f,1.0f,1.0f,0.11f };
+			option_constant.edge_color = { 0.0f,1.0f,1.0f,0.6f };
+
+			option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
+			option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+
+			// BGM
+			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
+			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON_SE, true);
+
 		}
 		// 夜
 		if (stage_manager.GetStageLevel() == 6 ||
@@ -217,10 +231,16 @@ void GameScene::Initialize()
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.0f,1.0f };
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.3f,1.0f };
 			option_constant.parameters.y = 0.2f;
+
+			option_constant.attack_color = { 0.18f,1.0f,1.0f,0.07f };
+			option_constant.edge_color = { 0.3f,1.0f,1.0f,0.3f };
+
+			option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
+			option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+
 			// BGM
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT, true);
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT_SE, true);
-
 		}
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
@@ -394,7 +414,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		else
 		{
 			timer_angle = 360 * (timer / time_limit);
-			timer += elapsedTime;
+			//timer += elapsedTime;
 		}
 		// プレイヤーの更新
 		player->Update(elapsedTime);
@@ -532,7 +552,7 @@ void GameScene::Render(float elapsedTime)
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Activate(immediate_context);
 		ID3D11PixelShader* null_pixel_shader{ NULL };
 		player->Render(0.025f, &null_pixel_shader);
-		UnitManager::Instance().CollisionRender(scale, null_pixel_shader);
+		UnitManager::Instance().CollisionRender(scale, null_pixel_shader, null_pixel_shader);
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Deactivate(immediate_context);
 	}
 
@@ -592,7 +612,7 @@ void GameScene::Render(float elapsedTime)
 			StageManager::Instance().Render(1.0f, stage_ps_1.GetAddressOf(), stage_ps_2.GetAddressOf());
 			// ユニット描画
 			UnitManager::Instance().Render(scale, unit_ps.Get());
-			UnitManager::Instance().CollisionRender(scale, collision.Get());
+			UnitManager::Instance().CollisionRender(scale, collision.Get(), collision_2.Get());
 			for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
 			{
 				//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
