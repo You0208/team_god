@@ -34,6 +34,8 @@ private:
         { 1560,570 }
     };
 
+    bool first_touch = true;
+    float touch_interval = 0.0f;
     int             world_num                   = 0;    // ワールド番号
     int             stage_num                   = 0;    // ステージ番号
     bool            switch_direction            = false;//切り替えアニメーション実行フラグ
@@ -58,6 +60,9 @@ private:
 
     // UI
     std::shared_ptr<Sprite> ui                  = nullptr;
+    std::shared_ptr<Sprite> ui_1                  = nullptr;
+    std::shared_ptr<Sprite> ui_2                  = nullptr;
+
     // 案山子
     std::shared_ptr<Sprite> kakashi_1           = nullptr;
     std::shared_ptr<Sprite> kakashi_2           = nullptr;

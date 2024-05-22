@@ -110,6 +110,9 @@ void FormationScene::Initialize()
         // ポストエフェクト最終
         create_ps_from_cso(graphics.GetDevice(), "Shader/formation_final_pass.cso", pixel_shaders[static_cast<size_t>(PS::FINAL)].GetAddressOf());
     }
+    // アイリスアウトを呼ぶ
+    CallTransition(false);
+
 
     // ポイントライト・スポットライトの初期位置設定
     InitializeLight();
@@ -154,7 +157,7 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
     TransitionMask(elapsedTime);
 
     // アイリスインの最中操作を受け付けない
-    if (start_transition && is_in)return;
+    if (start_transition)return;
 
     // イージングの更新
     line_y.EasingValue(elapsedTime);

@@ -52,7 +52,7 @@ GreenPumpkin::GreenPumpkin()
 void GreenPumpkin::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 
     //// 奥三角
     //debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
@@ -392,6 +392,7 @@ Cauliflower::Cauliflower()
     death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
+    attack_effect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\rect.fbx");
 
     attack_times = 5;    // 攻撃回数
@@ -512,6 +513,9 @@ void Cauliflower::UpdateAttackState(float elapsed_time)
                     Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::Cauliflower, false);
                     PlayAnimation(Animation::Attack, false);
                     enemy->ApplyDamage(ReturnDamage());
+                    // エフェクトの再生
+                    attack_handle = attack_effect->Play_R(position, 1.0f, DirectX::XMConvertToRadians(90.0f));
+
                 }
             }
         }

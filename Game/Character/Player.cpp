@@ -20,8 +20,10 @@ Player::Player()
     limit = { StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().left_up.x + 0.5f,
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
 
+    GamePad& gamePad = Input::Instance().GetGamePad();
+
     // ユニットカテゴリーの初期化
-    unit_category = UnitManager::UNIT_INDEX::Broccoli;
+    unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
 
     // TODO もね　ゲーム画面 案山子
     {

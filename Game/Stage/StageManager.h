@@ -38,6 +38,8 @@ public:
     void AddStageLevel() { stage_level++; }
 public:
     float result_health_parsent = 1.0f;
+    int current_stage_level = 0;
+    int current_world_level = 0;
 private:
     std::vector<Stage*> stages;
     int stage_index;

@@ -115,7 +115,7 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
         PlayAnimation(Animation::Attack, false);
         Enemy* enemy = nullptr;
 
-        switch (rand() % 3)
+        switch (rand() % 2)
         {
         case EnemyType::A:
         {
@@ -146,19 +146,6 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
             // リストに追加
             EnemyManager::Instance().Register(enemy);
             break;
-        }
-        case   EnemyType::C:
-        {
-            enemy = new Enemy_C(false);
-            EnemySpawner::SetBasicEnemyStatus(enemy, status[rand() % 4]);//ランダムなステータスをセット
-
-            enemy->SetShaft(rand() % 2);// ランダムな軸に
-            enemy->SetPosition(position);// 召喚敵の座標を設定
-            enemy->SetModelScale(child_scale);
-            enemy->UpdateTransform();
-
-            // リストに追加
-            EnemyManager::Instance().Register(enemy);
         }
         };
 

@@ -180,7 +180,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
 
     if (!first_touch)touch_interval += elapsed_time;
     else touch_interval = 0.0f;
-    if (touch_interval >= .5f)
+    if (touch_interval >= 0.3f)
     {
         first_touch = true;
         touch_interval = 0.0f;
@@ -193,14 +193,18 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 下を選んだとき
-            if (first_touch&&gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+
+            if (gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
             {
-                first_touch = false;
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                next.CallValueEasing(1.0f, next.value, EasingFunction::EasingType::InSine);
-                select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                select_num = Button::Select;
-                break;
+                if (first_touch)
+                {
+                    first_touch = false;
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                    next.CallValueEasing(1.0f, next.value, EasingFunction::EasingType::InSine);
+                    select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+                    select_num = Button::Select;
+                    break;
+                }
             }
             else
             {
@@ -232,25 +236,31 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 下を選んだとき
-            if (first_touch&&gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+            if (gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
             {
-                first_touch = false;
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
-                again.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                select_num = Button::Again;
-                break;
+                if (first_touch)
+                {
+                    first_touch = false;
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                    select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
+                    again.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+                    select_num = Button::Again;
+                    break;
+                }
             }
-            // 上を選んだとき
-            else if (first_touch && gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
+                // 上を選んだとき
+            else if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
             {
-                first_touch = false;
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
-                next.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                select_num = Button::Next;
-                break;
-            }
+                if (first_touch)
+                {
+                    first_touch = false;
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                    select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
+                    next.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+                    select_num = Button::Next;
+                    break;
+                }
+            }            
             else
             {
                 first_touch = true;
@@ -279,20 +289,23 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
 
         if (!is_continue)// 選択されていない時
         {
-            if (first_touch && gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)// 上選択すると
+
+            if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)// 上選択すると
             {
-                first_touch = false;
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                again.CallValueEasing(1.0f, again.value, EasingFunction::EasingType::InSine);
-                select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                select_num = Button::Select;
-                break;
+                if (first_touch)
+                {
+                    first_touch = false;
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                    again.CallValueEasing(1.0f, again.value, EasingFunction::EasingType::InSine);
+                    select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+                    select_num = Button::Select;
+                    break;
+                }
             }
             else
             {
                 first_touch = true;
             }
-
             // イージングを更新
             next.EasingValue(elapsed_time);
             select.EasingValue(elapsed_time);

@@ -87,7 +87,7 @@ void DemoScene::Initialize()
 
 		result = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\result_back.png");
 
-		debugEffect = new Effect(".\\resources\\Effect\\UNIT5_ATK\\UNIT5_ATK_ALL.efk");
+		debugEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
 	}
 	sprite_batches[0] = std::make_unique<SpriteBatch>(graphics.GetDevice(), L".\\resources_2\\screenshot.jpg", 1);
 

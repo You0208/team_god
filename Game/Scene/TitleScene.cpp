@@ -175,8 +175,8 @@ void TitleScene::Render(float elapsedTime)
     immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
     immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-    title_back->Render(immediate_context, title_x_1, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT);
-    title_back2->Render(immediate_context, title_x_2, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT);
+    title_back->Render(immediate_context, title_x_1, 0, SCREEN_WIDTH*2+5, SCREEN_HEIGHT);
+    title_back2->Render(immediate_context, title_x_2, 0, SCREEN_WIDTH * 2+5, SCREEN_HEIGHT);
     //title_left->RenderCenter(immediate_context, left_x.value,left_y.value, 1010 * left_scale.value, SCREEN_HEIGHT * left_scale.value);
     title_left->RenderLeftDown(immediate_context, 0, 1080.0f, 1010 * left_scale.value, SCREEN_HEIGHT * left_scale.value, 0.0f);
     title_right->RenderRightDown(immediate_context, 1920.0f, 1080.0f, 955 * right_scale.value, SCREEN_HEIGHT * right_scale.value, 0.0f);

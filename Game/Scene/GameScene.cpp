@@ -74,12 +74,14 @@ void GameScene::Initialize()
 		timer_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
 		button_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
 		button_ui_chara =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
+		button_ui_circle =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
 
 		start_text_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\1.png");
 		start_text_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\2.png");
 		start_text_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\3.png");
 		start_text_start = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\START.png");
 		start_text_clear = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\CLEAR.png");
+		fight_enemy = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\てきをたおそう.png");
 
 		pause_main =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
 		pause_text_continue =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
@@ -112,8 +114,8 @@ void GameScene::Initialize()
 		//7 3-2
 		//8 3-3
 
-		stage_manager.SetStageLevel(0);
-		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
+		stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
+		//stage_manager.SetStageLevel(0);
 
 		//TODO もね 制限時間 ステージ選択
 		switch (stage_manager.GetStageLevel())
@@ -263,7 +265,7 @@ void GameScene::Initialize()
 			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
 		}
-		hitEffect = new Effect(".\\resources\\Effect\\pUNIT6_ATK\\UNIT6_ATK_main.efk");
+		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
 		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
 		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 		//option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
@@ -332,10 +334,10 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	if (::GetAsyncKeyState('C') & 0x8000)
 	{
-		StageManager::Instance().result_health_parsent = fence->health_prsent;
+		//StageManager::Instance().result_health_parsent = fence->health_prsent;
 		//fence->CallFenceShake();
-		clear_direction = true;
-		//handle = hitEffect->Play({ 0,0,0 }, 1.0f);
+		//clear_direction = true;
+		handle = hitEffect->Play({ 0,0,0 }, 1.0f);
 	}
 	// ライトの更新
 	LightUpdate();
@@ -414,7 +416,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		else
 		{
 			timer_angle = 360 * (timer / time_limit);
-			//timer += elapsedTime;
+			timer += elapsedTime;
 		}
 		// プレイヤーの更新
 		player->Update(elapsedTime);
@@ -613,10 +615,6 @@ void GameScene::Render(float elapsedTime)
 			// ユニット描画
 			UnitManager::Instance().Render(scale, unit_ps.Get());
 			UnitManager::Instance().CollisionRender(scale, collision.Get(), collision_2.Get());
-			for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
-			{
-				//UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, unit_ps.Get());
-			}
 			// エネミー描画
 			EnemyManager::Instance().Render(enemy_scale, enemy_ps.Get());
 			// 種描画
@@ -674,6 +672,12 @@ void GameScene::Render(float elapsedTime)
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT);
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT * 3, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+		if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 0, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		else if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH *1, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		else if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH *2, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		else if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+
 		timer_ui_base->Render(immediate_context, sprite_ui.Get(), 50, 50, 214, 273, 0.0f);
 		timer_hands->RenderCenter(immediate_context, sprite_ui.Get(), 50 + 107, 50 + 167, 4, 180, timer_angle);
 
@@ -712,6 +716,7 @@ void GameScene::Render(float elapsedTime)
 		pause_text_select->RenderCenter(immediate_context, 1520, 700, 500 * pause_text_select_scale.value, 120 * pause_text_select_scale.value);
 
 	}
+	if (timer >= time_limit)fight_enemy->RenderCenter(immediate_context, SCREEN_WIDTH * 0.5f, 70, 700, 120);
 	// マスクの描画
 	RenderTransitionMask(elapsedTime);
 }

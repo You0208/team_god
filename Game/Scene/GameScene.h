@@ -91,6 +91,7 @@ private:// ƒQ[ƒ€
     std::shared_ptr<Sprite> timer_ui_base;
     std::shared_ptr<Sprite> button_ui_base;
     std::shared_ptr<Sprite> button_ui_chara;
+    std::shared_ptr<Sprite> button_ui_circle;
 
     std::shared_ptr<Sprite> pause_main;
     std::shared_ptr<Sprite> pause_text_continue;
@@ -101,6 +102,8 @@ private:// ƒQ[ƒ€
     std::shared_ptr<Sprite> start_text_1;
     std::shared_ptr<Sprite> start_text_start;
     std::shared_ptr<Sprite> start_text_clear;
+
+    std::shared_ptr<Sprite> fight_enemy;
 
 
     std::unique_ptr<GltfModelManager> gltf_test_model;

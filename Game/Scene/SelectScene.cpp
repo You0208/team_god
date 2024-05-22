@@ -30,7 +30,9 @@ void SelectScene::Initialize()
 
     // テクスチャ&PS
     {    
-        ui = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI.png");
+        ui = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_AB.png");
+        ui_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_LB.png");
+        ui_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_RB.png");
 
         kakashi_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi1.png");
         kakashi_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi2.png");
@@ -59,6 +61,9 @@ void SelectScene::Initialize()
 
     // ゲーム
     {
+        world_num = StageManager::Instance().current_world_level;
+        stage_num = StageManager::Instance().current_stage_level;
+
         transition_angle.value = 140.0f;
         transition_line1_angle.value = 90.0f;
         transition_line2_angle.value = 110.0f;
@@ -161,22 +166,42 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
         return;
     }
 
+    if (!first_touch)touch_interval += elapsed_time;
+    else touch_interval = 0.0f;
+    if (touch_interval >= 0.3f)
+    {
+        first_touch = true;
+        touch_interval = 0.0f;
+    }
+
     // ステージ選択
     if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
     {
-        if (stage_num < 2)
+        if (first_touch)
         {
-            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-            stage_num++;
+            if (stage_num < 2)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                stage_num++;
+            }
+            first_touch = false;
         }
     }
     else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)
     {
-        if (stage_num > 0)
+        if (first_touch)
         {
-            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-            stage_num--;
+            if (stage_num > 0)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                stage_num--;
+            }
+            first_touch = false;
         }
+    }
+    else
+    {
+        first_touch = true;
     }
 
     // ワールド選択
@@ -212,6 +237,9 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     // ステージ決定
     if (gamePad.GetButtonDown() & gamePad.BTN_B)
     {
+        StageManager::Instance().current_world_level = world_num;
+        StageManager::Instance().current_stage_level = stage_num;
+
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
         next_scene = 0;
         CallTransition(true, stage_mask_pos[stage_num]);
@@ -276,6 +304,8 @@ void SelectScene::Render(float elapsedTime)
         }
 
         ui->Render(immediate_context, select_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+        if ( world_num != 0) ui_1->Render(immediate_context, select_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+        if ( world_num != 2 )ui_2->Render(immediate_context, select_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
 
         if (switch_direction)
         {
