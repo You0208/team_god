@@ -23,10 +23,10 @@ SummonEnemy::SummonEnemy(bool is_minor)
     height = 1.0f;     // デバッグ用
     speed_power = -1.0f;    // 速度
 
-    // TODO もね 出現敵の大きさ
+    // TODO もね 
     child_scale = 0.95f;
 
-    // TODO もね 召喚敵ランダムステータス
+    // TODO もね 
   
     // 出現敵のステータススタック
     status[0].attack_power = 1;              //攻撃力
@@ -70,7 +70,7 @@ SummonEnemy::SummonEnemy(bool is_minor)
     mover_timer_max_B = 1.0f; // 一気に進むまでの時間
     dis_B             = 3.0f;     // 一気に進む距離
 
-    // TODO もね　summon召喚物大きさ
+    // TODO もね　
     model_scale = 10.0f;
 
     // 半径の調整
@@ -107,7 +107,7 @@ void SummonEnemy::UpdateMoveState(float elapsed_time)
     position.y = easing_pos_y.value;
 
     timer += elapsed_time;
-    //TODO もね　攻撃間隔召喚敵　最初(ランダム確率)
+    //TODO もね　
     float interval = 6.5f;
 
     if (first&& interval<=timer)
@@ -254,7 +254,7 @@ BossEnemy::BossEnemy(bool is_minor)
     height = 1.0f;     // デバッグ用
     speed_power = -1.0f;    // 速度
 
-    // TODO もね　モデル大きさ
+    // TODO もね　
     model_scale = 2.0f;
 
     // スケールのイージング
@@ -345,7 +345,7 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
     radius = 1.0f;          // 半径
     height = 1.0f;          // デバッグ用
 
-    // TODO もね　動かない敵大きさ
+    // TODO もね　
      model_scale = 2.3f;
 
      // スケールのイージング
