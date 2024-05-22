@@ -33,7 +33,7 @@ void ClearScene::Initialize()
 
     // テクスチャ
     {
-        clear_start_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\start_back.png");
+        clear_start_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\spritesheet (2).png");
         clear_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\result_back.png");
         result_cover = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Result_scene.png");
         star1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Star_1.png");
@@ -68,10 +68,13 @@ void ClearScene::Initialize()
         }
         else if (StageManager::Instance().result_health_parsent <= 0.9f)
         {
+            is_star_1 = true;
             is_star_2 = true;
         }
         else 
         {
+            is_star_1 = true;
+            is_star_2 = true;
             is_star_3 = true;
         }
 
@@ -175,6 +178,14 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
     }
 
 
+    if (!first_touch)touch_interval += elapsed_time;
+    else touch_interval = 0.0f;
+    if (touch_interval >= .5f)
+    {
+        first_touch = true;
+        touch_interval = 0.0f;
+    }
+
     // どのボタンを選択しているか
     switch (select_num)
     {
@@ -182,14 +193,19 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 下を選んだとき
-            if (gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+            if (first_touch&&gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
             {
+                first_touch = false;
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 next.CallValueEasing(1.0f, next.value, EasingFunction::EasingType::InSine);
                 select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
                 select_num = Button::Select;
                 break;
             }
-
+            else
+            {
+                first_touch = true;
+            }
             // イージングを更新
             select.EasingValue(elapsed_time);
             again.EasingValue(elapsed_time);
@@ -216,22 +232,29 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 下を選んだとき
-            if (gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+            if (first_touch&&gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
             {
+                first_touch = false;
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
                 again.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
                 select_num = Button::Again;
                 break;
             }
             // 上を選んだとき
-            else if (gamePad.GetButtonDown() & gamePad.BTN_UP)
+            else if (first_touch && gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
             {
+                first_touch = false;
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
                 next.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
                 select_num = Button::Next;
                 break;
             }
-
+            else
+            {
+                first_touch = true;
+            }
             // イージングを更新
             next.EasingValue(elapsed_time);
             again.EasingValue(elapsed_time);
@@ -240,6 +263,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
             // 選択されると
             if (gamePad.GetButtonDown() & gamePad.BTN_B)
             {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;
             }
         }
@@ -255,12 +279,18 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
 
         if (!is_continue)// 選択されていない時
         {
-            if (gamePad.GetButtonDown() & gamePad.BTN_UP)// 上選択すると
+            if (first_touch && gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)// 上選択すると
             {
+                first_touch = false;
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 again.CallValueEasing(1.0f, again.value, EasingFunction::EasingType::InSine);
                 select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
                 select_num = Button::Select;
                 break;
+            }
+            else
+            {
+                first_touch = true;
             }
 
             // イージングを更新
@@ -271,6 +301,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
             // 選択されると
             if (gamePad.GetButtonDown() & gamePad.BTN_B)
             {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;
             }
         }
@@ -283,8 +314,6 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         }
         break;
     }
-
-
 }
 
 void ClearScene::Render(float elapsedTime)
@@ -310,7 +339,7 @@ void ClearScene::Render(float elapsedTime)
 
     // 2D基本
     {
-        if(!clear_start_back->is_anime_end)clear_start_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 3, false);
+        if (!clear_start_back->is_anime_end)clear_start_back->Animation(immediate_context, elapsedTime, 0.05f, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT  }, { 1,1,1,1 }, 0.0f, { 1714, 964 }, 1, false);
         else clear_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { SCREEN_WIDTH, SCREEN_HEIGHT }, 1);
 
         result_cover->RenderRightUp(immediate_context, SCREEN_WIDTH, 0, 1200, SCREEN_HEIGHT, 0.0f);
@@ -332,6 +361,7 @@ void ClearScene::Render(float elapsedTime)
     }
     // マスク
     RenderTransitionMask(elapsedTime);
+   // clear_start_back->Animation(immediate_context, { 0, 0 }, { SCREEN_WIDTH, SCREEN_HEIGHT }, { 1,1,1,1 }, 0.0f, { 1714, 964 }, 3, false);
 
 }
 

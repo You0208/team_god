@@ -44,7 +44,11 @@ namespace Lemur::Audio
         SPOWN,
         APPEARANCE,
         STANDUP,
-
+        Shishito,
+        OrangePumpkin,
+        GreenPumpkin,
+        Broccoli,
+        Cauliflower,
         SE_Max
     };
     

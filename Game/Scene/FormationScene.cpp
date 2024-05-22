@@ -4,7 +4,7 @@
 #include "./Lemur/Scene/SceneManager.h"
 #include "./high_resolution_timer.h"
 #include "./Lemur/Effekseer/EffekseerManager.h"
-
+#include"Game/Stage/StageManager.h"
 
 #include "GameScene.h"
 #include "LoadingScene.h"
@@ -60,6 +60,9 @@ void FormationScene::Initialize()
         mark_1_1         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1_1.png");
         mark_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2.png");
         mark_2_2         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2_2.png");
+        
+        Best = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Best.png");
+        arrow = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Arrow.png");
 
         // 3D
         gltf_unit[0]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Chili.glb", true);
@@ -475,6 +478,10 @@ void FormationScene::Render(float elapsedTime)
             // ２Dユニット
             unit_line[n]->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, SCREEN_HEIGHT);
         }
+        for (int n = 0; n < UNIT_MAX; n++)
+        {
+            if(enable_best[StageManager::Instance().GetStageLevel()][n])Best->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, 90);
+        }
 
         // 前に置くやつ
         front->Render(immediate_context, 0, 0, 660, SCREEN_HEIGHT);
@@ -490,6 +497,8 @@ void FormationScene::Render(float elapsedTime)
             // 島
             base->Render(immediate_context, (691.5f + 300 * j), 680, 300, 300);
         }
+
+        if (line_add.value >= -1.0f)arrow->RenderRightDown(immediate_context, SCREEN_WIDTH, SCREEN_HEIGHT*0.5f + 50, 100, 100, 0.0f);
     }
     // 書き込み終了
     if (enable_post_effect)
@@ -560,7 +569,4 @@ void FormationScene::InitializeLight()
 {
     ZeroMemory(&point_light[8], sizeof(pointLights) * 8);
     ZeroMemory(&spot_light[4], sizeof(spotLights) * 4);
-
-    BaseScene::InitializeLight();
-
 }

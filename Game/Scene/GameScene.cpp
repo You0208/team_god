@@ -243,7 +243,7 @@ void GameScene::Initialize()
 			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
 		}
-		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_main.efk");
+		hitEffect = new Effect(".\\resources\\Effect\\pUNIT6_ATK\\UNIT6_ATK_main.efk");
 		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
 		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 		//option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
@@ -312,9 +312,10 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 	if (::GetAsyncKeyState('C') & 0x8000)
 	{
+		StageManager::Instance().result_health_parsent = fence->health_prsent;
 		//fence->CallFenceShake();
-		//over_direction = true;
-		handle = hitEffect->Play({ 0,0,0 }, 1.0f);
+		clear_direction = true;
+		//handle = hitEffect->Play({ 0,0,0 }, 1.0f);
 	}
 	// ライトの更新
 	LightUpdate();
@@ -737,14 +738,16 @@ void GameScene::PauseUpdate(float elapsedTime)
 	case 0:
 		pause_text_continue_scale.ContinueEasing(elapsedTime);
 		pause_text_select_scale.EasingValue(elapsedTime);
-		if (gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+		if (gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 			pause_text_select_scale.CallValueContinue(1.0f, 1.1f, pause_text_select_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
 			pause_text_continue_scale.CallValueEasing(1.0f, pause_text_continue_scale.value, EasingFunction::EasingType::InSine);
 			pause_num++;
 		}
 		else if(gamePad.GetButtonDown() & gamePad.BTN_B)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
 			is_bloom = true;
 			pause_num = 0;
 			is_pause = false;
@@ -753,14 +756,16 @@ void GameScene::PauseUpdate(float elapsedTime)
 	case 1:
 		pause_text_select_scale.ContinueEasing(elapsedTime);
 		pause_text_continue_scale.EasingValue(elapsedTime);
-		if (gamePad.GetButtonDown() & gamePad.BTN_UP)
+		if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 			pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
 			pause_text_select_scale.CallValueEasing(1.0f, pause_text_select_scale.value, EasingFunction::EasingType::InSine);
 			pause_num--;
 		}
 		else if (gamePad.GetButtonDown() & gamePad.BTN_B)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
 			is_bloom = true;
 			pause_num = 0;
 			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
@@ -859,6 +864,7 @@ void GameScene::OverDirectionUpdate(float elapsedTime)
 		if (over_timer >= 1.0f)
 		{
 			fence->StopFenceShake();
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FANCE_BREAK, false);
 
 			fence->fence_state = fence->FANCE_2;
 			over_timer = 0.0f;
@@ -888,12 +894,15 @@ void GameScene::ClearDirectionUpdate(float elapsedTime)
 		is_bloom = false;
 		if (stage_manager.GetStageLevel() <= 2)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CHICKEN, false);
 		}
 		else if (stage_manager.GetStageLevel() <= 5)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::BARD, false);
 		}
 		else if (stage_manager.GetStageLevel() <= 8)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::OWL, false);
 		}
 		clear_direction_state++;
 		break;
@@ -902,6 +911,7 @@ void GameScene::ClearDirectionUpdate(float elapsedTime)
 
 		if (clear_timer >= 1.0f)
 		{
+			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CLEAR, false);
 			clear_text_scale.CallValueEasing(1.0f, clear_text_scale.value, EasingFunction::EasingType::OutBounce, 1.0f);
 			clear_timer = 0;
 			clear_direction_state++;

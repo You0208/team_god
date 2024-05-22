@@ -168,6 +168,8 @@ namespace Lemur::Scene
             DirectX::XMFLOAT4 parameters{ 0.0f,0.0f,0.0f,0.0f }; // x : ディゾルブ適応量、yzw : 空き
             DirectX::XMFLOAT4 rgb_adjustment{ 1.0f,1.0f,1.0f,1.0f }; // rgb補正
             DirectX::XMFLOAT4 hsv_adjustment{ 1.0f,1.0f,1.0f,1.0f }; // hsv補正
+            DirectX::XMFLOAT4 attack_color{ 1.0f,1.0f,1.0f,1.0f }; // 攻撃範囲色
+            DirectX::XMFLOAT4 edge_color{ 1.0f,1.0f,1.0f,1.0f }; // 攻撃範囲枠色
         };
         option_constants option_constant;
 

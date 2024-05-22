@@ -50,7 +50,7 @@ float3 reinhard_tone_mapping(float3 color)
 }
 float4 main(VS_OUT pin) : SV_TARGET
 {
-    float4 color = texture_maps[0].Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord);
+    float4 color = texture_maps[0].Sample(sampler_states[POINT], pin.texcoord);
     float alpha = color.a;
 
 #if 0
@@ -60,7 +60,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 #endif   
   
 	// BLOOM
-    float3 bloom_color = texture_maps[1].Sample(sampler_states[LINEAR_BORDER_BLACK], pin.texcoord).rgb;
+    float3 bloom_color = texture_maps[1].Sample(sampler_states[POINT], pin.texcoord).rgb;
     color.rgb += bloom_color;
     
     

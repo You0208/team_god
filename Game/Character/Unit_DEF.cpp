@@ -1,6 +1,7 @@
 #include "Unit_DEF.h"
 #include "EnemyManager.h"
 #include "Game/Stage/StageManager.h"
+#include "Lemur/Audio/AudioManager.h"
 
 //--------GreenPumpkin--------------------------------------------------
 
@@ -45,6 +46,7 @@ GreenPumpkin::GreenPumpkin()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void GreenPumpkin::DrawDebugPrimitive()
@@ -157,6 +159,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                 is_intersected = true;
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::GreenPumpkin, false);
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理
@@ -177,6 +180,7 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
                 is_intersected = true;
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::GreenPumpkin, false);
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理
@@ -246,6 +250,7 @@ Broccoli::Broccoli()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void Broccoli::DrawDebugPrimitive()
@@ -342,6 +347,7 @@ void Broccoli::UpdateAttackState(float elapsed_time)
                 // アニメーションの切り替え
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::Broccoli, false);
                     PlayAnimation(Animation::Attack, false);
                     enemy->ApplyDamage(ReturnDamage());
                     // エフェクトの再生
@@ -405,6 +411,7 @@ Cauliflower::Cauliflower()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void Cauliflower::DrawDebugPrimitive()
@@ -502,6 +509,7 @@ void Cauliflower::UpdateAttackState(float elapsed_time)
                 // アニメーションの切り替え
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::Cauliflower, false);
                     PlayAnimation(Animation::Attack, false);
                     enemy->ApplyDamage(ReturnDamage());
                 }

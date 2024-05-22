@@ -30,6 +30,7 @@ Enemy_A::Enemy_A(bool is_minor)
     EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::SPOWN, false);
 }
 
 void Enemy_A::DrawDebugPrimitive()
@@ -125,6 +126,7 @@ Enemy_B::Enemy_B(bool is_minor)
     EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, false);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::SPOWN, false);
 }
 
 void Enemy_B::DrawDebugGUI(int n)
@@ -143,6 +145,7 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false,0.8f, 0.5f);
 
@@ -268,6 +271,7 @@ Enemy_C::Enemy_C(bool is_minor)
     EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::SPOWN, false);
 }
 
 void Enemy_C::DrawDebugPrimitive()
@@ -292,6 +296,7 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
             attack_handle = attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
@@ -635,6 +640,7 @@ Enemy_D::Enemy_D(bool is_minor)
     EasingScaleIn();
     // とりあえずアニメーション
     PlayAnimation(Animation::Move, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::SPOWN, false);
 }
 
 void Enemy_D::DrawDebugPrimitive()
@@ -658,6 +664,7 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
         // 柵に当たったら
         if (Fence::Instance().ApplyDamage(attack_power))
         {
+            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
             attack_handle = attack_effect->Play(position, attack_effect_size);
             //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);

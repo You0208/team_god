@@ -4,7 +4,7 @@
 class StageManager
 {
 private:
-    StageManager(){ result_health_parsent = 0.0f; }
+    StageManager(){ }
     ~StageManager() {}
 
 public:
@@ -37,7 +37,7 @@ public:
 
     void AddStageLevel() { stage_level++; }
 public:
-    float result_health_parsent = 0.0f;
+    float result_health_parsent = 1.0f;
 private:
     std::vector<Stage*> stages;
     int stage_index;

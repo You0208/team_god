@@ -162,7 +162,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     }
 
     // ステージ選択
-    if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
+    if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
     {
         if (stage_num < 2)
         {
@@ -170,7 +170,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
             stage_num++;
         }
     }
-    else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)
+    else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)
     {
         if (stage_num > 0)
         {

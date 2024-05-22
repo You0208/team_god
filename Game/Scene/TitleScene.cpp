@@ -127,16 +127,15 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
             }
             break;
         }
+        return;
     }
 
-    if (is_direction)return;
-
-    if (gamePad.GetButton() & gamePad.BTN_B&&!is_credit)
+    if (gamePad.GetButtonDown() & gamePad.BTN_B&&!is_credit)
     {
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
         if (!is_in)CallTransition(true);
     }
-    if (gamePad.GetButton() & gamePad.BTN_START)
+    if (gamePad.GetButtonUp() & gamePad.BTN_START)
     {
         if (is_credit)
         {

@@ -50,7 +50,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     {
         // 深度値が結構違う場合はピクセルカラーを黒にする
         // ->これがエッジカラーとなる
-        return float4(parameters.x, parameters.y, parameters.w, 0.6f);
+        return float4(edge_color.x, edge_color.y, edge_color.z, edge_color.w);
     }
     
 #endif

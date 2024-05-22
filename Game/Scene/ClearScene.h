@@ -54,6 +54,9 @@ private:
     float interval_3 = 2.0f;
 
     int select_num = 0;
+
+    bool first_touch = true;
+    float touch_interval = 0.0f;
 private:
     std::shared_ptr<Sprite> clear_back = nullptr;              // ƒNƒŠƒAŠî–{‚Ì”wŒi
     std::shared_ptr<Sprite> clear_start_back = nullptr;              // ‘I‘ğ‚³‚ê‚½‚Ì”wŒi

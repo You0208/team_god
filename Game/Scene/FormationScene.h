@@ -97,7 +97,7 @@ private:
         {3,2},
         {4,1},
         {4,1},
-        {1,1},
+        {1,3},
         {1,3},
         {2,2},
     };
@@ -117,6 +117,21 @@ private:
     std::shared_ptr<Sprite> mark_1_1;
     std::shared_ptr<Sprite> mark_2;
     std::shared_ptr<Sprite> mark_2_2;
+    std::shared_ptr<Sprite> Best;
+    std::shared_ptr<Sprite> arrow;
+
+    bool enable_best[9][UNIT_MAX] =
+    {
+        {true,false,false,false,false,false,false},
+        {true,false,false,false,false,false,false},
+        {true,false,false,false,false,false,false},
+        {true,false,false,false,true,false,false},
+        {true,false,false,false,false,false,false},
+        {true,false,false,false,false,false,false},
+        {true,false,false,false,false,true,false},
+        {true,false,true,true,false,false,false},
+        {true,false,true,true,false,false,false},
+    };
 
     std::unique_ptr<GltfModelManager> gltf_unit[UNIT_MAX];
 

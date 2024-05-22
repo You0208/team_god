@@ -34,6 +34,7 @@ Chili::Chili()
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
 
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void Chili::DrawDebugPrimitive()
@@ -179,6 +180,7 @@ Shishito::Shishito()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void Shishito::DrawDebugPrimitive()
@@ -247,6 +249,7 @@ void Shishito::UpdateAttackState(float elapsed_time)
 
     if (!IsPlayAnimation())
     {
+        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::Shishito, false);
         PlayAnimation(Animation::Attack, false);
         attack_handle = attack_effect->Play(position, attack_effect_size);
     }
@@ -342,6 +345,7 @@ OrangePumpkin::OrangePumpkin()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void OrangePumpkin::DrawDebugPrimitive()
@@ -453,6 +457,7 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
                 is_intersected = true;
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::OrangePumpkin, false);
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理
@@ -473,6 +478,7 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
 
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::OrangePumpkin, false);
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理

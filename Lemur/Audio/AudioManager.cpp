@@ -35,6 +35,11 @@ namespace Lemur::Audio
             se[static_cast<int>(SE::SPOWN)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/17_spown.wav");
             se[static_cast<int>(SE::APPEARANCE)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/18_appearance.wav");
             se[static_cast<int>(SE::STANDUP)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/19_standup .wav");
+            se[static_cast<int>(SE::Shishito)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/Shishito.wav");
+            se[static_cast<int>(SE::OrangePumpkin)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/OrangePumpkin.wav");
+            se[static_cast<int>(SE::GreenPumpkin)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/GreenPumpkin.wav");
+            se[static_cast<int>(SE::Broccoli)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/Broccoli.wav");
+            se[static_cast<int>(SE::Cauliflower)] = std::make_unique<Lemur::Audio::Audio>(xAudio2.Get(), L"./resources/Sound/SE/Cauliflower.wav");
         }
     }
     void AudioManager::PlayBgm(const BGM& bgm_, const bool isloop)

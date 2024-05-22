@@ -1,5 +1,6 @@
 #include "Unit_HIJ.h"
 #include "EnemyManager.h"
+#include "Lemur/Audio/AudioManager.h"
 
 Unit_J::Unit_J()
 {
@@ -26,6 +27,7 @@ Unit_J::Unit_J()
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
+    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::APPEARANCE, false);
 }
 
 void Unit_J::DrawDebugPrimitive()
@@ -107,6 +109,7 @@ void Unit_J::UpdateAttackState(float elapsed_time)
 
                 if (is_attack)
                 {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::UNIT_ATTACK, false);
                     // アニメーションの切り替え
                     PlayAnimation(Animation::Attack, false);
                     // 攻撃フラグがONならダメージ処理

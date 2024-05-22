@@ -157,8 +157,9 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 右を選んだとき
-            if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
+            if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
             {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 again.CallValueEasing(1.1f, again.value, EasingFunction::EasingType::InSine);
                 select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
                 again.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
@@ -173,6 +174,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
             // 選択されると
             if (gamePad.GetButtonDown() & gamePad.BTN_B)
             {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;
             }
         }
@@ -189,8 +191,10 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
 
         if (!is_continue)// 選択されていない時
         {
-            if (gamePad.GetButtonDown() & gamePad.BTN_LEFT)// 左選択すると
+            if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)// 左選択すると
             {
+                Lemur::Audio::AudioManager::Instance().StopAllBGM();
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STANDUP, false);
                 select.CallValueEasing(1.1f, select.value, EasingFunction::EasingType::InSine);
                 again.CallValueEasing(1.0f, again.value, EasingFunction::EasingType::InSine);
                 select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
@@ -206,6 +210,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
             // 選択されると
             if (gamePad.GetButtonDown() & gamePad.BTN_B)
             {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;
             }
         }
