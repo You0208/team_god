@@ -1,5 +1,5 @@
 #include "TitleScene.h"
-#include "SelectScene.h"
+#include "TutorialScene.h"
 #include "LoadingScene.h"
 #include "./Lemur/Graphics/Camera.h"
 #include "./Lemur/Resource/ResourceManager.h"
@@ -150,7 +150,7 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
     }
 
     // アイリスインを呼ぶ
-    if (!start_transition && is_in)        Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+    if (!start_transition && is_in)        Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
     DebugImgui();
 }
 

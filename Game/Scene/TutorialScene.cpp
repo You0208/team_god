@@ -245,6 +245,10 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 			if (tutorial_gif_num > 0)tutorial_gif_num--;
 		}
 
+		if (gamePad.GetButtonDown() & gamePad.BTN_START)
+		{
+			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+		}
 
 		if (gamePad.GetButtonUp() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonUp() & gamePad.BTN_RIGHT_SHOULDER)
 		{
@@ -296,10 +300,6 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 			}
 			break;
 		case MISSION::clear:
-			if (gamePad.GetButtonDown() & gamePad.BTN_START)
-			{
-				Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
-			}
 			break;
 		}
 	}
