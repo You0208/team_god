@@ -230,7 +230,7 @@ void GameScene::Initialize()
 
 	// デバッグ
 	{
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), graphics.GetTexture2D());
+		//LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), graphics.GetTexture2D());
 
 		// パーティクルシステム準備
 		{
@@ -244,7 +244,6 @@ void GameScene::Initialize()
 
 		}
 		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK_main.efk");
-
 		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
 		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 		//option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
@@ -554,7 +553,7 @@ void GameScene::Render(float elapsedTime)
 		//　深度値
 		immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
 		// PROJECTION_MAPPING
-		immediate_context->PSSetShaderResources(15, 1, projection_mapping_texture.GetAddressOf());
+		//immediate_context->PSSetShaderResources(15, 1, projection_mapping_texture.GetAddressOf());
 	}
 	// ポストエフェクトの開始
 	if (enable_post_effect)

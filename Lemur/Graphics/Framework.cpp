@@ -23,7 +23,7 @@
 //TODO もね　FALSE→ウィンドウ　TRUE→フルスクリーン
 Framework::Framework(HWND hwnd) 
 	: hwnd(hwnd),
-	graphics(hwnd, FALSE),
+	graphics(hwnd, TRUE),
 	input(hwnd)
 {
 	input.GetMouse().SetScreenWidth(SCREEN_WIDTH);
