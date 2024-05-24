@@ -47,12 +47,12 @@ void GameScene::Initialize()
 		InitializeMask();
 
 		// スカイマップテクスチャのロード
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
+		//LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_ui.cso", sprite_ui.GetAddressOf());
@@ -82,6 +82,7 @@ void GameScene::Initialize()
 		start_text_start = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\START.png");
 		start_text_clear = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\CLEAR.png");
 		fight_enemy = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\てきをたおそう.png");
+		pose_exp = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\pose_word.png");
 
 		pause_main =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
 		pause_text_continue =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
@@ -115,8 +116,6 @@ void GameScene::Initialize()
 		//8 3-3
 
 		stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
-		//stage_manager.SetStageLevel(0);
-		//stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
 		switch (stage_manager.GetStageLevel())
@@ -246,37 +245,10 @@ void GameScene::Initialize()
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT_SE, true);
 		}
 
-
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
 
 		EnemyManager::Instance().SetTimeUp(false);
-	}
-
-	// デバッグ
-	{
-		//LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), graphics.GetTexture2D());
-
-		// パーティクルシステム準備
-		{
-			D3D11_TEXTURE2D_DESC texture2d_desc;
-			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
-			// パーティクル用画像ロード
-			LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Particle\\particle256x256.png",
-				shader_resource_view.GetAddressOf(), &texture2d_desc);
-			// パーティクルシステム生成
-			particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
-
-		}
-		hitEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
-		//directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
-		//option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
-		//option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
-		//option_constant.parameters.y = 0.5f;
-
-		//// BGM
-		//Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
-
 	}
 }
 
@@ -333,14 +305,6 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	// カメラ
 	{
 		camera.Update(elapsedTime);
-	}
-
-	if (::GetAsyncKeyState('C') & 0x8000)
-	{
-		//StageManager::Instance().result_health_parsent = fence->health_prsent;
-		//fence->CallFenceShake();
-		//clear_direction = true;
-		handle = hitEffect->Play({ 0,0,0 }, 1.0f);
 	}
 	// ライトの更新
 	LightUpdate();
@@ -440,49 +404,6 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		// スポーン
 		EnemySpawner::Instance().Update(elapsedTime);
 		EnemySpawner::Instance().DebugImGui();
-	}
-
-	// デバッグ
-	{
-		if (gamePad.GetButtonUp() & gamePad.BTN_B)
-		{
-			//hitEffect->Stop(handle);
-		}
-		if (gamePad.GetButtonUp()&gamePad.BTN_A)
-		{
-			//handle = hitEffect->Play({ 0,0,0 }, 0.3f);
-		}
-		//// パーティクルシステム更新
-		//if (particle_system)
-		//{
-		//	if (::GetAsyncKeyState('A') & 0x8000)
-		//	{
-		//		DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3((
-		//			rand() % 30 - 15) * 0.1f,
-		//			rand() % 30 * 0.1f + 20,
-		//			(rand() % 30 - 15) * 0.1f + 3);
-		//		int max = 100;
-		//		for (int i = 0; i < max; i++)
-		//		{
-		//			// 発生位置
-		//			DirectX::XMFLOAT3 p = { 0,0,0 };
-		//			p.x = pos.x + (rand() % 10001 - 5000) * 0.01f;
-		//			p.y = pos.y;
-		//			p.z = pos.z + (rand() % 10001 - 5000) * 0.01f;
-		//			// 発生方向
-		//			DirectX::XMFLOAT3 v = { 0,0,0 };
-		//			v.y = -(rand() % 10001) * 0.0005f - 0.002f;
-		//			// 力
-		//			DirectX::XMFLOAT3 f = { 0,0,0 };
-		//			f.x = (rand() % 10001) * 0.0001f + 0.1f;
-		//			f.z = (rand() % 10001 - 5000) * 0.00001f;
-		//			// 大きさ
-		//			DirectX::XMFLOAT2 s = { .2f,.2f };
-		//			particle_system->Set(12, 5, p, v, f, s);
-		//		}
-		//	}
-		//	particle_system->Update(elapsedTime);
-		//}
 	}
 
 	// Imgui
@@ -651,8 +572,6 @@ void GameScene::Render(float elapsedTime)
 		immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_OFF)].Get(), 0);
 		// ラスタライザーステート設定
 		immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-		if (particle_bomb)	particle_bomb->Render(immediate_context);
-		if (particle_system)	particle_system->Render(immediate_context);
 	}
 	// ポストエフェクトの実行
 	if (enable_post_effect)
@@ -717,6 +636,7 @@ void GameScene::Render(float elapsedTime)
 		pause_main->Render(immediate_context, SCREEN_WIDTH - 820, 0, 820, SCREEN_HEIGHT);
 		pause_text_continue->RenderCenter(immediate_context, 1520, 550, 500 * pause_text_continue_scale.value, 120 * pause_text_continue_scale.value);
 		pause_text_select->RenderCenter(immediate_context, 1520, 700, 500 * pause_text_select_scale.value, 120 * pause_text_select_scale.value);
+		pose_exp->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	}
 	if (timer >= time_limit)fight_enemy->RenderCenter(immediate_context, SCREEN_WIDTH * 0.5f, 70, 700, 120);
@@ -726,18 +646,18 @@ void GameScene::Render(float elapsedTime)
 
 void GameScene::DebugImgui()
 {
-	ImGui::Begin(u8"ゲーム");
-	float t = time_limit - timer;
-	ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
-	ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
-	ImGui::End();
+	//ImGui::Begin(u8"ゲーム");
+	//float t = time_limit - timer;
+	//ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
+	//ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
+	//ImGui::End();
 
-	ImGui::Begin("shadow_color");
-	ImGui::SliderFloat3("shadow_color", &scene_constant.shadow_color.x, 0.0f, 1.0f);
-	ImGui::End();
+	//ImGui::Begin("shadow_color");
+	//ImGui::SliderFloat3("shadow_color", &scene_constant.shadow_color.x, 0.0f, 1.0f);
+	//ImGui::End();
 
-	BaseScene::DebugImgui();
-	Camera::Instance().DrawDebug();
+	//BaseScene::DebugImgui();
+	//Camera::Instance().DrawDebug();
 
 }
 

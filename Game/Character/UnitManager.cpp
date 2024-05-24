@@ -14,6 +14,7 @@ void UnitManager::Initialize()
         model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\GreenPumpkin.fbx");
         model_5 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
         model_6 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
+        model_7 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Mustard.fbx");
     }
 
     //TODO もね　ユニットステータス
@@ -248,7 +249,7 @@ void UnitManager::Remove(Unit* unit)
 }
 
 void UnitManager::DebugImGui()
-{
+{/*
     ImGui::Begin(u8"ユニット");
     if (ImGui::TreeNode("chili"))
     {
@@ -296,7 +297,7 @@ void UnitManager::DebugImGui()
         ImGui::SliderFloat(u8"ドーナツ外半径", &unit_status[UNIT_INDEX::J].attack_radius, 0.0f, 5.0f);
         ImGui::TreePop();
     }
-    ImGui::End();
+    ImGui::End();*/
 }
 
 void UnitManager::SetUpUnit(Unit* unit, int unit_index)

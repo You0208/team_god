@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "TutorialScene.h"
 #include "LoadingScene.h"
+#include "SelectScene.h"
 #include "./Lemur/Graphics/Camera.h"
 #include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
@@ -133,7 +134,10 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
     if (gamePad.GetButtonDown() & gamePad.BTN_B&&!is_credit)
     {
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
-        if (!is_in)CallTransition(true);
+        if (!is_in)
+        {
+            CallTransition(true);
+        }
     }
     if (gamePad.GetButtonUp() & gamePad.BTN_START)
     {
@@ -150,8 +154,19 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
     }
 
     // アイリスインを呼ぶ
-    if (!start_transition && is_in)        Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
-    DebugImgui();
+    if (!start_transition && is_in)
+    {
+        if (Lemur::Scene::SceneManager::Instance().once_tutorial)
+        {
+            Lemur::Scene::SceneManager::Instance().once_tutorial = false;
+            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
+        }
+        else if (!Lemur::Scene::SceneManager::Instance().once_tutorial)
+        {
+            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+        }
+    }
+   // DebugImgui();
 }
 
 void TitleScene::Render(float elapsedTime)

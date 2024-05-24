@@ -42,5 +42,6 @@ namespace Lemur::Scene
 
     public:
         int set_unit_cont[4] = { 0,1,2,3 };
+        bool once_tutorial = true;
     };
 }

@@ -1,5 +1,5 @@
 #include <time.h>
-
+#include "../resource.h"
 #include "Lemur\Graphics\Framework.h"
 #include "Lemur\Graphics\Graphics.h"
 
@@ -18,6 +18,10 @@ int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_  HINSTANCE prev_instance, _
 	//_CrtSetBreakAlloc(####);
 #endif
 
+	//TODO 重要！！！！！！！！
+	//カーソル消してる
+	ShowCursor(FALSE);
+
 	WNDCLASSEXW wcex{};
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -25,7 +29,7 @@ int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_  HINSTANCE prev_instance, _
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = instance;
-	wcex.hIcon = 0;
+	wcex.hIcon = wcex.hIcon = LoadIcon(wcex.hInstance, reinterpret_cast<LPCWSTR>(IDI_ICON));;
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;

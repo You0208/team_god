@@ -8,6 +8,7 @@
 
 #include "GameScene.h"
 #include "LoadingScene.h"
+#include "SelectScene.h"
 
 void FormationScene::Initialize()
 {
@@ -27,10 +28,11 @@ void FormationScene::Initialize()
         InitializeMask();
 
         create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
-        create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", chara_ps.GetAddressOf());
-        create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps.cso", stage_ps.GetAddressOf());
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", chara_ps.GetAddressOf());
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_select_ps.cso", stage_ps.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_chara_ps.cso", gltf_ps.GetAddressOf());
 
+        create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_select_ps.cso", select_ps.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
     }
@@ -72,7 +74,15 @@ void FormationScene::Initialize()
         gltf_unit[4]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb", true);
         gltf_unit[5]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb", true);
         gltf_unit[6]      = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Mustard.glb", true);
-   
+
+        unit_attack[UNIT::Chili]         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit1.png");
+        unit_attack[UNIT::Shishito]      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit2.png");
+        unit_attack[UNIT::OrangePumpkin] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit3.png");
+        unit_attack[UNIT::GreenPumpkin]  = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit4.png");
+        unit_attack[UNIT::Broccoli]      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit5.png");
+        unit_attack[UNIT::Cauliflower]   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit6.png");
+        unit_attack[UNIT::J]             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_unit7.png");
+
         // エフェクト
         effect           = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
     }
@@ -140,6 +150,9 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
 {
     using namespace DirectX;
     Camera& camera = Camera::Instance();
+    // ゲームパッド
+    GamePad& gamePad = Input::Instance().GetGamePad();
+
     // エフェクト更新処理
     EffectManager::Instance().Update(elapsedTime);
     // カメラ
@@ -155,6 +168,12 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
 
     // マスクの更新
     TransitionMask(elapsedTime);
+
+    if (!start_transition && is_in)
+    {
+        if (is_next_select)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+        else if (is_next_game)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
+    }
 
     // アイリスインの最中操作を受け付けない
     if (start_transition)return;
@@ -175,7 +194,13 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
     // 操作
     UpdateOperate(elapsedTime);
 
-    DebugImgui();
+    if (gamePad.GetButtonDown() & gamePad.BTN_START)
+    {
+        is_next_select = true;
+        CallTransition(true);
+    }
+
+    //DebugImgui();
 }
 
 void FormationScene::UpdateUnit(float elapsedTime)
@@ -204,11 +229,6 @@ void FormationScene::UpdateOperate(float elapsedTime)
     button.EasingValue(elapsedTime);
     line_x.EasingValue(elapsedTime);
     line_add.EasingValue(elapsedTime);
-    if (!start_transition && is_in)
-    {
-        // 次のシーンへ
-        Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
-    }
     // ボタンを選択してる時
     if (select_button)
     {
@@ -233,6 +253,7 @@ void FormationScene::UpdateOperate(float elapsedTime)
             Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X] = cont_num[gamePad.X];
             Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y] = cont_num[gamePad.Y];
 
+            is_next_game = true;
             CallTransition(true);
         }
     }
@@ -502,6 +523,8 @@ void FormationScene::Render(float elapsedTime)
         }
 
         if (line_add.value >= -1.0f)arrow->RenderRightDown(immediate_context, SCREEN_WIDTH, SCREEN_HEIGHT*0.5f + 50, 100, 100, 0.0f);
+
+        unit_attack[choose_num]->Render(immediate_context,stage_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f);
     }
     // 書き込み終了
     if (enable_post_effect)

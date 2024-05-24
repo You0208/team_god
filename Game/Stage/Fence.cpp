@@ -104,7 +104,7 @@ void Fence::Update(float elapsedTime)
     };
 
 
-    health_prsent = health / max_health;
+    health_prsent = float(health) / float(max_health);
 
     if (health_prsent <= 0.5f)fence_state = FENCE_STATE::FANCE_1;
 
@@ -144,43 +144,44 @@ void Fence::StopFenceShake()
 
 void Fence::DrawDebugGui()
 {
-    ImGui::Begin(u8"ò‚¤");
-    ImGui::SliderInt(u8"‘Ï‹v’l", &health, 0, 100);
-    ImGui::End();
-
-    std::string name = "Fence";
-    std::string T = std::string("Transform") + name;
-    if (ImGui::TreeNode(T.c_str()))
-    {
-        ImGui::DragInt("Health", &health, 0, 10);
-        //ImGui::SliderFloat2("back_rect_left_up", &back_rect.left_up.x, 10.0f, -10.0f);
-        //ImGui::SliderFloat2("back_rect_right_down", &back_rect.right_down.x, 10.0f, -10.0f);
-
-        //ImGui::SliderFloat2("left_rect_left_up", &left_rect.left_up.x, 10.0f, -10.0f);
-        //ImGui::SliderFloat2("left_rect_right_down", &left_rect.right_down.x, 10.0f, -10.0f);
-
-        //ImGui::SliderFloat2("front_rect_left_up", &front_rect.left_up.x, 10.0f, -10.0f);
-        //ImGui::SliderFloat2("front_rect_right_down", &front_rect.right_down.x, 10.0f, -10.0f);
-
-        std::string p = std::string("position") + name;
-        ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);
-        std::string s = std::string("scale") + name;
-        ImGui::DragFloat3(s.c_str(), &scale.x, 0.001f, -FLT_MAX, FLT_MAX);
-
-        std::string r = std::string("rotation") + name;
-        DirectX::XMFLOAT3 rot{};
-        rot.x = DirectX::XMConvertToDegrees(rotation.x);
-        rot.y = DirectX::XMConvertToDegrees(rotation.y);
-        rot.z = DirectX::XMConvertToDegrees(rotation.z);
-        ImGui::DragFloat3(r.c_str(), &rot.x, 0.5f, -FLT_MAX, FLT_MAX);
-        rotation.x = DirectX::XMConvertToRadians(rot.x);
-        rotation.y = DirectX::XMConvertToRadians(rot.y);
-        rotation.z = DirectX::XMConvertToRadians(rot.z);
-
-        std::string s_f = std::string("scale_facter") + name;
-        ImGui::DragFloat(s_f.c_str(), &scaleFactor, 0.001f, 0.001f, 1.0f);
-        ImGui::TreePop();
-    }
+//{
+//    ImGui::Begin(u8"ò‚¤");
+//    ImGui::SliderInt(u8"‘Ï‹v’l", &health, 0, 100);
+//    ImGui::End();
+//
+//    std::string name = "Fence";
+//    std::string T = std::string("Transform") + name;
+//    if (ImGui::TreeNode(T.c_str()))
+//    {
+//        ImGui::DragInt("Health", &health, 0, 10);
+//        //ImGui::SliderFloat2("back_rect_left_up", &back_rect.left_up.x, 10.0f, -10.0f);
+//        //ImGui::SliderFloat2("back_rect_right_down", &back_rect.right_down.x, 10.0f, -10.0f);
+//
+//        //ImGui::SliderFloat2("left_rect_left_up", &left_rect.left_up.x, 10.0f, -10.0f);
+//        //ImGui::SliderFloat2("left_rect_right_down", &left_rect.right_down.x, 10.0f, -10.0f);
+//
+//        //ImGui::SliderFloat2("front_rect_left_up", &front_rect.left_up.x, 10.0f, -10.0f);
+//        //ImGui::SliderFloat2("front_rect_right_down", &front_rect.right_down.x, 10.0f, -10.0f);
+//
+//        std::string p = std::string("position") + name;
+//        ImGui::DragFloat3(p.c_str(), &position.x, 1.0f, -FLT_MAX, FLT_MAX);
+//        std::string s = std::string("scale") + name;
+//        ImGui::DragFloat3(s.c_str(), &scale.x, 0.001f, -FLT_MAX, FLT_MAX);
+//
+//        std::string r = std::string("rotation") + name;
+//        DirectX::XMFLOAT3 rot{};
+//        rot.x = DirectX::XMConvertToDegrees(rotation.x);
+//        rot.y = DirectX::XMConvertToDegrees(rotation.y);
+//        rot.z = DirectX::XMConvertToDegrees(rotation.z);
+//        ImGui::DragFloat3(r.c_str(), &rot.x, 0.5f, -FLT_MAX, FLT_MAX);
+//        rotation.x = DirectX::XMConvertToRadians(rot.x);
+//        rotation.y = DirectX::XMConvertToRadians(rot.y);
+//        rotation.z = DirectX::XMConvertToRadians(rot.z);
+//
+//        std::string s_f = std::string("scale_facter") + name;
+//        ImGui::DragFloat(s_f.c_str(), &scaleFactor, 0.001f, 0.001f, 1.0f);
+//        ImGui::TreePop();
+//    }
 }
 
 void Fence::DrawDebugPrimitive()

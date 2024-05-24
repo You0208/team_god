@@ -149,7 +149,7 @@ void Chili::UpdateAttackState(float elapsed_time)
 
 void Chili::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("Chili", n);
+   // Character::DrawDebugGUI("Chili", n);
 }
 
 

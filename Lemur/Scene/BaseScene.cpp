@@ -478,7 +478,7 @@ void Lemur::Scene::BaseScene::InitializeMask()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
-	LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
+	LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/transition_mask_ps.cso", transition_mask_ps.GetAddressOf());
 
@@ -951,6 +951,7 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 		mask_pos = mask_pos_;
 		//TODOÅ@Ç‡ÇÀ
 		mask_scale.CallValueEasing(0.0f, mask_scale.value, EasingFunction::EasingType::OutSine, 0.9f);
+		Lemur::Audio::AudioManager::Instance().StopSE(Lemur::Audio::SE::CHANGE_OUT);
 		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CHANGE_IN, false);
 		is_in = true;
 	}
@@ -961,6 +962,7 @@ void Lemur::Scene::BaseScene::CallTransition(bool in,DirectX::XMFLOAT2 mask_pos_
 		mask_pos = mask_pos_;
 		//TODOÅ@Ç‡ÇÀ
 		mask_scale.CallValueEasing(10.0f, 0.0f, EasingFunction::EasingType::OutSine, 0.9f);
+		Lemur::Audio::AudioManager::Instance().StopSE(Lemur::Audio::SE::CHANGE_IN);
 		Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CHANGE_OUT,false);
 	}
 	start_transition = true;

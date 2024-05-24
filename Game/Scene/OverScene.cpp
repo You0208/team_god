@@ -193,8 +193,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
         {
             if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)// ¶‘I‘ð‚·‚é‚Æ
             {
-                Lemur::Audio::AudioManager::Instance().StopAllBGM();
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STANDUP, false);
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 select.CallValueEasing(1.1f, select.value, EasingFunction::EasingType::InSine);
                 again.CallValueEasing(1.0f, again.value, EasingFunction::EasingType::InSine);
                 select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
@@ -210,7 +209,8 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
             // ‘I‘ð‚³‚ê‚é‚Æ
             if (gamePad.GetButtonDown() & gamePad.BTN_B)
             {
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+                Lemur::Audio::AudioManager::Instance().StopAllBGM();
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STANDUP, false);
                 is_continue = true;
             }
         }
@@ -276,6 +276,6 @@ void OverScene::Render(float elapsedTime)
 
 void OverScene::DebugImgui()
 {
-    ImGui::Begin("ImGUI");
-    ImGui::End();
+    //ImGui::Begin("ImGUI");
+    //ImGui::End();
 }

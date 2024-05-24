@@ -58,14 +58,14 @@ void DemoPlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 void DemoPlayer::DebugImgui()
 {
 	// 左のintはmesh_index、右のintはbone_indexです
-	// intの場所に名前を入れても出来ます。
-	float f = Model->JointPosition(0, 0, &keyframe, world).x;
-	ImGui::Begin("DemoPlayer");// ここのnameをDemoPlayerに変えました
-	ImGui::DragFloat("PlayerPosition", &position.x);
-	ImGui::DragFloat("ScaleFactor", &scaleFactor);
-	ImGui::DragFloat("jointposition", &f);
+	//// intの場所に名前を入れても出来ます。
+	//float f = Model->JointPosition(0, 0, &keyframe, world).x;
+	//ImGui::Begin("DemoPlayer");// ここのnameをDemoPlayerに変えました
+	//ImGui::DragFloat("PlayerPosition", &position.x);
+	//ImGui::DragFloat("ScaleFactor", &scaleFactor);
+	//ImGui::DragFloat("jointposition", &f);
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void DemoPlayer::DrawDebugPrimitive()

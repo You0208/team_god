@@ -41,7 +41,7 @@ void Enemy_A::DrawDebugPrimitive()
 
 void Enemy_A::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("Enemy_A", n);
+  //  Character::DrawDebugGUI("Enemy_A", n);
 }
 
 void Enemy_A::UpdateAttackState(float elapsed_time)
@@ -131,7 +131,7 @@ Enemy_B::Enemy_B(bool is_minor)
 
 void Enemy_B::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("Enemy_B", n);
+   // Character::DrawDebugGUI("Enemy_B", n);
 }
 
 void Enemy_B::UpdateAttackState(float elapsed_time)
@@ -282,7 +282,7 @@ void Enemy_C::DrawDebugPrimitive()
 
 void Enemy_C::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("Enemy_C", n);
+  //  Character::DrawDebugGUI("Enemy_C", n);
 }
 
 void Enemy_C::UpdateAttackState(float elapsed_time)
@@ -651,7 +651,7 @@ void Enemy_D::DrawDebugPrimitive()
 
 void Enemy_D::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("Enemy_D", n);
+   // Character::DrawDebugGUI("Enemy_D", n);
 }
 
 void Enemy_D::UpdateAttackState(float elapsed_time)

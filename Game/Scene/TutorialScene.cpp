@@ -42,13 +42,10 @@ void TutorialScene::Initialize()
 		// マスクの初期化
 		InitializeMask();
 
-		// スカイマップテクスチャのロード
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
-
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_ui.cso", sprite_ui.GetAddressOf());
@@ -66,6 +63,7 @@ void TutorialScene::Initialize()
 	{
 		button_ui_base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
 		button_ui_chara = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
+		button_ui_circle = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
 
 		pause_main = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
 		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
@@ -79,6 +77,7 @@ void TutorialScene::Initialize()
 		tutorial_gif[5] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\6.png");
 		tutorial_gif[6] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\7.png");
 		tutorial_gif[7] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\8.png");
+		tutorial_gif[8] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\9.png");
 
 		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
 		pause_text_select = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
@@ -129,6 +128,12 @@ void TutorialScene::Initialize()
 		option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 		option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
 		option_constant.parameters.y = 0.5f;
+		option_constant.attack_color = { 0.0f,1.0f,1.0f,0.11f };
+		option_constant.edge_color = { 0.0f,1.0f,1.0f,0.6f };
+
+		option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
+		option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+
 
 		// ステージ初期化
 		StageMain* stage_main = new StageMain;
@@ -160,6 +165,10 @@ void TutorialScene::Initialize()
 		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
 		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON_SE, true);
 
+		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 0;
+		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 1;
+		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 2;
+		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 5;
 
 		// アイリスアウトを呼ぶ
 		CallTransition(false);
@@ -238,7 +247,7 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 
 		if (gamePad.GetButtonUp() & gamePad.BTN_RIGHT)
 		{
-			if (tutorial_gif_num < 7)tutorial_gif_num++;
+			if (tutorial_gif_num < 8)tutorial_gif_num++;
 		}
 		if (gamePad.GetButtonUp() & gamePad.BTN_LEFT)
 		{
@@ -305,7 +314,7 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 	}
 
 	// Imgui
-	DebugImgui();
+	//DebugImgui();
 }
 
 void TutorialScene::Render(float elapsedTime)
@@ -468,14 +477,19 @@ void TutorialScene::Render(float elapsedTime)
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B], SCREEN_HEIGHT * 1, SCREEN_WIDTH, SCREEN_HEIGHT);
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X], SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT);
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y], SCREEN_HEIGHT * 3, SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+
+		if (Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A] == player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 0, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		else if (Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B] == player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 1, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		else if (Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X] == player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		else if (Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y] == player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 		if(tutorial_gif_num!=0)tutorial_gif[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.05f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
 		else tutorial_gif[0]->Animation(immediate_context, elapsedTime, 0.05f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[0],false);
 
 		Frame_tutorial->Render(immediate_context, 0, 0, 700, SCREEN_HEIGHT);
 		mission_text[tutorial_state]->Render(immediate_context, 40, 600, 600, 200);
 
-		if(tutorial_gif_num!=7)right_row->Render(immediate_context, 600, 240, 100, 100);
+		if(tutorial_gif_num!=8)right_row->Render(immediate_context, 600, 240, 100, 100);
 		if(tutorial_gif_num!=0)left_row->Render(immediate_context, -20, 240, 100, 100);
 
 		reset_text->Render(immediate_context, 1600, 960, 300, 100);
@@ -519,7 +533,7 @@ void TutorialScene::Render(float elapsedTime)
 }
 
 void TutorialScene::DebugImgui()
-{
+{/*
 	ImGui::Begin("tutorial_state");
 	switch (tutorial_state)
 	{
@@ -541,7 +555,7 @@ void TutorialScene::DebugImgui()
 	}
 	ImGui::End();
 	BaseScene::DebugImgui();
-	Camera::Instance().DrawDebug();
+	Camera::Instance().DrawDebug();*/
 }
 
 void TutorialScene::InitializeLight()

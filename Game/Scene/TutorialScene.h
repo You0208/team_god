@@ -41,12 +41,13 @@ private:// ゲーム
     // コントローラー用
     std::shared_ptr<Sprite> button_ui_base;
     std::shared_ptr<Sprite> button_ui_chara;
+    std::shared_ptr<Sprite> button_ui_circle;
 
     std::shared_ptr<Sprite> pause_main;
     std::shared_ptr<Sprite> pause_text_continue;
     std::shared_ptr<Sprite> pause_text_select;
 
-    std::shared_ptr<Sprite> tutorial_gif[8];
+    std::shared_ptr<Sprite> tutorial_gif[9];
 
     std::shared_ptr<Sprite> button[4] = {};
     std::shared_ptr<Sprite> mission_text[4] = {};

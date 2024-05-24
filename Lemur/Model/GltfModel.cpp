@@ -1386,9 +1386,9 @@ void GltfModel::MaterialForGPU(ID3D11Device* device)
 
 void GltfModel::DebugThreshold()
 {
-    ImGui::Begin("mask");
-    ImGui::SliderFloat("threshold", &threshold, 0.0f, 1.0f);
-    ImGui::End();
+    //ImGui::Begin("mask");
+    //ImGui::SliderFloat("threshold", &threshold, 0.0f, 1.0f);
+    //ImGui::End();
 }
 
 void GltfModel::BlendAnimation(const std::vector<node>* nodes_[2], float factor, std::vector<GltfModel::node>* node_)

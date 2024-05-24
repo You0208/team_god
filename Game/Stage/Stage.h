@@ -28,6 +28,5 @@ protected:
     DirectX::XMFLOAT3                   position                = {};           // ステージの中心
     DirectX::XMFLOAT3                   scale                   = {};           // ステージのサイズ（調整用）
     float                               scale_facter            = 0.0f;         // スケールファクター
-    std::shared_ptr<FbxModelManager>    stage_model             = nullptr;      // モデル
     DirectX::XMFLOAT2                   variable_stage_width    = {};           // 可変のステージ幅
 };

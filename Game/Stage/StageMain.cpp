@@ -4,7 +4,6 @@
 StageMain::StageMain()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    stage_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources_2\\Model\\plantune.fbx");
     ground = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ground\\ground.fbx");
     fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
     fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
@@ -111,8 +110,6 @@ void StageMain::Update(float elapsedTime)
         {position.x + variable_stage_width.x,position.z - variable_stage_width.y}
     };
 
-    stage_model->GetTransform()->SetPosition(position);
-    stage_model->GetTransform()->SetScale(scale);
 }
 
 void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2)

@@ -79,7 +79,23 @@ public:
         float angle/*degree*/,
         float sx, float sy, float sw, float sh);
 
+    void RenderRightDown(ID3D11DeviceContext*,
+        ID3D11PixelShader* replaced_pixel_shader,
+        float dx, float dy,// 矩形の左上の座標（スクリーン座標系）
+        float dw, float dh, // 矩形のサイズ（スクリーン座標系）
+        float r, float g, float b, float a,
+        float angle/*degree*/,
+        float sx, float sy, float sw, float sh);
+
     void RenderRightUp(ID3D11DeviceContext*,
+        float dx, float dy,// 矩形の左上の座標（スクリーン座標系）
+        float dw, float dh, // 矩形のサイズ（スクリーン座標系）
+        float r, float g, float b, float a,
+        float angle/*degree*/,
+        float sx, float sy, float sw, float sh);
+
+    void RenderRightUp(ID3D11DeviceContext*,
+        ID3D11PixelShader* replaced_pixel_shader,
         float dx, float dy,// 矩形の左上の座標（スクリーン座標系）
         float dw, float dh, // 矩形のサイズ（スクリーン座標系）
         float r, float g, float b, float a,
@@ -88,7 +104,9 @@ public:
 
     void RenderLeftDown(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);
     void RenderRightDown(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);
+    void RenderRightDown(ID3D11DeviceContext* immediate_context, ID3D11PixelShader* replaced_pixel_shader, float dx, float dy, float dw, float dh, float angle);
     void RenderRightUp(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);
+    void RenderRightUp(ID3D11DeviceContext* immediate_context, ID3D11PixelShader* replaced_pixel_shader, float dx, float dy, float dw, float dh, float angle);
 
     void RenderCenter(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh);
     void RenderCenter(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float angle);

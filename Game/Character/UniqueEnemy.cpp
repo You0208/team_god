@@ -88,13 +88,13 @@ SummonEnemy::SummonEnemy(bool is_minor)
 
 void SummonEnemy::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+   // DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void SummonEnemy::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("SummonEnemy", n);
+   // Character::DrawDebugGUI("SummonEnemy", n);
 }
 
 void SummonEnemy::UpdateAttackState(float elapsed_time)
@@ -257,7 +257,7 @@ void BossEnemy::DrawDebugPrimitive()
 }
 void BossEnemy::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("BossEnemy", n);
+  //  Character::DrawDebugGUI("BossEnemy", n);
 }
 
 void BossEnemy::UpdateAttackState(float elapsed_time)
@@ -343,13 +343,13 @@ NuisanceEnemy::NuisanceEnemy(bool is_minor)
 
 void NuisanceEnemy::DrawDebugPrimitive()
 {
-    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+   // DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
     //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void NuisanceEnemy::DrawDebugGUI(int n)
 {
-    Character::DrawDebugGUI("NuisanceEnemy", n);
+   // Character::DrawDebugGUI("NuisanceEnemy", n);
 }
 
 void NuisanceEnemy::UpdateMoveState(float elapsed_time)

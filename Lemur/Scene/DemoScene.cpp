@@ -28,12 +28,12 @@ void DemoScene::Initialize()
 		InitializePS();
 
 		// スカイマップテクスチャのロード
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
+		//LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
 
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
 		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", Try.GetAddressOf());
@@ -83,44 +83,44 @@ void DemoScene::Initialize()
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\spider_v009.glb", false);
 		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Mustard.glb",true);
 		//gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit1_RE.glb");
-		gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf",false);	
+		//gltf_test_model_2 = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources_2\\glTF-Sample-Models-master\\2.0\\TwoSidedPlane\\glTF\\TwoSidedPlane.gltf",false);	
 
 		result = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\result_back.png");
 
 		debugEffect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
 	}
-	sprite_batches[0] = std::make_unique<SpriteBatch>(graphics.GetDevice(), L".\\resources_2\\screenshot.jpg", 1);
+	//sprite_batches[0] = std::make_unique<SpriteBatch>(graphics.GetDevice(), L".\\resources_2\\screenshot.jpg", 1);
 
 
 	// ポイントライト・スポットライトの初期位置設定
 	InitializeLight();
 
-	// パーティクルシステム準備
-	{
-		D3D11_TEXTURE2D_DESC texture2d_desc;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
-		// パーティクル用画像ロード
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Particle\\particle256x256.png",
-			shader_resource_view.GetAddressOf(), &texture2d_desc);
-		// パーティクルシステム生成
-		particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
+	//// パーティクルシステム準備
+	//{
+	//	D3D11_TEXTURE2D_DESC texture2d_desc;
+	//	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
+	//	// パーティクル用画像ロード
+	//	LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Particle\\particle256x256.png",
+	//		shader_resource_view.GetAddressOf(), &texture2d_desc);
+	//	// パーティクルシステム生成
+	//	particle_system = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 4, 4, 10000);
 
-	}
-	// 爆発アニメーション付きパーティクル
-	{
-		D3D11_TEXTURE2D_DESC texture2d_desc;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
-		// パーティクル用画像ロード
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Particle\\Explosion01_5x5.png",
-			shader_resource_view.GetAddressOf(), &texture2d_desc);
-		// パーティクルシステム生成
-		particle_bomb = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 5, 5);
-	}
+	//}
+	//// 爆発アニメーション付きパーティクル
+	//{
+	//	D3D11_TEXTURE2D_DESC texture2d_desc;
+	//	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
+	//	// パーティクル用画像ロード
+	//	LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\Particle\\Explosion01_5x5.png",
+	//		shader_resource_view.GetAddressOf(), &texture2d_desc);
+	//	// パーティクルシステム生成
+	//	particle_bomb = std::make_unique<ParticleSystem>(graphics.GetDevice(), shader_resource_view, 5, 5);
+	//}
 
 	// デバッグ
 	{
 		D3D11_TEXTURE2D_DESC texture2d_desc;
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), &texture2d_desc);
+		//LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\projection\\circle.png", projection_mapping_texture.GetAddressOf(), &texture2d_desc);
 
 		directional_light_direction = { 1,-1,-1,0 };
 		gltf_test_model->PlayAnimation(0, false);

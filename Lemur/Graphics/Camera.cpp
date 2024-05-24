@@ -78,7 +78,7 @@ void Camera::Update(float elapsedTime)
 }
 
 void Camera::DrawDebug()
-{
+{/*
     ImGui::Begin("Camera");
 
     DirectX::XMFLOAT3 angle_d = { DirectX::XMConvertToDegrees(angle.x),
@@ -93,7 +93,7 @@ void Camera::DrawDebug()
     ImGui::SliderFloat(u8"距離", &range, 0.0f, 60.0f);
     ImGui::SliderFloat3(u8"ターゲット", &target.x , -30.0f, 30.0f);
 
-    ImGui::End();
+    ImGui::End();*/
 }
 
 void Camera::UpdateDebug()
@@ -113,49 +113,49 @@ void Camera::NonLockOnUpdate(float elapsedTime)
     GamePad& game_pad = Input::Instance().GetGamePad();
 
     /*----------- コントローラー処理 ------------*/
-    float ax = game_pad.GetAxisRX();
-    float ay = game_pad.GetAxisRY();
+    //float ax = game_pad.GetAxisRX();
+    //float ay = game_pad.GetAxisRY();
 
-    float lx = game_pad.GetAxisLX();
-    float ly = game_pad.GetAxisLY();
+    //float lx = game_pad.GetAxisLX();
+    //float ly = game_pad.GetAxisLY();
 
-    float wx = game_pad.GetTriggerL();
-    float wy = game_pad.GetTriggerR();
-    // カメラの回転速度
-    float speed = rollSpeed * elapsedTime;
+    //float wx = game_pad.GetTriggerL();
+    //float wy = game_pad.GetTriggerR();
+    //// カメラの回転速度
+    //float speed = rollSpeed * elapsedTime;
 
     {
         // IMGUIのマウス入力値を使ってカメラ操作する
-        ImGuiIO io = ImGui::GetIO();
+        //ImGuiIO io = ImGui::GetIO();
 
-        // マウスカーソルの移動量を求める
-        float moveX = io.MouseDelta.x * 0.02f;
-        float moveY = io.MouseDelta.y * 0.02f;
+        //// マウスカーソルの移動量を求める
+        //float moveX = io.MouseDelta.x * 0.02f;
+        //float moveY = io.MouseDelta.y * 0.02f;
 
-        // マウス左ボタン押下中
-        if (io.MouseDown[ImGuiMouseButton_Right])
-        {
-            // Y軸回転
-            angle.y += moveX * 0.5f;
-            if (angle.y > DirectX::XM_PI)
-            {
-                angle.y -= DirectX::XM_2PI;
-            }
-            else if (angle.y < -DirectX::XM_PI)
-            {
-                angle.y += DirectX::XM_2PI;
-            }
-            // X軸回転
-            angle.x += moveY * 0.5f;
-            if (angle.x > DirectX::XM_PI)
-            {
-                angle.x -= DirectX::XM_2PI;
-            }
-            else if (angle.x < -DirectX::XM_PI)
-            {
-                angle.x += DirectX::XM_2PI;
-            }
-        }
+        //// マウス左ボタン押下中
+        //if (io.MouseDown[ImGuiMouseButton_Right])
+        //{
+        //    // Y軸回転
+        //    angle.y += moveX * 0.5f;
+        //    if (angle.y > DirectX::XM_PI)
+        //    {
+        //        angle.y -= DirectX::XM_2PI;
+        //    }
+        //    else if (angle.y < -DirectX::XM_PI)
+        //    {
+        //        angle.y += DirectX::XM_2PI;
+        //    }
+        //    // X軸回転
+        //    angle.x += moveY * 0.5f;
+        //    if (angle.x > DirectX::XM_PI)
+        //    {
+        //        angle.x -= DirectX::XM_2PI;
+        //    }
+        //    else if (angle.x < -DirectX::XM_PI)
+        //    {
+        //        angle.x += DirectX::XM_2PI;
+        //    }
+        //}
     }
 
 

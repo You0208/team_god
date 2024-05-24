@@ -105,6 +105,8 @@ private:// ゲーム
 
     std::shared_ptr<Sprite> fight_enemy;
 
+    std::shared_ptr<Sprite> pose_exp;
+
 
     std::unique_ptr<GltfModelManager> gltf_test_model;
 private:// シェーダー

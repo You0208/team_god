@@ -76,6 +76,8 @@ private:
 
     float               effect_scale            = 0.3f;     // エフェクトのサイズ
 
+    bool is_next_select = false;
+    bool is_next_game = false;
 
     // 各場所の位置と角度
     DirectX::XMFLOAT3 position[4] = {
@@ -103,6 +105,9 @@ private:
     };
 
 private:
+    // ステージの色味調整用
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> select_ps;
+
     // テクスチャ
     std::shared_ptr<Sprite> back;
     std::shared_ptr<Sprite> front;
@@ -120,6 +125,8 @@ private:
     std::shared_ptr<Sprite> Best;
     std::shared_ptr<Sprite> arrow;
 
+    std::shared_ptr<Sprite> unit_attack[UNIT_MAX];
+
     bool enable_best[9][UNIT_MAX] =
     {
         {true,false,false,false,false,false,false},
@@ -127,10 +134,10 @@ private:
         {true,false,false,false,false,false,false},
         {true,false,false,false,true,false,false},
         {true,false,false,false,false,false,false},
-        {true,false,false,false,false,false,false},
         {true,false,false,false,false,true,false},
-        {true,false,true,true,false,false,false},
-        {true,false,true,true,false,false,false},
+        {true,false,true,true,false,true,false},
+        {false,false,true,true,false,false,false},
+        {false,false,true,true,false,false,false},
     };
 
     std::unique_ptr<GltfModelManager> gltf_unit[UNIT_MAX];
