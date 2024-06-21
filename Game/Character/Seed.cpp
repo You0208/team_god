@@ -34,7 +34,7 @@ Seed::Seed()
 Seed::~Seed()
 {
     //error_effect->Stop(error_effect_handle);
-
+    delete error_effect;
     //EffectManager::Instance().Update(0.01f);
 }
 
