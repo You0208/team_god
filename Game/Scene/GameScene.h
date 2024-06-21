@@ -5,6 +5,7 @@
 #include "../Stage/Stage.h"
 #include "../Stage/Fence.h"
 #include "../Character/Player.h"
+#include "../Stage/StageMain.h"
 
 class GameScene :public Lemur::Scene::BaseScene
 {
@@ -37,6 +38,8 @@ public:
     void OverDirectionUpdate(float elapsedTime);
     void ClearDirectionUpdate(float elapsedTime);
 private:// ÉQÅ[ÉÄ
+    StageMain* stage_main;
+
     Stage* stage = nullptr;
 
     Player* player = nullptr;

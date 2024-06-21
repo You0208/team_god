@@ -1,18 +1,8 @@
 #include "GameScene.h"
-#include "./Lemur/Component/DemoEnemyManager.h"
 #include "./Lemur/Graphics/Camera.h"
-#include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
-#include "Game/Scene/OverScene.h"
-#include "Game/Scene/LoadingScene.h"
-#include "./high_resolution_timer.h"
-
-// Effect
-#include "./Lemur/Effekseer/EffekseerManager.h"
-
 // Game
 #include "Game/CollisionManager.h"
-#include "../Stage/StageMain.h"
 #include "../Stage/StageManager.h"
 #include "../Character/EnemyManager.h"
 #include "../Character/Enemy_ABCD.h"
@@ -23,8 +13,10 @@
 #include "../Character/EnemySpawner.h"
 #include "../Scene/SelectScene.h"
 #include "../Scene/ClearScene.h"
+#include "../Scene/OverScene.h"
+#include "../Scene/LoadingScene.h"
 
-#include "Lemur/Graphics/DebugRenderer.h"
+#define _CRTDBG_MAP_ALLOC
 
 void GameScene::Initialize()
 {
@@ -154,7 +146,7 @@ void GameScene::Initialize()
 		timer_angle = 360 * (timer / time_limit);
 		
 		// ステージ初期化
-		StageMain* stage_main = new StageMain;
+		stage_main = new StageMain;
 		stage_manager.Register(stage_main);
 
 		// プレイヤーの初期化
@@ -278,6 +270,11 @@ void GameScene::Finalize()
 	{
 		delete player;
 		player = nullptr;
+	}
+	if (stage_main != nullptr)
+	{
+		delete stage_main;
+		stage_main = nullptr;
 	}
 	//プレイヤー終了
 	if (fence != nullptr)

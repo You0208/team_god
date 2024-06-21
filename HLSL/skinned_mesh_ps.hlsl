@@ -128,7 +128,6 @@ float4 main(VS_OUT pin) : SV_TARGET
     float3 V = normalize(camera_position.xyz - pin.world_position.xyz);
     float3 specular = pow(max(0, dot(N, normalize(V + L))), 128);
 	
-	
     //return (1, 0, 0, 1);
     return float4(diffuse + specular, alpha) * pin.color;
 }
