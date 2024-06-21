@@ -121,12 +121,44 @@ void Player::DrawDebugGUI()
 void Player::Flick(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
+    // マウス用
+    {
+        float scaling_max = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
+
+        if (!is_mouse_click)
+        {
+            if (mouse.GetButtonDown() & mouse.BTN_LEFT)
+            {
+                is_mouse_click = true;
+                mouse_timer = dis_scarecrow;
+            }
+        }
+        else
+        {
+            if (scaling_max > mouse_timer)mouse_timer += elapsedTime * mouse_timer_speed;
+            if (mouse.GetButtonUp() & mouse.BTN_LEFT)
+            {
+                // 最小値0、最大値scalingにクランプする
+                flip_pos_z = mouse_timer;
+
+                is_mouse_click = false;
+                mouse_timer = dis_scarecrow;
+                max_right_stick_y = 0;
+                right_stick_y = 0;
+                flip_timer = 0;
+
+                is_throw = true;
+            }
+        }
+    }
 
     // コントローラーの右スティックY成分
     right_stick_y = gamePad.GetAxisRY() * -1.0f;
 
     // 右スティックが動かされたとき（引っ張られた時）
-    if ( right_stick_y > 0.1f)
+    if (right_stick_y > 0.1f)
     {
         // 引っ張りモーションへ
         // 横移動できないように

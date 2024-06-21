@@ -74,37 +74,37 @@ void Seed::Update(float elapsedTime)
         if (born)
         {
             Unit* unit = nullptr;
-
             // ユニットの種類によって発芽先のユニットを変更
-            switch (category)
-            {
-            case UnitManager::UNIT_INDEX::Chili:
-                unit = new Chili;
-                break;
-            case UnitManager::UNIT_INDEX::Shishito:
-                unit = new Shishito;
-                break;
-            case UnitManager::UNIT_INDEX::GreenPumpkin:
-                unit = new GreenPumpkin;
-                break;
-            case UnitManager::UNIT_INDEX::OrangePumpkin:
-                unit = new OrangePumpkin;
-                break;
-            case UnitManager::UNIT_INDEX::Broccoli:
-                unit = new Broccoli;
-                break;
-            case UnitManager::UNIT_INDEX::Cauliflower:
-                unit = new Cauliflower;
-                break;
-            case UnitManager::UNIT_INDEX::J:
-                unit = new Unit_J;
-                break;
-            default:
-                unit = new Chili;
-                break;
+            if (!unit) {
+                switch (category)
+                {
+                case UnitManager::UNIT_INDEX::Chili:
+                    unit = new Chili();
+                    break;
+                case UnitManager::UNIT_INDEX::Shishito:
+                    unit = new Shishito();
+                    break;
+                case UnitManager::UNIT_INDEX::GreenPumpkin:
+                    unit = new GreenPumpkin();
+                    break;
+                case UnitManager::UNIT_INDEX::OrangePumpkin:
+                    unit = new OrangePumpkin();
+                    break;
+                case UnitManager::UNIT_INDEX::Broccoli:
+                    unit = new Broccoli();
+                    break;
+                case UnitManager::UNIT_INDEX::Cauliflower:
+                    unit = new Cauliflower();
+                    break;
+                case UnitManager::UNIT_INDEX::J:
+                    unit = new Unit_J();
+                    break;
+                default:
+                    unit = new Chili();
+                    break;
+                }
+                UnitManager::Instance().SetUpUnit(unit, category);
             }
-            UnitManager::Instance().SetUpUnit(unit, category);
-
             // ユニットが生まれたら
             if (unit != nullptr)
             {
@@ -132,6 +132,7 @@ void Seed::Update(float elapsedTime)
 
                 // Managerにセット
                 UnitManager::Instance().Register(unit);
+
                 // 種を消す
                 death = true;
             }

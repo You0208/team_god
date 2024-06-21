@@ -44,13 +44,11 @@ namespace Lemur::Audio
     }
     void AudioManager::PlayBgm(const BGM& bgm_, const bool isloop)
     {
-        bgm[static_cast<int>(bgm_)]->Volume(0.0f);
         bgm[static_cast<int>(bgm_)]->Play(isloop);
     }
 
     void AudioManager::PlaySe(const SE& se_, const bool isLoop)
     {
-        se[static_cast<int>(se_)]->Volume(0.0f);
         se[static_cast<int>(se_)]->Play(isLoop);
     }
 

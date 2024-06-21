@@ -20,7 +20,7 @@ int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_  HINSTANCE prev_instance, _
 
 	//TODO 重要！！！！！！！！
 	//カーソル消してる
-	ShowCursor(FALSE);
+	//ShowCursor(FALSE);
 
 	WNDCLASSEXW wcex{};
 	wcex.cbSize = sizeof(WNDCLASSEX);

@@ -2,6 +2,8 @@
 #include "Lemur/Object/Character.h"
 #include "Lemur/Effekseer/Effect.h"
 
+#include "Unit.h"
+
 class Seed :public Character
 {
 public:
