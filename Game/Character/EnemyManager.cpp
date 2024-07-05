@@ -30,7 +30,9 @@ void EnemyManager::Update(float elapsedTime)
     {
         Enemy* enemy = enemies.at(i);
         //TODO ImGuiÁ‚·
+#ifdef DEBUG_IMGUI
         enemy->DrawDebugGUI(i);
+#endif
     }
 
     // ”jŠüˆ—
@@ -61,6 +63,10 @@ void EnemyManager::PowerUpEnemy()
 // •`‰æˆ—
 void EnemyManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
+#ifdef DEBUG_IMGUI
+    DrawDebugPrimitive();
+#endif // _DEBUG
+
     for (Enemy* enemy : enemies)
     {
         enemy->Render(elapsedTime, replaced_pixel_shader);

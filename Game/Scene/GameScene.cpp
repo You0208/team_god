@@ -92,9 +92,13 @@ void GameScene::Initialize()
 		camera.SetEyeYOffset(8.0f);
 		camera.SetAngle(camera_angle);
 
+#ifdef  DEBUG_IMGUI
+		camera_angle = { DirectX::XMConvertToRadians(40.0f),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
+		camera.SetAngle(camera_angle);
+#else
 		// イージングを呼ぶ
 		rotation_camera_x.CallValueEasing(40.0f, rotation_camera_x.value, EasingFunction::EasingType::OutSine, 1.0f);
-
+#endif
 		StageManager& stage_manager = StageManager::Instance();
 
 		//0 1-1
@@ -322,6 +326,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		if (preparation_next)return;
 	}
 	// スタート演出
+
+#ifndef  DEBUG_IMGUI
 	if(start_direction)
 	{
 		StartDirectionUpdate(elapsedTime);
@@ -339,6 +345,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		ClearDirectionUpdate(elapsedTime);
 		return;
 	}
+#endif
 	// ゲームクリア、オーバーの判定
 	{
 		// タイムアップかつ敵が全て死んだら
@@ -400,12 +407,13 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 
 		// スポーン
 		EnemySpawner::Instance().Update(elapsedTime);
-		EnemySpawner::Instance().DebugImGui();
 	}
 
 	// Imgui
         //TODO もね　ImGui消す 
-	//DebugImgui();
+#ifdef  DEBUG_IMGUI
+	DebugImgui();
+#endif
 }
 
 void GameScene::Render(float elapsedTime)
@@ -643,19 +651,19 @@ void GameScene::Render(float elapsedTime)
 
 void GameScene::DebugImgui()
 {
-	//ImGui::Begin(u8"ゲーム");
-	//float t = time_limit - timer;
-	//ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
-	//ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
-	//ImGui::End();
+	ImGui::Begin(u8"ゲーム");
+	float t = time_limit - timer;
+	ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
+	ImGui::SliderFloat(u8"制限時間", &time_limit, 0.0f, 600.0f);
+	ImGui::End();
 
-	//ImGui::Begin("shadow_color");
-	//ImGui::SliderFloat3("shadow_color", &scene_constant.shadow_color.x, 0.0f, 1.0f);
-	//ImGui::End();
+	ImGui::Begin("shadow_color");
+	ImGui::SliderFloat3("shadow_color", &scene_constant.shadow_color.x, 0.0f, 1.0f);
+	ImGui::End();
 
-	//BaseScene::DebugImgui();
-	//Camera::Instance().DrawDebug();
-
+	BaseScene::DebugImgui();
+	Camera::Instance().DrawDebug();
+	EnemySpawner::Instance().DebugImGui();
 }
 
 void GameScene::InitializeLight()

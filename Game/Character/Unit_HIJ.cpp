@@ -33,9 +33,9 @@ Unit_J::Unit_J()
 void Unit_J::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
- /*   debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,1,1 });
+    debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,1,1 });
     debug_renderer->DrawCylinder(position, attack_radius_in, height, { 1,0,1,1 });
-    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });*/
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Unit_J::UpdateIdleState(float elapsed_time)

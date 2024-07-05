@@ -38,8 +38,7 @@ void DemoScene::Initialize()
 	// ゲーム部分
 	{
 		Camera& camera = Camera::Instance();
-
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
+		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_UFO.fbx");
 		gltf_test_model = std::make_unique<GltfModelManager>(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Mustard.glb",true);
 	}
 	// ポイントライト・スポットライトの初期位置設定
@@ -52,7 +51,7 @@ void DemoScene::Initialize()
 
 		directional_light_direction = { 1,-1,-1,0 };
 		gltf_test_model->PlayAnimation(0, false);
-		test_model->PlayAnimation(0, false);
+		test_model->PlayAnimation(0, true);
 	}
 }
 

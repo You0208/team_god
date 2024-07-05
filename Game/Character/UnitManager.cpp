@@ -107,7 +107,10 @@ void UnitManager::Initialize()
 void UnitManager::Update(float elapsedTime)
 {
     //TODO ImGui消す
-    //DebugImGui();
+#ifdef DEBUG_IMGUI
+    DebugImGui();
+#endif // DEBUG_IMGUI
+
     for (Unit* unit : units)
     {
         unit->Update(elapsedTime);
@@ -162,7 +165,9 @@ void UnitManager::Update(float elapsedTime)
     {
         Unit* unit = units.at(i);
         //TODO ImGui消す
-        //unit->DrawDebugGUI(i);
+#ifdef DEBUG_IMGUI
+        unit->DrawDebugGUI(i);
+#endif //DEBUG_IMGUI
     }
 
     // 破棄処理
@@ -185,7 +190,10 @@ void UnitManager::Update(float elapsedTime)
 // 描画処理
 void UnitManager::Render(float elapsedTime, ID3D11PixelShader* replaced_pixel_shader)
 {
+#ifdef DEBUG_IMGUI
     DrawDebugPrimitive();
+#endif // DEBUG_IMGUI
+
     for (Unit* unit : units)
     {
         unit->Render(elapsedTime, replaced_pixel_shader);
@@ -249,7 +257,7 @@ void UnitManager::Remove(Unit* unit)
 }
 
 void UnitManager::DebugImGui()
-{/*
+{
     ImGui::Begin(u8"ユニット");
     if (ImGui::TreeNode("chili"))
     {
@@ -297,7 +305,7 @@ void UnitManager::DebugImGui()
         ImGui::SliderFloat(u8"ドーナツ外半径", &unit_status[UNIT_INDEX::J].attack_radius, 0.0f, 5.0f);
         ImGui::TreePop();
     }
-    ImGui::End();*/
+    ImGui::End();
 }
 
 void UnitManager::SetUpUnit(Unit* unit, int unit_index)

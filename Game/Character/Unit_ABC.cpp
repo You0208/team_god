@@ -39,9 +39,9 @@ Chili::Chili()
 
 void Chili::DrawDebugPrimitive()
 {
-    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Chili::UpdateIdleState(float elapsed_time)
@@ -149,7 +149,7 @@ void Chili::UpdateAttackState(float elapsed_time)
 
 void Chili::DrawDebugGUI(int n)
 {
-   // Character::DrawDebugGUI("Chili", n);
+    Character::DrawDebugGUI("Chili", n);
 }
 
 
@@ -185,9 +185,9 @@ Shishito::Shishito()
 
 void Shishito::DrawDebugPrimitive()
 {
-   //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-   //debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
-   //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+   DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+   debug_renderer->DrawCylinder(position, attack_collision_range, height, { 1,0,0,1 });
+   debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Shishito::UpdateIdleState(float elapsed_time)
@@ -350,18 +350,18 @@ OrangePumpkin::OrangePumpkin()
 
 void OrangePumpkin::DrawDebugPrimitive()
 {
-    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 
-    //// ‰œŽOŠp
-    //debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
+    // ‰œŽOŠp
+    debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
 
-    //// Žè‘OŽOŠp
-    //debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
+    // Žè‘OŽOŠp
+    debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
 }
 
 void OrangePumpkin::Update(float elapsed_time)

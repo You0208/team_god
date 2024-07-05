@@ -208,7 +208,10 @@ void EnemySpawner::Finalize()
 void EnemySpawner::Update(float elapsed_time)
 {
 	//TODO ImGui消す
+#ifdef DEBUG_IMGUI
 	DebugImGui();
+#endif // DEBUG_IMGUI
+
 
 	stage_pos = {
 		StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStagePos().x,
@@ -573,7 +576,7 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 }
 
 void EnemySpawner::DebugImGui()
-{/*
+{
 	ImGui::Begin(u8"敵");
 
 	ImGui::DragFloat(u8"敵出現用のタイマー", &timer, 0.0f, 5.0f);
@@ -696,7 +699,7 @@ void EnemySpawner::DebugImGui()
 	{
 		EnemySpawn(script_nuisance_enemy);
 	}
-	ImGui::End();*/
+	ImGui::End();
 }
 
 void EnemySpawner::SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status)

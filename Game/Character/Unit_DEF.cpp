@@ -52,17 +52,17 @@ GreenPumpkin::GreenPumpkin()
 void GreenPumpkin::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 
-    //// ‰œŽOŠp
-    //debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
+    // ‰œŽOŠp
+    debug_renderer->DrawSphere({ triangle_1.A.x,0.2f,triangle_1.A.y }, 0.1f, { 1,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_1.B.x,0.2f,triangle_1.B.y }, 0.1f, { 1,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_1.C.x,0.2f,triangle_1.C.y }, 0.1f, { 1,0,1,1 });
 
-    //// Žè‘OŽOŠp
-    //debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
-    //debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
+    // Žè‘OŽOŠp
+    debug_renderer->DrawSphere({ triangle_2.A.x,0.2f,triangle_2.A.y }, 0.1f, { 0,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_2.B.x,0.2f,triangle_2.B.y }, 0.1f, { 0,0,1,1 });
+    debug_renderer->DrawSphere({ triangle_2.C.x,0.2f,triangle_2.C.y }, 0.1f, { 0,0,1,1 });
 }
 
 void GreenPumpkin::Update(float elapsed_time)
@@ -255,19 +255,19 @@ Broccoli::Broccoli()
 
 void Broccoli::DrawDebugPrimitive()
 {
-    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //DirectX::XMFLOAT3 attack_rect_size = {
-    //    (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
-    //    0.5f,
-    //    (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
-    //};
-    //DirectX::XMFLOAT3 attack_rect_center = {
-    //    attack_rect.left_up.x + attack_rect_size.x,
-    //    0,
-    //    attack_rect.right_down.y + attack_rect_size.z
-    //};
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    DirectX::XMFLOAT3 attack_rect_size = {
+        (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
+        0.5f,
+        (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
+    };
+    DirectX::XMFLOAT3 attack_rect_center = {
+        attack_rect.left_up.x + attack_rect_size.x,
+        0,
+        attack_rect.right_down.y + attack_rect_size.z
+    };
 
-    //debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
+    debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
 }
 
 void Broccoli::Update(float elapsed_time)
@@ -417,19 +417,19 @@ Cauliflower::Cauliflower()
 
 void Cauliflower::DrawDebugPrimitive()
 {
-    //DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //DirectX::XMFLOAT3 attack_rect_size = {
-    //    (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
-    //    0.5f,
-    //    (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
-    //};
-    //DirectX::XMFLOAT3 attack_rect_center = {
-    //    attack_rect.left_up.x + attack_rect_size.x,
-    //    0,
-    //    attack_rect.right_down.y + attack_rect_size.z
-    //};
+    DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
+    DirectX::XMFLOAT3 attack_rect_size = {
+        (attack_rect.right_down.x - attack_rect.left_up.x) * 0.5f,
+        0.5f,
+        (attack_rect.left_up.y - attack_rect.right_down.y) * 0.5f
+    };
+    DirectX::XMFLOAT3 attack_rect_center = {
+        attack_rect.left_up.x + attack_rect_size.x,
+        0,
+        attack_rect.right_down.y + attack_rect_size.z
+    };
 
-    //debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
+    debug_renderer->DrawBox(attack_rect_center, { 0,0,0 }, attack_rect_size, { 1,0,1,1 });
 }
 
 void Cauliflower::Update(float elapsed_time)

@@ -102,7 +102,7 @@ void Player::Update(float elapsedTime)
 
 // Imgui
 void Player::DrawDebugGUI()
-{/*
+{
 
     ImGui::Begin(u8"ˆÄRq‚Æ‚©");
 
@@ -114,7 +114,7 @@ void Player::DrawDebugGUI()
     ImGui::SliderFloat(u8"—­‚ß‚ÌÅ‘åŠÔ", &max_charge_time, 0.0f, 3.0f);
     ImGui::SliderFloat(u8"í‚ª—‚¿‚éˆê”Ôè‘O", &dis_scarecrow, 0.0f, 3.0f);
     
-    ImGui::End();*/
+    ImGui::End();
 }
 
 // ‚Í‚¶‚«ˆ—

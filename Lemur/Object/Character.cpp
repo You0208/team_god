@@ -31,7 +31,7 @@ bool Character::ApplyDamage(int damage)
 
 void Character::DrawDebugGUI(std::string name, int i)
 {
- /*   std::string num = std::to_string(i);
+    std::string num = std::to_string(i);
     name = name + num;
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))
@@ -63,7 +63,7 @@ void Character::DrawDebugGUI(std::string name, int i)
         std::string s_f = std::string("scale_facter") + name;
         ImGui::DragFloat(s_f.c_str(), &scaleFactor, 0.001f, 0.001f, 1.0f);
         ImGui::TreePop();
-    }*/
+    }
 }
 
 void Character::Render(float scale_, ID3D11PixelShader* replaced_pixel_shader)

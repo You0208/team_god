@@ -180,14 +180,14 @@ void Seed::Render(float scale, ID3D11PixelShader* replaced_pixel_shader)
 }
 
 void Seed::DrawDebugGUI()
-{/*
+{
     ImGui::Begin("Seed");
 
     ImGui::DragInt("number", &number);
     ImGui::DragFloat("timer", &timer);
     ImGui::Checkbox("born", &born);
 
-    ImGui::End();*/
+    ImGui::End();
 }
 
 void Seed::DrawDebugPrimitive()

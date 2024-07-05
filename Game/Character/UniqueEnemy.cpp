@@ -6,7 +6,7 @@
 SummonEnemy::SummonEnemy(bool is_minor)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_Sphere.fbx");
+    if (!is_minor)LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_UFO.fbx");
     else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Mushroom.fbx");
 
     death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
@@ -94,7 +94,7 @@ void SummonEnemy::DrawDebugPrimitive()
 
 void SummonEnemy::DrawDebugGUI(int n)
 {
-   // Character::DrawDebugGUI("SummonEnemy", n);
+    Character::DrawDebugGUI("SummonEnemy", n);
 }
 
 void SummonEnemy::UpdateAttackState(float elapsed_time)
@@ -257,7 +257,7 @@ void BossEnemy::DrawDebugPrimitive()
 }
 void BossEnemy::DrawDebugGUI(int n)
 {
-  //  Character::DrawDebugGUI("BossEnemy", n);
+    Character::DrawDebugGUI("BossEnemy", n);
 }
 
 void BossEnemy::UpdateAttackState(float elapsed_time)
@@ -349,7 +349,7 @@ void NuisanceEnemy::DrawDebugPrimitive()
 
 void NuisanceEnemy::DrawDebugGUI(int n)
 {
-   // Character::DrawDebugGUI("NuisanceEnemy", n);
+    Character::DrawDebugGUI("NuisanceEnemy", n);
 }
 
 void NuisanceEnemy::UpdateMoveState(float elapsed_time)
