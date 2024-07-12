@@ -93,6 +93,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // ゲームパッド
     GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
     Camera& camera = Camera::Instance();
     camera.Update(elapsed_time);
 
@@ -174,8 +175,9 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
         touch_interval = 0.0f;
     }
 
+
     // ステージ選択
-    if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
+    if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1)
     {
         if (first_touch)
         {
@@ -187,7 +189,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
             first_touch = false;
         }
     }
-    else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)
+    else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1)
     {
         if (first_touch)
         {
@@ -205,37 +207,39 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     }
 
     // ワールド選択
-    if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER)
+    if (!switch_direction)
     {
-        if (world_num < 2)
+        if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER || GetAsyncKeyState('D') & 1)
         {
-            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
-            switch_direction = true;
-            add = true;
-            transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
-            transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
-            transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
-            transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
-            direction_num = 0;
+            if (world_num < 2)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
+                switch_direction = true;
+                add = true;
+                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
+                transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
+                transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
+                transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
+                direction_num = 0;
+            }
+        }
+        else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || GetAsyncKeyState('A') & 1)
+        {
+            if (world_num > 0)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
+                switch_direction = true;
+                minus = true;
+                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
+                transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
+                transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
+                transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
+                direction_num = 0;
+            }
         }
     }
-    else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER)
-    {
-        if (world_num > 0)
-        {
-            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
-            switch_direction = true;
-            minus = true;
-            transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
-            transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
-            transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
-            transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
-            direction_num = 0;
-        }
-    }
-
     // ステージ決定
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)
+    if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) || mouse.GetButtonDown()&mouse.BTN_LEFT)
     {
         StageManager::Instance().current_world_level = world_num;
         StageManager::Instance().current_stage_level = stage_num;
@@ -244,7 +248,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
         next_scene = 0;
         CallTransition(true, stage_mask_pos[stage_num]);
     }
-    if (gamePad.GetButtonDown() & gamePad.BTN_A)
+    if (gamePad.GetButtonDown() & gamePad.BTN_START|| GetAsyncKeyState(VK_BACK) & 1)
     {
         next_scene = 1;
         CallTransition(true);
@@ -260,6 +264,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
 
 void SelectScene::Render(float elapsedTime)
 {
+    DebugImgui();
     HRESULT hr{ S_OK };
 
     Camera& camera = Camera::Instance();
@@ -335,5 +340,16 @@ void SelectScene::Render(float elapsedTime)
 
 void SelectScene::DebugImgui()
 {
+#ifdef DEBUG_IMGUI
+    ImGui::Begin("Select");
+    bool i = GetAsyncKeyState('D') & 1;
+    ImGui::Checkbox("D", &i);
+    i = GetAsyncKeyState('A') & 1;
+    ImGui::Checkbox("A", &i);
+    ImGui::Checkbox("add", &add);
+    ImGui::Checkbox("switch", &switch_direction);
+    ImGui::DragInt("world_num", &world_num);
+    ImGui::End();
+#endif
 }
 

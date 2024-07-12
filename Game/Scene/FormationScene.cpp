@@ -148,57 +148,57 @@ void FormationScene::Finalize()
 
 void FormationScene::Update(HWND hwnd, float elapsedTime)
 {
-    using namespace DirectX;
-    Camera& camera = Camera::Instance();
-    // ゲームパッド
-    GamePad& gamePad = Input::Instance().GetGamePad();
+    //using namespace DirectX;
+    //Camera& camera = Camera::Instance();
+    //// ゲームパッド
+    //GamePad& gamePad = Input::Instance().GetGamePad();
 
-    // エフェクト更新処理
-    EffectManager::Instance().Update(elapsedTime);
-    // カメラ
-    {
-        camera.Update(elapsedTime);
-        camera.SetTarget(camera_target);
-        camera.SetRange(camera_range);
-        camera.SetEyeYOffset(0);
-        camera.SetAngle(camera_angle);
-    }
-    // ライトの更新
-    LightUpdate();
+    //// エフェクト更新処理
+    //EffectManager::Instance().Update(elapsedTime);
+    //// カメラ
+    //{
+    //    camera.Update(elapsedTime);
+    //    camera.SetTarget(camera_target);
+    //    camera.SetRange(camera_range);
+    //    camera.SetEyeYOffset(0);
+    //    camera.SetAngle(camera_angle);
+    //}
+    //// ライトの更新
+    //LightUpdate();
 
-    // マスクの更新
-    TransitionMask(elapsedTime);
+    //// マスクの更新
+    //TransitionMask(elapsedTime);
 
-    if (!start_transition && is_in)
-    {
-        if (is_next_select)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
-        else if (is_next_game)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
-    }
+    //if (!start_transition && is_in)
+    //{
+    //    if (is_next_select)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+    //    else if (is_next_game)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
+    //}
 
-    // アイリスインの最中操作を受け付けない
-    if (start_transition)return;
+    //// アイリスインの最中操作を受け付けない
+    //if (start_transition)return;
 
-    // イージングの更新
-    line_y.EasingValue(elapsedTime);
+    //// イージングの更新
+    //line_y.EasingValue(elapsedTime);
 
-    if (once_only && !start_transition)
-    {
-        line_y.CallValueEasing(0, line_y.value, EasingFunction::EasingType::OutBounce, 1.5f);
-        once_only = false;
-    }
-    if (line_y.is_easing)return;
+    //if (once_only && !start_transition)
+    //{
+    //    line_y.CallValueEasing(0, line_y.value, EasingFunction::EasingType::OutBounce, 1.5f);
+    //    once_only = false;
+    //}
+    //if (line_y.is_easing)return;
 
-    // ユニットの更新
-    UpdateUnit(elapsedTime);
+    //// ユニットの更新
+    //UpdateUnit(elapsedTime);
 
-    // 操作
-    UpdateOperate(elapsedTime);
+    //// 操作
+    //UpdateOperate(elapsedTime);
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_START)
-    {
-        is_next_select = true;
-        CallTransition(true);
-    }
+    //if (gamePad.GetButtonDown() & gamePad.BTN_START)
+    //{
+    //    is_next_select = true;
+    //    CallTransition(true);
+    //}
 
     //DebugImgui();
 }
@@ -438,157 +438,159 @@ void FormationScene::SelectUnit(int button_num)
 
 void FormationScene::Render(float elapsedTime)
 {
-    HRESULT hr{ S_OK };
+    //HRESULT hr{ S_OK };
 
-    Camera& camera = Camera::Instance();
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
-    ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
-    ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+    //Camera& camera = Camera::Instance();
+    //GamePad& gamePad = Input::Instance().GetGamePad();
+    //Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+    //ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+    //ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+    //ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
 
-    camera.SetPerspectiveFov(immediate_context);
-    // 描画の設定
-    SetUpRendering();
-    SetUpConstantBuffer();
+    //camera.SetPerspectiveFov(immediate_context);
+    //// 描画の設定
+    //SetUpRendering();
+    //SetUpConstantBuffer();
 
-    // テクスチャをセット
-    {
-        // ノイズ
-        immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
-        // シャドウ
-        //immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
-        //　深度値
-        immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
-    }
+    //// テクスチャをセット
+    //{
+    //    // ノイズ
+    //    immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
+    //    // シャドウ
+    //    //immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
+    //    //　深度値
+    //    immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
+    //}
 
-    //ステートの設定
-    immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].Get(), nullptr, 0xFFFFFFFF);
-    immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
-    immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+    ////ステートの設定
+    //immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::MLT_ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+    //immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+    //immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
 
-    // ２Dの書き込み開始
-    if (enable_post_effect)
-    {
-        framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Clear(immediate_context);
-        framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Activate(immediate_context);
-    }
+    //// ２Dの書き込み開始
+    //if (enable_post_effect)
+    //{
+    //    framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Clear(immediate_context);
+    //    framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Activate(immediate_context);
+    //}
 
-    // 2D描画（3Dの後面）
-    {
-        // ステートの設定
-        immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-        immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-        immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+    //// 2D描画（3Dの後面）
+    //{
+    //    // ステートの設定
+    //    immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+    //    immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+    //    immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 
-        // 背景
-        back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    //    // 背景
+    //    back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        // ユニット裏のライン
-        for (int i = 0; i < UNIT_MAX; i++)
-        {
-            line_1->Render(immediate_context, (660 + 210 * i)+ line_add.value, line_y.value, 210, SCREEN_HEIGHT);
-        }
-        // 赤ライン
-        line_2->Render(immediate_context, line_x.value+ line_add.value, line_y.value, 210, SCREEN_HEIGHT);
+    //    // ユニット裏のライン
+    //    for (int i = 0; i < UNIT_MAX; i++)
+    //    {
+    //        line_1->Render(immediate_context, (660 + 210 * i)+ line_add.value, line_y.value, 210, SCREEN_HEIGHT);
+    //    }
+    //    // 赤ライン
+    //    line_2->Render(immediate_context, line_x.value+ line_add.value, line_y.value, 210, SCREEN_HEIGHT);
 
-        for (int l = 0; l < 4; l++)
-        {
-            if (enable_lineblue[l])line_blue->Render(immediate_context, lineblue_pos_x[l] + line_add.value, 0.0f, 210, SCREEN_HEIGHT);
-        }
-        for (int n = 0; n < UNIT_MAX; n++)
-        {  
-            // ２Dユニット
-            unit_line[n]->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, SCREEN_HEIGHT);
-        }
-        for (int n = 0; n < UNIT_MAX; n++)
-        {
-            if(enable_best[StageManager::Instance().GetStageLevel()][n])Best->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, 90);
-        }
+    //    for (int l = 0; l < 4; l++)
+    //    {
+    //        if (enable_lineblue[l])line_blue->Render(immediate_context, lineblue_pos_x[l] + line_add.value, 0.0f, 210, SCREEN_HEIGHT);
+    //    }
+    //    for (int n = 0; n < UNIT_MAX; n++)
+    //    {  
+    //        // ２Dユニット
+    //        unit_line[n]->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, SCREEN_HEIGHT);
+    //    }
+    //    for (int n = 0; n < UNIT_MAX; n++)
+    //    {
+    //        if(enable_best[StageManager::Instance().GetStageLevel()][n])Best->Render(immediate_context, (660 + 210 * n) + line_add.value, line_y.value, 210, 90);
+    //    }
 
-        // 前に置くやつ
-        front->Render(immediate_context, 0, 0, 660, SCREEN_HEIGHT);
+    //    // 前に置くやつ
+    //    front->Render(immediate_context, 0, 0, 660, SCREEN_HEIGHT);
 
-        for (int j = 0; j < 4; j++)
-        {
-            // マーク１
-            if (j < status[choose_num][0])mark_1->Render(immediate_context, 100 + float(110 * j), 740, 100, 100);
-            else mark_1_1->Render(immediate_context, 100 + float(110 * j), 740, 100, 100);
-            // マーク２
-            if (j < status[choose_num][1])mark_2->Render(immediate_context, 100 + float(110 * j), 900, 100, 100);
-            else mark_2_2->Render(immediate_context, 100 + float(110 * j), 900, 100, 100);
-            // 島
-            base->Render(immediate_context, (691.5f + 300 * j), 680, 300, 300);
-        }
+    //    for (int j = 0; j < 4; j++)
+    //    {
+    //        // マーク１
+    //        if (j < status[choose_num][0])mark_1->Render(immediate_context, 100 + float(110 * j), 740, 100, 100);
+    //        else mark_1_1->Render(immediate_context, 100 + float(110 * j), 740, 100, 100);
+    //        // マーク２
+    //        if (j < status[choose_num][1])mark_2->Render(immediate_context, 100 + float(110 * j), 900, 100, 100);
+    //        else mark_2_2->Render(immediate_context, 100 + float(110 * j), 900, 100, 100);
+    //        // 島
+    //        base->Render(immediate_context, (691.5f + 300 * j), 680, 300, 300);
+    //    }
 
-        if (line_add.value >= -1.0f)arrow->RenderRightDown(immediate_context, SCREEN_WIDTH, SCREEN_HEIGHT*0.5f + 50, 100, 100, 0.0f);
+    //    if (line_add.value >= -1.0f)arrow->RenderRightDown(immediate_context, SCREEN_WIDTH, SCREEN_HEIGHT*0.5f + 50, 100, 100, 0.0f);
 
-        unit_attack[choose_num]->Render(immediate_context,stage_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f);
-    }
-    // 書き込み終了
-    if (enable_post_effect)
-    {
-        framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Deactivate(immediate_context);
-    }
+    //    unit_attack[choose_num]->Render(immediate_context,stage_ps.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f);
+    //}
+    //// 書き込み終了
+    //if (enable_post_effect)
+    //{
+    //    framebuffers[static_cast<size_t>(FRAME_BUFFER::TEX)]->Deactivate(immediate_context);
+    //}
 
-    // ポストエフェクトの開始
-    if (enable_post_effect)
-    {
-        framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context, 0, 0, 0, 0);
-        framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
-    }
+    //// ポストエフェクトの開始
+    //if (enable_post_effect)
+    //{
+    //    framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Clear(immediate_context, 0, 0, 0, 0);
+    //    framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Activate(immediate_context);
+    //}
 
-    // 3D描画
-    {
-        immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
-        immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
+    //// 3D描画
+    //{
+    //    immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
+    //    immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
-        for (int i = 0; i < UNIT_MAX; i++)
-        {
-            if (enable_units[i])           gltf_unit[i]->Render(1.0f, gltf_ps.Get());
-        }
-    }
+    //    for (int i = 0; i < UNIT_MAX; i++)
+    //    {
+    //        if (enable_units[i])           gltf_unit[i]->Render(1.0f, gltf_ps.Get());
+    //    }
+    //}
 
-    // ポストエフェクトの実行
-    if (enable_post_effect)
-    {
-        framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
-        ExePostEffct();
-    }
+    //// ポストエフェクトの実行
+    //if (enable_post_effect)
+    //{
+    //    framebuffers[static_cast<size_t>(FRAME_BUFFER::SCENE)]->Deactivate(immediate_context);
+    //    ExePostEffct();
+    //}
 
-    // 2D描画（3Dの前面）
-    {
-        // ボタンのアルファベット
-        for (int i = 0; i < 4; i++)
-        {
-            Controller_UI[i]->Render(immediate_context, float(850 + i * 300), 800, 150, 150);
-        }
-        // ボタン
-        Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button.value, 200* button.value);
+    //// 2D描画（3Dの前面）
+    //{
+    //    // ボタンのアルファベット
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        Controller_UI[i]->Render(immediate_context, float(850 + i * 300), 800, 150, 150);
+    //    }
+    //    // ボタン
+    //    Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500* button.value, 200* button.value);
 
-        {
-            DirectX::XMFLOAT4X4 view;
-            DirectX::XMFLOAT4X4 projection;
-            DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
-            DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
-            graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
+    //    {
+    //        DirectX::XMFLOAT4X4 view;
+    //        DirectX::XMFLOAT4X4 projection;
+    //        DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
+    //        DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
+    //        graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
 
-            // エフェクト再生
-            EffectManager::Instance().Render(view, projection);
-        }
+    //        // エフェクト再生
+    //        EffectManager::Instance().Render(view, projection);
+    //    }
 
-        // マスク
-        RenderTransitionMask(elapsedTime);
-    }
+    //    // マスク
+    //    RenderTransitionMask(elapsedTime);
+    //}
 }
 
 
 void FormationScene::DebugImgui()
 {
+#ifdef DEBUG_IMGUI
     BaseScene::DebugImgui();
     Camera::Instance().DrawDebug();
     gltf_unit[0]->DrawDebug();
+#endif
 }
 
 void FormationScene::InitializeLight()

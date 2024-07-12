@@ -131,7 +131,9 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
         return;
     }
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_B&&!is_credit)
+    bool buttonPressed = (gamePad.GetButtonDown() & gamePad.BTN_B) || (GetAsyncKeyState('B') & 1);
+
+    if (buttonPressed && !is_credit)
     {
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
         if (!is_in)
@@ -139,7 +141,7 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
             CallTransition(true);
         }
     }
-    if (gamePad.GetButtonUp() & gamePad.BTN_START)
+    if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
     {
         if (is_credit)
         {
