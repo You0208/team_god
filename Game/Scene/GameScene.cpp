@@ -664,6 +664,7 @@ void GameScene::DebugImgui()
 	BaseScene::DebugImgui();
 	Camera::Instance().DrawDebug();
 	EnemySpawner::Instance().DebugImGui();
+	player->DrawDebugGUI();
 }
 
 void GameScene::InitializeLight()

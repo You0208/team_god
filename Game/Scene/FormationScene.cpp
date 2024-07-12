@@ -105,6 +105,8 @@ void FormationScene::Initialize()
             gltf_unit[i]->PlayAnimation(0, true);
             // 透明度のクリア
             gltf_unit[i]->ClearThreshold();
+
+            unit_size[i].value = 1.0f;
         }
         // ブルームの調整
         bloomer->bloom_extraction_threshold = 0.05f;
@@ -230,6 +232,7 @@ void FormationScene::UpdateOperate(float elapsedTime)
     button.EasingValue(elapsedTime);
     line_x.EasingValue(elapsedTime);
     line_add.EasingValue(elapsedTime);
+
     // ボタンを選択してる時
     if (select_button)
     {
@@ -246,7 +249,7 @@ void FormationScene::UpdateOperate(float elapsedTime)
         }
 
         // Bボタンを押したら
-        if (gamePad.GetButtonDown() & gamePad.BTN_B && all_unit_num >= 4)
+        if (gamePad.GetButtonDown() & gamePad.BTN_B && all_unit_num >= 4|| GetAsyncKeyState(VK_RETURN))
         {
             Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
             Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A] = cont_num[gamePad.A];
@@ -260,59 +263,71 @@ void FormationScene::UpdateOperate(float elapsedTime)
     }
 
 
-    // ボタンを選択していない時
+    // 全部初期化
+    if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER||GetAsyncKeyState(VK_BACK))
+    {
+        if (select_button)
+        {
+            select_button = false;
+            interval_timer = 0.0f;
+            button.CallValueEasing(0.9f, button.value, EasingFunction::EasingType::InSine);
+        }
+
+        bool is = false;
+        for (int n = 0; n < UNIT_MAX; n++)
+        {
+            if (gltf_unit[n]->GetIsDissolve())
+            {
+                is = true;
+            }
+        }
+        if (is)return;
+        for (int i = 0; i < UNIT_MAX; i++)
+        {
+            enable_units[i] = {};
+            units_rotation[i] = {};
+            units_position[i] = {};
+        }
+        for (int j = 0; j < 4; j++)
+        {
+            enable_controllers[j] = {};
+            cont_num[j] = {};
+            enable_lineblue[j] = false;
+            lineblue_pos_x[j] = {};
+        }
+        all_unit_num = 0;
+
+        for (int i = 0; i < UNIT_MAX; i++)
+        {
+            // 透明度のクリア
+            gltf_unit[i]->ClearThreshold();
+        }
+    }
+
+        // ボタンを選択していない時
     if (!select_button)
     {
-        // 全部初期化
-        if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER|| gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER)
-        {
-            bool is = false;
-            for (int n = 0; n < UNIT_MAX; n++)
-            {
-                if (gltf_unit[n]->GetIsDissolve())
-                {
-                    is = true;
-                }
-            }
-            if (is)return;
-            for (int i = 0; i < UNIT_MAX; i++)
-            {
-                enable_units[i] = {};
-                units_rotation[i] = {};
-                units_position[i] = {};
-            }
-            for (int j = 0; j < 4; j++)
-            {
-                enable_controllers[j] = {};
-                cont_num[j] = {};
-                enable_lineblue[j] = false;
-                lineblue_pos_x[j] = {};
-            }
-            all_unit_num = 0;
-            select_button = false;
-
-            for (int i = 0; i < UNIT_MAX; i++)
-            {
-                // 透明度のクリア
-                gltf_unit[i]->ClearThreshold();
-            }
-        }
-
-        // 下を選択する時
-        if (gamePad.GetAxisLY() <= -1.0f || gamePad.GetAxisRY() <= -1.0f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
-        {
-            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-            select_button = true;
-            interval_timer = 0.0f;
-            // ボタンコンティニューを呼ぶ
-            button.CallValueContinue(0.9f, 1.1f, button.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
-        }
-
-
         // ユニットの選択
         {
+            auto updateChooseNum = [&](int direction, bool f = true, int add = -1)
+                {
+                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                    choose_num += direction;// 右選択の時'1',左選択の時'-1'
+                    if (add != -1)
+                    {
+                        line_add.CallValueEasing(add, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    }
+                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
+                    interval_timer = 0.0f;
+                    if (f)first_touch = false;
+
+                };
+
+            bool rightPressed = gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_RIGHT) || (GetAsyncKeyState(VK_RIGHT) & 1);
+            bool leftPressed = gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_LEFT) || (GetAsyncKeyState(VK_LEFT) & 1);
+
             // 右
-            if (gamePad.GetAxisLX() >= 0.5f|| gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
+            if (rightPressed)
             {
                 // インターバルを考慮してカウントを動かす
                 interval_timer += elapsedTime;
@@ -320,75 +335,43 @@ void FormationScene::UpdateOperate(float elapsedTime)
                 // ユニット５を選択中まではこれ
                 if (first_touch && choose_num < UNIT_MAX - 2)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num++;
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
-                    first_touch = false;
+                    updateChooseNum(1);
                 }
                 else if (choose_num < UNIT_MAX - 2 && interval_timer_max <= interval_timer)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num++;
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
+                    updateChooseNum(1, false);
                 }
                 // ユニット6選択中は次の画面に行くので変える
                 else if (first_touch && choose_num == UNIT_MAX - 2)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num++;
-                    line_add.CallValueEasing(-210, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
-                    first_touch = false;
+                    updateChooseNum(1, true, -210);
                 }
                 else if (choose_num == UNIT_MAX - 2 && interval_timer_max <= interval_timer)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num++;
-                    line_add.CallValueEasing(-210, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
+                    updateChooseNum(1, false, -210);
                 }
             }
             // 左
-            else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)
+            else if (leftPressed)
             {
                 // インターバルを考慮してカウントを動かす
                 interval_timer += elapsedTime;
                 // 次の画面に行ってるので
                 if (first_touch && choose_num == 1 && line_add.value < -200.0f)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num--;
-                    line_add.CallValueEasing(0, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
-                    first_touch = false;
+                    updateChooseNum(-1, true, 0);
                 }
                 if (choose_num == 1 && interval_timer_max <= interval_timer && line_add.value < -200.0f)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num--;
-                    line_add.CallValueEasing(0, line_add.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
+                    updateChooseNum(-1, false, 0);
                 }
                 else if (first_touch && choose_num > 0)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num--;
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
-                    first_touch = false;
+                    updateChooseNum(-1);
                 }
                 else if (choose_num > 0 && interval_timer_max <= interval_timer)
                 {
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    choose_num--;
-                    line_x.CallValueEasing((660 + 210 * choose_num), line_x.value, EasingFunction::EasingType::InSine, interval_timer_max);
-                    interval_timer = 0.0f;
+                    updateChooseNum(-1, false);
                 }
             }
             else
@@ -403,10 +386,10 @@ void FormationScene::UpdateOperate(float elapsedTime)
             // ユニットが選べる状態の時
             if (!enable_units[choose_num])
             {
-                if(gamePad.GetButtonDown() & gamePad.BTN_A)SelectUnit(gamePad.A);
-                else if(gamePad.GetButtonDown() & gamePad.BTN_B)SelectUnit(gamePad.B);
-                else if(gamePad.GetButtonDown() & gamePad.BTN_X)SelectUnit(gamePad.X);
-                else if(gamePad.GetButtonDown() & gamePad.BTN_Y)SelectUnit(gamePad.Y);
+                if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('1') & 1)SelectUnit(gamePad.A);
+                else if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('2') & 1)SelectUnit(gamePad.B);
+                else if (gamePad.GetButtonDown() & gamePad.BTN_X || GetAsyncKeyState('3') & 1)SelectUnit(gamePad.X);
+                else if (gamePad.GetButtonDown() & gamePad.BTN_Y || GetAsyncKeyState('4') & 1)SelectUnit(gamePad.Y);
             }
         }
     }
@@ -434,6 +417,15 @@ void FormationScene::SelectUnit(int button_num)
         effect_handle[button_num] = effect->Play(position[button_num], effect_scale);
         gltf_unit[choose_num]->SetIsDissolve(true);
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::CHARACTER_SET, false);
+
+        // ユニットの数が規定を超えたとき守ボタンを動かす
+        if (all_unit_num >= 4)
+        {
+            select_button = true;
+            interval_timer = 0.0f;
+            // ボタンコンティニューを呼ぶ
+            button.CallValueContinue(0.9f, 1.1f, button.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+        }
     }
 }
 

@@ -29,7 +29,6 @@ void ClearScene::Initialize()
         InitializeLight();
         // テクスチャの初期化
         InitializeMask();
-
     }
 
     // テクスチャ
@@ -102,7 +101,6 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
 
     // マスクの更新
     TransitionMask(elapsed_time);
-
 
     // イージングの更新
     star1_scale.EasingValue(elapsed_time);

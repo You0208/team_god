@@ -116,6 +116,9 @@ public:
 				PostMessage(hwnd, WM_CLOSE, 0, 0);
 			}
 			break;
+		case WM_MOUSEWHEEL:
+			Input::Instance().GetMouse().SetWheel(GET_WHEEL_DELTA_WPARAM(wparam));
+			break;
 		case WM_ENTERSIZEMOVE:
 			high_resolution_timer::Instance().stop();
 			break;

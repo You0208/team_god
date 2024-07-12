@@ -50,31 +50,31 @@ private:
     };
     static const int UNIT_MAX = 7;
 
-    EasingFunction      button                  = {};       // ボタンのイージング
-    EasingFunction      line_y                  = {};       // ラインのイージング
-    EasingFunction      line_x                  = {};       // ラインのイージング
-    EasingFunction      line_add                = {};     // ユニット７用のやつ
-    bool                enable_lineblue[4] = {};
+    EasingFunction      button                         = {};       // ボタンのイージング
+    EasingFunction      line_y                         = {};       // ラインのイージング
+    EasingFunction      line_x                         = {};       // ラインのイージング
+    EasingFunction      line_add                       = {};       // ユニット７用のやつ
+    bool                enable_lineblue[4]             = {};
     float               lineblue_pos_x[4];
 
-    bool                once_only               = true;     
+    bool                once_only                      = true;     
 
-    int                 choose_num              = 0;        // 現在選ばれているユニット番号
-    int                 all_unit_num            = 0;        // 選択されたユニットの数
+    int                 choose_num                     = 0;        // 現在選ばれているユニット番号
+    int                 all_unit_num                   = 0;        // 選択されたユニットの数
     bool                enable_units[UNIT_MAX]         = {};       // ユニットが使われたか
     float               units_rotation[UNIT_MAX]       = {};       // ユニットの角度
     DirectX::XMFLOAT3   units_position[UNIT_MAX]       = {};       // ユニットの位置
+    EasingFunction      unit_size[UNIT_MAX]            = {};       // 選択中のユニットのサイズ
 
-    float               interval_timer          = 0.0f;     // コントローラ時間
-    float               interval_timer_max      = 0.15f;    // コントローラー最大時間
+    float               interval_timer                 = 0.0f;     // コントローラ時間
+    float               interval_timer_max             = 0.15f;    // コントローラー最大時間
 
+    bool                enable_controllers[4]          = {};       // どのボタンが選ばれているか
+    int                 cont_num[4]                    = {};       // ボタンにどのユニットが登録されているか
+    bool                select_button                  = false;    // ボタンが選択されているか
+    bool                first_touch                    = true;     // ボタン長押しの最初の一押しか
 
-    bool                enable_controllers[4]   = {};       // どのボタンが選ばれているか
-    int                 cont_num[4]             = {};       // ボタンにどのユニットが登録されているか
-    bool                select_button           = false;    // ボタンが選択されているか
-    bool                first_touch             = true;     // ボタン長押しの最初の一押しか
-
-    float               effect_scale            = 0.3f;     // エフェクトのサイズ
+    float               effect_scale                   = 0.3f;     // エフェクトのサイズ
 
     bool is_next_select = false;
     bool is_next_game = false;

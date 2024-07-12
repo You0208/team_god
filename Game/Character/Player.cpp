@@ -103,8 +103,12 @@ void Player::Update(float elapsedTime)
 // Imgui
 void Player::DrawDebugGUI()
 {
+    Mouse& mouse = Input::Instance().GetMouse();
 
     ImGui::Begin(u8"案山子とか");
+
+    float m = static_cast<float>(mouse.GetWheel())*0.001f;
+    ImGui::DragFloat(u8"ホイール", &m, 0.0f);
 
     ImGui::SliderFloat(u8"移動速度", &moveSpeed, 0.0f, 10.0f);
     ImGui::SliderFloat(u8"ステージとの距離", &sub_pos_z_puls, 0.0f, 5.0f);
@@ -133,6 +137,7 @@ void Player::Flick(float elapsedTime)
             {
                 is_mouse_click = true;
                 mouse_timer = dis_scarecrow;
+                PlayAnimation(Animation::Pull, false);
             }
         }
         else
@@ -140,6 +145,7 @@ void Player::Flick(float elapsedTime)
             if (scaling_max > mouse_timer)mouse_timer += elapsedTime * mouse_timer_speed;
             if (mouse.GetButtonUp() & mouse.BTN_LEFT)
             {
+                PlayAnimation(Animation::Throw, false);
                 // 最小値0、最大値scalingにクランプする
                 flip_pos_z = mouse_timer;
 
@@ -292,16 +298,18 @@ void Player::ChangeCategory()
     //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
 
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_B)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X)unit_category =  Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X];
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y)unit_category =  Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y];
+    if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('1') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('2') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X || GetAsyncKeyState('3') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y || GetAsyncKeyState('4') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y];
 }
 
 // 入力処理
 void Player::InputProcess()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
     if ((GetCurrentAnimationIndex() == Animation::Throw|| GetCurrentAnimationIndex() == Animation::Pull) && IsPlayAnimation())
     {
         velocity.x = 0;
@@ -310,9 +318,15 @@ void Player::InputProcess()
     {
         // 左スティックX成分をスピードに変換
         velocity.x = gamePad.GetAxisLX() * moveSpeed;
+
+        // キーマウ用
+        if (GetAsyncKeyState('D'))velocity.x = moveSpeed;
+        else if (GetAsyncKeyState('A'))velocity.x = -moveSpeed;
+
+        // アニメーション
         if (velocity.x < 0)  PlayAnimation(Animation::Left, false);
         else if (velocity.x > 0)  PlayAnimation(Animation::Right, false);
-        else if (velocity.x == 0)  PlayAnimation(Animation::Idle, false);
+        else if (velocity.x == 0&&!is_mouse_click)  PlayAnimation(Animation::Idle, false);
     }
 }
 
