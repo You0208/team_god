@@ -142,6 +142,8 @@ void Player::Flick(float elapsedTime)
         }
         else
         {
+
+            velocity.x = 0;
             if (scaling_max > mouse_timer)mouse_timer += elapsedTime * mouse_timer_speed;
             if (mouse.GetButtonUp() & mouse.BTN_LEFT)
             {
@@ -310,7 +312,7 @@ void Player::InputProcess()
     GamePad& gamePad = Input::Instance().GetGamePad();
     Mouse& mouse = Input::Instance().GetMouse();
 
-    if ((GetCurrentAnimationIndex() == Animation::Throw|| GetCurrentAnimationIndex() == Animation::Pull) && IsPlayAnimation())
+    if ((GetCurrentAnimationIndex() == Animation::Throw|| GetCurrentAnimationIndex() == Animation::Pull) && IsPlayAnimation() || is_mouse_click)
     {
         velocity.x = 0;
     }
@@ -326,7 +328,7 @@ void Player::InputProcess()
         // アニメーション
         if (velocity.x < 0)  PlayAnimation(Animation::Left, false);
         else if (velocity.x > 0)  PlayAnimation(Animation::Right, false);
-        else if (velocity.x == 0&&!is_mouse_click)  PlayAnimation(Animation::Idle, false);
+        else if (velocity.x == 0)  PlayAnimation(Animation::Idle, false);
     }
 }
 

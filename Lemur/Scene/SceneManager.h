@@ -31,7 +31,7 @@ namespace Lemur::Scene
         // ƒV[ƒ“‚ÌØ‚è‘Ö‚¦
         void ChangeScene(BaseScene* scene);
 
-        void Finalize();
+        void Finalize() {};
 
         void SetStageNum(int stage_num_) { stage_num = stage_num_; };
     private:
@@ -42,6 +42,7 @@ namespace Lemur::Scene
 
     public:
         int set_unit_cont[4] = { 0,1,2,3 };
+        int save_units[4] = {-1,-1,-1,-1 };
         bool once_tutorial = true;
     };
 }

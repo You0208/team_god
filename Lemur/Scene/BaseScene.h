@@ -30,7 +30,7 @@ namespace Lemur::Scene
         virtual ~BaseScene() {}
 
         // ‰Šú‰»
-        virtual void Initialize() = 0;
+        virtual void Initialize();
         // I—¹‰»
         virtual void Finalize() = 0;
         // XVˆ—

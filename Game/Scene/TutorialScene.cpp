@@ -1,13 +1,9 @@
 #include "TutorialScene.h"
-#include "./Lemur/Component/DemoEnemyManager.h"
 #include "./Lemur/Graphics/Camera.h"
-#include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
-#include "Game/Scene/OverScene.h"
-#include "Game/Scene/LoadingScene.h"
-#include "./high_resolution_timer.h"
 
 // Game
+#include "Game/Scene/LoadingScene.h"
 #include "Game/CollisionManager.h"
 #include "../Stage/StageMain.h"
 #include "../Stage/StageManager.h"
@@ -28,26 +24,14 @@ void TutorialScene::Initialize()
 
 	// シェーダー関連
 	{
-		// ステートの初期化
-		InitializeState();
-		// ディファードレンダリングの初期化
-		InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
-		// フレームバッファーの初期化
-		InitializeFramebuffer();
-		// ピクセルシェーダーの初期化
-		InitializePS();
-		// ポイントライト・スポットライトの初期位置設定
-		InitializeLight();
-
-		// マスクの初期化
-		InitializeMask();
+		Initialize();
 
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
 		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
 
-		//TODO 実験用
+		//PS
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_ui.cso", sprite_ui.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", stage_ps_1.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", stage_ps_2.GetAddressOf());

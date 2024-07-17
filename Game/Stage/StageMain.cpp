@@ -1,3 +1,4 @@
+#include "StageManager.h"
 #include "StageMain.h"
 #include "Fence.h"
 
@@ -30,6 +31,9 @@ StageMain::StageMain()
     {
         leavs_LV1[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV1\\leavs_LV1.fbx");
         leavs_LV2[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV2\\leavs_LV2.fbx");
+        leavs_LV3_tomato[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_tomato\\leavs_LV3_tomato.fbx");
+        leavs_LV3_himawari[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_himawari\\leavs_LV3_himawari.fbx");
+        leavs_LV3_eggplant[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_eggplant\\leavs_LV3_eggplant.fbx");
 
         tree[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\tree\\tree.fbx");
 
@@ -38,6 +42,13 @@ StageMain::StageMain()
 
         leavs_LV2[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -12.0f });
         leavs_LV2[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+
+        leavs_LV3_tomato[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
+        leavs_LV3_tomato[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        leavs_LV3_himawari[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
+        leavs_LV3_himawari[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90));
+        leavs_LV3_eggplant[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
+        leavs_LV3_eggplant[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
     }
     scale_facter = 1.0f;
     stage_width = { 9,9 };
@@ -97,7 +108,9 @@ StageMain::~StageMain()
 void StageMain::Update(float elapsedTime)
 {
     //TODO ImGui消す
-    //DrawDebugGui();
+#ifdef DEBUG_IMGUI
+    DrawDebugGui();
+#endif
     scale.x = scale.y = scale.z = scale_facter;
 
     // 可変のステージ幅をスケーリング
@@ -257,6 +270,10 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
         // 草
         leavs_LV1[i]->Render(scale, replaced_pixel_shader);
         leavs_LV2[i]->Render(scale, replaced_pixel_shader);
+
+        if (StageManager::Instance().GetStageLevel() >= 0 && StageManager::Instance().GetStageLevel() < 3)  leavs_LV3_tomato[i]->Render(scale, replaced_pixel_shader);
+        else if (StageManager::Instance().GetStageLevel() >= 3 && StageManager::Instance().GetStageLevel() < 6)  leavs_LV3_himawari[i]->Render(scale, replaced_pixel_shader);
+        else if (StageManager::Instance().GetStageLevel() >= 6 && StageManager::Instance().GetStageLevel() < 9)  leavs_LV3_eggplant[i]->Render(scale, replaced_pixel_shader);
     }
     for (int i = 0; i < 3; i++)
     {
@@ -268,6 +285,7 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
 
 void StageMain::DrawDebugGui()
 {
+
     std::string name = "StageMain";
     std::string T = std::string("Transform") + name;
     if (ImGui::TreeNode(T.c_str()))

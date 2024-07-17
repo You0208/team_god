@@ -34,6 +34,9 @@ private:
     std::unique_ptr<FbxModelManager>   silo = nullptr;
     std::unique_ptr<FbxModelManager>   leavs_LV1[7] = {};
     std::unique_ptr<FbxModelManager>   leavs_LV2[7] = {};
+    std::unique_ptr<FbxModelManager>   leavs_LV3_tomato[7] = {};
+    std::unique_ptr<FbxModelManager>   leavs_LV3_himawari[7] = {};
+    std::unique_ptr<FbxModelManager>   leavs_LV3_eggplant[7] = {};
     std::unique_ptr<FbxModelManager>   une[3] = {};
     std::unique_ptr<FbxModelManager>   log = {};
     std::unique_ptr<FbxModelManager>   tree[7] = {};

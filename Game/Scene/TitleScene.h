@@ -21,6 +21,9 @@ public:
 
     void DebugImgui()override;
 private:
+    void Direction();
+    void ButtonInput();
+private:
     enum Type
     {
         LEFT,

@@ -3,6 +3,22 @@
 #include "../Math/Easing.h"
 #include "./Lemur/Resource/ResourceManager.h"
 
+void Lemur::Scene::BaseScene::Initialize()
+{
+	// ステートの初期化
+	InitializeState();
+	// ディファードレンダリングの初期化
+	InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
+	// フレームバッファーの初期化
+	InitializeFramebuffer();
+	// ピクセルシェーダーの初期化
+	InitializePS();
+	// ポイントライト・スポットライトの初期位置設定
+	InitializeLight();
+	// テクスチャの初期化
+	InitializeMask();
+}
+
 void Lemur::Scene::BaseScene::DebugImgui()
 {
 	ImGui::Begin("Shader");

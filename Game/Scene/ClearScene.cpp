@@ -4,6 +4,7 @@
 #include "./Lemur/Scene/SceneManager.h"
 
 #include "Game/Scene/FormationScene.h"
+#include "Game/Scene/TitleScene.h"
 #include "Game/Scene/SelectScene.h"
 #include "Game/Scene/GameScene.h"
 #include "Game/Scene/LoadingScene.h"
@@ -33,7 +34,7 @@ void ClearScene::Initialize()
 
     // テクスチャ
     {
-        clear_start_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\spritesheet.png");
+        clear_start_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\鎌.png");
         clear_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\result_back.png");
         result_cover = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Result_scene.png");
         star1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Result\\Star_1.png");
@@ -96,6 +97,7 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // ゲームパッド
     GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
     Camera& camera = Camera::Instance();
     camera.Update(elapsed_time);
 
@@ -185,6 +187,29 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         touch_interval = 0.0f;
     }
 
+    auto handleSelection = [&](Button nextButton, float targetValue, auto& current, auto& next, auto& select) 
+    {
+        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+        current.CallValueEasing(1.0f, current.value, EasingFunction::EasingType::InSine);
+        next.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+        select_num = nextButton;
+        first_touch = false;
+    };
+
+    bool down_pressed = gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_DOWN) || GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState('S');
+    bool up_pressed = gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_UP) || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('W');
+    bool buttonB_pressed = gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('B') || GetAsyncKeyState(VK_RETURN) & 1 || mouse.GetButtonDown() & mouse.BTN_LEFT;
+
+    float f = static_cast<float>(mouse.GetWheel());
+    if (mouse.GetWheel() != 0 && f < 0)
+    {
+        down_pressed = true;
+    }
+    if (mouse.GetWheel() != 0 && f > 0)
+    {
+        up_pressed = true;
+    }
+
     // どのボタンを選択しているか
     switch (select_num)
     {
@@ -192,30 +217,19 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 下を選んだとき
-
-            if (gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+            if (down_pressed && first_touch)
             {
-                if (first_touch)
-                {
-                    first_touch = false;
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    next.CallValueEasing(1.0f, next.value, EasingFunction::EasingType::InSine);
-                    select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                    select_num = Button::Select;
-                    break;
-                }
+                handleSelection(Button::Select, 1.0f, next, select, select);
+                break;
             }
-            else
-            {
-                first_touch = true;
-            }
+            first_touch = !down_pressed;
             // イージングを更新
             select.EasingValue(elapsed_time);
             again.EasingValue(elapsed_time);
             next.ContinueEasing(elapsed_time);
 
             // 選択されると
-            if (gamePad.GetButtonDown() & gamePad.BTN_B)
+            if (buttonB_pressed)
             {
                 is_continue = true;
             }
@@ -226,51 +240,34 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
         {
             // ステージのレベルを加算
             if (StageManager::Instance().GetStageLevel() < 8)StageManager::Instance().AddStageLevel();
+            else if(StageManager::Instance().GetStageLevel()==8)  Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TitleScene));
             // 次のシーンへ
             Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new FormationScene));
         }
         break;
-
     case Button::Select:
         if (!is_continue)// 選択されていない時
         {
             // 下を選んだとき
-            if (gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+            if (down_pressed && first_touch)
             {
-                if (first_touch)
-                {
-                    first_touch = false;
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
-                    again.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                    select_num = Button::Again;
-                    break;
-                }
+                handleSelection(Button::Again, 1.0f, select, again, select);
+                break;
             }
-                // 上を選んだとき
-            else if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
+            // 上を選んだとき
+            else if (up_pressed && first_touch)
             {
-                if (first_touch)
-                {
-                    first_touch = false;
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    select.CallValueEasing(1.0f, select.value, EasingFunction::EasingType::InSine);
-                    next.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                    select_num = Button::Next;
-                    break;
-                }
-            }            
-            else
-            {
-                first_touch = true;
+                handleSelection(Button::Next, 1.0f, select, next, select);
+                break;
             }
+            first_touch = !down_pressed && !up_pressed;
             // イージングを更新
             next.EasingValue(elapsed_time);
             again.EasingValue(elapsed_time);
             select.ContinueEasing(elapsed_time);
 
             // 選択されると
-            if (gamePad.GetButtonDown() & gamePad.BTN_B)
+            if (buttonB_pressed)
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;
@@ -288,30 +285,19 @@ void ClearScene::Update(HWND hwnd, float elapsed_time)
 
         if (!is_continue)// 選択されていない時
         {
-
-            if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)// 上選択すると
+            if (up_pressed && first_touch)
             {
-                if (first_touch)
-                {
-                    first_touch = false;
-                    Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                    again.CallValueEasing(1.0f, again.value, EasingFunction::EasingType::InSine);
-                    select.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
-                    select_num = Button::Select;
-                    break;
-                }
+                handleSelection(Button::Select, 1.0f, again, select, again);
+                break;
             }
-            else
-            {
-                first_touch = true;
-            }
+            first_touch = !up_pressed;
             // イージングを更新
             next.EasingValue(elapsed_time);
             select.EasingValue(elapsed_time);
             again.ContinueEasing(elapsed_time);
 
             // 選択されると
-            if (gamePad.GetButtonDown() & gamePad.BTN_B)
+            if (buttonB_pressed)
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;

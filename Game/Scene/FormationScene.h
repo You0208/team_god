@@ -75,9 +75,10 @@ private:
     bool                first_touch                    = true;     // ボタン長押しの最初の一押しか
 
     float               effect_scale                   = 0.3f;     // エフェクトのサイズ
-
-    bool is_next_select = false;
-    bool is_next_game = false;
+    int                 alpha                          = 1;
+    float               blue_y[4]                      = {};
+    bool                is_next_select                 = false;
+    bool                is_next_game                   = false;
 
     // 各場所の位置と角度
     DirectX::XMFLOAT3 position[4] = {
@@ -113,6 +114,7 @@ private:
     std::shared_ptr<Sprite> front;
     std::shared_ptr<Sprite> line_1;
     std::shared_ptr<Sprite> line_2;
+    std::shared_ptr<Sprite> line_4;
     std::shared_ptr<Sprite> line_blue;
     std::shared_ptr<Sprite> unit_line[UNIT_MAX];
     std::shared_ptr<Sprite> Button;

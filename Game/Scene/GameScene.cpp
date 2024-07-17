@@ -374,6 +374,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		else is_bloom = true;
 	}
 	// ゲーム
+#if 0
 	{
 		if (timer >= time_limit)
 		{
@@ -408,7 +409,10 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		// スポーン
 		EnemySpawner::Instance().Update(elapsedTime);
 	}
-
+#else
+		//ステージ更新処理
+	StageManager::Instance().update(elapsedTime);
+#endif
 	// Imgui
         //TODO もね　ImGui消す 
 #ifdef  DEBUG_IMGUI

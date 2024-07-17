@@ -75,6 +75,7 @@ void Camera::Update(float elapsedTime)
 
     //ƒJƒƒ‰‚Ì‹“_‚Æ’‹“_‚ğİ’è
     SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
+
 }
 
 void Camera::DrawDebug()

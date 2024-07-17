@@ -83,6 +83,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // ゲームパッド
     GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
     Camera& camera = Camera::Instance();
     camera.Update(elapsed_time);
 
@@ -157,7 +158,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
         if (!is_continue)// 選択されていない時
         {
             // 右を選んだとき
-            if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT)
+            if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT||GetAsyncKeyState(VK_RIGHT)&1 || GetAsyncKeyState('D') & 1)
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 again.CallValueEasing(1.1f, again.value, EasingFunction::EasingType::InSine);
@@ -172,7 +173,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
             select.ContinueEasing(elapsed_time);
 
             // 選択されると
-            if (gamePad.GetButtonDown() & gamePad.BTN_B)
+            if (gamePad.GetButtonDown() & gamePad.BTN_B||GetAsyncKeyState(VK_RETURN) & 1 || mouse.GetButtonDown()&mouse.BTN_LEFT)
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
                 is_continue = true;
@@ -191,7 +192,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
 
         if (!is_continue)// 選択されていない時
         {
-            if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT)// 左選択すると
+            if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 select.CallValueEasing(1.1f, select.value, EasingFunction::EasingType::InSine);
@@ -207,7 +208,7 @@ void OverScene::Update(HWND hwnd, float elapsed_time)
             again.ContinueEasing(elapsed_time);
 
             // 選択されると
-            if (gamePad.GetButtonDown() & gamePad.BTN_B)
+            if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 1 || mouse.GetButtonDown() & mouse.BTN_LEFT)
             {
                 Lemur::Audio::AudioManager::Instance().StopAllBGM();
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STANDUP, false);
