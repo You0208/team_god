@@ -12,9 +12,9 @@ Enemy_A::Enemy_A(bool is_minor)
     else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear2.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
-    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
-    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect    = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
 
     set_effect_size = 0.3f;
 
@@ -36,7 +36,7 @@ Enemy_A::Enemy_A(bool is_minor)
 void Enemy_A::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Enemy_A::DrawDebugGUI(int n)
@@ -103,9 +103,9 @@ Enemy_B::Enemy_B(bool is_minor)
     else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar2.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
-    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
-    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect    = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
 
     set_effect_size = 0.3f;
 
@@ -146,7 +146,6 @@ void Enemy_B::UpdateAttackState(float elapsed_time)
         if (Fence::Instance().ApplyDamage(attack_power))
         {
             Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
-            //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false,0.8f, 0.5f);
 
             attack_handle = attack_effect->Play(position, attack_effect_size);
@@ -249,9 +248,9 @@ Enemy_C::Enemy_C(bool is_minor)
     else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit2.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
-    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
-    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect    = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
 
     set_effect_size = 0.3f;
 
@@ -277,7 +276,7 @@ Enemy_C::Enemy_C(bool is_minor)
 void Enemy_C::DrawDebugPrimitive()
 {
     DebugRenderer* debug_renderer = Lemur::Graphics::Graphics::Instance().GetDebugRenderer();
-    //debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
+    debug_renderer->DrawCylinder(position, radius, height, { 0,1,0,1 });
 }
 
 void Enemy_C::DrawDebugGUI(int n)
@@ -298,14 +297,12 @@ void Enemy_C::UpdateAttackState(float elapsed_time)
         {
             Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
             attack_handle = attack_effect->Play(position, attack_effect_size);
-            //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーをに
             timer = 0.0f;
         }
     }
 
-    //TODO これはアニメーションがきたら要変更
     if (!IsPlayAnimation())
     {
         PlayAnimation(7, true);
@@ -346,7 +343,7 @@ void Enemy_C::UpdateMoveState(float elapsed_time)
         // 移動
         HandleMovementState(Fence::Instance().GetLeftRect(), Fence::Instance().GetFrontRect(),
             speed_power, Move::Straight, Move::Avoid, velocity.z, is_touched_unit, elapsed_time);
-        //
+      
         if (Collision::IntersectRectVsCircle(Fence::Instance().GetRightRect(), { position.x,position.z }, radius))
         {
             is_limit = true;
@@ -615,9 +612,9 @@ Enemy_D::Enemy_D(bool is_minor)
     else LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
 
     attack_effect = new Effect(".\\resources\\Effect\\fence_break\\fence_break.efk");
-    death_effect = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
-    hit_effect = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\ENEMY_DOWN\\ENEMY_DOWN.efk");
+    hit_effect    = new Effect(".\\resources\\Effect\\hit_to_enemy\\hit_to_enemy.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
 
     set_effect_size = 0.3f;
 
@@ -666,14 +663,12 @@ void Enemy_D::UpdateAttackState(float elapsed_time)
         {
             Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::FENCE_ATTACK, false);
             attack_handle = attack_effect->Play(position, attack_effect_size);
-            //TODO これはアニメーションがきたら要変更
             PlayAnimation(Animation::Attack, false);
             // タイマーを0に
             attack_timer = 0.0f;
         }
     }
 
-    //TODO これはアニメーションがきたら要変更
     if (!IsPlayAnimation())
     {
        PlayAnimation(7, true);

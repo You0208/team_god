@@ -39,33 +39,35 @@ public:
     // Imgui
     void DebugImGui();
 private:
-    std::vector<EnemyScript>    level_1 = {};    // レベル１
-    std::vector<EnemyScript>    level_2 = {};    // レベル１
-    std::vector<EnemyScript>    level_3 = {};    // レベル１
-    std::vector<EnemyScript>    level_4 = {};    // レベル１
-    std::vector<EnemyScript>    level_5 = {};    // レベル１
-    std::vector<EnemyScript>    level_6 = {};    // レベル１
-    std::vector<EnemyScript>    level_7 = {};    // レベル１
-    std::vector<EnemyScript>    level_8 = {};    // レベル１
-    std::vector<EnemyScript>    level_9 = {};    // レベル１
+    // レベルごとの設定
+    std::vector<EnemyScript>    level_1 = {};
+    std::vector<EnemyScript>    level_2 = {};
+    std::vector<EnemyScript>    level_3 = {};
+    std::vector<EnemyScript>    level_4 = {};
+    std::vector<EnemyScript>    level_5 = {};
+    std::vector<EnemyScript>    level_6 = {};
+    std::vector<EnemyScript>    level_7 = {};
+    std::vector<EnemyScript>    level_8 = {};
+    std::vector<EnemyScript>    level_9 = {};
 
     int                         index          = 0.0f;
-    float                       timer          = 0.0f;  // タイマー
-    float                       timer_speed    = 3.0f;  // タイマーの早くする倍
-    float                       stage_to_shaft = 1.0f;  // ステージと軸の離れ具合
-    DirectX::XMFLOAT2           shaft_pos      = {};    // 各軸の位置
-    DirectX::XMFLOAT2           stage_pos      = {0,0};    // ステージ位置の保存
-    DirectX::XMFLOAT2           stage_width    = {5,5};    // ステージ幅の保存
+    float                       timer          = 0.0f; // タイマー
+    float                       timer_speed    = 3.0f; // タイマーの早くする倍
+    float                       stage_to_shaft = 1.0f; // ステージと軸の離れ具合
+    DirectX::XMFLOAT2           shaft_pos      = {};   // 各軸の位置
+    DirectX::XMFLOAT2           stage_pos      = {0,0};// ステージ位置の保存
+    DirectX::XMFLOAT2           stage_width    = {5,5};// ステージ幅の保存
 
 
 
 //-----この下デバッグ用↓--------------------------------------------
 public:
+    // 共通の設定
     struct EnemyStatus
     {
-        int attack_power;         //攻撃力
+        int   attack_power;       //攻撃力
         float attack_interval;    //攻撃間隔
-        int health;               // HP
+        int   health;             // HP
         float speed_power;        // 速度
         float radius;             // 半径
         float attack_effect_size; // 攻撃エフェクトのサイズ
@@ -78,45 +80,45 @@ public:
 
 private:
     //Enemy_A
-    EnemyStatus enemy_A;
+    EnemyStatus enemy_A = {};
 
     // Enemy_B
-    EnemyStatus enemy_B;
+    EnemyStatus enemy_B     = {};
     float mover_timer_max_B = 1.0f; // 一気に進むまでの時間
-    float dis_B = 3.0f;     // 一気に進む距離
+    float dis_B             = 3.0f; // 一気に進む距離
 
     // Enemy_C
-    EnemyStatus enemy_C;
+    EnemyStatus enemy_C = {};
 
     // Enemy_D
-    EnemyStatus enemy_D;
+    EnemyStatus enemy_D   = {};
     float speed_power_Y_D = -1.0f;
-    float dis_D = 1.0f;
+    float dis_D           = 1.0f;
 
     //Enemy_A
-    EnemyStatus enemy_A_2;
+    EnemyStatus enemy_A_2 = {};
 
     // Enemy_B
-    EnemyStatus enemy_B_2;
+    EnemyStatus enemy_B_2     = {};
     float mover_timer_max_B_2 = 1.0f; // 一気に進むまでの時間
-    float dis_B_2 = 3.0f;     // 一気に進む距離
+    float dis_B_2             = 3.0f;     // 一気に進む距離
 
     // Enemy_C
-    EnemyStatus enemy_C_2;
+    EnemyStatus enemy_C_2 = {};
 
     // Enemy_D
-    EnemyStatus enemy_D_2;
+    EnemyStatus enemy_D_2   = {};
     float speed_power_Y_D_2 = -1.0f;
-    float dis_D_2 = 1.0f;
+    float dis_D_2           = 1.0f;
 
     // SummonEnemy
-    EnemyStatus summon_enemy;
+    EnemyStatus summon_enemy = {};
 
     // BossEnemy
-    EnemyStatus boss_enemy;
+    EnemyStatus boss_enemy = {};
 
     // NuisanceEnemy
-    EnemyStatus nuisance_enemy;
+    EnemyStatus nuisance_enemy = {};
 
     // Imgui
     void EnemyImGui(EnemyStatus& status);

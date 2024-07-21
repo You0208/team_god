@@ -1323,7 +1323,6 @@ void GltfModel::FetchExternalTextures(ID3D11Device* device, const tinygltf::Mode
         texture_n.source = index_count;
         index_count++;
 
-        //TODO 今回ラフネスのみなのでラフネス
         // メタルネスいるときは書き換え
         char filename_pbr[256] = {};
         strcpy_s(filename_pbr, filename);

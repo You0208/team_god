@@ -3,8 +3,9 @@
 #include "./Lemur/Scene/SceneManager.h"
 
 // Game
-#include "Game/Scene/LoadingScene.h"
-#include "Game/CollisionManager.h"
+#include "SelectScene.h"
+#include "LoadingScene.h"
+#include "../CollisionManager.h"
 #include "../Stage/StageMain.h"
 #include "../Stage/StageManager.h"
 #include "../Character/EnemyManager.h"
@@ -15,7 +16,6 @@
 #include "../Character/SeedManager.h"
 #include "../Character/EnemySpawner.h"
 #include "../Character/UniqueEnemy.h"
-#include "../Scene/SelectScene.h"
 
 
 void TutorialScene::Initialize()
@@ -29,7 +29,7 @@ void TutorialScene::Initialize()
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());
 
 		//PS
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_ui.cso", sprite_ui.GetAddressOf());
@@ -45,52 +45,49 @@ void TutorialScene::Initialize()
 	}
 	// スプライト読み込み
 	{
-		button_ui_base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
-		button_ui_chara = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
-		button_ui_circle = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
+		button_ui_base      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
+		button_ui_chara     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
+		button_ui_circle    = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
 
-		pause_main = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
+		pause_main          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
 		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
-		pause_text_select = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
+		pause_text_select   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
 
-		tutorial_gif[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\1.png");
-		tutorial_gif[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\2.png");
-		tutorial_gif[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\3.png");
-		tutorial_gif[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\4.png");
-		tutorial_gif[4] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\5.png");
-		tutorial_gif[5] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\6.png");
-		tutorial_gif[6] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\7.png");
-		tutorial_gif[7] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\8.png");
-		tutorial_gif[8] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\9.png");
+		tutorial_gif[0]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\1.png");
+		tutorial_gif[1]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\2.png");
+		tutorial_gif[2]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\3.png");
+		tutorial_gif[3]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\4.png");
+		tutorial_gif[4]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\5.png");
+		tutorial_gif[5]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\6.png");
+		tutorial_gif[6]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\7.png");
+		tutorial_gif[7]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\8.png");
+		tutorial_gif[8]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\9.png");
 
 		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
-		pause_text_select = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
+		pause_text_select   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
 
+		button[0]           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Abutton.png");
+		button[1]           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Bbutton.png");
+		button[2]           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Xbutton.png");
+		button[3]           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Ybutton.png");
 
+		menu_text           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\MENUでステージセレクト.png");
+		reset_text          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Reset.png");
+		Frame_tutorial      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Frame_tutorial.png");
+		
+		button_beside       = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Button_beside.png");
+		button_up           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Button_up.png");
+		
+		left_row            = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Leftarrow.png");
+		right_row           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Rightarrow.png");
 	
-		button[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Abutton.png");
-		button[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Bbutton.png");
-		button[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Xbutton.png");
-		button[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Ybutton.png");
+		left_text           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Left.png");
+		right_text          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Right.png");
 
-
-		mission_text[MISSION::throw_seed] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\たねをとばす.png");
+		mission_text[MISSION::throw_seed]  = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\たねをとばす.png");
 		mission_text[MISSION::change_unit] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\ユニットをかえる.png");
 		mission_text[MISSION::move_player] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\かかしをうごかす.png");
-		mission_text[MISSION::attack] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\きのこにこうげき.png");
-		
-		menu_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\MENUでステージセレクト.png");
-		reset_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Reset.png");
-		Frame_tutorial = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Frame_tutorial.png");
-		
-		button_beside = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Button_beside.png");
-		button_up = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Button_up.png");
-		
-		left_row = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Leftarrow.png");
-		right_row = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Rightarrow.png");
-	
-		left_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Left.png");
-		right_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Right.png");
+		mission_text[MISSION::attack]      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\きのこにこうげき.png");
 	}
 	// ゲーム部分
 	{
@@ -104,7 +101,6 @@ void TutorialScene::Initialize()
 		camera.SetEyeYOffset(8.0f);
 		camera.SetAngle(camera_angle);
 
-		StageManager& stage_manager = StageManager::Instance();
 
 		// ライティング、色調補正
 		// 昼
@@ -120,20 +116,15 @@ void TutorialScene::Initialize()
 
 
 		// ステージ初期化
+		StageManager& stage_manager = StageManager::Instance();
 		StageMain* stage_main = new StageMain;
 		stage_manager.Register(stage_main);
 
-		// プレイヤーの初期化
+		// 初期化
 		player = new Player;
-
 		fence = new Fence;
-
-
-		// 敵スポーン制御装置の初期化
 		EnemySpawner::Instance().Initialize();
-		// ユニットマネージャーの初期化
 		UnitManager::Instance().Initialize();
-		// エネミーマネージャーの初期化
 		EnemyManager::Instance().Initialize();
 
 		// ポーズ画面
@@ -145,10 +136,12 @@ void TutorialScene::Initialize()
 		// チュートリアル
 		tutorial_state = 0;
 		tutorial_gif_num = 0;
+
 		// BGM
 		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
 		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON_SE, true);
 
+		// ユニットの決定
 		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 0;
 		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 1;
 		Lemur::Scene::SceneManager::Instance().set_unit_cont[0] = 2;
@@ -162,7 +155,6 @@ void TutorialScene::Initialize()
 void TutorialScene::Finalize()
 {
 	// BGM終了
-	// BGM
 	Lemur::Audio::AudioManager::Instance().StopAllBGM();
 	Lemur::Audio::AudioManager::Instance().StopAllSE();
 
@@ -186,16 +178,13 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 	Camera& camera = Camera::Instance();
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	// カメラ
-	{
-		camera.Update(elapsedTime);
-	}
-
+	camera.Update(elapsedTime);
 	// ライトの更新
 	LightUpdate();
-
 	// マスクの更新
 	TransitionMask(elapsedTime);
 
+	// ポーズ更新
 	if (gamePad.GetButtonUp() & gamePad.BTN_BACK)
 	{
 		is_pause = !is_pause;
@@ -225,30 +214,13 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 		UnitManager::Instance().Update(elapsedTime);
 		// 種更新
 		SeedManager::Instance().Update(elapsedTime);
-
 		// 種とユニットの当たり判定（種が生まれるか）
 		CollisionManager::Instance().CollisionSeedVsUnit();
 
-		if (gamePad.GetButtonUp() & gamePad.BTN_RIGHT)
-		{
-			if (tutorial_gif_num < 8)tutorial_gif_num++;
-		}
-		if (gamePad.GetButtonUp() & gamePad.BTN_LEFT)
-		{
-			if (tutorial_gif_num > 0)tutorial_gif_num--;
-		}
+		// 入力
+		HandleInput();
 
-		if (gamePad.GetButtonDown() & gamePad.BTN_START)
-		{
-			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
-		}
-
-		if (gamePad.GetButtonUp() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonUp() & gamePad.BTN_RIGHT_SHOULDER)
-		{
-			UnitManager::Instance().Clear();
-			SeedManager::Instance().Clear();
-		}
-
+		// エンドレスで敵を出す
 		if (EnemyManager::Instance().GetEnemyCount() <= 0&& tutorial_state!= MISSION::attack)
 		{
 			Enemy* new_enemy = new NuisanceEnemy(false);
@@ -262,43 +234,13 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 			tutorial_gif[0]->is_anime_end = false;
 			tutorial_gif_num = 1;
 		}
-		switch (tutorial_state)
-		{
-		case MISSION::throw_seed:// 種を飛ばす
-			if (SeedManager::Instance().GetSeedCount() > 0)
-			{
-				tutorial_gif_num = 2;
-				tutorial_state = MISSION::move_player;
-				player_current_position = player->GetPosition();
-			}
-			break;
-		case MISSION::move_player:// かかしを動かす
-			if (!Equal(player_current_position.x, player->GetPosition().x) || !Equal(player_current_position.z, player->GetPosition().z))
-			{
-				tutorial_gif_num = 3;
-				unit_category = player->GetCategory();
-				tutorial_state = MISSION::change_unit;
-			}
-			break;
-		case MISSION::change_unit:// ユニットを変える
-			if (player->GetCategory() != unit_category)
-			{
-				tutorial_state = MISSION::attack;
-			}
-			break;
-		case MISSION::attack:// 攻撃する
-			if (EnemyManager::Instance().GetEnemyCount() <= 0)
-			{
-				tutorial_state = MISSION::clear;
-			}
-			break;
-		case MISSION::clear:
-			break;
-		}
+
+		// 状態の更新
+		UpdateState();
 	}
 
 	// Imgui
-	//DebugImgui();
+	DebugImgui();
 }
 
 void TutorialScene::Render(float elapsedTime)
@@ -323,34 +265,37 @@ void TutorialScene::Render(float elapsedTime)
 
 	// スケール
 	const float scale = 0.015f;
-	// TODO もね　えねみーの大きさ
+	// TODO もね　敵の大きさ
 	const float enemy_scale = 0.016f;
 
-	SetUpShadowMap();
-
-	shadow_map->Clear(immediate_context);
-	shadow_map->Activate(immediate_context);
-
-	ID3D11PixelShader* null_pixel_shader{ NULL };
-	// プレイヤー描画
-	player->Render(scale, &null_pixel_shader);
-
-	//// ステージ描画
-	StageManager::Instance().Render(1.0f, &null_pixel_shader, &null_pixel_shader);
-	// ユニット描画
-	UnitManager::Instance().Render(scale, null_pixel_shader);
-	for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+	// 影生成
 	{
-		UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, null_pixel_shader);
+		ID3D11PixelShader* null_pixel_shader{ NULL };
+		SetUpShadowMap();
+		shadow_map->Clear(immediate_context);
+		shadow_map->Activate(immediate_context);
+
+		// プレイヤー描画
+		player->Render(scale, &null_pixel_shader);
+		//// ステージ描画
+		StageManager::Instance().Render(1.0f, &null_pixel_shader, &null_pixel_shader);
+		// ユニット描画
+		UnitManager::Instance().Render(scale, null_pixel_shader);
+		for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
+		{
+			UnitManager::Instance().GetUnit(i)->collision_model->Render(scale, null_pixel_shader);
+		}
+		// エネミー描画
+		EnemyManager::Instance().Render(enemy_scale, null_pixel_shader);
+		// 種描画
+		SeedManager::Instance().Render(0.1f, null_pixel_shader);
+
+		shadow_map->Deactivate(immediate_context);
 	}
-	// エネミー描画
-	EnemyManager::Instance().Render(enemy_scale, null_pixel_shader);
-	// 種描画
-	SeedManager::Instance().Render(0.1f, null_pixel_shader);
 
-	shadow_map->Deactivate(immediate_context);
-
+	// 定数バッファの更新
 	SetUpConstantBuffer();
+
 	// エッジ検出
 	{
 		framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->Clear(immediate_context);
@@ -373,7 +318,7 @@ void TutorialScene::Render(float elapsedTime)
 	// テクスチャをセット
 	{
 		// ノイズ
-		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());//TODO
+		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());
 		// シャドウ
 		immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
 		//　深度値
@@ -517,7 +462,8 @@ void TutorialScene::Render(float elapsedTime)
 }
 
 void TutorialScene::DebugImgui()
-{/*
+{
+#ifdef DEBUG_IMGUI
 	ImGui::Begin("tutorial_state");
 	switch (tutorial_state)
 	{
@@ -539,7 +485,8 @@ void TutorialScene::DebugImgui()
 	}
 	ImGui::End();
 	BaseScene::DebugImgui();
-	Camera::Instance().DrawDebug();*/
+	Camera::Instance().DrawDebug();
+#endif
 }
 
 void TutorialScene::InitializeLight()
@@ -595,6 +542,67 @@ void TutorialScene::PauseUpdate(float elapsedTime)
 			pause_num = 0;
 			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
 		}
+		break;
+	}
+}
+
+void TutorialScene::HandleInput()
+{
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	if (gamePad.GetButtonUp() & gamePad.BTN_RIGHT)
+	{
+		if (tutorial_gif_num < 8)tutorial_gif_num++;
+	}
+	if (gamePad.GetButtonUp() & gamePad.BTN_LEFT)
+	{
+		if (tutorial_gif_num > 0)tutorial_gif_num--;
+	}
+
+	if (gamePad.GetButtonDown() & gamePad.BTN_START)
+	{
+		Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+	}
+
+	if (gamePad.GetButtonUp() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonUp() & gamePad.BTN_RIGHT_SHOULDER)
+	{
+		UnitManager::Instance().Clear();
+		SeedManager::Instance().Clear();
+	}
+}
+
+void TutorialScene::UpdateState()
+{
+	switch (tutorial_state)
+	{
+	case MISSION::throw_seed:// 種を飛ばす
+		if (SeedManager::Instance().GetSeedCount() > 0)
+		{
+			tutorial_gif_num = 2;
+			tutorial_state = MISSION::move_player;
+			player_current_position = player->GetPosition();
+		}
+		break;
+	case MISSION::move_player:// かかしを動かす
+		if (!Equal(player_current_position.x, player->GetPosition().x) || !Equal(player_current_position.z, player->GetPosition().z))
+		{
+			tutorial_gif_num = 3;
+			unit_category = player->GetCategory();
+			tutorial_state = MISSION::change_unit;
+		}
+		break;
+	case MISSION::change_unit:// ユニットを変える
+		if (player->GetCategory() != unit_category)
+		{
+			tutorial_state = MISSION::attack;
+		}
+		break;
+	case MISSION::attack:// 攻撃する
+		if (EnemyManager::Instance().GetEnemyCount() <= 0)
+		{
+			tutorial_state = MISSION::clear;
+		}
+		break;
+	case MISSION::clear:
 		break;
 	}
 }

@@ -13,11 +13,11 @@ public:
     virtual void Update(float elapsedTime) = 0;
 
     //ï`âÊèàóù
-    //virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader) = 0;
-    virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2) {};
+   virtual void Render(float elapsedTime, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2) {};
 
     virtual void DrawDebugGui() {}
 
+    // ÉQÉbÉ^Å[
     Rect                GetStageCollision() { return stage_collision; }
     DirectX::XMFLOAT3   GetStagePos()       { return position; }
     DirectX::XMFLOAT2   GetVariableStageWidth()     { return variable_stage_width; }

@@ -149,7 +149,6 @@ namespace Lemur::Graphics
 
     public:
 #ifdef ENABLE_DIRECT2D
-        //TODO Font
         ID2D1Factory* g_pD2DFactory = nullptr;
         IDXGISurface* g_pBackBuffer = nullptr;
         IDWriteFactory* g_pDWriteFactory = nullptr;

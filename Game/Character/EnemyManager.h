@@ -55,11 +55,13 @@ private:
     std::shared_ptr<FbxModelManager> model_2 = nullptr;
     std::shared_ptr<FbxModelManager> model_3 = nullptr;
     std::shared_ptr<FbxModelManager> model_4 = nullptr;
+    std::shared_ptr<FbxModelManager> model_5 = nullptr;
+    std::shared_ptr<FbxModelManager> model_6 = nullptr;
 
     std::vector<Enemy*> enemies = {};
     std::set<Enemy*>    removes = {};
-    DirectX::XMFLOAT2   shaft_pos = {};    // 各軸の位置
+    DirectX::XMFLOAT2   shaft_pos = {}; // 各軸の位置
 
-    int add_attack = 2;
-    bool time_up = false;
+    int     add_attack = 2;// バフユニット用
+    bool    time_up    = false;// タイマーが止まっているときは敵を出さないフラグ
 };

@@ -285,7 +285,7 @@ namespace Lemur::Graphics
 		{
 			// ウィンドウサイズの取得
 			GetWindowRect(hwnd, &windowed_rect);
-			//TODO ウィンドウの属性を変更(?)
+			// ウィンドウの属性を変更(?)
 			SetWindowLongPtrA(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW & ~(WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME));
 
 			RECT fullscreen_window_rect;

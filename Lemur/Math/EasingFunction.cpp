@@ -2,14 +2,16 @@
 
 void EasingFunction::EasingValue(float elapsed_time)
 {
+	// フラグがたっているとき
 	if (is_easing)
 	{
+		// 既定の時間を越えたら初期化
 		if (timer > time_max)
 		{
-			timer = time_max;
-			value = target_value;
+			timer     = time_max;
+			value     = target_value;
 			is_easing = false;
-			timer = 0.0f;
+			timer     = 0.0f;
 			return;
 		}
 
@@ -36,6 +38,7 @@ void EasingFunction::EasingValue(float elapsed_time)
 		}
 		timer += elapsed_time;
 
+		// タイプを分ける
 		switch (easing_type)
 		{
 		case EasingType::InSine:
@@ -67,30 +70,31 @@ void EasingFunction::ContinueEasing(float elapsed_time)
 			// 時間切れ
 			if (timer > continue_time_max)
 			{
-				timer = continue_time_max;// 超過した時間を戻す
+				timer = continue_time_max;    // 超過した時間を戻す
 				value = continue_target_value;// スケールを調整
-				timer = 0.0f;// タイマーを初期化
+				timer = 0.0f;                 // タイマーを初期化
 
 				// ダウンスケールの準備
-				continue_start_scale = value;// スタートスケールの設定
+				continue_start_scale  = value;       // スタートスケールの設定
 				continue_target_value = continue_min;// ターゲットスケールの設定
-				continue_state = 1;// ステートを次へ
+				continue_state        = 1;           // ステートを次へ
 				break;
 			}
 			if (value >= continue_target_value)
 			{
 				value = continue_target_value;// スケールを調整
-				timer = 0.0f;// タイマーを初期化
+				timer = 0.0f;                 // タイマーを初期化
 
 				// ダウンスケールの準備
-				continue_start_scale = value;// スタートスケールの設定
+				continue_start_scale  = value;       // スタートスケールの設定
 				continue_target_value = continue_min;// ターゲットスケールの設定
-				continue_state = 1;// ステートを次へ
+				continue_state        = 1;           // ステートを次へ
 				break;
 			}
 
 			timer += elapsed_time;
 
+			// 値を増加させるタイプを分ける
 			switch (easing_type_up)
 			{
 			case EasingType::InSine:
@@ -144,6 +148,7 @@ void EasingFunction::ContinueEasing(float elapsed_time)
 
 			timer += elapsed_time;
 
+			// 値を減少させるタイプを分ける
 			switch (easing_type_down)
 			{
 			case EasingType::InSine:
@@ -174,9 +179,4 @@ void EasingFunction::ContinueEasing(float elapsed_time)
 
 void EasingFunction::TwiceEasing(float elapsed_time)
 {
-	if (!is_easing && is_twice_easing)
-	{
-
-	}
-
 }

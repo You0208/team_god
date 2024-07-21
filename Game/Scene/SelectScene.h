@@ -20,6 +20,12 @@ public:
     void Render(float elapsedTime)override;
 
     void DebugImgui()override;
+
+private:
+    // 演出
+    void Direction();
+    // 操作
+    void HandleInput(float elapsedTime);
 private:
     // levelセット用
     int set_level[3][3] = {
@@ -34,8 +40,8 @@ private:
         { 1560,570 }
     };
 
-    bool first_touch = true;
-    float touch_interval = 0.0f;
+    bool            first_touch                 = true;// 選択のブロック
+    float           touch_interval              = 0.0f;// 選択インターバル
     int             world_num                   = 0;    // ワールド番号
     int             stage_num                   = 0;    // ステージ番号
     bool            switch_direction            = false;//切り替えアニメーション実行フラグ

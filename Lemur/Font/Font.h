@@ -11,8 +11,7 @@ namespace Lemur::Graphics
         void render();
         void render(const WCHAR wcText1[], int TextNum,DirectX::XMFLOAT2 pos,float width,float hight);
     private:
-        ////TODO Font
-        // 
+        // Font
 #ifdef ENABLE_DIRECT2D
         //ID2D1Factory* g_pD2DFactory = nullptr;
         //IDXGISurface* g_pBackBuffer = nullptr;

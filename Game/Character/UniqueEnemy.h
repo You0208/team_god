@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "EnemySpawner.h"
+
 class SummonEnemy :public Enemy
 {
 public:
@@ -16,15 +17,15 @@ private:
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
 private:
-    float timer;// タイマー
+    float timer = 0.0f;// タイマー
 
     EnemySpawner::EnemyStatus status[4];
     float mover_timer_max_B = 1.0f; // 一気に進むまでの時間
-    float dis_B = 3.0f;     // 一気に進む距離
-    bool once = true;
-    bool first = true;
-    float child_scale = 1.0f;
-    float child_radius = 1.0f;
+    float dis_B             = 3.0f;     // 一気に進む距離
+    bool once               = true;
+    bool first              = true;
+    float child_scale       = 1.0f;
+    float child_radius      = 1.0f;
 
     EasingFunction easing_pos_y = {};
 };
@@ -44,7 +45,7 @@ private:
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
 private:
-    float timer;// タイマー
+    float timer = 0.0f;// タイマー
 };
 
 class NuisanceEnemy :public Enemy
@@ -62,5 +63,5 @@ private:
     void TransitionMoveState()override {}
     void UpdateMoveState(float elapsed_time)override;
 private:
-    float timer;// タイマー
+    float timer = 0.0f;// タイマー
 };

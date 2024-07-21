@@ -30,7 +30,6 @@ void GameObject::RootmationUpdate(float elapsedTime)
     DirectX::XMMATRIX World = DirectX::XMLoadFloat4x4(&world);
     DirectX::XMVECTOR Translation = DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&transration), World);
     DirectX::XMStoreFloat3(&transration, Translation);
-    // todo ここ数字いじれる。
     position += transration * 1.0f;
 }
 
@@ -466,8 +465,6 @@ void GameObject::UpdateHorizontalMove(float elapsedTime)
 
 void GameObject::HitStopCalc()
 {
-    //todo ヒットストップどっちにするか決める
-
 #if 0 ヒットストップをブールでして完全に止まるパターン
     if(hit_stop_timer>hit_stop_time)
     {

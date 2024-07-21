@@ -5,13 +5,13 @@
 
 void Enemy::Destroy()
 {
+    // エフェクト終了
     if (set_effect != nullptr)
     {
         set_effect->Stop(set_handle);
         delete set_effect;
         set_effect = nullptr;
     }
-    // エフェクト終了
     if (attack_effect != nullptr)
     {
         attack_effect->Stop(attack_handle);
@@ -134,7 +134,7 @@ void Enemy::Update(float elapsed_time)
     // モデルアニメーション更新
     UpdateAnimation(elapsed_time);
 
-    // さいずの更新
+    // サイズの更新
     UpdateScale();
 
     DrawDebugPrimitive();

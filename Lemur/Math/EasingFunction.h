@@ -11,12 +11,12 @@ public:
         InOutSine,
         OutBounce
     };
-    float value = 0.0f;
-    bool is_easing = false;
+    float value             = 0.0f;
+    bool is_easing          = false;
     bool is_continue_easing = false;
 
 public:
-    void EasingValue(float elapsed_time);
+    // イージングの初期化
     void CallValueEasing(float target_scale_, float start_scale_, EasingType easing_type_, float t = 0.2f)
     {
         timer = 0.0f;
@@ -28,8 +28,10 @@ public:
         is_twice_easing = false;
         easing_type = easing_type_;
     }
+    // イージングの更新
+    void EasingValue(float elapsed_time);
 
-    void ContinueEasing(float elapsed_time);
+    // 値が指定域でイージングし続ける
     void CallValueContinue(float continue_min_, float continue_max_, float start_scale_, int easing_type_up_, int easing_type_down_, float t = 0.5f)
     {
         timer = 0.0f;
@@ -54,7 +56,9 @@ public:
         easing_type_up = easing_type_up_;
         easing_type_down = easing_type_down_;
     }
+    void ContinueEasing(float elapsed_time);
 
+    void TwiceEasing(float elapsed_time);
     void CallTwiceEasing(float continue_min_, float continue_max_, float start_scale_, int easing_type_up_, int easing_type_down_, float t = 0.5f)
     {
         timer = 0.0f;
@@ -80,24 +84,22 @@ public:
         easing_type_down = easing_type_down_;
     }
 
-    void TwiceEasing(float elapsed_time);
-
 private:
-    float timer = 0.0f;
-    float time_max = 0.2f;
-    float target_value = 0.0f;
-    float start_value = 0.0f;
+    float timer                 = 0.0f;
+    float time_max              = 0.2f;
+    float target_value          = 0.0f;
+    float start_value           = 0.0f;
 
-    int loop_count = 0;
-    bool is_loop = true;
-    bool is_twice_easing = false;
-    float continue_time_max = 0.2f;
-    float continue_max = 0.0f;
-    float continue_min = 0.0f;
+    int loop_count              = 0;
+    bool is_loop                = true;
+    bool is_twice_easing        = false;
+    float continue_time_max     = 0.2f;
+    float continue_max          = 0.0f;
+    float continue_min          = 0.0f;
     float continue_target_value = 0.0f;
-    float continue_start_scale = 0.0f;
-    int easing_type = 0;
-    int easing_type_up = 0;
-    int easing_type_down = 0;
-    int continue_state = 0;// 0:Up,1:Down
+    float continue_start_scale  = 0.0f;
+    int easing_type             = 0;
+    int easing_type_up          = 0;
+    int easing_type_down        = 0;
+    int continue_state          = 0;// 0:Up,1:Down
 };

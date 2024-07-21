@@ -17,6 +17,8 @@ void Lemur::Scene::BaseScene::Initialize()
 	InitializeLight();
 	// テクスチャの初期化
 	InitializeMask();
+	// マスクの初期化
+	InitializeMask();
 }
 
 void Lemur::Scene::BaseScene::DebugImgui()
@@ -282,7 +284,7 @@ void Lemur::Scene::BaseScene::InitializeState()
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 
-		//TODO ディファードレンダリング用に（G-Bufferの枚数を増やした場合はここも増やす）
+		// ディファードレンダリング用に（G-Bufferの枚数を増やした場合はここも増やす）
 		blend_desc.AlphaToCoverageEnable = FALSE;
 		blend_desc.IndependentBlendEnable = TRUE;
 		blend_desc.RenderTarget[0].BlendEnable = TRUE;
@@ -494,7 +496,7 @@ void Lemur::Scene::BaseScene::InitializeMask()
 {
 	Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
-	LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", mask_texture.GetAddressOf(), graphics.GetTexture2D());//TODO
+	LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", mask_texture.GetAddressOf(), graphics.GetTexture2D());
 
 	create_ps_from_cso(graphics.GetDevice(), "./Shader/transition_mask_ps.cso", transition_mask_ps.GetAddressOf());
 

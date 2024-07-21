@@ -20,6 +20,10 @@ public:
     void Render(float elapsedTime)override;
 
     void DebugImgui()override;
+
+private:
+    void Direction(float elapsed_time);
+    void HandleInput(float elapsed_time);
 private:
     enum Button
     {

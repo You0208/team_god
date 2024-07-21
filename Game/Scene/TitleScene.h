@@ -22,7 +22,7 @@ public:
     void DebugImgui()override;
 private:
     void Direction();
-    void ButtonInput();
+    void HandleInput();
 private:
     enum Type
     {

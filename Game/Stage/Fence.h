@@ -6,8 +6,6 @@
 // ステージ
 class Fence :public Character
 {
-private:
-
 public:
     Fence();
     ~Fence()override;
@@ -31,21 +29,24 @@ public:
     // インスタンス取得
     static Fence& Instance();
 
+    // ゲッター
     Rect GetLeftRect() { return left_rect; }
     Rect GetFrontRect() { return front_rect; }
     Rect GetBackRect() { return back_rect; }
     Rect GetRightRect() { return right_rect; }
 
-    float health_prsent = 0.0f;
-    int fence_state = 0;
-    EasingFunction fence1_pos = {};
-    EasingFunction fence2_pos = {};
-    enum FENCE_STATE
+public:
+    enum FENCE_STATE// 状態
     {
         FANCE_0,
         FANCE_1,
         FANCE_2,
     };
+    float           health_prsent = 0.0f;
+    int             fence_state   = 0;
+    // イージング
+    EasingFunction  fence1_pos    = {};
+    EasingFunction  fence2_pos    = {};
 private:    
     // デバッグ用に四角使ってる
     Rect left_rect      = {};

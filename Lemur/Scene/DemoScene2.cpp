@@ -19,9 +19,8 @@ void DemoScene2::Initialize()
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());
 
-		//TODO 実験用
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/skinned_mesh_ps.cso", Try.GetAddressOf());
 
 	}
@@ -88,7 +87,7 @@ void DemoScene2::Render(float elapsedTime)
 	// テクスチャをセット
 	{
 		// ノイズ
-		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());//TODO
+		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());
 		// シャドウ
 		immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
 		//　深度値
@@ -107,9 +106,9 @@ void DemoScene2::Render(float elapsedTime)
 	//3D描画
 	if (enable_deferred)
 	{
-		//test_model->Render(0.01f, fbx_gbuffer_ps.Get());
+		//shadow_model->Render(0.01f, fbx_gbuffer_ps.Get());
 		//test_model_2->Render(0.1f, fbx_gbuffer_ps.Get());
-		//test_model->DrawDebug("Test");
+		//shadow_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test_2");
 
 		//gltf_test_model->Render(1.0f, gltf_gbuffer_ps.Get());
@@ -121,7 +120,7 @@ void DemoScene2::Render(float elapsedTime)
 		//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 		test_model->Render(0.02f, Try.Get());
 		//test_model_2->Render(0.1f, Try.Get());
-		//test_model->DrawDebug("Test");
+		//shadow_model->DrawDebug("Test");
 		//test_model_2->DrawDebug("Test");
 		//gltf_test_model->GetTransform()->SetPositionY(1.0f);
 		//gltf_test_model->Render(1.0f, gltf_ps.Get());
@@ -175,7 +174,7 @@ void DemoScene2::Render(float elapsedTime)
 		if (particle_system)	particle_system->Render(immediate_context);
 		if (particle_bomb)	particle_bomb->Render(immediate_context);
 	}
-	//test_model->Render(0.01f, fbx_gbuffer_ps.Get());
+	//shadow_model->Render(0.01f, fbx_gbuffer_ps.Get());
 	//immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	//immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 	//gltf_test_model->Render(1.0f, gltf_ps.Get());

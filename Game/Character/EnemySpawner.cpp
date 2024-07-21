@@ -207,7 +207,6 @@ void EnemySpawner::Finalize()
 
 void EnemySpawner::Update(float elapsed_time)
 {
-	//TODO ImGui消す
 #ifdef DEBUG_IMGUI
 	DebugImGui();
 #endif // DEBUG_IMGUI
@@ -577,129 +576,129 @@ void EnemySpawner::EnemySpawn(EnemyScript script)
 
 void EnemySpawner::DebugImGui()
 {
-	ImGui::Begin(u8"敵");
+	//ImGui::Begin(u8"敵");
 
-	ImGui::DragFloat(u8"敵出現用のタイマー", &timer, 0.0f, 5.0f);
-	ImGui::SliderFloat(u8"敵いない時の倍速", &timer_speed, 0.0f, 5.0f);
-
-
-	if (ImGui::TreeNode("enemy1"))
-	{
-		EnemyImGui(enemy_A);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy2"))
-	{
-		EnemyImGui(enemy_B);
-		ImGui::SliderFloat(u8"一気に進むまでの時間", &mover_timer_max_B, 0.0f, 5.0f);
-		ImGui::SliderFloat(u8"一気に進む距離", &dis_B, 0.0f, 10.0f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy3"))
-	{
-		EnemyImGui(enemy_C);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy4"))
-	{
-		EnemyImGui(enemy_D);
-		ImGui::SliderFloat(u8"斜めの時の追加速度", &speed_power_Y_D, 0.0f, 10.0f);
-		ImGui::SliderFloat(u8"進む距離", &dis_D, 0.0f, 10.0f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy1_2"))
-	{
-		EnemyImGui(enemy_A_2);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy2_2"))
-	{
-		EnemyImGui(enemy_B_2);
-		ImGui::SliderFloat(u8"一気に進むまでの時間_2", &mover_timer_max_B, 0.0f, 5.0f);
-		ImGui::SliderFloat(u8"一気に進む距離_2", &dis_B, 0.0f, 10.0f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy3_2"))
-	{
-		EnemyImGui(enemy_C_2);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("enemy4_2"))
-	{
-		EnemyImGui(enemy_D_2);
-		ImGui::SliderFloat(u8"斜めの時の追加速度_2", &speed_power_Y_D, 0.0f, 10.0f);
-		ImGui::SliderFloat(u8"進む距離_2", &dis_D, 0.0f, 10.0f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("summon"))
-	{
-		EnemyImGui(summon_enemy);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("boss"))
-	{
-		EnemyImGui(boss_enemy);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("nuisance"))
-	{
-		EnemyImGui(nuisance_enemy);
-		ImGui::TreePop();
-	}
+	//ImGui::DragFloat(u8"敵出現用のタイマー", &timer, 0.0f, 5.0f);
+	//ImGui::SliderFloat(u8"敵いない時の倍速", &timer_speed, 0.0f, 5.0f);
 
 
+	//if (ImGui::TreeNode("enemy1"))
+	//{
+	//	EnemyImGui(enemy_A);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy2"))
+	//{
+	//	EnemyImGui(enemy_B);
+	//	ImGui::SliderFloat(u8"一気に進むまでの時間", &mover_timer_max_B, 0.0f, 5.0f);
+	//	ImGui::SliderFloat(u8"一気に進む距離", &dis_B, 0.0f, 10.0f);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy3"))
+	//{
+	//	EnemyImGui(enemy_C);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy4"))
+	//{
+	//	EnemyImGui(enemy_D);
+	//	ImGui::SliderFloat(u8"斜めの時の追加速度", &speed_power_Y_D, 0.0f, 10.0f);
+	//	ImGui::SliderFloat(u8"進む距離", &dis_D, 0.0f, 10.0f);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy1_2"))
+	//{
+	//	EnemyImGui(enemy_A_2);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy2_2"))
+	//{
+	//	EnemyImGui(enemy_B_2);
+	//	ImGui::SliderFloat(u8"一気に進むまでの時間_2", &mover_timer_max_B, 0.0f, 5.0f);
+	//	ImGui::SliderFloat(u8"一気に進む距離_2", &dis_B, 0.0f, 10.0f);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy3_2"))
+	//{
+	//	EnemyImGui(enemy_C_2);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("enemy4_2"))
+	//{
+	//	EnemyImGui(enemy_D_2);
+	//	ImGui::SliderFloat(u8"斜めの時の追加速度_2", &speed_power_Y_D, 0.0f, 10.0f);
+	//	ImGui::SliderFloat(u8"進む距離_2", &dis_D, 0.0f, 10.0f);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("summon"))
+	//{
+	//	EnemyImGui(summon_enemy);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("boss"))
+	//{
+	//	EnemyImGui(boss_enemy);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("nuisance"))
+	//{
+	//	EnemyImGui(nuisance_enemy);
+	//	ImGui::TreePop();
+	//}
 
-	ImGui::End();
 
-	ImGui::Begin(u8"敵生成");
 
-	if (ImGui::Button("enemy1"))
-	{
-		EnemySpawn(script_enemy_A);
-	}
-	if (ImGui::Button("enemy2"))
-	{
-		EnemySpawn(script_enemy_B);
-	}
+	//ImGui::End();
 
-	if (ImGui::Button("enemy3"))
-	{
-		EnemySpawn(script_enemy_C);
-	}
-	if (ImGui::Button("enemy4"))
-	{
-		EnemySpawn(script_enemy_D);
-	}
-	if (ImGui::Button("enemy1_2"))
-	{
-		EnemySpawn(script_enemy_A_2);
-	}
-	if (ImGui::Button("enemy2_2"))
-	{
-		EnemySpawn(script_enemy_B_2);
-	}
+	//ImGui::Begin(u8"敵生成");
 
-	if (ImGui::Button("enemy3_2"))
-	{
-		EnemySpawn(script_enemy_C_2);
-	}
-	if (ImGui::Button("enemy4_2"))
-	{
-		EnemySpawn(script_enemy_D_2);
-	}
-	if (ImGui::Button("summon"))
-	{
-		EnemySpawn(script_summon_enemy);
-	}
-	if (ImGui::Button("boss"))
-	{
-		EnemySpawn(script_boss_enemy);
-	}
-	if (ImGui::Button("nuisance"))
-	{
-		EnemySpawn(script_nuisance_enemy);
-	}
-	ImGui::End();
+	//if (ImGui::Button("enemy1"))
+	//{
+	//	EnemySpawn(script_enemy_A);
+	//}
+	//if (ImGui::Button("enemy2"))
+	//{
+	//	EnemySpawn(script_enemy_B);
+	//}
+
+	//if (ImGui::Button("enemy3"))
+	//{
+	//	EnemySpawn(script_enemy_C);
+	//}
+	//if (ImGui::Button("enemy4"))
+	//{
+	//	EnemySpawn(script_enemy_D);
+	//}
+	//if (ImGui::Button("enemy1_2"))
+	//{
+	//	EnemySpawn(script_enemy_A_2);
+	//}
+	//if (ImGui::Button("enemy2_2"))
+	//{
+	//	EnemySpawn(script_enemy_B_2);
+	//}
+
+	//if (ImGui::Button("enemy3_2"))
+	//{
+	//	EnemySpawn(script_enemy_C_2);
+	//}
+	//if (ImGui::Button("enemy4_2"))
+	//{
+	//	EnemySpawn(script_enemy_D_2);
+	//}
+	//if (ImGui::Button("summon"))
+	//{
+	//	EnemySpawn(script_summon_enemy);
+	//}
+	//if (ImGui::Button("boss"))
+	//{
+	//	EnemySpawn(script_boss_enemy);
+	//}
+	//if (ImGui::Button("nuisance"))
+	//{
+	//	EnemySpawn(script_nuisance_enemy);
+	//}
+	//ImGui::End();
 }
 
 void EnemySpawner::SetBasicEnemyStatus(Enemy* enemy, EnemyStatus status)
@@ -739,7 +738,7 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, int shaft, floa
 		break;
 	}
 
-	return { second ,enemy_type,shaft,pos,spawn_pos };
+	return { enemy_type,shaft,second,pos,spawn_pos };
 }
 
 EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, DirectX::XMFLOAT2 pos)
@@ -748,7 +747,7 @@ EnemyScript EnemySpawner::SetEnemy(float second, int enemy_type, DirectX::XMFLOA
 	DirectX::XMFLOAT3 spawn_pos = {};
 	spawn_pos = { pos.x,0.0f,pos.y };
 
-	return { second ,enemy_type,0,0.0f,spawn_pos };
+	return { enemy_type,0,second ,0.0,spawn_pos };
 }
 
 //TODO　もね敵スポーン

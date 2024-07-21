@@ -125,39 +125,39 @@ protected:
         Death   // 死亡
     };
 
-    State		state                       = State::Idle;      // ステート
+    State		state                       = State::Idle; // ステート
 
-    float       dec_pos                     = 0.0f;             // 種がユニットに跳ね返される距離
-    bool        is_attack                   = false;            // 攻撃中かどうか
-    bool        is_streng                   = false;            // 強化中かどうか
-    int         attack_times                = 0;                // 攻撃回数
-    int         streng_attack_power         = 0;                // 強化攻撃力
-    int         original_attack_power       = 0;                // 強化前 攻撃力
-    float       t_height                    = 0.0f;             // 三角形の高さ
-    float       t_base                      = 0.0f;             // 三角形の底辺長
-    Triangle    triangle_1                  = {};               // 三角攻撃範囲１
-    Triangle    triangle_2                  = {};               // 三角攻撃範囲２
-    Rect        attack_rect                 = {};               // ユニットの四角攻撃範囲
-    Rect        unit_back                   = {};               // ユニットの後方範囲
-    float       attack_timer                = 0.0f;             // 攻撃間隔タイマー
-    float       rect_angle                  = 0.0f;             // 回転矩形角度
+    float       dec_pos                     = 0.0f;    // 種がユニットに跳ね返される距離
+    bool        is_attack                   = false;   // 攻撃中かどうか
+    bool        is_streng                   = false;   // 強化中かどうか
+    int         attack_times                = 0;       // 攻撃回数
+    int         streng_attack_power         = 0;       // 強化攻撃力
+    int         original_attack_power       = 0;       // 強化前 攻撃力
+    float       t_height                    = 0.0f;    // 三角形の高さ
+    float       t_base                      = 0.0f;    // 三角形の底辺長
+    Triangle    triangle_1                  = {};      // 三角攻撃範囲１
+    Triangle    triangle_2                  = {};      // 三角攻撃範囲２
+    Rect        attack_rect                 = {};      // ユニットの四角攻撃範囲
+    Rect        unit_back                   = {};      // ユニットの後方範囲
+    float       attack_timer                = 0.0f;    // 攻撃間隔タイマー
+    float       rect_angle                  = 0.0f;    // 回転矩形角度
 
-    float       timer_max                   = 0.0f;             // タイマーの最大
-    int         streng_width                = 0.0f;             // 強化幅
-    float       attack_width                = 0.0f;             // 四角の幅
-    float       attack_radius_in            = 0.0f;             // ドーナツ型用の中身円半径
+    float       timer_max                   = 0.0f;    // タイマーの最大
+    int         streng_width                = 0.0f;    // 強化幅
+    float       attack_width                = 0.0f;    // 四角の幅
+    float       attack_radius_in            = 0.0f;    // ドーナツ型用の中身円半径
 
-    Effect*     attack_effect               = nullptr;          // 攻撃エフェクト
-    Effect*     death_effect                = nullptr;          // 死亡エフェクト
-    Effect*     set_effect                  = nullptr;          // 設置エフェクト
+    Effect*     attack_effect               = nullptr; // 攻撃エフェクト
+    Effect*     death_effect                = nullptr; // 死亡エフェクト
+    Effect*     set_effect                  = nullptr; // 設置エフェクト
 
-    Effekseer::Handle attack_handle         = 0;          // 攻撃エフェクト
-    Effekseer::Handle death_handle          = 0;          // 死亡エフェクト
-    Effekseer::Handle set_handle            = 0;          // 設置エフェクト
+    Effekseer::Handle attack_handle         = 0;       // 攻撃エフェクト
+    Effekseer::Handle death_handle          = 0;       // 死亡エフェクト
+    Effekseer::Handle set_handle            = 0;       // 設置エフェクト
 
 
-    float       attack_effect_size          = 0.0f;             // 攻撃エフェクトサイズ
-    float       death_effect_size           = 0.0f;             // 死亡エフェクトサイズ
-    float       set_effect_size             = 0.0f;             // 設置エフェクトサイズ
+    float       attack_effect_size          = 0.0f;    // 攻撃エフェクトサイズ
+    float       death_effect_size           = 0.0f;    // 死亡エフェクトサイズ
+    float       set_effect_size             = 0.0f;    // 設置エフェクトサイズ
 
 };

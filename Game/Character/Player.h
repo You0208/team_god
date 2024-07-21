@@ -61,9 +61,9 @@ private:
     float               max_charge_time     = 2.0f;     // —­‚ßUŒ‚‚ÌÅ‘åŠÔ
     bool                is_throw            = false;    // “Š‚°‚ç‚ê‚½‚©‚Ç‚¤‚©
 
-    bool                is_mouse_click = false;
-    float               mouse_timer = dis_scarecrow;
-    float               mouse_timer_speed = 15.0f;
+    bool                is_mouse_click      = false;
+    float               mouse_timer         = dis_scarecrow;
+    float               mouse_timer_speed   = 15.0f;
 };
 
 

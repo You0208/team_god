@@ -24,29 +24,14 @@ void GameScene::Initialize()
 
 	// シェーダー関連
 	{
-		// ステートの初期化
-		InitializeState();
-		// ディファードレンダリングの初期化
-		InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
-		// フレームバッファーの初期化
-		InitializeFramebuffer();
-		// ピクセルシェーダーの初期化
-		InitializePS();
-		// ポイントライト・スポットライトの初期位置設定
-		InitializeLight();
-
-		// マスクの初期化
-		InitializeMask();
-
-		// スカイマップテクスチャのロード
-		//LoadTextureFromFile(graphics.GetDevice(), L".\\resources_2\\winter_evening_4k.hdr", skymap.GetAddressOf(), graphics.GetTexture2D());
+		BaseScene::Initialize();
 
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
 		// dissolve
-		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());//TODO
+		LoadTextureFromFile(graphics.GetDevice(), L".\\resources\\Image\\dissolve_animation.png", noise.GetAddressOf(), graphics.GetTexture2D());
 
-		//TODO 実験用
+		// PS
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/sprite_ui.cso", sprite_ui.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_1.cso", stage_ps_1.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_model_ps_2.cso", stage_ps_2.GetAddressOf());
@@ -62,24 +47,25 @@ void GameScene::Initialize()
 	}
 	// スプライト読み込み
 	{
-		timer_hands = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_hands.png");
-		timer_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
-		button_ui_base =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
-		button_ui_chara =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
-		button_ui_circle =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
+		timer_hands         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_hands.png");
+		timer_ui_base       = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
+		button_ui_base      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
+		button_ui_chara     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
+		button_ui_circle    = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
 
-		start_text_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\1.png");
-		start_text_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\2.png");
-		start_text_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\3.png");
-		start_text_start = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\START.png");
-		start_text_clear = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\CLEAR.png");
-		fight_enemy = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\てきをたおそう.png");
-		pose_exp = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\pose_word.png");
+		start_text_1        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\1.png");
+		start_text_2        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\2.png");
+		start_text_3        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\3.png");
+		start_text_start    = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\START.png");
+		start_text_clear    = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\CLEAR.png");
+		fight_enemy         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Game\\てきをたおそう.png");
+		pose_exp            = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\pose_word.png");
 
-		pause_main =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
-		pause_text_continue =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
-		pause_text_select =ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
-		test_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_Sphere.fbx");
+		pause_main          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Pause_kakasi.png");
+		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
+		pause_text_select   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
+
+		shadow_model        = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_Sphere.fbx");
 	}
 	// ゲーム部分
 	{
@@ -99,6 +85,7 @@ void GameScene::Initialize()
 		// イージングを呼ぶ
 		rotation_camera_x.CallValueEasing(40.0f, rotation_camera_x.value, EasingFunction::EasingType::OutSine, 1.0f);
 #endif
+
 		StageManager& stage_manager = StageManager::Instance();
 
 		//0 1-1
@@ -110,38 +97,37 @@ void GameScene::Initialize()
 		//6 3-1
 		//7 3-2
 		//8 3-3
-
 		stage_manager.SetStageLevel(StageManager::Instance().GetStageLevel());
 
 		//TODO もね 制限時間 ステージ選択
 		switch (stage_manager.GetStageLevel())
 		{
 		case 0:// レベル１
-			time_limit = 80.0f;// ここで制限時間を調整
+			time_limit = 80.0f;
 			break;
 		case 1:// レベル２
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 2:// レベル３
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 3:// レベル４
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 4:// レベル５
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 5:// レベル6
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 6:// レベル7
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 7:// レベル8
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		case 8:// レベル9
-			time_limit = 90.0f;// ここで制限時間を調整
+			time_limit = 90.0f;
 			break;
 		}
 
@@ -155,7 +141,6 @@ void GameScene::Initialize()
 
 		// プレイヤーの初期化
 		player = new Player;
-		
 		fence = new Fence;
 
 		// 敵スポーン制御装置の初期化
@@ -169,27 +154,26 @@ void GameScene::Initialize()
 		is_pause = false;
 		is_bloom = true;
 		pause_text_continue_scale.value = 1.0f;
-		pause_text_select_scale.value = 1.0f;
-		clear_direction_state = 0;
+		pause_text_select_scale.value   = 1.0f;
+		clear_direction_state           = 0;
 
-		////TODO もねライティング
-		//// ワールドごとのライティング、色調補正
-		//// 朝
+		// ワールドごとのライティング、色調補正
+		// 朝
 		if (stage_manager.GetStageLevel() == 0 ||
 			stage_manager.GetStageLevel() == 1 ||
 			stage_manager.GetStageLevel() == 2)
 		{
-			point_light[1].range = 100;
-			directional_light_direction = { 0.737f,-1.00f,-0.795f,0.0f };
+			point_light[1].range           = 100;
+			directional_light_direction    = { 0.737f,-1.00f,-0.795f,0.0f };
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.15f,1.0f };
-			option_constant.parameters.y = 0.5f;
+			option_constant.parameters.y   = 0.5f;
 
-			option_constant.attack_color = { 0.0f,1.0f,1.0f,0.11f };
-			option_constant.edge_color = { 0.0f,1.0f,1.0f,0.6f };
+			option_constant.attack_color   = { 0.0f,1.0f,1.0f,0.11f };
+			option_constant.edge_color     = { 0.0f,1.0f,1.0f,0.6f };
 
-			option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
-			option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+			option_constant.attack_color2  = { 1.0f,1.0f,0.0f,0.11f };
+			option_constant.edge_color2    = { 1.0f,0.2f,0.0f,1.0f };
 
 			// BGM
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_MORNING, true);
@@ -201,16 +185,16 @@ void GameScene::Initialize()
 			stage_manager.GetStageLevel() == 4 ||
 			stage_manager.GetStageLevel() == 5)
 		{
-			directional_light_direction = { -0.342f,-1.00f,0.0f,0.0f };
+			directional_light_direction    = { -0.342f,-1.00f,0.0f,0.0f };
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.7f,1.0f };
 			option_constant.rgb_adjustment = { 1.1f,1.0f,1.0f,1.0f };
-			option_constant.parameters.y = 0.5f;
+			option_constant.parameters.y   = 0.5f;
 
-			option_constant.attack_color = { 0.0f,1.0f,1.0f,0.11f };
-			option_constant.edge_color = { 0.0f,1.0f,1.0f,0.6f };
+			option_constant.attack_color   = { 0.0f,1.0f,1.0f,0.11f };
+			option_constant.edge_color     = { 0.0f,1.0f,1.0f,0.6f };
 
-			option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
-			option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+			option_constant.attack_color2  = { 1.0f,1.0f,0.0f,0.11f };
+			option_constant.edge_color2    = { 1.0f,0.2f,0.0f,1.0f };
 
 			// BGM
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
@@ -222,19 +206,19 @@ void GameScene::Initialize()
 			stage_manager.GetStageLevel() == 7 ||
 			stage_manager.GetStageLevel() == 8)
 		{
-			point_light[0].position = { 0.0f,3.0f,0.0f,1.0f };
-			point_light[0].range = 40;
-			point_light[1].range = 0;
-			directional_light_direction = { 0.111f,-1.00f,-0.676f,0.0f };
+			point_light[0].position        = { 0.0f,3.0f,0.0f,1.0f };
+			point_light[0].range           = 40;
+			point_light[1].range           = 0;
+			directional_light_direction    = { 0.111f,-1.00f,-0.676f,0.0f };
 			option_constant.hsv_adjustment = { 1.0f,1.1f,1.0f,1.0f };
 			option_constant.rgb_adjustment = { 1.0f,1.0f,1.3f,1.0f };
-			option_constant.parameters.y = 0.2f;
+			option_constant.parameters.y   = 0.2f;
 
-			option_constant.attack_color = { 0.18f,1.0f,1.0f,0.07f };
-			option_constant.edge_color = { 0.3f,1.0f,1.0f,0.3f };
+			option_constant.attack_color   = { 0.18f,1.0f,1.0f,0.07f };
+			option_constant.edge_color     = { 0.3f,1.0f,1.0f,0.3f };
 
-			option_constant.attack_color2 = { 1.0f,1.0f,0.0f,0.11f };
-			option_constant.edge_color2 = { 1.0f,0.2f,0.0f,1.0f };
+			option_constant.attack_color2  = { 1.0f,1.0f,0.0f,0.11f };
+			option_constant.edge_color2    = { 1.0f,0.2f,0.0f,1.0f };
 
 			// BGM
 			Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NIGHT, true);
@@ -251,17 +235,8 @@ void GameScene::Initialize()
 void GameScene::Finalize()
 {
 	// BGM終了
-	// BGM
 	Lemur::Audio::AudioManager::Instance().StopAllBGM();
 	Lemur::Audio::AudioManager::Instance().StopAllSE();
-
-	// デバッグ
-	// エフェクト終了
-	if (hitEffect != nullptr)
-	{
-		delete hitEffect;
-		hitEffect = nullptr;
-	}
 
 	//ステージ終了
 	if (stage != nullptr)
@@ -303,10 +278,9 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	using namespace DirectX;
 	Camera& camera = Camera::Instance();
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	// カメラ
-	{
-		camera.Update(elapsedTime);
-	}
+	// カメラ	
+	camera.Update(elapsedTime);
+	
 	// ライトの更新
 	LightUpdate();
 
@@ -325,8 +299,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		if (start_transition)return;
 		if (preparation_next)return;
 	}
-	// スタート演出
-
+	// 演出
 #ifndef  DEBUG_IMGUI
 	if(start_direction)
 	{
@@ -374,7 +347,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		else is_bloom = true;
 	}
 	// ゲーム
-#if 0
+#if 1
 	{
 		if (timer >= time_limit)
 		{
@@ -402,10 +375,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		UnitManager::Instance().Update(elapsedTime);
 		// 種更新
 		SeedManager::Instance().Update(elapsedTime);
-
 		// 種とユニットの当たり判定（種が生まれるか）
 		CollisionManager::Instance().CollisionSeedVsUnit();
-
 		// スポーン
 		EnemySpawner::Instance().Update(elapsedTime);
 	}
@@ -413,11 +384,8 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		//ステージ更新処理
 	StageManager::Instance().update(elapsedTime);
 #endif
-	// Imgui
-        //TODO もね　ImGui消す 
-#ifdef  DEBUG_IMGUI
+
 	DebugImgui();
-#endif
 }
 
 void GameScene::Render(float elapsedTime)
@@ -457,8 +425,8 @@ void GameScene::Render(float elapsedTime)
 		// ●影
 		for (int i=0;i<EnemyManager::Instance().GetEnemyCount();i++)
 		{
-			test_model->GetTransform()->SetPosition({ EnemyManager::Instance().GetEnemy(i)->GetPosition().x,-0.3f, EnemyManager::Instance().GetEnemy(i)->GetPosition().z });
-			test_model->Render(scale * 13.0f, &null_pixel_shader);
+			shadow_model->GetTransform()->SetPosition({ EnemyManager::Instance().GetEnemy(i)->GetPosition().x,-0.3f, EnemyManager::Instance().GetEnemy(i)->GetPosition().z });
+			shadow_model->Render(scale * 13.0f, &null_pixel_shader);
 		}
 
 		// プレイヤー描画
@@ -469,8 +437,8 @@ void GameScene::Render(float elapsedTime)
 		// ●影
 		for (int i = 0; i < UnitManager::Instance().GetUnitCount(); i++)
 		{
-			test_model->GetTransform()->SetPosition({ UnitManager::Instance().GetUnit(i)->GetPosition().x,-0.3f, UnitManager::Instance().GetUnit(i)->GetPosition().z });
-			test_model->Render(scale * 13.0f, &null_pixel_shader);
+			shadow_model->GetTransform()->SetPosition({ UnitManager::Instance().GetUnit(i)->GetPosition().x,-0.3f, UnitManager::Instance().GetUnit(i)->GetPosition().z });
+			shadow_model->Render(scale * 13.0f, &null_pixel_shader);
 		}
 		// 種描画
 		SeedManager::Instance().Render(0.1f, null_pixel_shader);
@@ -503,7 +471,7 @@ void GameScene::Render(float elapsedTime)
 	// テクスチャをセット
 	{
 		// ノイズ
-		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());//TODO
+		immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, noise.GetAddressOf());
 		// シャドウ
 		immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
 		//　深度値
@@ -562,19 +530,14 @@ void GameScene::Render(float elapsedTime)
 	// バッファーの変更
 	RenderingDeffered();
 
-
-	//TODO debug
 	{
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
 		DirectX::XMStoreFloat4x4(&view, camera.GetViewMatrix());
 		DirectX::XMStoreFloat4x4(&projection, camera.GetProjectionMatrix());
-		//TODO もね　当たり判定
 		graphics.GetDebugRenderer()->Render(immediate_context, view, projection);
-
 		// エフェクト再生
 		EffectManager::Instance().Render(view, projection);
-
 		// ブレンドステート設定
 		immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
 		// 深度ステンシルステート設定
@@ -655,6 +618,7 @@ void GameScene::Render(float elapsedTime)
 
 void GameScene::DebugImgui()
 {
+#ifdef  DEBUG_IMGUI
 	ImGui::Begin(u8"ゲーム");
 	float t = time_limit - timer;
 	ImGui::DragFloat(u8"残り時間", &t, 0.0f, 0.1f);
@@ -669,6 +633,7 @@ void GameScene::DebugImgui()
 	Camera::Instance().DrawDebug();
 	EnemySpawner::Instance().DebugImGui();
 	player->DrawDebugGUI();
+#endif
 }
 
 void GameScene::InitializeLight()

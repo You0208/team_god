@@ -71,7 +71,7 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
     Direction();
 
     // 操作
-    ButtonInput();
+    HandleInput();
 
     // アイリスインを呼ぶ
     if (!start_transition && is_in)
@@ -182,7 +182,7 @@ void TitleScene::Direction()
     }
 }
 
-void TitleScene::ButtonInput()
+void TitleScene::HandleInput()
 {
     // ゲームパッド
     GamePad& gamePad = Input::Instance().GetGamePad();

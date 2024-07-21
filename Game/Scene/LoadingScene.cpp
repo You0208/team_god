@@ -9,26 +9,12 @@ void LoadingScene::Initialize()
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // シェーダー関連
-    {
-        // ステートの初期化
-        InitializeState();
-        // ディファードレンダリングの初期化
-        InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
-        // フレームバッファーの初期化
-        InitializeFramebuffer();
-        // ピクセルシェーダーの初期化
-        InitializePS();
-        // ポイントライト・スポットライトの初期位置設定
-        InitializeLight();
-        // テクスチャの初期化
-        InitializeMask();
-    }
+    BaseScene::Initialize();
 
     // シェーダー関連
     // スレッド
-    {
-        thread = new std::thread(LoadingThread, this);
-    }
+    thread = new std::thread(LoadingThread, this);
+
     // ゲーム部分
     {
         spr_back = std::make_unique<Sprite>(graphics.GetDevice(), L".\\resources\\Image\\Load\\Loading.png");
@@ -91,18 +77,16 @@ void LoadingScene::Render(float elapsedTime)
     // 2D描画
     {
         // sprite描画
-        {
-            immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
-            immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
-            immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
-            spr_back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
-            loading_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
-            if(enable_posint[0])point_1_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
-            if (enable_posint[1])point_2_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
-            if (enable_posint[2])point_3_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+        immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_OFF_ZW_OFF)].Get(), 0);
+        immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::CULL_NONE)].Get());
+        immediate_context->OMSetBlendState(blend_states[static_cast<size_t>(BLEND_STATE::ALPHA)].Get(), nullptr, 0xFFFFFFFF);
+        spr_back->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+        loading_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+        if (enable_posint[0])point_1_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+        if (enable_posint[1])point_2_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
+        if (enable_posint[2])point_3_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0);
 
-            RenderTransitionMask(elapsedTime);
-        }
+        RenderTransitionMask(elapsedTime);
     }
 }
 

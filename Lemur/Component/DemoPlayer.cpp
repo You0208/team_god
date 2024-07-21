@@ -51,7 +51,6 @@ void DemoPlayerPhysicsComponent::Initialize(GameObject* gameobj)
 void DemoPlayerPhysicsComponent::Update(GameObject* gameobj, float elapsedTime)
 {
 	DemoPlayer* demoPlayer = dynamic_cast<DemoPlayer*> (gameobj);
-	//TODO IMGUI
 	demoPlayer->DebugImgui();
 }
 

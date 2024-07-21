@@ -18,16 +18,7 @@ void FormationScene::Initialize()
 
     // シェーダー関連
     {
-        // ステートの初期化
-        InitializeState();
-        // ディファードレンダリングの初期化
-        InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
-        // フレームバッファーの初期化
-        InitializeFramebuffer();
-        // ピクセルシェーダーの初期化
-        InitializePS();
-        // マスクの初期化
-        InitializeMask();
+        BaseScene::Initialize();
 
         create_ps_from_cso(graphics.GetDevice(), "./Shader/chara_model_ps.cso", Try.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/unit_ps.cso", chara_ps.GetAddressOf());
@@ -37,6 +28,7 @@ void FormationScene::Initialize()
         create_ps_from_cso(graphics.GetDevice(), "./Shader/stage_select_ps.cso", select_ps.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/fbx_gbuffer_ps.cso", fbx_gbuffer_ps.GetAddressOf());
         create_ps_from_cso(graphics.GetDevice(), "./Shader/gltf_gbuffer_ps.cso", gltf_gbuffer_ps.GetAddressOf());
+        
         // ポストエフェクト最終
         pixel_shaders[static_cast<size_t>(PS::FINAL)].Reset();// メモリリーク対策
         create_ps_from_cso(graphics.GetDevice(), "./Shader/formation_final_pass.cso", pixel_shaders[static_cast<size_t>(PS::FINAL)].GetAddressOf());
@@ -98,7 +90,6 @@ void FormationScene::Initialize()
         // カメラ
         Camera& camera = Camera::Instance();
         camera_angle = { DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(180),DirectX::XMConvertToRadians(0) };
-
         // 並行ライト
         directional_light_direction = { 0.0f,-0.3f,-1.0f,1.0f };
 
@@ -117,16 +108,15 @@ void FormationScene::Initialize()
 
         enable_post_effect = true;
 
+        // ラインの位置調整
         line_y.value = -1080.0f;
         button.value = 0.9f;
         line_x.value = (660 + 210 * choose_num);
         line_add.value = 0.0f;
 
         Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::FORMATION, true);
-        // マスクを呼ぶ
-        //CallTransition(false);
-
-
+   
+        // 編成データの取り出し
         Lemur::Scene::SceneManager& manager = Lemur::Scene::SceneManager::Instance();
         if (manager.save_units[0] != -1 || manager.save_units[1] != -1
             || manager.save_units[2] != -1 || manager.save_units[3] != -1)
@@ -138,14 +128,14 @@ void FormationScene::Initialize()
 
             for (int i = 0; i < 4; i++)
             {
-                blue_y[i] = line_y.value;
                 // 青ラインを下ろす
-                lineblue_pos_x[i] = (660 + 210 * cont_num[i]);
-                enable_lineblue[i] = true;
+                blue_y[i]                   = line_y.value;
+                lineblue_pos_x[i]           = (660 + 210 * cont_num[i]);
+                enable_lineblue[i]          = true;
                 // ユニットの設定
                 units_position[cont_num[i]] = position[i];
                 units_rotation[cont_num[i]] = rotation[i];
-                enable_units[cont_num[i]] = true;
+                enable_units[cont_num[i]]   = true;
                 all_unit_num++;
 
                 // コントローラー
@@ -211,53 +201,49 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
     // ライトの更新
     LightUpdate();
 
-    // マスクの更新
-    TransitionMask(elapsedTime);
-
-    if (!start_transition && is_in)
+    // 始めの演出
     {
-        if (is_next_select)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
-        else if (is_next_game)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
-    }
+        // マスクの更新
+        TransitionMask(elapsedTime);
 
-    // アイリスインの最中操作を受け付けない
-    if (start_transition)return;
-
-    // イージングの更新
-    line_y.EasingValue(elapsedTime);
-
-    for (int i = 0; i < 4; i++)
-    {
-        // 青ラインを下ろす
-        if (enable_lineblue[i])
+        if (!start_transition && is_in)
         {
-            blue_y[i] = line_y.value;
+            if (is_next_select)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+            else if (is_next_game)Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
         }
-    }
-    if (once_only && !start_transition)
-    {
-        line_y.CallValueEasing(0, line_y.value, EasingFunction::EasingType::OutBounce, 1.5f);
-        once_only = false;
-    }
-    if (line_y.is_easing)return;
 
+        // アイリスインの最中操作を受け付けない
+        if (start_transition)return;
+
+        // イージングの更新
+        line_y.EasingValue(elapsedTime);
+
+        for (int i = 0; i < 4; i++)
+        {
+            // 青ラインを下ろす
+            if (enable_lineblue[i])
+            {
+                blue_y[i] = line_y.value;
+            }
+        }
+        if (once_only && !start_transition)
+        {
+            line_y.CallValueEasing(0, line_y.value, EasingFunction::EasingType::OutBounce, 1.5f);
+            once_only = false;
+        }
+        if (line_y.is_easing)return;
+    }
 
     // ユニットの更新
     UpdateUnit(elapsedTime);
 
     // 操作
-    UpdateOperate(elapsedTime);
+    HandleInput(elapsedTime);
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_START)
-    {
-        is_next_select = true;
-        CallTransition(true);
-    }
+    // 枠をチカチカさせる
     interval<500>::run([&] {
-        if (alpha == 1)alpha = 0;
-        else if (alpha == 0)alpha = 1;
+        alpha = (alpha == 1) ? 0 : 1;
         });
-
 
     DebugImgui();
 }
@@ -265,23 +251,21 @@ void FormationScene::Update(HWND hwnd, float elapsedTime)
 void FormationScene::UpdateUnit(float elapsedTime)
 {
     // ユニットの更新
+    for (int i = 0; i < UNIT_MAX; i++)
     {
-        for (int i = 0; i < UNIT_MAX; i++)
-        {
-            gltf_unit[i]->UpdateAnimation(elapsedTime);
+        gltf_unit[i]->UpdateAnimation(elapsedTime);
 
-            gltf_unit[i]->GetTransform()->SetPositionX(units_position[i].x);
-            gltf_unit[i]->GetTransform()->SetPositionY(units_position[i].y);
-            gltf_unit[i]->GetTransform()->SetPositionZ(units_position[i].z);
-            gltf_unit[i]->GetTransform()->SetRotationY(units_rotation[i]);
-            gltf_unit[i]->GetTransform()->SetScaleFactor(2.0f);
+        gltf_unit[i]->GetTransform()->SetPositionX(units_position[i].x);
+        gltf_unit[i]->GetTransform()->SetPositionY(units_position[i].y);
+        gltf_unit[i]->GetTransform()->SetPositionZ(units_position[i].z);
+        gltf_unit[i]->GetTransform()->SetRotationY(units_rotation[i]);
+        gltf_unit[i]->GetTransform()->SetScaleFactor(2.0f);
 
-            gltf_unit[i]->InDissolve(elapsedTime);
-        }
+        gltf_unit[i]->InDissolve(elapsedTime);
     }
 }
 
-void FormationScene::UpdateOperate(float elapsedTime)
+void FormationScene::HandleInput(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -327,7 +311,6 @@ void FormationScene::UpdateOperate(float elapsedTime)
             CallTransition(true);
         }
     }
-
 
     // 全部初期化
     if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER||GetAsyncKeyState(VK_BACK))
@@ -458,6 +441,12 @@ void FormationScene::UpdateOperate(float elapsedTime)
             }
         }
     }
+
+    if (gamePad.GetButtonDown() & gamePad.BTN_START)
+    {
+        is_next_select = true;
+        CallTransition(true);
+    }
 }
 
 void FormationScene::SelectUnit(int button_num)
@@ -513,9 +502,7 @@ void FormationScene::Render(float elapsedTime)
     // テクスチャをセット
     {
         // ノイズ
-        immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());//TODO
-        // シャドウ
-        //immediate_context->PSSetShaderResources(8, 1, shadow_map->shader_resource_view.GetAddressOf());
+        immediate_context->PSSetShaderResources(9/*slot(1番にセットします)*/, 1, mask_texture.GetAddressOf());
         //　深度値
         immediate_context->PSSetShaderResources(11/*Edge*/, 1, framebuffers[static_cast<size_t>(FRAME_BUFFER::DEPTH)]->shader_resource_views[1].GetAddressOf());
     }
@@ -641,7 +628,6 @@ void FormationScene::Render(float elapsedTime)
         RenderTransitionMask(elapsedTime);
     }
 }
-
 
 void FormationScene::DebugImgui()
 {

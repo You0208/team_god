@@ -5,100 +5,109 @@
 StageMain::StageMain()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    ground = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ground\\ground.fbx");
-    fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
-    fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
-    fence = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
-    fence_type1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken1\\fence_broken1.fbx");
-    fence_type2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
-    fence2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
-    fence2_type1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken1\\fence_broken1.fbx");
-    fence2_type2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
-    fence_end = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_end\\fence_end.fbx");
-    
-    ido = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido\\ido.fbx");
-    ido_yane = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido_yane\\ido_yane.fbx");
-    cave = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
-    rock = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\rock\\rock.fbx");
-    silo = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\silo\\silo.fbx");
-    log = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\log\\log_set.fbx");
 
-    for (int j = 0; j < 3; j++)
+    // モデルの読み込み
     {
-        une[j] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\une\\une.fbx");
+        ground = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ground\\ground.fbx");
+        fild1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_1\\field_1.fbx");
+        fild2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\field_2\\field_2.fbx");
+        fence = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
+        fence_type1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken1\\fence_broken1.fbx");
+        fence_type2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
+        fence2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence\\fence.fbx");
+        fence2_type1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken1\\fence_broken1.fbx");
+        fence2_type2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_broken2\\fence_broken2.fbx");
+        fence_end = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\fence_end\\fence_end.fbx");
+
+        ido = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido\\ido.fbx");
+        ido_yane = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\ido_yane\\ido_yane.fbx");
+        cave = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\cave\\cave_set_RE.fbx");
+        rock = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\rock\\rock.fbx");
+        silo = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\silo\\silo.fbx");
+        log = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\log\\log_set.fbx");
+
+        for (int j = 0; j < 3; j++)
+        {
+            une[j] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\une\\une.fbx");
+        }
+        for (int i = 0; i < 7; i++)
+        {
+            leavs_LV1[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV1\\leavs_LV1.fbx");
+            leavs_LV2[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV2\\leavs_LV2.fbx");
+            leavs_LV3_tomato[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_tomato\\leavs_LV3_tomato.fbx");
+            leavs_LV3_himawari[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_himawari\\leavs_LV3_himawari.fbx");
+            leavs_LV3_eggplant[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_eggplant\\leavs_LV3_eggplant.fbx");
+
+            tree[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\tree\\tree.fbx");
+
+            leavs_LV1[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -15.0f });
+            leavs_LV1[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+
+            leavs_LV2[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -12.0f });
+            leavs_LV2[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+
+            leavs_LV3_tomato[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
+            leavs_LV3_tomato[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+            leavs_LV3_himawari[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
+            leavs_LV3_himawari[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90));
+            leavs_LV3_eggplant[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
+            leavs_LV3_eggplant[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        }
     }
-    for (int i = 0; i < 7; i++)
+
+    // 位置調整
     {
-        leavs_LV1[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV1\\leavs_LV1.fbx");
-        leavs_LV2[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV2\\leavs_LV2.fbx");
-        leavs_LV3_tomato[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_tomato\\leavs_LV3_tomato.fbx");
-        leavs_LV3_himawari[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_himawari\\leavs_LV3_himawari.fbx");
-        leavs_LV3_eggplant[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\leavs_LV3_eggplant\\leavs_LV3_eggplant.fbx");
+        scale_facter = 1.0f;
+        stage_width = { 9,9 };
+        scale = { 1.0f,1.0f,1.0f };
+        position = { 0.0f,0.0f,0.0f };
+        stage_collision = {
+            {position.x - stage_width.x,position.z + stage_width.y},
+            {position.x + stage_width.x,position.z - stage_width.y}
+        };
+        variable_stage_width =
+        {
+            stage_width.x,
+            stage_width.y
+        };
 
-        tree[i] = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Stage\\tree\\tree.fbx");
 
-        leavs_LV1[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -15.0f });
-        leavs_LV1[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        // 木
+        tree[0]->GetTransform()->SetPosition({ -9.0f,dec_y,12.0f });
+        tree[1]->GetTransform()->SetPosition({ -6.0f,dec_y,16.0f });
+        tree[2]->GetTransform()->SetPosition({ 6.0f,dec_y,17.0f });
+        tree[3]->GetTransform()->SetPosition({ 10.0f,dec_y,13.0f });
+        tree[4]->GetTransform()->SetPosition({ 13.0f,dec_y,8.0f });
+        tree[5]->GetTransform()->SetPosition({ 16.0f,dec_y,15.0f });
+        tree[6]->GetTransform()->SetPosition({ -12.0f,dec_y,18.0f });
 
-        leavs_LV2[i]->GetTransform()->SetPosition({ -7.0f + (i * 2.3f), 0.3f, -12.0f });
-        leavs_LV2[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[0]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[1]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[3]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[4]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[5]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        tree[6]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
 
-        leavs_LV3_tomato[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
-        leavs_LV3_tomato[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
-        leavs_LV3_himawari[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
-        leavs_LV3_himawari[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90));
-        leavs_LV3_eggplant[i]->GetTransform()->SetPosition({ -13.0f , 0.3f, -4.0f - (i * 2.3f) });
-        leavs_LV3_eggplant[i]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand() % 360));
+        ido->GetTransform()->SetPositionX(-13.0f);
+        ido->GetTransform()->SetPositionY(dec_y);
+        ido_yane->GetTransform()->SetPositionX(-13.0f);
+        ido_yane->GetTransform()->SetPositionY(dec_y);
+
+        cave->GetTransform()->SetPositionZ(12.0f);
+        cave->GetTransform()->SetPositionY(dec_y);
+        cave->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180.0f));
+
+        silo->GetTransform()->SetPosition({ -14.0f,dec_y,11.0f });
+
+        une[0]->GetTransform()->SetPosition({ 0,dec_y ,-12 });
+        une[1]->GetTransform()->SetPosition({ 0,dec_y ,-15 });
+        une[2]->GetTransform()->SetPosition({ -13,dec_y ,-12 });
+        une[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90.0f));
+
+        log->GetTransform()->SetPosition({ 14.0f,dec_y ,2.0f });
+        log->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-14.0f));
     }
-    scale_facter = 1.0f;
-    stage_width = { 9,9 };
-    scale = { 1.0f,1.0f,1.0f };
-    position = { 0.0f,0.0f,0.0f };
-    stage_collision = {
-        {position.x - stage_width.x,position.z + stage_width.y},
-        {position.x + stage_width.x,position.z - stage_width.y}
-    };
-    variable_stage_width =
-    {
-        stage_width.x,
-        stage_width.y
-    };
-
-    // 木
-    tree[0]->GetTransform()->SetPosition({ -9.0f,dec_y,12.0f });
-    tree[1]->GetTransform()->SetPosition({ -6.0f,dec_y,16.0f });
-    tree[2]->GetTransform()->SetPosition({ 6.0f,dec_y,17.0f });
-    tree[3]->GetTransform()->SetPosition({ 10.0f,dec_y,13.0f });
-    tree[4]->GetTransform()->SetPosition({ 13.0f,dec_y,8.0f });
-    tree[5]->GetTransform()->SetPosition({ 16.0f,dec_y,15.0f });
-    tree[6]->GetTransform()->SetPosition({ -12.0f,dec_y,18.0f });
-
-    tree[0]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-    tree[1]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-    tree[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-    tree[3]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-    tree[4]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-    tree[5]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-    tree[6]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(rand()%360));
-
-    ido->GetTransform()->SetPositionX(-13.0f);
-    ido->GetTransform()->SetPositionY(dec_y);
-    ido_yane->GetTransform()->SetPositionX(-13.0f);
-    ido_yane->GetTransform()->SetPositionY(dec_y);
-
-    cave->GetTransform()->SetPositionZ(12.0f);
-    cave->GetTransform()->SetPositionY(dec_y);
-    cave->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180.0f));
-
-    silo->GetTransform()->SetPosition({ -14.0f,dec_y,11.0f });
-
-    une[0]->GetTransform()->SetPosition({ 0,dec_y ,-12 });
-    une[1]->GetTransform()->SetPosition({ 0,dec_y ,-15 });
-    une[2]->GetTransform()->SetPosition({ -13,dec_y ,-12 });
-    une[2]->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(90.0f));
-
-    log->GetTransform()->SetPosition({ 14.0f,dec_y ,2.0f });
-    log->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(-14.0f));
 }
 
 StageMain::~StageMain()
@@ -107,22 +116,7 @@ StageMain::~StageMain()
 
 void StageMain::Update(float elapsedTime)
 {
-    //TODO ImGui消す
-#ifdef DEBUG_IMGUI
     DrawDebugGui();
-#endif
-    scale.x = scale.y = scale.z = scale_facter;
-
-    // 可変のステージ幅をスケーリング
-    variable_stage_width.x = stage_width.x * scale_facter;
-    variable_stage_width.y = stage_width.y * scale_facter;
-
-    // ステージの四角をスケーリングに合わせる
-    stage_collision = {
-        {position.x - variable_stage_width.x,position.z + variable_stage_width.y},
-        {position.x + variable_stage_width.x,position.z - variable_stage_width.y}
-    };
-
 }
 
 void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, ID3D11PixelShader** replaced_pixel_shader2)
@@ -285,6 +279,19 @@ void StageMain::Render(float scale, ID3D11PixelShader** replaced_pixel_shader, I
 
 void StageMain::DrawDebugGui()
 {
+#ifdef DEBUG_IMGUI
+
+    scale.x = scale.y = scale.z = scale_facter;
+
+    // 可変のステージ幅をスケーリング
+    variable_stage_width.x = stage_width.x * scale_facter;
+    variable_stage_width.y = stage_width.y * scale_facter;
+
+    // ステージの四角をスケーリングに合わせる
+    stage_collision = {
+        {position.x - variable_stage_width.x,position.z + variable_stage_width.y},
+        {position.x + variable_stage_width.x,position.z - variable_stage_width.y}
+    };
 
     std::string name = "StageMain";
     std::string T = std::string("Transform") + name;
@@ -303,4 +310,6 @@ void StageMain::DrawDebugGui()
         ImGui::DragFloat(s_f.c_str(), &scale_facter, 0.001f, 0.001f, 1.0f);
         ImGui::TreePop();
     }
+#endif // DEBUG_IMGUI
+
 }

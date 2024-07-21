@@ -284,127 +284,10 @@ void Character::UpdateHorizontalMove(float elapsedTime)
     // 移動処理
     position.x += velocity.x * elapsedTime;
     position.z += velocity.z * elapsedTime;
-
-#if 0
-    // 移動量取得
-    float VecX = position.x + velocity.x - position.x;
-    float VecZ = position.z + velocity.z - position.z;
-
-    // 水平速力量計算
-    float velocityLengthXZ = sqrtf((VecX * VecX) + (VecZ * VecZ));
-
-    if (velocityLengthXZ > 0.0f)
-    {
-        // 水平移動値
-        float mx = velocity.x * elapsed_time;
-        float mz = velocity.z * elapsed_time;
-
-        // レイの開始位置と終点位置設定
-        DirectX::XMFLOAT4 start = { position.x,position.y,position.z,1 };
-        DirectX::XMFLOAT4 end = {
-            position.x + mx,
-            position.y ,
-            position.z + mz,
-            1
-        };
-        start.y += 0.1;
-        end.y += 0.1;
-        // レイ始点
-        DirectX::XMVECTOR Start = DirectX::XMLoadFloat4(&start);
-        // レイ終点
-        DirectX::XMVECTOR End = DirectX::XMLoadFloat4(&end);
-
-        // レイの方向
-        DirectX::XMVECTOR RayVec = DirectX::XMVector4Normalize(DirectX::XMVectorSubtract(End, Start));
-        DirectX::XMFLOAT4 ray_vec;
-        DirectX::XMStoreFloat4(&ray_vec, RayVec);
-
-        // レイキャストによる壁判定
-
-        // 交点
-        DirectX::XMFLOAT4 hit_pos;
-
-        std::string intersected_mesh;
-        std::string intersected_material;
-        DirectX::XMFLOAT3 hit_normal;
-
-        if (Model->RayCast(start, ray_vec, world, hit_pos, hit_normal, intersected_mesh, intersected_material))
-        {
-            DirectX::XMVECTOR Hit = DirectX::XMLoadFloat4(&hit_pos);
-            DirectX::XMVECTOR Start_to_Hit = DirectX::XMVectorSubtract(Hit, Start);
-            float ray_length = DirectX::XMVectorGetX(DirectX::XMVector4Length(Start_to_Hit));
-
-
-            // ヒットした
-            if (ray_length < velocityLengthXZ)
-            {
-                // 移動量ベクトル終点
-                DirectX::XMVECTOR MoveVecEnd = DirectX::XMVectorScale(DirectX::XMVector3Normalize(Start), velocityLengthXZ);
-
-                // ヒットしたポリゴンの法線
-                DirectX::XMVECTOR Normal = DirectX::XMLoadFloat3(&hit_normal);
-
-                DirectX::XMVECTOR Hit_To_MoveVecEnd = DirectX::XMVectorSubtract(MoveVecEnd, Hit);
-                // 射影ベクトルを算出
-                DirectX::XMVECTOR Projection = DirectX::XMVectorScale(Normal,
-                    DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMVectorNegate(Hit_To_MoveVecEnd), Normal)));
-
-                // 多めに補正するためにちょっと大きくする
-                Projection = DirectX::XMVectorScale(Projection, 1.01f);
-
-                // 進行ベクトルの終点と射影ベクトルを足して補正後の位置ベクトル算出。
-                DirectX::XMVECTOR CollectPosition = DirectX::XMVectorMultiplyAdd(Normal, Projection, MoveVecEnd);
-
-                // 補正後の位置
-                DirectX::XMFLOAT4 new_pos;
-                DirectX::XMStoreFloat4(&new_pos, CollectPosition);
-
-                /*------------ 交点から補正後の位置の間でもっかいレイキャスト ----------*/
-
-                // 交点から補正後の位置までのベクトル
-                DirectX::XMVECTOR Hit_To_NewPos = DirectX::XMVectorSubtract(CollectPosition, Hit);
-                Hit_To_NewPos = DirectX::XMVector3Normalize(Hit_To_NewPos);
-
-                DirectX::XMStoreFloat4(&ray_vec, Hit_To_NewPos);
-                if (Model->RayCast(new_pos, ray_vec, world, hit_pos, hit_normal, intersected_mesh, intersected_material))
-                {
-                    position.x = hit_pos.x;
-                    position.y = hit_pos.y;
-                    position.z = hit_pos.z;
-                }
-                else
-                {
-                    position.x = new_pos.x;
-                    position.y = new_pos.y;
-                    position.z = new_pos.z;
-                }
-
-            }
-        }
-        else
-        {
-            position.x += mx;
-            position.z += mz;
-        }
-    }
-#endif
-
-
 }
 
 void Character::HitStopCalc()
 {
-    //todo ヒットストップどっちにするか決める
-
-#if 0 ヒットストップをブールでして完全に止まるパターン
-    if (hit_stop_timer > hit_stop_time)
-    {
-        is_hit_stop = false;
-    }
-
-    hit_stop_timer += high_resolution_timer::Instance().time_interval();
-#else ヒットストップをイージングでしてちょっとずつ動き出すパターン
-
     if (hit_stop_timer > hit_stop_time)
     {
         hit_stop_rate = 1.0f;
@@ -416,31 +299,10 @@ void Character::HitStopCalc()
     hit_stop_rate = Easing::InSine(hit_stop_timer, hit_stop_time, 1.0f, 0.0f);
 
     hit_stop_timer += high_resolution_timer::Instance().time_interval();
-#endif
-
 }
 
 void Character::UpdateTransform()
 {
-#if 0
-    // スケールの行列の作成。
-    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
-
-    // 回転の行列の作成。
-    DirectX::XMMATRIX X = DirectX::XMMatrixRotationX(rotation.x);
-    DirectX::XMMATRIX Y = DirectX::XMMatrixRotationY(rotation.y);
-    DirectX::XMMATRIX Z = DirectX::XMMatrixRotationZ(rotation.z);
-    DirectX::XMMATRIX R = Y * X * Z;
-    // 位置の行列の作成。
-    DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-
-    // 3地の行列を組み合わせてワールド行列を作成。
-    DirectX::XMMATRIX W = S * R * T;
-
-    // 計算したワールド行列を取り出す。
-    DirectX::XMStoreFloat4x4(&transform, W);
-#else
-
     if (!is_gltf)
     {
         model->GetTransform()->SetPosition(position);
@@ -467,9 +329,6 @@ void Character::UpdateTransform()
             collision_model->GetTransform()->SetRotation({ collision_rotation.x,collision_rotation.y,collision_rotation.z,0 });
         }
     }
-
-
-#endif
 }
 
 void Character::UpdateInvincibleTimer(float elapsedTime)

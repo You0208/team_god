@@ -28,12 +28,11 @@ enum Shaft
 
 struct EnemyScript
 {
-    float   second;    //スポーン時間(秒)
-    int     enemy_type;// 敵のタイプ
-    int     shaft;     // 軸
-    float   enemy_pos; // 敵の軸の長さに対する位置
-
-    DirectX::XMFLOAT3 pos;// スポーン位置
+    int     enemy_type    = 0;       // 敵のタイプ
+    int     shaft         = 0;       // 軸
+    float   second        = 0.0f;    //スポーン時間(秒)
+    float   enemy_pos     = 0.0f;    // 敵の軸の長さに対する位置
+    DirectX::XMFLOAT3 pos = {};      // スポーン位置
 };
 
 class Enemy :public Character
@@ -41,13 +40,13 @@ class Enemy :public Character
 public:
     Enemy() {}
     ~Enemy() {
+        // エフェクト終了
         if (set_effect != nullptr)
         {
             set_effect->Stop(set_handle);
             delete set_effect;
             set_effect = nullptr;
         }
-        // エフェクト終了
         if (attack_effect != nullptr)
         {
             attack_effect->Stop(attack_handle);
@@ -81,7 +80,6 @@ public:
     // 破棄
     void Destroy();
 
-    void SetShaft(int shaft_) { shaft = shaft_; }
 protected:
     // 死亡ステートへ遷移
     virtual void TransitionDeathState();
@@ -106,9 +104,12 @@ public:
         set_handle = set_effect->Play(pos, size);
     }
 
+    // ゲッター
     float GetSetEffectSize() { return set_effect_size; }
     int GetEnemyType() { return enemy_type; }
 
+    // セッター
+    void SetShaft(int shaft_) { shaft = shaft_; }
     void SetEnemyType(int type) { enemy_type = type; }
     void SetMoveTimerMax(float move_timer_max_) { move_timer_max = move_timer_max_; }
     void SetDis(float dis_) { dis = dis_; }
@@ -118,6 +119,8 @@ public:
     void SetDeathEffectSize(float death_effect_size_) { death_effect_size = death_effect_size_; }
     void SetHitEffectSize(float hit_effect_size_) { hit_effect_size = hit_effect_size_; }
     void SetEasingValue(float value) { rotation_y.value = value; }
+
+
     // ダメージを与える
     bool ApplyDamage(int damage);
 
@@ -166,7 +169,7 @@ protected:
     float       move_timer_max      = 0.0f;             // 移動間隔
     float       dis                 = 0.0f;             // 進む距離
     float       speed_power_Y       = 0.0f;             // 斜めに進むときのスピード
-    EasingFunction rotation_y       = {};// 方向転換用のイージング
+    EasingFunction rotation_y       = {};               // 方向転換用のイージング
 
     bool        is_power_up         = false;            // パワーアップしたか
 

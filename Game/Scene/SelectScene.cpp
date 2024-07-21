@@ -2,56 +2,36 @@
 #include "FormationScene.h"
 #include "TitleScene.h"
 #include "./Lemur/Graphics/Camera.h"
-#include "./Lemur/Resource/ResourceManager.h"
 #include "./Lemur/Scene/SceneManager.h"
 #include "Game/Stage/StageManager.h"
 #include "Game/Scene/LoadingScene.h"
-#include "./high_resolution_timer.h"
 
 void SelectScene::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
     // シェーダー関連
-    {
-        // ステートの初期化
-        InitializeState();
-        // ディファードレンダリングの初期化
-        InitializeDeffered(SCREEN_WIDTH, SCREEN_HEIGHT);
-        // フレームバッファーの初期化
-        InitializeFramebuffer();
-        // ピクセルシェーダーの初期化
-        InitializePS();
-        // ポイントライト・スポットライトの初期位置設定
-        InitializeLight();
-        // テクスチャの初期化
-        InitializeMask();
-    }
+    BaseScene::Initialize();
 
     // テクスチャ&PS
     {    
-        ui = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_AB.png");
-        ui_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_LB.png");
-        ui_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_RB.png");
-
-        kakashi_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi1.png");
-        kakashi_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi2.png");
-        kakashi_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi3.png");
-
-        highlight_1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage1.png");
-        highlight_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage2.png");
-        highlight_3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage3.png");
-
-        select_back = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_back.png");
-
-        joro = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\jouro_UI_highlight.png");
+        ui                 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_AB.png");
+        ui_1               = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_LB.png");
+        ui_2               = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_select_UI_RB.png");
+        kakashi_1          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi1.png");
+        kakashi_2          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi2.png");
+        kakashi_3          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\kakashi3.png");
+        highlight_1        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage1.png");
+        highlight_2        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage2.png");
+        highlight_3        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage3.png");
+        select_back        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\stage_back.png");
+        joro               = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\jouro_UI_highlight.png");
 
         // 遷移
-        transition = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition.png");
-        transition_line1 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line1.png");
-        transition_line2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line2.png");
-        transition_line3 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line3.png");
-
+        transition         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition.png");
+        transition_line1   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line1.png");
+        transition_line2   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line2.png");
+        transition_line3   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line3.png");
         transition_line1_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line1_2.png");
         transition_line2_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line2_2.png");
         transition_line3_2 = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Select\\transition_line3_2.png");
@@ -64,11 +44,12 @@ void SelectScene::Initialize()
         world_num = StageManager::Instance().current_world_level;
         stage_num = StageManager::Instance().current_stage_level;
 
-        transition_angle.value = 140.0f;
-        transition_line1_angle.value = 90.0f;
-        transition_line2_angle.value = 110.0f;
-        transition_line3_angle.value = 180.0f;
-        transition_angle.value = 90.0f;
+        // 初期位置設定
+        transition_angle.value         = 140.0f;
+        transition_line1_angle.value   = 90.0f;
+        transition_line2_angle.value   = 110.0f;
+        transition_line3_angle.value   = 180.0f;
+        transition_angle.value         = 90.0f;
         transition_line1_angle_2.value = 110.0f;
         transition_line2_angle_2.value = 180.0f;
         transition_line3_angle_2.value =90.0f;
@@ -92,8 +73,7 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     // ゲームパッド
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    Mouse& mouse = Input::Instance().GetMouse();
+
     Camera& camera = Camera::Instance();
     camera.Update(elapsed_time);
 
@@ -110,149 +90,11 @@ void SelectScene::Update(HWND hwnd, float elapsed_time)
     transition_line2_angle_2.EasingValue(elapsed_time);
     transition_line3_angle_2.EasingValue(elapsed_time);
 
-    if (switch_direction)
-    {
-        switch (direction_num)
-        {
-        case 0:
-            // 演出が終わったら
-            if (!transition_angle.is_easing
-                && !transition_line1_angle.is_easing
-                && !transition_line2_angle.is_easing
-                && !transition_line3_angle.is_easing)
-            {
-                // 角度を初期化
-                transition_angle.value = 90.0f;
-                transition_line1_angle.value = 90.0f;
-                transition_line2_angle.value = 110.0f;
-                transition_line3_angle.value = 180.0f;
+    // 演出
+    Direction();
 
-                // イージングを呼ぶ
-                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
-                transition_line1_angle_2.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
-                transition_line2_angle_2.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
-                transition_line3_angle_2.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
-
-                // つぎのセレクト画面を初期化
-                if(add)world_num++;
-                else if(minus)world_num--;
-                stage_num = 0;
-
-                // 次の演出へ
-                direction_num++;
-            }
-            break;
-        case 1:
-            // 演出が終わったら
-            if (!transition_angle.is_easing
-                && !transition_line1_angle_2.is_easing
-                && !transition_line2_angle_2.is_easing
-                && !transition_line3_angle_2.is_easing)
-            {
-                // 角度を初期化
-                transition_angle.value = 140.0f;
-                transition_line1_angle_2.value = 110.0f;
-                transition_line2_angle_2.value = 180.0f;
-                transition_line3_angle_2.value = 90.0f;
-
-                // 初期化
-                direction_num = 0;
-                switch_direction = false;
-                add = false;
-                minus = false;
-            }
-            break;
-        }
-
-        return;
-    }
-
-    if (!first_touch)touch_interval += elapsed_time;
-    else touch_interval = 0.0f;
-    if (touch_interval >= 0.3f)
-    {
-        first_touch = true;
-        touch_interval = 0.0f;
-    }
-
-
-    // ステージ選択
-    if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1)
-    {
-        if (first_touch)
-        {
-            if (stage_num < 2)
-            {
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                stage_num++;
-            }
-            first_touch = false;
-        }
-    }
-    else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1)
-    {
-        if (first_touch)
-        {
-            if (stage_num > 0)
-            {
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-                stage_num--;
-            }
-            first_touch = false;
-        }
-    }
-    else
-    {
-        first_touch = true;
-    }
-
-    // ワールド選択
-    if (!switch_direction)
-    {
-        if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER || GetAsyncKeyState('D') & 1)
-        {
-            if (world_num < 2)
-            {
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
-                switch_direction = true;
-                add = true;
-                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
-                transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
-                transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
-                transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
-                direction_num = 0;
-            }
-        }
-        else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || GetAsyncKeyState('A') & 1)
-        {
-            if (world_num > 0)
-            {
-                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
-                switch_direction = true;
-                minus = true;
-                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
-                transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
-                transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
-                transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
-                direction_num = 0;
-            }
-        }
-    }
-    // ステージ決定
-    if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) || mouse.GetButtonDown()&mouse.BTN_LEFT)
-    {
-        StageManager::Instance().current_world_level = world_num;
-        StageManager::Instance().current_stage_level = stage_num;
-
-        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
-        next_scene = 0;
-        CallTransition(true, stage_mask_pos[stage_num]);
-    }
-    if (gamePad.GetButtonDown() & gamePad.BTN_START|| GetAsyncKeyState(VK_BACK) & 1)
-    {
-        next_scene = 1;
-        CallTransition(true);
-    }
+    // 操作
+    HandleInput(elapsed_time);
     if (!start_transition && is_in)
     {
         StageManager::Instance().SetStageLevel(set_level[world_num][stage_num]);
@@ -351,5 +193,157 @@ void SelectScene::DebugImgui()
     ImGui::DragInt("world_num", &world_num);
     ImGui::End();
 #endif
+}
+
+void SelectScene::Direction()
+{
+    if (switch_direction)
+    {
+        switch (direction_num)
+        {
+        case 0:
+            // 演出が終わったら
+            if (!transition_angle.is_easing
+                && !transition_line1_angle.is_easing
+                && !transition_line2_angle.is_easing
+                && !transition_line3_angle.is_easing)
+            {
+                // 角度を初期化
+                transition_angle.value = 90.0f;
+                transition_line1_angle.value = 90.0f;
+                transition_line2_angle.value = 110.0f;
+                transition_line3_angle.value = 180.0f;
+
+                // イージングを呼ぶ
+                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
+                transition_line1_angle_2.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
+                transition_line2_angle_2.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
+                transition_line3_angle_2.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
+
+                // つぎのセレクト画面を初期化
+                if (add)world_num++;
+                else if (minus)world_num--;
+                stage_num = 0;
+
+                // 次の演出へ
+                direction_num++;
+            }
+            break;
+        case 1:
+            // 演出が終わったら
+            if (!transition_angle.is_easing
+                && !transition_line1_angle_2.is_easing
+                && !transition_line2_angle_2.is_easing
+                && !transition_line3_angle_2.is_easing)
+            {
+                // 角度を初期化
+                transition_angle.value = 140.0f;
+                transition_line1_angle_2.value = 110.0f;
+                transition_line2_angle_2.value = 180.0f;
+                transition_line3_angle_2.value = 90.0f;
+
+                // 初期化
+                direction_num = 0;
+                switch_direction = false;
+                add = false;
+                minus = false;
+            }
+            break;
+        }
+
+        return;
+    }
+}
+
+void SelectScene::HandleInput(float elapsedTime)
+{
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
+    if (!first_touch)touch_interval += elapsedTime;
+    else touch_interval = 0.0f;
+    if (touch_interval >= 0.3f)
+    {
+        first_touch = true;
+        touch_interval = 0.0f;
+    }
+
+    // ステージ選択
+    if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1)
+    {
+        if (first_touch)
+        {
+            if (stage_num < 2)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                stage_num++;
+            }
+            first_touch = false;
+        }
+    }
+    else if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1)
+    {
+        if (first_touch)
+        {
+            if (stage_num > 0)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                stage_num--;
+            }
+            first_touch = false;
+        }
+    }
+    else
+    {
+        first_touch = true;
+    }
+
+    // ワールド選択
+    if (!switch_direction)
+    {
+        if (gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER || GetAsyncKeyState('D') & 1)
+        {
+            if (world_num < 2)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
+                switch_direction = true;
+                add = true;
+                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
+                transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
+                transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
+                transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
+                direction_num = 0;
+            }
+        }
+        else if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || GetAsyncKeyState('A') & 1)
+        {
+            if (world_num > 0)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::WORLD_CHANGE, false);
+                switch_direction = true;
+                minus = true;
+                transition_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.3f);
+                transition_line1_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.1f);
+                transition_line2_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.5f);
+                transition_line3_angle.CallValueEasing(0.0f, transition_angle.value, EasingFunction::EasingType::InSine, 1.7f);
+                direction_num = 0;
+            }
+        }
+    }
+    // ステージ決定
+    if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) || mouse.GetButtonDown() & mouse.BTN_LEFT)
+    {
+        StageManager::Instance().current_world_level = world_num;
+        StageManager::Instance().current_stage_level = stage_num;
+
+        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+        next_scene = 0;
+        CallTransition(true, stage_mask_pos[stage_num]);
+    }
+    if (gamePad.GetButtonDown() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
+    {
+        next_scene = 1;
+        CallTransition(true);
+    }
 }
 

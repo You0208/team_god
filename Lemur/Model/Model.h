@@ -195,7 +195,6 @@ struct Material
 
     std::string texture_filenames[4];
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_views[4];
-   //TODO materialé¿å±
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness_smoothness;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> metalness;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> roughness;

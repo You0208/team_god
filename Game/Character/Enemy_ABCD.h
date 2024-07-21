@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "Lemur/Math/EasingFunction.h"
+
 class Enemy_A :public Enemy
 {
 public:
@@ -89,11 +90,11 @@ private:
     }
 
 private:
-    float   timer                       = 0.0f;      // タイマー
-    int     move_state                  = Straight;  // 移動ステート
-    bool    is_touched_unit             = false;     // ユニットに触れたか
-    bool    is_limit             = false;     // ユニットに触れたか
-    DirectX::XMFLOAT2   destination     = { 0,0 };   // 目的地
+    float   timer                       = 0.0f;     // タイマー
+    int     move_state                  = Straight; // 移動ステート
+    bool    is_touched_unit             = false;    // ユニットに触れたか
+    bool    is_limit                    = false;    // ユニットに触れたか
+    DirectX::XMFLOAT2 destination       = { 0,0 };  // 目的地
 };
 
 class Enemy_D :public Enemy
@@ -125,15 +126,12 @@ private:
         Up,
     };
 
-
-
     int     move_state      = Move::Straight;         // 移動の状態
     int     direction_state = Direction::Under;       // 方向の状態
     float   dis             = 0.0f;                   // 移動量
     float   dis_max         = 1.0f;                   // 移動量規定値
     float   speed_power_Y   = 10.0f;                  // Y方向の移動量
     bool    is_last_touched = false;                  // 前回の移動で柵に触れたか
-
     float   attack_timer    = 1.0f;                   // 攻撃間隔
 
 };

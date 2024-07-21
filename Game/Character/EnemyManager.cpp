@@ -7,14 +7,13 @@ void EnemyManager::Initialize()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
 
+    // ゲーム中に止まらないために先に読み込みを済ませリソースマネージャに入れる
     model_1 = std::make_unique<FbxModelManager>(graphics.GetDevice(),".\\resources\\Model\\Enemy\\Bear.fbx");
     model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Bear2.fbx");
-    model_3 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar.fbx");
-    model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Boar2.fbx");
-    model_1 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit.fbx");
-    model_2 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit2.fbx");
-    model_3 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
-    model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+    model_3 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit.fbx");
+    model_4 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Rabbit2.fbx");
+    model_5 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
+    model_6 = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Deer.fbx");
 }
 
 // 更新処理
@@ -29,7 +28,6 @@ void EnemyManager::Update(float elapsedTime)
     for (int i = 0; i < GetEnemyCount(); i++)
     {
         Enemy* enemy = enemies.at(i);
-        //TODO ImGui消す
 #ifdef DEBUG_IMGUI
         enemy->DrawDebugGUI(i);
 #endif
@@ -43,7 +41,6 @@ void EnemyManager::Update(float elapsedTime)
         {
             enemies.erase(it);
         }
-
         // 削除
         delete enemy;
     }

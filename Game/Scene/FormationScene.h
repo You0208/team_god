@@ -27,7 +27,7 @@ public:
     void UpdateUnit(float elapsedTime);
 
     // ‘€ì
-    void UpdateOperate(float elapsedTime);
+    void HandleInput(float elapsedTime);
 
     // ImGui
     void DebugImgui()override;

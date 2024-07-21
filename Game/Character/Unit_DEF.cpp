@@ -8,41 +8,36 @@
 GreenPumpkin::GreenPumpkin()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\unit2_RE.glb", true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\GreenPumpkin.fbx");
 
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\triangle_collision.fbx");
 
+    // エフェクト関連
     attack_effect = new Effect(".\\resources\\Effect\\UNIT3_ATK\\UNIT3_ATK.efk");
-    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
-    attack_times = 5;    // 攻撃回数
-    attack_power = 1;    // 攻撃力
-    attack_interval = 0.5f; // 攻撃間隔
+    attack_times           = 5;    // 攻撃回数
+    attack_power           = 1;    // 攻撃力
+    attack_interval        = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    height = 0.5f; // デバッグ用
-    dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-
-    radius = 0.4f; // 半径
-
+    height                 = 0.5f; // デバッグ用
+    dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+    radius                 = 0.4f; // 半径
     // 三角
-    t_height = 1.0f;// 高さ
-    t_base = 1.0f;// 底辺
-
-    // triangle_1=奥、triangle_2=手前
+    t_height               = 1.0f;// 高さ
+    t_base                 = 1.0f;// 底辺
+    // triangle_1          =奥、triangle_2=手前
     // 頂点をユニットのポジションに
-    triangle_1.A = triangle_2.A = { position.x,position.z };
+    triangle_1.A           = triangle_2.A = { position.x,position.z };
     // 左側の頂点
-    triangle_1.B = { triangle_1.A.x - (t_base * 0.5f),triangle_1.A.y + t_height };
-    triangle_2.B = { triangle_2.A.x - (t_base * 0.5f),triangle_2.A.y - t_height };
+    triangle_1.B           = { triangle_1.A.x - (t_base * 0.5f),triangle_1.A.y + t_height };
+    triangle_2.B           = { triangle_2.A.x - (t_base * 0.5f),triangle_2.A.y - t_height };
     // 右側の頂点
-    triangle_1.C = { triangle_1.A.x + (t_base * 0.5f),triangle_1.A.y + t_height };
-    triangle_2.C = { triangle_2.A.x + (t_base * 0.5f),triangle_2.A.y - t_height };
-
+    triangle_1.C           = { triangle_1.A.x + (t_base * 0.5f),triangle_1.A.y + t_height };
+    triangle_2.C           = { triangle_2.A.x + (t_base * 0.5f),triangle_2.A.y - t_height };
 
     UpdateTransform();
-
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
@@ -86,7 +81,6 @@ void GreenPumpkin::UpdateIdleState(float elapsed_time)
 
     int enemyCount = enemyManager.GetEnemyCount();
 
-    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -137,7 +131,6 @@ void GreenPumpkin::UpdateAttackState(float elapsed_time)
 
     if (attack_times > 0)// 攻撃回数が残っているとき
     {
-        //TODO モーションが来たらまた変える
         // 敵の総当たり
         for (int j = 0; j < enemyCount; ++j)
         {
@@ -222,26 +215,24 @@ void GreenPumpkin::DrawDebugGUI(int n)
 Broccoli::Broccoli()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    // LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Broccoli.glb",true);
-
+    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\rect.fbx");
 
-    LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Broccoli.fbx");
+    // エフェクト関連
     attack_effect = new Effect(".\\resources\\Effect\\UNIT5_ATK\\UNIT5_ATK_ALL.efk");
-    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
-
+    death_effect  = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
     attack_effect_size = 1.0f;
 
-    attack_times = 5;    // 攻撃回数
-    attack_power = 1;    // 攻撃力
-    attack_width = 1.0f;    // 攻撃幅
-    attack_interval = 0.5f; // 攻撃間隔
+    attack_times           = 5;    // 攻撃回数
+    attack_power           = 1;    // 攻撃力
+    attack_width           = 1.0f; // 攻撃幅
+    attack_interval        = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius = 0.4f; // 半径
-    height = 0.5f; // デバッグ用
-    dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
+    radius                 = 0.4f; // 半径
+    height                 = 0.5f; // デバッグ用
+    dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+    Rect stage_size        = StageManager::Instance().GetStage(0)->GetStageCollision();
     attack_rect =
     {
         {stage_size.left_up.x,position.z + attack_width},
@@ -287,7 +278,6 @@ void Broccoli::UpdateIdleState(float elapsed_time)
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
 
-    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -387,23 +377,23 @@ void Broccoli::DrawDebugGUI(int n)
 Cauliflower::Cauliflower()
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
-    //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Cauliflower.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Cauliflower.fbx");
-    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
-
-    attack_effect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\rect.fbx");
 
-    attack_times = 5;    // 攻撃回数
-    attack_power = 1;    // 攻撃力
-    attack_width = 1.0f;    // 攻撃幅
-    attack_interval = 0.5f; // 攻撃間隔
+    // エフェクト関連
+    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+    attack_effect = new Effect(".\\resources\\Effect\\UNIT6_ATK\\UNIT6_ATK.efk");
+
+    attack_times           = 5;    // 攻撃回数
+    attack_power           = 1;    // 攻撃力
+    attack_width           = 1.0f; // 攻撃幅
+    attack_interval        = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius = 0.4f; // 半径
-    height = 0.5f; // デバッグ用
-    dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-    Rect stage_size = StageManager::Instance().GetStage(0)->GetStageCollision();
+    radius                 = 0.4f; // 半径
+    height                 = 0.5f; // デバッグ用
+    dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+    Rect stage_size        = StageManager::Instance().GetStage(0)->GetStageCollision();
     attack_rect =
     {
         {position.x-attack_width,stage_size.left_up.y},
@@ -449,7 +439,6 @@ void Cauliflower::UpdateIdleState(float elapsed_time)
     EnemyManager& enemyManager = EnemyManager::Instance();
     int enemyCount = enemyManager.GetEnemyCount();
 
-    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -489,7 +478,6 @@ void Cauliflower::UpdateAttackState(float elapsed_time)
 
     if (attack_times > 0)// 攻撃回数が残っているとき
     {
-        //TODO モーションが来たらまた変える
         // 敵の総当たり
         for (int j = 0; j < enemyCount; ++j)
         {

@@ -11,10 +11,13 @@ Chili::Chili()
 
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\circle.fbx");
 
-
-    attack_effect = new Effect(".\\resources\\Effect\\UNIT1\\UNIT1.efk");
-    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+    // エフェクト関連
+    attack_effect      = new Effect(".\\resources\\Effect\\UNIT1\\UNIT1.efk");
+    death_effect       = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect         = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+    attack_effect_size = 0.5f;
+    set_effect_size    = 0.5f;
+    death_effect_size  = 0.5f;
 
     attack_times           = 5;    // 攻撃回数
     attack_power           = 1;    // 攻撃力
@@ -22,12 +25,7 @@ Chili::Chili()
     attack_collision_range = 1.0f; // 攻撃範囲
     height                 = 0.5f; // デバッグ用
     dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-
     radius                 = 0.4f; // 半径
-
-    attack_effect_size = 0.5f;
-    set_effect_size = 0.5f;
-    death_effect_size = 0.5f;
 
     UpdateTransform();
 
@@ -50,7 +48,6 @@ void Chili::UpdateIdleState(float elapsed_time)
 
     int enemyCount = enemyManager.GetEnemyCount();
 
-    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -161,22 +158,23 @@ Shishito::Shishito()
     //LoadGltfModel(graphics.GetDevice(), ".\\resources\\Model_glb\\Unit\\Shishito.glb",true);
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\Unit\\Shishito.fbx");
 
-    collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\circle.fbx");
+    collision_model        = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\circle.fbx");
     collision_scale_facter = 2.0f;
 
+    // エフェクト関連
     attack_effect = new Effect(".\\resources\\Effect\\UNIT4_BUFF\\UNIT4_BUFF.efk");
-    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
-    attack_times = 5;    // 攻撃回数
-    attack_power = 1;    // 攻撃力
-    streng_width = 2;    // 強化幅
-    attack_interval = 0.5f; // 攻撃間隔
+    attack_times           = 5;    // 攻撃回数
+    attack_power           = 1;    // 攻撃力
+    streng_width           = 2;    // 強化幅
+    attack_interval        = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    height = 0.5f; // デバッグ用
-    dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
-    timer_max = 3.0f; // バフの秒数
-    radius = 0.4f; // 半径
+    height                 = 0.5f; // デバッグ用
+    dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+    timer_max              = 3.0f; // バフの秒数
+    radius                 = 0.4f; // 半径
 
     // とりあえずアニメーション
     PlayAnimation(Animation::Idle, true);
@@ -201,8 +199,6 @@ void Shishito::UpdateIdleState(float elapsed_time)
 
     attack_timer += elapsed_time;// 攻撃タイマー
 
-
-    //TODO モーションが来たらまた変える
     // ユニットの総当たり
     for (int j = 0; j < unitCount; ++j)
     {
@@ -254,7 +250,6 @@ void Shishito::UpdateAttackState(float elapsed_time)
         attack_handle = attack_effect->Play(position, attack_effect_size);
     }
 
-    //TODO モーションが来たらまた変える
     // ユニットの総当たり
     for (int j = 0; j < unitCount; ++j)
     {
@@ -277,7 +272,6 @@ void Shishito::UpdateAttackState(float elapsed_time)
             // 強化状態をtrueに
             unit->SetBuff(true);
             unit->SetStrengAttack(unit->GetAttackPower() + streng_width);
-
         }
         else// 範囲内にいない
         {
@@ -285,13 +279,6 @@ void Shishito::UpdateAttackState(float elapsed_time)
             unit->SetBuff(true);
         }
     }
-
-    //// 範囲内に敵が一体も居なければ待機
-    //if (!is_intersected)
-    //{
-    //    TransitionIdleState();
-    //}
-
     // 攻撃時間が過ぎたら消滅
     if (attack_timer >= timer_max)
     {
@@ -316,30 +303,31 @@ OrangePumpkin::OrangePumpkin()
 
     collision_model = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Collision\\triangle_collision.fbx");
 
+    // エフェクト関連
     attack_effect = new Effect(".\\resources\\Effect\\UNIT2_ATK\\UNIT2_ATK.efk");
-    death_effect = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
-    set_effect = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
+    death_effect  = new Effect(".\\resources\\Effect\\UNIT_DEATH\\UNIT_DEATH.efk");
+    set_effect    = new Effect(".\\resources\\Effect\\UNIT_SET\\UNIT_SET.efk");
 
-    attack_times = 5;    // 攻撃回数
-    attack_power = 1;    // 攻撃力
-    attack_interval = 0.5f; // 攻撃間隔
+    attack_times           = 5;    // 攻撃回数
+    attack_power           = 1;    // 攻撃力
+    attack_interval        = 0.5f; // 攻撃間隔
     attack_collision_range = 1.0f; // 攻撃範囲
-    radius = 0.4f; // 半径
-    height = 0.5f; // デバッグ用
-    dec_pos = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
+    radius                 = 0.4f; // 半径
+    height                 = 0.5f; // デバッグ用
+    dec_pos                = 1.0f; // ユニットに接触した種がどのくらい跳ね返されるか
 
     // 三角
     t_height               = 1.0f;// 高さ
     t_base                 = 1.0f;// 底辺
 
     // 頂点をユニットのポジションに
-    triangle_1.A = triangle_2.A = { position.x,position.z };
+    triangle_1.A           = triangle_2.A = { position.x,position.z };
     // 左奥側の頂点
-    triangle_1.B = { triangle_1.A.x - t_height,triangle_1.A.y + (t_base * 0.5f) };
-    triangle_2.B = { triangle_2.A.x + t_height,triangle_2.A.y + (t_base * 0.5f) };
+    triangle_1.B           = { triangle_1.A.x - t_height,triangle_1.A.y + (t_base * 0.5f) };
+    triangle_2.B           = { triangle_2.A.x + t_height,triangle_2.A.y + (t_base * 0.5f) };
     // 右手前側の頂点
-    triangle_1.C = { triangle_1.A.x - t_height,triangle_1.A.y - (t_base * 0.5f) };
-    triangle_2.C = { triangle_2.A.x + t_height,triangle_2.A.y - (t_base * 0.5f) };
+    triangle_1.C           = { triangle_1.A.x - t_height,triangle_1.A.y - (t_base * 0.5f) };
+    triangle_2.C           = { triangle_2.A.x + t_height,triangle_2.A.y - (t_base * 0.5f) };
 
     UpdateTransform();
 
@@ -385,7 +373,6 @@ void OrangePumpkin::UpdateIdleState(float elapsed_time)
 
     int enemyCount = enemyManager.GetEnemyCount();
 
-    //TODO モーションが来たらまた変える
     // 敵の総当たり
     for (int j = 0; j < enemyCount; ++j)
     {
@@ -436,7 +423,6 @@ void OrangePumpkin::UpdateAttackState(float elapsed_time)
 
     if (attack_times > 0)// 攻撃回数が残っているとき
     {
-        //TODO モーションが来たらまた変える
         // 敵の総当たり
         for (int j = 0; j < enemyCount; ++j)
         {

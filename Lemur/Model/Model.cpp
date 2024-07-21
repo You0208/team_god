@@ -288,7 +288,7 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
     // マテリアル
     for (std::unordered_map<uint64_t, Material>::iterator iterator = materials.begin(); iterator != materials.end(); ++iterator)
     {
-        //TODO EMISSIVE
+        //EMISSIVE
         D3D11_TEXTURE2D_DESC texture2d_desc;
         // Diffuse
         if (iterator->second.texture_filenames[0].size() > 0)
@@ -402,7 +402,6 @@ void SkinnedMesh::CreateComObjects(ID3D11Device* device, const char* fbx_filenam
         char filename[256];
         ::_makepath_s(filename, 256, nullptr, dirname, tname, nullptr);
 
-        //TODO materil実験
         LoadTexture(device, filename, "_MS", true, iterator->second.metalness_smoothness.GetAddressOf(), 0x00FFFF00);
         LoadTexture(device, filename, "_Metalness", true, iterator->second.metalness.GetAddressOf(), 0x0000000);
         LoadTexture(device, filename, "_Roughness", true, iterator->second.roughness.GetAddressOf(), 0xFFFFFFF);
@@ -504,9 +503,9 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const XMFLOAT4X
             immediate_context->PSSetShaderResources(0, 1, material.shader_resource_views[0].GetAddressOf());
             // 法線マップのシェーダーリソースビューをバインド
             immediate_context->PSSetShaderResources(1, 1, material.shader_resource_views[1].GetAddressOf());
-            //TODO EMISSIVE
+            //EMISSIVE
             immediate_context->PSSetShaderResources(2, 1, material.shader_resource_views[2].GetAddressOf());
-            //TODO material実験
+            //material実験
             immediate_context->PSSetShaderResources(3, 1, material.metalness_smoothness.GetAddressOf());
             immediate_context->PSSetShaderResources(4, 1, material.metalness.GetAddressOf());
             immediate_context->PSSetShaderResources(5, 1, material.roughness.GetAddressOf());
@@ -593,9 +592,9 @@ void SkinnedMesh::Render(ID3D11DeviceContext* immediate_context, const DirectX::
             immediate_context->PSSetShaderResources(0, 1, material.shader_resource_views[0].GetAddressOf());
             // 法線マップのシェーダーリソースビューをバインド
             immediate_context->PSSetShaderResources(1, 1, material.shader_resource_views[1].GetAddressOf());
-            //TODO EMISSIVE
+            // EMISSIVE
             immediate_context->PSSetShaderResources(2, 1, material.shader_resource_views[2].GetAddressOf());
-            //TODO material実験
+            // material実験
             immediate_context->PSSetShaderResources(3, 1, material.metalness_smoothness.GetAddressOf());
             immediate_context->PSSetShaderResources(4, 1, material.metalness.GetAddressOf());
             immediate_context->PSSetShaderResources(5, 1, material.roughness.GetAddressOf());
@@ -925,7 +924,7 @@ void SkinnedMesh::FetchMaterials(FbxScene* fbx_scene, std::unordered_map<uint64_
                 const FbxFileTexture* fbx_texture{ fbx_property.GetSrcObject<FbxFileTexture>() };
                 material.texture_filenames[1] = fbx_texture ? fbx_texture->GetRelativeFileName() : "";
             }
-            //TODO EMISSIVE
+            // EMISSIVE
             fbx_property = fbx_material->FindProperty(FbxSurfaceMaterial::sEmissive);
             if (fbx_property.IsValid())
             {

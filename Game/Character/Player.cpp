@@ -71,9 +71,7 @@ void Player::Update(float elapsedTime)
         // 行列更新処理
         UpdateTransform();
 
-        // TODO ImGui消す
-        // Imgui
-        //DrawDebugGUI();
+        DrawDebugGUI();
     }
 
     // 入力処理
@@ -81,7 +79,6 @@ void Player::Update(float elapsedTime)
 
     // 経過フレーム
     float elapsed_frame = 60.0f * elapsedTime;
-   // FlickRe(elapsed_frame);
     // はじき処理
     Flick(elapsedTime);
 
@@ -162,71 +159,71 @@ void Player::Flick(float elapsedTime)
         }
     }
 
-    // コントローラーの右スティックY成分
-    right_stick_y = gamePad.GetAxisRY() * -1.0f;
-
-    // 右スティックが動かされたとき（引っ張られた時）
-    if (right_stick_y > 0.1f)
+    // コントローラー用
     {
-        // 引っ張りモーションへ
-        // 横移動できないように
-        velocity.x = 0;
-        PlayAnimation(Animation::Pull, false);
+        // コントローラーの右スティックY成分
+        right_stick_y = gamePad.GetAxisRY() * -1.0f;
 
-        if (flip_timer > 0.5f)
+        // 右スティックが動かされたとき（引っ張られた時）
+        if (right_stick_y > 0.1f)
         {
-            //// 投げアニメーションへ
-            PlayAnimation(Animation::Throw, false);
-            //// 横移動できないように
-            //velocity.x = 0;
+            // 引っ張りモーションへ
+            // 横移動できないように
+            velocity.x = 0;
+            PlayAnimation(Animation::Pull, false);
 
-            // タイマーを動かす
-            flip_timer += elapsedTime;
-            // 最大値を更新し続ける
-            if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
+            if (flip_timer > 0.5f)
+            {
+                //// 投げアニメーションへ
+                PlayAnimation(Animation::Throw, false);
+                // タイマーを動かす
+                flip_timer += elapsedTime;
+                // 最大値を更新し続ける
+                if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
+            }
+            else
+            {
+                // タイマーを動かす
+                flip_timer += elapsedTime;
+                // 最大値を更新し続ける
+                if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
+            }
         }
         else
         {
-            // タイマーを動かす
-            flip_timer += elapsedTime;
-            // 最大値を更新し続ける
-            if (max_right_stick_y <= right_stick_y)max_right_stick_y = right_stick_y;
-        }
-    }
-    else
-    {
-        // タイマーが0以上＝右スティックが離された時
-        if (flip_timer > 0)
-        {
-            // 投げアニメーションへ
-            PlayAnimation(Animation::Throw, false);
-            // 横移動できないように
-            velocity.x = 0;
-
-            // はじき距離を算出
-            flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
-            // 初期化
-            if (flip_timer > max_charge_time)
+            // タイマーが0以上＝右スティックが離された時
+            if (flip_timer > 0)
             {
-                flip_pos_z = sub_pos_z_puls;
+                // 投げアニメーションへ
+                PlayAnimation(Animation::Throw, false);
+                // 横移動できないように
+                velocity.x = 0;
+
+                // はじき距離を算出
+                flip_pos_z = (max_right_stick_y) / flip_timer * flip_speed;
+                // 初期化
+                if (flip_timer > max_charge_time)
+                {
+                    flip_pos_z = sub_pos_z_puls;
+                }
+
+                // スケーリング
+                float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
+                // 最小値0、最大値scalingにクランプする
+                flip_pos_z = std::clamp(flip_pos_z + dis_scarecrow, dis_scarecrow, scaling);
+                flip_pos_z = (scaling + sub_pos_z_puls + dis_scarecrow) - flip_pos_z;
+
+                // 初期化
+                max_right_stick_y = 0;
+                right_stick_y = 0;
+                flip_timer = 0;
+
+                is_throw = true;
             }
-
-            // スケーリング
-            float scaling = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
-            // 最小値0、最大値scalingにクランプする
-            flip_pos_z = std::clamp(flip_pos_z + dis_scarecrow, dis_scarecrow, scaling);
-            flip_pos_z = (scaling + sub_pos_z_puls+ dis_scarecrow) - flip_pos_z;
-
-
-            max_right_stick_y = 0;
-            right_stick_y = 0;
-            flip_timer = 0;
-
-            is_throw = true;
         }
     }
 
-    //TODO この条件は暴発しかねないので要修正
+    // 投げられたら
     if (is_throw)
     {
         is_throw = false;
@@ -237,6 +234,7 @@ void Player::Flick(float elapsedTime)
         // 一番近いユニットの場所を渡す
         DirectX::XMFLOAT2 unit_pos;
 
+        // ユニットの後ろと種の判定
         if (!CollisionManager::CollisionUnitBackVsSeed_Re({ position.x ,flip_pos_z - sub_pos_z/*はじきで出た座標から、ステージの半径を減算*/ }, unit_pos))
         {
             // ユニットがいないなら即座に発芽
@@ -298,7 +296,6 @@ void Player::ChangeCategory()
     //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A]= UnitManager::UNIT_INDEX::Broccoli;
     //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
     //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
-
 
     if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('1') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
     else if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('2') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
