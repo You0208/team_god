@@ -24,7 +24,7 @@ void TutorialScene::Initialize()
 
 	// シェーダー関連
 	{
-		Initialize();
+		BaseScene::Initialize();
 
 		// SHADOW
 		shadow_map = std::make_unique<ShadowMap>(graphics.GetDevice(), shadowmap_width, shadowmap_height);
@@ -41,7 +41,6 @@ void TutorialScene::Initialize()
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/enemy_ps.cso", enemy_ps.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps.cso", collision.GetAddressOf());
 		create_ps_from_cso(graphics.GetDevice(), "./Shader/collision_ps_2.cso", collision_2.GetAddressOf());
-
 	}
 	// スプライト読み込み
 	{
