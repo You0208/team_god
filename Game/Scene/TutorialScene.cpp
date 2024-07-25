@@ -83,6 +83,8 @@ void TutorialScene::Initialize()
 		left_text           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Left.png");
 		right_text          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\Right.png");
 
+		OK = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\OK.png");
+
 		mission_text[MISSION::throw_seed]  = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\たねをとばす.png");
 		mission_text[MISSION::change_unit] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\ユニットをかえる.png");
 		mission_text[MISSION::move_player] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Tutorial\\かかしをうごかす.png");
@@ -135,6 +137,7 @@ void TutorialScene::Initialize()
 		// チュートリアル
 		tutorial_state = 0;
 		tutorial_gif_num = 0;
+		ok_text.value = -1920;
 
 		// BGM
 		Lemur::Audio::AudioManager::Instance().PlayBgm(Lemur::Audio::BGM::GAME_NOON, true);
@@ -182,6 +185,20 @@ void TutorialScene::Update(HWND hwnd, float elapsedTime)
 	LightUpdate();
 	// マスクの更新
 	TransitionMask(elapsedTime);
+
+	ok_text.EasingValue(elapsedTime);
+	//if (GetAsyncKeyState('K') & 1)
+	//{
+	//	ok_text.CallValueEasing(0, ok_text.value, ok_text.OutSine, 0.5f);
+	//}
+	//if (ok_text.value >= 0 && ok_text.value < 1920 && !ok_text.is_easing)
+	//{
+	//	ok_text.CallValueEasing(1920, ok_text.value, ok_text.InSine, 0.5f);
+	//}
+	//if (ok_text.value >= 1920 && !ok_text.is_easing)
+	//{
+	//	ok_text.value = -1920;
+	//}
 
 	// ポーズ更新
 	if (gamePad.GetButtonUp() & gamePad.BTN_BACK)
@@ -411,11 +428,34 @@ void TutorialScene::Render(float elapsedTime)
 		else if (Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X] == player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		else if (Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y] == player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		if(tutorial_gif_num!=0)tutorial_gif[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.05f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
+		if(tutorial_gif_num!=0)tutorial_gif[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.1f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
 		else tutorial_gif[0]->Animation(immediate_context, elapsedTime, 0.05f, { 40,70 }, { 600 ,450 }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[0],false);
 
 		Frame_tutorial->Render(immediate_context, 0, 0, 700, SCREEN_HEIGHT);
-		mission_text[tutorial_state]->Render(immediate_context, 40, 600, 600, 200);
+
+		int tutorial_state_index = 0;
+
+		switch (tutorial_state)
+		{
+		case MISSION::throw_seed:
+		case MISSION::throw_seed_end:
+			tutorial_state_index = MISSION::throw_seed;
+			break;
+		case MISSION::move_player:
+		case MISSION::move_player_end:
+			tutorial_state_index = MISSION::move_player;
+			break;
+		case MISSION::change_unit:
+		case MISSION::change_unit_end:
+			tutorial_state_index = MISSION::change_unit;
+			break;
+		case MISSION::attack:
+		case MISSION::attack_end:
+			tutorial_state_index = MISSION::attack;
+			break;
+		}
+
+		mission_text[tutorial_state_index]->Render(immediate_context, 40, 600, 600, 200);
 
 		if(tutorial_gif_num!=8)right_row->Render(immediate_context, 600, 240, 100, 100);
 		if(tutorial_gif_num!=0)left_row->Render(immediate_context, -20, 240, 100, 100);
@@ -426,24 +466,35 @@ void TutorialScene::Render(float elapsedTime)
 		switch (tutorial_state)
 		{
 		case MISSION::move_player:
+		case MISSION::move_player_end:
 			button_beside->Animation(immediate_context, elapsedTime, 0.2f, { 330,750 }, { 300 ,300 }, { 1,1,1,1 }, 0.0f, { 300 ,300 }, 3);
 			left_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			break;
 		case MISSION::attack:
+		case MISSION::attack_end:
 			button_up->Animation(immediate_context, elapsedTime, 0.2f, { 330,750 }, { 300 ,300 }, { 1,1,1,1 }, 180.0f, { 300 ,300 }, 6);
 			right_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			break;
 		case MISSION::throw_seed:
+		case MISSION::throw_seed_end:
 			button_up->Animation(immediate_context, elapsedTime, 0.2f, { 330,750 }, { 300 ,300 }, { 1,1,1,1 }, 180.0f, { 300 ,300 }, 6);
 			right_text->Render(immediate_context, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			break;
 		case MISSION::change_unit:
+		case MISSION::change_unit_end:
 			for (int i = 0; i < 4; i++)
 			{
 				button[i]->Render(immediate_context, 55+(140*i), 830, 150, 150);
 			}
 			break;
 		}
+
+		if (tutorial_gif_num >= 6) 
+		{
+			tutorial_gif[tutorial_gif_num]->Animation(immediate_context, elapsedTime, 0.1f, { 535,150 }, { 600 * 1.8f ,450 * 1.8f }, { 1,1,1,1 }, 0.0f, { 600 ,450 }, tutorial_glf_num_x[tutorial_gif_num]);
+		}
+
+		OK->Render(immediate_context, ok_text.value, 0, 1920, 1080);
 	}
 	else
 	{
@@ -454,7 +505,6 @@ void TutorialScene::Render(float elapsedTime)
 		pause_main->Render(immediate_context, SCREEN_WIDTH - 820, 0, 820, SCREEN_HEIGHT);
 		pause_text_continue->RenderCenter(immediate_context, 1520, 550, 500 * pause_text_continue_scale.value, 120 * pause_text_continue_scale.value);
 		pause_text_select->RenderCenter(immediate_context, 1520, 700, 500 * pause_text_select_scale.value, 120 * pause_text_select_scale.value);
-
 	}
 	// マスクの描画
 	RenderTransitionMask(elapsedTime);
@@ -462,7 +512,7 @@ void TutorialScene::Render(float elapsedTime)
 
 void TutorialScene::DebugImgui()
 {
-#ifdef DEBUG_IMGUI
+#if 0
 	ImGui::Begin("tutorial_state");
 	switch (tutorial_state)
 	{
@@ -548,21 +598,21 @@ void TutorialScene::PauseUpdate(float elapsedTime)
 void TutorialScene::HandleInput()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonUp() & gamePad.BTN_RIGHT)
+	if (gamePad.GetButtonUp() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1)
 	{
 		if (tutorial_gif_num < 8)tutorial_gif_num++;
 	}
-	if (gamePad.GetButtonUp() & gamePad.BTN_LEFT)
+	if (gamePad.GetButtonUp() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1)
 	{
 		if (tutorial_gif_num > 0)tutorial_gif_num--;
 	}
 
-	if (gamePad.GetButtonDown() & gamePad.BTN_START)
+	if (gamePad.GetButtonDown() & gamePad.BTN_START||GetAsyncKeyState(VK_BACK) & 1)
 	{
 		Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
 	}
 
-	if (gamePad.GetButtonUp() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonUp() & gamePad.BTN_RIGHT_SHOULDER)
+	if (gamePad.GetButtonUp() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonUp() & gamePad.BTN_RIGHT_SHOULDER|| GetAsyncKeyState(VK_BACK) & 1)
 	{
 		UnitManager::Instance().Clear();
 		SeedManager::Instance().Clear();
@@ -576,14 +626,38 @@ void TutorialScene::UpdateState()
 	case MISSION::throw_seed:// 種を飛ばす
 		if (SeedManager::Instance().GetSeedCount() > 0)
 		{
+			ok_text.CallValueEasing(0, ok_text.value, ok_text.OutSine, 0.5f);
+			tutorial_state = MISSION::throw_seed_end;
+		}
+		break;
+	case MISSION::throw_seed_end:
+		if (ok_text.value >= 0 && ok_text.value < 1920 && !ok_text.is_easing)
+		{
+			ok_text.CallValueEasing(1920, ok_text.value, ok_text.InSine, 0.5f);
+		}
+		if (ok_text.value >= 1920 && !ok_text.is_easing)
+		{
+			ok_text.value = -1920;
 			tutorial_gif_num = 2;
-			tutorial_state = MISSION::move_player;
 			player_current_position = player->GetPosition();
+			tutorial_state = MISSION::move_player;
 		}
 		break;
 	case MISSION::move_player:// かかしを動かす
 		if (!Equal(player_current_position.x, player->GetPosition().x) || !Equal(player_current_position.z, player->GetPosition().z))
 		{
+			ok_text.CallValueEasing(0, ok_text.value, ok_text.OutSine, 0.5f);
+			tutorial_state = MISSION::move_player_end;
+		}
+		break;
+	case  MISSION::move_player_end:
+		if (ok_text.value >= 0 && ok_text.value < 1920 && !ok_text.is_easing)
+		{
+			ok_text.CallValueEasing(1920, ok_text.value, ok_text.InSine, 0.5f);
+		}
+		if (ok_text.value >= 1920 && !ok_text.is_easing)
+		{
+			ok_text.value = -1920;
 			tutorial_gif_num = 3;
 			unit_category = player->GetCategory();
 			tutorial_state = MISSION::change_unit;
@@ -592,16 +666,42 @@ void TutorialScene::UpdateState()
 	case MISSION::change_unit:// ユニットを変える
 		if (player->GetCategory() != unit_category)
 		{
+			ok_text.CallValueEasing(0, ok_text.value, ok_text.OutSine, 0.5f);
+			tutorial_state = MISSION::change_unit_end;
+		}
+		break;
+	case  MISSION::change_unit_end:
+		if (ok_text.value >= 0 && ok_text.value < 1920 && !ok_text.is_easing)
+		{
+			ok_text.CallValueEasing(1920, ok_text.value, ok_text.InSine, 0.5f);
+		}
+		if (ok_text.value >= 1920 && !ok_text.is_easing)
+		{
+			ok_text.value = -1920;
 			tutorial_state = MISSION::attack;
 		}
 		break;
 	case MISSION::attack:// 攻撃する
 		if (EnemyManager::Instance().GetEnemyCount() <= 0)
 		{
+			ok_text.CallValueEasing(0, ok_text.value, ok_text.OutSine, 0.5f);
+			tutorial_state = MISSION::attack_end;
+		}
+		break;
+	case MISSION::attack_end:
+		if (ok_text.value >= 0 && ok_text.value < 1920 && !ok_text.is_easing)
+		{
+			ok_text.CallValueEasing(1920, ok_text.value, ok_text.InSine, 0.5f);
+		}
+		if (ok_text.value >= 1920 && !ok_text.is_easing)
+		{
+			ok_text.value = -1920;
 			tutorial_state = MISSION::clear;
 		}
 		break;
+
 	case MISSION::clear:
+		
 		break;
 	}
 }

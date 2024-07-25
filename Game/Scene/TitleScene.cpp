@@ -23,6 +23,11 @@ void TitleScene::Initialize()
         title_credit = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Credit.png");
         title_menu   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Credit_menu.png");
         title_start  = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Start.png");
+
+        window = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window.png");
+        window_tutorial = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_tutorial.png");
+        window_yes = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_yes.png");
+        window_no = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_no.png");
     }
 
     // ゲーム
@@ -46,6 +51,10 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
 {
     Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
     Camera& camera = Camera::Instance();
+    // ゲームパッド
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
+
     camera.Update(elapsedTime);
 
     // マスクの更新
@@ -73,7 +82,6 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
     // 操作
     HandleInput();
 
-    // アイリスインを呼ぶ
     if (!start_transition && is_in)
     {
         if (Lemur::Scene::SceneManager::Instance().once_tutorial)
@@ -83,8 +91,76 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
         }
         else if (!Lemur::Scene::SceneManager::Instance().once_tutorial)
         {
-            Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+            if (!is_tutorial_next)
+            {
+                Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+            }
+            else
+            {
+                Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
+            }
         }
+
+    }
+    else if (is_tutorial)
+    {
+        pause_window_scale.EasingValue(elapsedTime);
+        if (pause_window_scale.is_easing)return;
+
+        switch (select_num)
+        {
+        case Button::YES:
+            // 右を選んだとき
+            if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1 || GetAsyncKeyState('D') & 1)
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                no.CallValueEasing(1.1f, no.value, EasingFunction::EasingType::InSine);
+                yes.CallValueEasing(1.0f, yes.value, EasingFunction::EasingType::InSine);
+                no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+                select_num = Button::NO;
+                break;
+            }
+            // イージングを更新
+            yes.EasingValue(elapsedTime);
+            no.EasingValue(elapsedTime);
+            yes.ContinueEasing(elapsedTime);
+
+            // 選択されると
+            if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT)
+            {
+                is_tutorial_next = true;
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+                CallTransition(true);
+            }
+            break;
+
+        case Button::NO:
+            if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
+            {
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+                yes.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::InSine);
+                no.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::InSine);
+                yes.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+                select_num = Button::YES;
+                break;
+            }
+
+            // イージングを更新
+            no.EasingValue(elapsedTime);
+            yes.EasingValue(elapsedTime);
+            no.ContinueEasing(elapsedTime);
+
+            // 選択されると
+            if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT)
+            {
+                is_tutorial_next = false;
+                Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+                CallTransition(true);
+            }
+            break;
+        }
+        return;
+
     }
     DebugImgui();
 }
@@ -121,6 +197,14 @@ void TitleScene::Render(float elapsedTime)
         title_menu->RenderRightDown(immediate_context, 1920, 1080, 400, 100, 0.0f);
         title_start->RenderCenter(immediate_context, 905, 975, 400 * start_scale.value, 120 * start_scale.value);
         title_credit->Render(immediate_context, 0, credit_y.value, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        if (is_tutorial)
+        {
+            window->RenderCenter(immediate_context, 960, 540, 1400 * pause_window_scale.value, 700 * pause_window_scale.value);
+            window_tutorial->RenderCenter(immediate_context, 960, 420, 1100 * pause_window_scale.value, 200 * pause_window_scale.value);
+            window_yes->RenderCenter(immediate_context, 700, 645, 200 * pause_window_scale.value * yes.value, 100 * pause_window_scale.value * yes.value);
+            window_no->RenderCenter(immediate_context, 1200, 645, 200 * pause_window_scale.value * no.value, 100 * pause_window_scale.value * no.value);
+        }
 
         // マスク
         RenderTransitionMask(elapsedTime);
@@ -187,13 +271,38 @@ void TitleScene::HandleInput()
     // ゲームパッド
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    bool buttonPressed = (gamePad.GetButtonDown() & gamePad.BTN_B) || (GetAsyncKeyState('B') & 1);
-    if (buttonPressed && !is_credit)
+    if ((gamePad.GetButtonDown() & gamePad.BTN_B) && !is_credit)
     {
+        Lemur::Scene::SceneManager::Instance().cont_type = true;
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
-        if (!is_in)
+        if (!is_in && Lemur::Scene::SceneManager::Instance().once_tutorial)
         {
             CallTransition(true);
+        }
+        else
+        {
+            is_tutorial = true;
+            pause_window_scale.CallValueEasing(1.0f, pause_window_scale.value, pause_window_scale.OutSine);
+            no.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::OutSine);
+            yes.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::OutSine);
+            no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+        }
+    }
+    else if ((GetAsyncKeyState('B') & 1) && !is_credit)
+    {
+        Lemur::Scene::SceneManager::Instance().cont_type = false;
+        Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+        if (!is_in && Lemur::Scene::SceneManager::Instance().once_tutorial)
+        {
+            CallTransition(true);
+        }
+        else 
+        {
+            is_tutorial = true;
+            pause_window_scale.CallValueEasing(1.0f, pause_window_scale.value, pause_window_scale.OutSine);
+            no.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::OutSine);
+            yes.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::OutSine);
+            no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
         }
     }
     if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)

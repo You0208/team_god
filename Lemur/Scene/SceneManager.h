@@ -41,6 +41,7 @@ namespace Lemur::Scene
         int stage_num;
 
     public:
+        bool cont_type = true;//true=コントローラー,false=キーボード
         int set_unit_cont[4] = { 0,1,2,3 };
         int save_units[4] = {-1,-1,-1,-1 };
         bool once_tutorial = true;

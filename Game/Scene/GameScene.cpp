@@ -15,6 +15,7 @@
 #include "../Scene/ClearScene.h"
 #include "../Scene/OverScene.h"
 #include "../Scene/LoadingScene.h"
+#include "../Scene/TitleScene.h"
 
 #define _CRTDBG_MAP_ALLOC
 
@@ -65,6 +66,22 @@ void GameScene::Initialize()
 		pause_text_continue = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Continue.png");
 		pause_text_select   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Pause\\Stageselect.png");
 
+		window              = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window.png");
+		window_title        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_title.png");
+		window_select       = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_stage.png");
+		window_yes          = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_yes.png");
+		window_no           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window_no.png");
+
+		stage_num[0]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\1-1.png");
+		stage_num[1]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\1-2.png");
+		stage_num[2]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\1-3.png");
+		stage_num[3]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\2-1.png");
+		stage_num[4]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\2-2.png");
+		stage_num[5]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\2-3.png");
+		stage_num[6]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\3-1.png");
+		stage_num[7]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\3-2.png");
+		stage_num[8]        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\3-3.png");
+
 		shadow_model        = std::make_unique<FbxModelManager>(graphics.GetDevice(), ".\\resources\\Model\\Enemy\\Enemy_Sphere.fbx");
 	}
 	// ゲーム部分
@@ -78,13 +95,12 @@ void GameScene::Initialize()
 		camera.SetEyeYOffset(8.0f);
 		camera.SetAngle(camera_angle);
 
-#ifdef  DEBUG_IMGUI
+#if 0
 		camera_angle = { DirectX::XMConvertToRadians(40.0f),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 		camera.SetAngle(camera_angle);
-#else
-		// イージングを呼ぶ
-		rotation_camera_x.CallValueEasing(40.0f, rotation_camera_x.value, EasingFunction::EasingType::OutSine, 1.0f);
 #endif
+
+		stage_num_text.value = -300;
 
 		StageManager& stage_manager = StageManager::Instance();
 
@@ -156,7 +172,7 @@ void GameScene::Initialize()
 		pause_text_continue_scale.value = 1.0f;
 		pause_text_select_scale.value   = 1.0f;
 		clear_direction_state           = 0;
-
+		select_num = 1;
 		// ワールドごとのライティング、色調補正
 		// 朝
 		if (stage_manager.GetStageLevel() == 0 ||
@@ -238,22 +254,11 @@ void GameScene::Finalize()
 	Lemur::Audio::AudioManager::Instance().StopAllBGM();
 	Lemur::Audio::AudioManager::Instance().StopAllSE();
 
-	//ステージ終了
-	if (stage != nullptr)
-	{
-		delete stage;
-		stage = nullptr;
-	}
 	//プレイヤー終了
 	if (player != nullptr)
 	{
 		delete player;
 		player = nullptr;
-	}
-	if (stage_main != nullptr)
-	{
-		delete stage_main;
-		stage_main = nullptr;
 	}
 	//プレイヤー終了
 	if (fence != nullptr)
@@ -269,6 +274,8 @@ void GameScene::Finalize()
 	SeedManager::Instance().Clear();
 	// 敵スポーン制御装置の初期化
 	EnemySpawner::Instance().Finalize();
+	// ステージ終了
+	StageManager::Instance().Clear();
 }
 
 void GameScene::Update(HWND hwnd, float elapsedTime)
@@ -300,7 +307,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 		if (preparation_next)return;
 	}
 	// 演出
-#ifndef  DEBUG_IMGUI
+#if 1
 	if(start_direction)
 	{
 		StartDirectionUpdate(elapsedTime);
@@ -334,17 +341,18 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 	}
 	// ポーズ画面
 	{
-		if (gamePad.GetButtonUp() & gamePad.BTN_START)
-		{
-			is_pause = !is_pause;
-			pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
-		}
 		if (is_pause)
 		{
 			PauseUpdate(elapsedTime);
 			return;
 		}
 		else is_bloom = true;
+		if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
+		{
+			pause_window_scale.value = 0.0f;
+			is_pause = !is_pause;
+			pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
+		}
 	}
 	// ゲーム
 #if 1
@@ -467,7 +475,6 @@ void GameScene::Render(float elapsedTime)
 	immediate_context->OMSetDepthStencilState(depth_stencil_states[static_cast<size_t>(DEPTH_STATE::ZT_ON_ZW_ON)].Get(), 0);
 	immediate_context->RSSetState(rasterizer_states[static_cast<size_t>(RASTER_STATE::SOLID)].Get());
 
-
 	// テクスチャをセット
 	{
 		// ノイズ
@@ -559,6 +566,11 @@ void GameScene::Render(float elapsedTime)
 	if (is_bloom && !is_pause)
 	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
+
+		if (!clear_direction && !over_direction && !start_direction && !Lemur::Scene::SceneManager::Instance().cont_type)
+		{
+			player->GaugeRender();
+		}
 		// 2D描画
 		button_ui_base->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 		button_ui_chara->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A], SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -570,7 +582,6 @@ void GameScene::Render(float elapsedTime)
 		else if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH *1, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		else if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH *2, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		else if(Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]==player->GetCategory()) button_ui_circle->Render(immediate_context, sprite_ui.Get(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1, 1, 1, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
 
 		timer_ui_base->Render(immediate_context, sprite_ui.Get(), 50, 50, 214, 273, 0.0f);
 		timer_hands->RenderCenter(immediate_context, sprite_ui.Get(), 50 + 107, 50 + 167, 4, 180, timer_angle);
@@ -593,6 +604,8 @@ void GameScene::Render(float elapsedTime)
 			{
 				start_text_start->RenderCenter(immediate_context, 960.0f, 540.0f, SCREEN_WIDTH * scale_start_direction.value, SCREEN_HEIGHT * scale_start_direction.value);
 			}
+
+			stage_num[StageManager::Instance().GetStageLevel()]->RenderCenter(immediate_context, stage_num_text.value, 540, 600, 450);
 		}
 
 	}
@@ -612,6 +625,15 @@ void GameScene::Render(float elapsedTime)
 
 	}
 	if (timer >= time_limit)fight_enemy->RenderCenter(immediate_context, SCREEN_WIDTH * 0.5f, 70, 700, 120);
+
+	if (is_pause)
+	{
+		window->RenderCenter(immediate_context, 960, 540, 1400 * pause_window_scale.value, 700 * pause_window_scale.value);
+		if (is_select_text)window_select->RenderCenter(immediate_context, 960, 420, 1100 * pause_window_scale.value, 200 * pause_window_scale.value);
+		if (is_title_text)window_title->RenderCenter(immediate_context, 960, 420, 1100 * pause_window_scale.value, 200 * pause_window_scale.value);
+		window_yes->RenderCenter(immediate_context, 700, 645, 200 * pause_window_scale.value * yes.value, 100 * pause_window_scale.value * yes.value);
+		window_no->RenderCenter(immediate_context, 1200, 645, 200 * pause_window_scale.value * no.value, 100 * pause_window_scale.value * no.value);
+	}
 	// マスクの描画
 	RenderTransitionMask(elapsedTime);
 }
@@ -652,23 +674,117 @@ void GameScene::InitializeLight()
 
 void GameScene::PauseUpdate(float elapsedTime)
 {
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
 	is_bloom = false;
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	Mouse& mouse = Input::Instance().GetMouse();
+
+	bool down_pressed = gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_DOWN) || GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState('S');
+	bool up_pressed = gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_UP) || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('W');
+	bool buttonB_pressed = gamePad.GetButtonDown() & gamePad.BTN_B || mouse.GetButtonDown() & mouse.BTN_LEFT;
+
+	if (GetAsyncKeyState(VK_RETURN)& 0x8000)buttonB_pressed = true;
+
+	float f = static_cast<float>(mouse.GetWheel());
+	if (mouse.GetWheel() != 0 && f < 0)
+	{
+		down_pressed = true;
+	}
+	if (mouse.GetWheel() != 0 && f > 0)
+	{
+		up_pressed = true;
+	}
+
+	if (!is_select_text)
+	{
+		if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
+		{
+			is_title_text = true;
+			pause_window_scale.CallValueEasing(1.0f, pause_window_scale.value, pause_window_scale.OutSine);
+			no.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::OutSine);
+			yes.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::OutSine);
+			no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+		}
+		if (is_title_text)
+		{
+			pause_window_scale.EasingValue(elapsedTime);
+			if (pause_window_scale.is_easing)return;
+
+			switch (select_num)
+			{
+			case Button::YES:
+				// 右を選んだとき
+				if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1 || GetAsyncKeyState('D') & 1)
+				{
+					Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+					no.CallValueEasing(1.1f, no.value, EasingFunction::EasingType::InSine);
+					yes.CallValueEasing(1.0f, yes.value, EasingFunction::EasingType::InSine);
+					no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+					select_num = Button::NO;
+					break;
+				}
+				// イージングを更新
+				yes.EasingValue(elapsedTime);
+				no.EasingValue(elapsedTime);
+				yes.ContinueEasing(elapsedTime);
+
+				// 選択されると
+				if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT)
+				{
+					Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+					// アイリスインを呼ぶ
+					CallTransition(true);
+				}
+
+				if (!start_transition && is_in)
+				{
+					is_bloom = true;
+					// 次のシーンへ
+					Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TitleScene));
+				}
+				break;
+
+			case Button::NO:
+				if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
+				{
+					Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+					yes.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::InSine);
+					no.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::InSine);
+					yes.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+					select_num = Button::YES;
+					break;
+				}
+
+				// イージングを更新
+				no.EasingValue(elapsedTime);
+				yes.EasingValue(elapsedTime);
+				no.ContinueEasing(elapsedTime);
+
+				// 選択されると
+				if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT)
+				{
+					is_title_text = false;
+					select_num = 1;
+					pause_window_scale.CallValueEasing(0.0f, pause_window_scale.value, pause_window_scale.OutSine);
+				}
+				break;
+			}
+			return;
+		}
+	}
 
 	switch (pause_num)
 	{
-	case 0:
+	case PAUSE_STATE::CONTINUE:
 		pause_text_continue_scale.ContinueEasing(elapsedTime);
 		pause_text_select_scale.EasingValue(elapsedTime);
-		if (gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_DOWN)
+		if (down_pressed)
 		{
 			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 			pause_text_select_scale.CallValueContinue(1.0f, 1.1f, pause_text_select_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
 			pause_text_continue_scale.CallValueEasing(1.0f, pause_text_continue_scale.value, EasingFunction::EasingType::InSine);
-			pause_num++;
+			pause_num = PAUSE_STATE::SELECT;
 		}
-		else if(gamePad.GetButtonDown() & gamePad.BTN_B)
+		else if(buttonB_pressed)
 		{
 			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
 			is_bloom = true;
@@ -676,23 +792,94 @@ void GameScene::PauseUpdate(float elapsedTime)
 			is_pause = false;
 		}
 		break;
-	case 1:
+	case PAUSE_STATE::SELECT:
+		pause_window_scale.EasingValue(elapsedTime);
+		if (pause_window_scale.is_easing)return;
+
 		pause_text_select_scale.ContinueEasing(elapsedTime);
 		pause_text_continue_scale.EasingValue(elapsedTime);
-		if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
+		if (up_pressed)
 		{
 			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 			pause_text_continue_scale.CallValueContinue(1.0f, 1.1f, pause_text_continue_scale.value, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine);
 			pause_text_select_scale.CallValueEasing(1.0f, pause_text_select_scale.value, EasingFunction::EasingType::InSine);
-			pause_num--;
+			pause_num= PAUSE_STATE::CONTINUE;
 		}
-		else if (gamePad.GetButtonDown() & gamePad.BTN_B)
+		else if (buttonB_pressed)
 		{
+			is_select_text = true;
 			Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
-			is_bloom = true;
-			pause_num = 0;
-			Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+			pause_num = PAUSE_STATE::SELECT_END;
+			pause_window_scale.CallValueEasing(1.0f, pause_window_scale.value, pause_window_scale.OutSine);
+			no.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::OutSine);
+			yes.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::OutSine);
+			no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
 		}
+		break;
+	case PAUSE_STATE::SELECT_END:
+		pause_window_scale.EasingValue(elapsedTime);
+		if (pause_window_scale.is_easing)return;
+
+		switch (select_num)
+		{
+		case Button::YES:
+			// 右を選んだとき
+			if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1 || GetAsyncKeyState('D') & 1)
+			{
+				Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+				no.CallValueEasing(1.1f, no.value, EasingFunction::EasingType::InSine);
+				yes.CallValueEasing(1.0f, yes.value, EasingFunction::EasingType::InSine);
+				no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+				select_num = Button::NO;
+				break;
+			}
+			// イージングを更新
+			yes.EasingValue(elapsedTime);
+			no.EasingValue(elapsedTime);
+			yes.ContinueEasing(elapsedTime);
+
+			// 選択されると
+			if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT)
+			{
+				Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
+				CallTransition(true);
+			}
+
+			if (!start_transition && is_in)
+			{
+				is_bloom = true;
+				// 次のシーンへ
+				Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new SelectScene));
+			}
+			break;
+
+		case Button::NO:
+			if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
+			{
+				Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
+				yes.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::InSine);
+				no.CallValueEasing(1.0f, no.value, EasingFunction::EasingType::InSine);
+				yes.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
+				select_num = Button::YES;
+				break;
+			}
+
+			// イージングを更新
+			no.EasingValue(elapsedTime);
+			yes.EasingValue(elapsedTime);
+			no.ContinueEasing(elapsedTime);
+
+			// 選択されると
+			if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT)
+			{
+				is_select_text = false;
+				select_num = 1;
+				pause_window_scale.CallValueEasing(0.0f, pause_window_scale.value, pause_window_scale.OutSine);
+				pause_num = PAUSE_STATE::SELECT;
+			}
+			break;
+		}
+
 		break;
 	}
 }
@@ -703,12 +890,32 @@ void GameScene::StartDirectionUpdate(float elapsedTime)
 
 	scale_start_direction.EasingValue(elapsedTime);
 
+	stage_num_text.EasingValue(elapsedTime);
 	switch (start_direction_state)
 	{
-	case START_DIRECTION::Camera_direction:// カメラ移動
-		rotation_camera_x.EasingValue(elapsedTime);
+	case START_DIRECTION::Stage_num:
 		camera_angle = { DirectX::XMConvertToRadians(rotation_camera_x.value),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
 		camera.SetAngle(camera_angle);
+
+		stage_num_text.CallValueEasing(960, stage_num_text.value, stage_num_text.OutSine, 0.5f);
+		start_direction_state = START_DIRECTION::Stage_num_end;
+		break;
+	case START_DIRECTION::Stage_num_end:
+		if (stage_num_text.value >= 960 && stage_num_text.value < 2220 && !stage_num_text.is_easing)
+		{
+			stage_num_text.CallValueEasing(2220, stage_num_text.value, stage_num_text.InSine, 0.5f);
+		}
+		if (stage_num_text.value >= 1920 && !stage_num_text.is_easing)
+		{
+			// イージングを呼ぶ
+			rotation_camera_x.CallValueEasing(40.0f, rotation_camera_x.value, EasingFunction::EasingType::OutSine, 1.0f);
+			start_direction_state = START_DIRECTION::Camera_direction;
+		}
+		break;
+	case START_DIRECTION::Camera_direction:// カメラ移動
+		camera_angle = { DirectX::XMConvertToRadians(rotation_camera_x.value),DirectX::XMConvertToRadians(0),DirectX::XMConvertToRadians(0) };
+		camera.SetAngle(camera_angle);
+		rotation_camera_x.EasingValue(elapsedTime);
 
 		if (!rotation_camera_x.is_easing)
 		{

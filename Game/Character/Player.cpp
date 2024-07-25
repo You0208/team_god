@@ -16,6 +16,10 @@ Player::Player()
     // モデルの初期化
     LoadFBXModel(graphics.GetDevice(), ".\\resources\\Model\\scarecrow_Re.fbx");
 
+    gauge_base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\gauge_base.png");
+    gauge_frame = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\gauge_frame.png");
+    gauge_bar = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\gauge_bar.png");
+
     // 左右端初期化
     limit = { StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().left_up.x + 0.5f,
          StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetStageCollision().right_down.x - 0.5f };
@@ -55,6 +59,19 @@ Player::Player()
 
 Player::~Player()
 {
+}
+
+void Player::GaugeRender()
+{
+    float scaling_max = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
+    float scale = (mouse_timer - dis_scarecrow) / scaling_max;
+    if (scaling_max <= mouse_timer)scale = 1.0f;
+
+    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+    ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+    gauge_base->RenderCenter(immediate_context, position.x * 66 + 960 - 90, 960, 44, 206);
+    gauge_bar->RenderLeftDown(immediate_context, position.x * 66 + 960 - 90-22, 960+103, 44, 206 * scale, 0);
+    gauge_frame->RenderCenter(immediate_context, position.x * 66 + 960 - 90, 960, 44, 206);
 }
 
 // 更新処理
@@ -102,6 +119,7 @@ void Player::DrawDebugGUI()
 {
     Mouse& mouse = Input::Instance().GetMouse();
 
+#ifdef DEBUG_IMGUI
     ImGui::Begin(u8"案山子とか");
 
     float m = static_cast<float>(mouse.GetWheel())*0.001f;
@@ -116,6 +134,7 @@ void Player::DrawDebugGUI()
     ImGui::SliderFloat(u8"種が落ちる一番手前", &dis_scarecrow, 0.0f, 3.0f);
     
     ImGui::End();
+#endif
 }
 
 // はじき処理
@@ -135,6 +154,10 @@ void Player::Flick(float elapsedTime)
                 is_mouse_click = true;
                 mouse_timer = dis_scarecrow;
                 PlayAnimation(Animation::Pull, false);
+            }
+            else
+            {
+                mouse_timer = dis_scarecrow;
             }
         }
         else
@@ -276,7 +299,6 @@ void Player::Flick(float elapsedTime)
     }
 
 }
-
 
 // カテゴリーの変更
 void Player::ChangeCategory()

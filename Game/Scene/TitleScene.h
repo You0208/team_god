@@ -42,6 +42,19 @@ private:
     std::shared_ptr<Sprite> title_menu = nullptr;
     std::shared_ptr<Sprite> title_start = nullptr;
 
+    std::shared_ptr<Sprite> window;
+    std::shared_ptr<Sprite> window_tutorial;
+    std::shared_ptr<Sprite> window_yes;
+    std::shared_ptr<Sprite> window_no;
+    EasingFunction  pause_window_scale = {};     // ポーズセレクト画面イージング
+    EasingFunction          yes = {};                   // セレクトサイズ用
+    EasingFunction          no = {};                   // もう一度のサイズ用
+    enum Button
+    {
+        YES,
+        NO
+    };
+
     EasingFunction left_scale = {};
     EasingFunction right_scale = {};
     EasingFunction logo_scale = {};
@@ -53,4 +66,8 @@ private:
     bool is_direction = true;
     int direction_num = 0;
     bool is_credit = false;;
+
+    bool is_tutorial = false;  // ポーズフラグ
+    bool is_tutorial_next = false;  // ポーズフラグ
+    int  select_num = 1;                    // 今何のボタンが選ばれているか
 };

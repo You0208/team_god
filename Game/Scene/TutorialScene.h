@@ -37,9 +37,13 @@ private:// ゲーム
     enum MISSION
     {
         throw_seed,
+        throw_seed_end,
         move_player,
+        move_player_end,
         change_unit,
+        change_unit_end,
         attack,
+        attack_end,
         clear
     };
 
@@ -48,10 +52,11 @@ private:// ゲーム
     int             pause_num                 = 0;
     EasingFunction  pause_text_continue_scale = {};
     EasingFunction  pause_text_select_scale   = {};
+    EasingFunction  ok_text= {};
 
     float           timer_angle               = 0.0f;// タイマーの角度
 
-    int             tutorial_glf_num_x[8]     = {2,0,5,0,9,9,9,4};// 一番下のラインのとこ
+    int             tutorial_glf_num_x[9]     = {2,0,5,0,9,9,9,4,6};// 一番下のラインのとこ
     int             tutorial_gif_num          = 0;// GIFの番号
 
     int             tutorial_state            = 0;// ステート
@@ -74,7 +79,7 @@ private:
     std::shared_ptr<Sprite> tutorial_gif[9];
 
     std::shared_ptr<Sprite> button[4]       = {};
-    std::shared_ptr<Sprite> mission_text[4] = {};
+    std::shared_ptr<Sprite> mission_text[8] = {};
     std::shared_ptr<Sprite> menu_text       = nullptr;
     std::shared_ptr<Sprite> reset_text      = nullptr;
     std::shared_ptr<Sprite> button_beside   = nullptr;
@@ -84,6 +89,8 @@ private:
     std::shared_ptr<Sprite> Frame_tutorial  = nullptr;
     std::shared_ptr<Sprite> left_text       = nullptr;
     std::shared_ptr<Sprite> right_text      = nullptr;
+
+    std::shared_ptr<Sprite> OK      = nullptr;
 
     // シェーダー
     Microsoft::WRL::ComPtr<ID3D11PixelShader> unit_ps;

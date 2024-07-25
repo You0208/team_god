@@ -9,6 +9,8 @@ public:
     Player();
     ~Player()override;
 
+    void GaugeRender();
+
     // XVˆ—
     void Update(float elapsedTime);
 
@@ -64,6 +66,11 @@ private:
     bool                is_mouse_click      = false;
     float               mouse_timer         = dis_scarecrow;
     float               mouse_timer_speed   = 15.0f;
+
+
+    std::shared_ptr<Sprite> gauge_frame;
+    std::shared_ptr<Sprite> gauge_base;
+    std::shared_ptr<Sprite> gauge_bar;
 };
 
 

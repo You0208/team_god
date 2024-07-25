@@ -37,6 +37,14 @@ private:
     void OverDirectionUpdate(float elapsedTime);
     void ClearDirectionUpdate(float elapsedTime);
 private:// ゲーム
+    enum PAUSE_STATE
+    {
+        CONTINUE,
+        SELECT,
+        SELECT_END,
+    };
+
+
     StageMain*      stage_main                = nullptr;
     Stage*          stage                     = nullptr;
     Player*         player                    = nullptr;
@@ -52,10 +60,13 @@ private:// ゲーム
     int             pause_num                 = 0;      // ポーズで選択されている番号
     EasingFunction  pause_text_continue_scale = {};     // ポーズもう一度イージング
     EasingFunction  pause_text_select_scale   = {};     // ポーズセレクト画面イージング
+    EasingFunction  pause_window_scale        = {};     // ポーズセレクト画面イージング
 
     // スタート演出
     enum START_DIRECTION// ステート
     {
+        Stage_num,
+        Stage_num_end,
         Camera_direction,
         Three,
         Three_End,
@@ -88,6 +99,16 @@ private:// ゲーム
     // タイマーの針角度
     float           timer_angle           = 0.0f;
 
+    int                     select_num = 0;                    // 今何のボタンが選ばれているか
+    bool       is_select_text;
+    bool is_title_text;
+    EasingFunction          yes = {};                   // セレクトサイズ用
+    EasingFunction          no = {};                   // もう一度のサイズ用
+    enum Button
+    {
+        YES,
+        NO
+    };
 private:
     // スプライト
     std::shared_ptr<Sprite> timer_hands;
@@ -110,6 +131,14 @@ private:
 
     std::shared_ptr<Sprite> pose_exp;
 
+    std::shared_ptr<Sprite> window;
+    std::shared_ptr<Sprite> window_title;
+    std::shared_ptr<Sprite> window_select;
+    std::shared_ptr<Sprite> window_yes;
+    std::shared_ptr<Sprite> window_no;
+
+    std::shared_ptr<Sprite> stage_num[9];
+    EasingFunction stage_num_text;
     // シェーダー
     Microsoft::WRL::ComPtr<ID3D11PixelShader> unit_ps;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> enemy_ps;
