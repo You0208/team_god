@@ -21,7 +21,9 @@ void TitleScene::Initialize()
         title_back2  = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Title_scene.png");
         title_logo   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Titlelogo.png");
         title_credit = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Credit.png");
+
         title_menu   = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Credit_menu.png");
+
         title_start  = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Title\\Start.png");
 
         window = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Window.png");

@@ -39,6 +39,7 @@ private:
     std::shared_ptr<Sprite> title_right = nullptr;
     std::shared_ptr<Sprite> title_logo = nullptr;
     std::shared_ptr<Sprite> title_credit = nullptr;
+    std::shared_ptr<Sprite> title_credit_PC = nullptr;
     std::shared_ptr<Sprite> title_menu = nullptr;
     std::shared_ptr<Sprite> title_start = nullptr;
 

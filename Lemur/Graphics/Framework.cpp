@@ -23,7 +23,7 @@
 //TODO もね　FALSE→ウィンドウ　TRUE→フルスクリーン
 Framework::Framework(HWND hwnd) 
 	: hwnd(hwnd),
-	graphics(hwnd, FALSE),
+	graphics(hwnd, TRUE),
 	input(hwnd)
 {
 	input.GetMouse().SetScreenWidth(SCREEN_WIDTH);
@@ -51,7 +51,7 @@ bool Framework::Initialize()
 
 	// シーン初期化
 	//TODO もね　シーン FormationScene
-	//Lemur::Scene::SceneManager::Instance().ChangeScene(new TitleScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new TitleScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene2);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new DemoScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new ClearScene);
@@ -59,7 +59,7 @@ bool Framework::Initialize()
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
+	//Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new TutorialScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
