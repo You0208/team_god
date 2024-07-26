@@ -111,7 +111,7 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
         {
         case Button::YES:
             // 右を選んだとき
-            if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1 || GetAsyncKeyState('D') & 1)
+            if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState('D') & 0x8000)
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 no.CallValueEasing(1.1f, no.value, EasingFunction::EasingType::InSine);
@@ -135,7 +135,7 @@ void TitleScene::Update(HWND hwnd, float elapsedTime)
             break;
 
         case Button::NO:
-            if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
+            if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState('A') & 0x8000)// 左選択すると
             {
                 Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
                 yes.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::InSine);
@@ -288,7 +288,7 @@ void TitleScene::HandleInput()
             no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
         }
     }
-    else if ((GetAsyncKeyState('B') & 1) && !is_credit)
+    else if ((GetAsyncKeyState('B') & 0x8000) && !is_credit)
     {
         Lemur::Scene::SceneManager::Instance().cont_type = false;
         Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
@@ -305,14 +305,14 @@ void TitleScene::HandleInput()
             no.CallValueContinue(1.0f, 1.1f, 1.1f, EasingFunction::EasingType::OutSine, EasingFunction::EasingType::InSine, 0.4f);
         }
     }
-    if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
+    if (gamePad.GetButtonDown() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 0x8000)
     {
-        if (is_credit)
+        if (is_credit&& !credit_y.is_easing)
         {
             is_credit = false;
             credit_y.CallValueEasing(-1920.0f, credit_y.value, EasingFunction::EasingType::InSine, 1.0f);
         }
-        else
+        else if(!credit_y.is_easing)
         {
             is_credit = true;
             credit_y.CallValueEasing(0.0f, credit_y.value, EasingFunction::EasingType::OutBounce, 1.0f);

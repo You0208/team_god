@@ -64,9 +64,9 @@ void EnemySpawner::Initialize()
 		enemy_A.speed_power = -1.3f;    // 移動速度
 		enemy_A.radius = 0.4f;			// 半径
 		enemy_A.health = 3;				// 体力
-		enemy_A.attack_effect_size = 0.3f;			
+		enemy_A.attack_effect_size = 0.4f;			
 		enemy_A.death_effect_size = 0.4f;
-		enemy_A.hit_effect_size = 0.3f;
+		enemy_A.hit_effect_size = 0.5f;
 
 		// Enemy_B
 		enemy_B.attack_power = 2;		 // 攻撃力
@@ -74,9 +74,9 @@ void EnemySpawner::Initialize()
 		enemy_B.speed_power = -2.7f;	 // 移動速度
 		enemy_B.radius = 0.4f;			 // 半径
 		enemy_B.health = 4;				 // 体力
-		enemy_B.attack_effect_size = 0.3f;
+		enemy_B.attack_effect_size = 0.4f;
 		enemy_B.death_effect_size = 0.4f;
-		enemy_B.hit_effect_size = 0.3f;
+		enemy_B.hit_effect_size = 0.5f;
 		mover_timer_max_B = 0.7f;		 // とどっている時間
 		dis_B = 2.5f;					 // 一気に進む距離
 
@@ -87,9 +87,9 @@ void EnemySpawner::Initialize()
 		enemy_C.speed_power = -1.5f;	    // 移動速度
 		enemy_C.radius = 0.4f;				// 半径
 		enemy_C.health = 3;					// 体力
-		enemy_C.attack_effect_size = 0.3f;
+		enemy_C.attack_effect_size = 0.4f;
 		enemy_C.death_effect_size = 0.4f;
-		enemy_C.hit_effect_size = 0.3f;
+		enemy_C.hit_effect_size = 0.5f;
 		speed_power_Y_D = -0.0f;			// 斜め移動の時のもう一個の速度
 
 		// Enemy_D
@@ -98,9 +98,9 @@ void EnemySpawner::Initialize()
 		enemy_D.speed_power = -1.2f;		 // 移動速度
 		enemy_D.radius = 0.4f;				 // 半径
 		enemy_D.health = 2;					 // 体力
-		enemy_D.attack_effect_size = 0.3f;
+		enemy_D.attack_effect_size = 0.4f;
 		enemy_D.death_effect_size = 0.4f;
-		enemy_D.hit_effect_size = 0.3f;
+		enemy_D.hit_effect_size = 0.5f;
 		//enemy_D.hit_effect_size = 0.2f;
 		dis_D = 1.0f;						 // 移動する距離
 
@@ -110,9 +110,9 @@ void EnemySpawner::Initialize()
 		enemy_A_2.speed_power = -1.76f;    // 移動速度
 		enemy_A_2.radius = 0.4f;			// 半径
 		enemy_A_2.health = 6;				// 体力
-		enemy_A_2.attack_effect_size = 0.3f;
+		enemy_A_2.attack_effect_size = 0.4f;
 		enemy_A_2.death_effect_size = 0.4f;
-		enemy_A_2.hit_effect_size = 0.3f;
+		enemy_A_2.hit_effect_size = 0.5f;
 
 		// Enemy_B_2
 		enemy_B_2.attack_power = 3;		 // 攻撃力
@@ -120,9 +120,9 @@ void EnemySpawner::Initialize()
 		enemy_B_2.speed_power = -1.73f;	 // 移動速度
 		enemy_B_2.radius = 0.4f;			 // 半径
 		enemy_B_2.health = 7;				 // 体力
-		enemy_B_2.attack_effect_size = 0.3f;
+		enemy_B_2.attack_effect_size = 0.4f;
 		enemy_B_2.death_effect_size = 0.4f;
-		enemy_B_2.hit_effect_size = 0.3f;
+		enemy_B_2.hit_effect_size = 0.5f;
 		mover_timer_max_B_2 = 1.0f;		 // とどまっている時間
 		dis_B_2 = 3.0f;					 // 一気に進む距離
 
@@ -132,9 +132,9 @@ void EnemySpawner::Initialize()
 		enemy_C_2.speed_power = -1.3f;		// 移動速度
 		enemy_C_2.radius = 0.4f;				// 半径
 		enemy_C_2.health = 4;					// 体力
-		enemy_C_2.attack_effect_size = 0.3f;
+		enemy_C_2.attack_effect_size = 0.4f;
 		enemy_C_2.death_effect_size = 0.4f;
-		enemy_C_2.hit_effect_size = 0.3f;
+		enemy_C_2.hit_effect_size = 0.5f;
 		speed_power_Y_D_2 = -0.82f;			// 斜め移動の時のもう一個の速度
 
 		// Enemy_D
@@ -143,9 +143,9 @@ void EnemySpawner::Initialize()
 		enemy_D_2.speed_power = -1.79f;		 // 移動速度
 		enemy_D_2.radius = 0.4f;				 // 半径
 		enemy_D_2.health = 5;					 // 体力
-		enemy_D_2.attack_effect_size = 0.3f;
+		enemy_D_2.attack_effect_size = 0.4f;
 		enemy_D_2.death_effect_size = 0.4f;
-		enemy_D_2.hit_effect_size = 0.3f;
+		enemy_D_2.hit_effect_size = 0.5f;
 		dis_D_2 = 1.0f;						 // 移動する距離
 
 		// Summon_Enemy
@@ -154,9 +154,9 @@ void EnemySpawner::Initialize()
 		summon_enemy.speed_power = 0.0f;		 // 移動速度
 		summon_enemy.radius = 0.4f;				 // 半径
 		summon_enemy.health = 8;					 // 体力
-		summon_enemy.attack_effect_size = 0.3f;
+		summon_enemy.attack_effect_size = 0.4f;
 		summon_enemy.death_effect_size = 0.4f;
-		summon_enemy.hit_effect_size = 0.3f;
+		summon_enemy.hit_effect_size = 0.5f;
 
 		// boss_Enemy
 		boss_enemy.attack_power = 10;		// 攻撃力
@@ -164,9 +164,9 @@ void EnemySpawner::Initialize()
 		boss_enemy.speed_power = -0.9f;    // 移動速度
 		boss_enemy.radius = 0.5f;			// 半径
 		boss_enemy.health = 30;				// 体力
-		boss_enemy.attack_effect_size = 0.3f;
+		boss_enemy.attack_effect_size = 0.4f;
 		boss_enemy.death_effect_size = 0.4f;
-		boss_enemy.hit_effect_size = 0.3f;
+		boss_enemy.hit_effect_size = 0.55f;
 
 		// nuisance_Enemy
 		nuisance_enemy.attack_power = 0;		// 攻撃力
@@ -174,9 +174,9 @@ void EnemySpawner::Initialize()
 		nuisance_enemy.speed_power = 0.0f;    // 移動速度
 		nuisance_enemy.radius = 0.5f;			// 半径
 		nuisance_enemy.health = 1;				// 体力
-		nuisance_enemy.attack_effect_size = 0.3f;
+		nuisance_enemy.attack_effect_size = 0.4f;
 		nuisance_enemy.death_effect_size = 0.4f;
-		nuisance_enemy.hit_effect_size = 0.3f;
+		nuisance_enemy.hit_effect_size = 0.5f;
 
 		// デバッグ用
 		script_enemy_A = SetEnemy(4.0f, EnemyType::A, Shaft::Side, 4.0f);
@@ -756,7 +756,7 @@ void EnemySpawner::InitializeLevel1()
 	// 開始からの秒・エネミーのタイプ・軸（Side:縦軸　Vertical:横軸）・軸に対する長さ
 
 	//1-1 17体
-	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 1.0f));
+	level_1.emplace_back(SetEnemy(2.0f, EnemyType::B, Shaft::Side, 1.0f));
 	level_1.emplace_back(SetEnemy(2.0f, EnemyType::A, Shaft::Side, 17.5f));//A1
 
 	level_1.emplace_back(SetEnemy(35.0f, EnemyType::A, Shaft::Vertical, 1.0f));

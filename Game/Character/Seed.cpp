@@ -25,7 +25,7 @@ Seed::Seed()
     rotation.y = DirectX::XMConvertToRadians(90.0f);
 
     //TODO Ç‡ÇÀÅ@
-    effect_size = 0.3f;
+    effect_size = 0.35f;
 
     // âÒÇ∑
     PlayAnimation(Animation_Index::Throw, true);

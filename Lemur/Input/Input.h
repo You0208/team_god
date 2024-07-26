@@ -23,8 +23,10 @@ public:
     // ƒ}ƒEƒXæ“¾
     Mouse& GetMouse() { return mouse; }
 
+    bool GetButtonDownKey(int a);
 private:
     static Input* instance;
     GamePad				gamePad;
     Mouse				mouse;
+    bool key_flag;
 };

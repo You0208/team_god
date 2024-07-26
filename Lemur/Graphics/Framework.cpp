@@ -59,10 +59,9 @@ bool Framework::Initialize()
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new GameScene));
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new GameScene);
-	//Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
-	//Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
+	Lemur::Scene::SceneManager::Instance().ChangeScene(new SelectScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new LoadingScene(new TutorialScene));
-	Lemur::Scene::SceneManager::Instance().ChangeScene(new TutorialScene);
+	//Lemur::Scene::SceneManager::Instance().ChangeScene(new TutorialScene);
 	//Lemur::Scene::SceneManager::Instance().ChangeScene(new FormationScene);
 
 	return true;
@@ -70,7 +69,7 @@ bool Framework::Initialize()
 
 void Framework::Update(float elapsed_time/*Elapsed seconds from last frame*/)
 {
-#if 1
+#if 0
 	if (GetAsyncKeyState(VK_RETURN) & 1 && GetAsyncKeyState(VK_MENU) & 1)
 	{
 		graphics.StylizeWindow(!graphics.fullscreen_mode);

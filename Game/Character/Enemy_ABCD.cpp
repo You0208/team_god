@@ -183,6 +183,10 @@ void Enemy_B::UpdateMoveState(float elapsed_time)
     //タイマーが指定秒を超えたとき
     if (move_timer >= move_timer_max)                   
     {
+        if (!IsPlayAnimation() )
+        {
+            PlayAnimation(3, false, 1.0f, 0.3f);
+        }
         if (shaft == Shaft::Side)
         {
             // 速度を代入

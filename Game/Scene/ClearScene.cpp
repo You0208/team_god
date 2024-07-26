@@ -246,9 +246,9 @@ void ClearScene::HandleInput(float elapsed_time)
             first_touch = false;
         };
 
-    bool down_pressed = gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_DOWN) || GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState('S');
-    bool up_pressed = gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_UP) || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('W');
-    bool buttonB_pressed = gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('B') || GetAsyncKeyState(VK_RETURN) & 1 || mouse.GetButtonDown() & mouse.BTN_LEFT;
+    bool down_pressed = gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_DOWN) || GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState('S');
+    bool up_pressed = gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_UP) || GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState('W');
+    bool buttonB_pressed = gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('B') || GetAsyncKeyState(VK_RETURN) & 0x8000 || mouse.GetButtonDown() & mouse.BTN_LEFT;
 
     float f = static_cast<float>(mouse.GetWheel());
     if (mouse.GetWheel() != 0 && f < 0)

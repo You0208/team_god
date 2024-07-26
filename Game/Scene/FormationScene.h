@@ -126,6 +126,7 @@ private:
     std::shared_ptr<Sprite> mark_2_2;
     std::shared_ptr<Sprite> Best;
     std::shared_ptr<Sprite> arrow;
+    std::shared_ptr<Sprite> reset_text = nullptr;
 
     std::shared_ptr<Sprite> unit_attack[UNIT_MAX];
 

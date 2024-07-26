@@ -36,9 +36,26 @@ void FormationScene::Initialize()
 
     // モデル、テクスチャ読み込み
     {
+        if (Lemur::Scene::SceneManager::Instance().cont_type)
+        {
+            Controller_UI[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_A.png");
+            Controller_UI[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_B.png");
+            Controller_UI[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_X.png");
+            Controller_UI[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_Y.png");
+            reset_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Reset_RBLB.png");
+        }
+        else
+        {
+            Controller_UI[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_1.png");
+            Controller_UI[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_2.png");
+            Controller_UI[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_3.png");
+            Controller_UI[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_4.png");
+            reset_text = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\Reset_Z.png");
+        }
+
         // 2D
         back             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene.png");
-        front            = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_front.png");
+        front            = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Formation_scene_front_re.png");
         line_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_1.png");
         line_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_2.png");
         line_blue        = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Line_3.png");
@@ -52,10 +69,6 @@ void FormationScene::Initialize()
         unit_line[6]     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Unit_7.png");
         Button           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Button.png");
         base             = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Base.png");
-        Controller_UI[0] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_A.png");
-        Controller_UI[1] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_B.png");
-        Controller_UI[2] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_X.png");
-        Controller_UI[3] = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\Controller_UI_Y.png");
         mark_1           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1.png");
         mark_1_1         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_1_1.png");
         mark_2           = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\Formation\\mark_2.png");
@@ -268,6 +281,7 @@ void FormationScene::UpdateUnit(float elapsedTime)
 void FormationScene::HandleInput(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+    Mouse& mouse = Input::Instance().GetMouse();
 
     button.EasingValue(elapsedTime);
     line_x.EasingValue(elapsedTime);
@@ -279,17 +293,8 @@ void FormationScene::HandleInput(float elapsedTime)
         // イージングを更新
         button.ContinueEasing(elapsedTime);
 
-        // 上に行ったら
-        if (gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_UP)
-        {
-            Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
-            select_button = false;
-            interval_timer = 0.0f;
-            button.CallValueEasing(0.9f, button.value, EasingFunction::EasingType::InSine);
-        }
-
         // Bボタンを押したら
-        if (gamePad.GetButtonDown() & gamePad.BTN_B && all_unit_num >= 4|| GetAsyncKeyState(VK_RETURN))
+        if (gamePad.GetButtonDown() & gamePad.BTN_B && all_unit_num >= 4|| GetAsyncKeyState(VK_RETURN) & 0x8000||mouse.GetButtonDown()&mouse.BTN_LEFT)
         {
             Lemur::Scene::SceneManager& manager = Lemur::Scene::SceneManager::Instance();
             Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::DECISION, false);
@@ -313,7 +318,7 @@ void FormationScene::HandleInput(float elapsedTime)
     }
 
     // 全部初期化
-    if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER||GetAsyncKeyState(VK_BACK))
+    if (gamePad.GetButtonDown() & gamePad.BTN_LEFT_SHOULDER || gamePad.GetButtonDown() & gamePad.BTN_RIGHT_SHOULDER||GetAsyncKeyState('Z') & 0x8000)
     {
         if (select_button)
         {
@@ -371,8 +376,8 @@ void FormationScene::HandleInput(float elapsedTime)
                     if (f)first_touch = false;
                 };
 
-            bool rightPressed = gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_RIGHT) || (GetAsyncKeyState(VK_RIGHT) & 1);
-            bool leftPressed = gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_LEFT) || (GetAsyncKeyState(VK_LEFT) & 1);
+            bool rightPressed = gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_RIGHT) || (GetAsyncKeyState(VK_RIGHT) & 0x8000)|| (GetAsyncKeyState('D') & 0x8000);
+            bool leftPressed = gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_LEFT) || (GetAsyncKeyState(VK_LEFT) & 0x8000) || (GetAsyncKeyState('A') & 0x8000);
 
             // 右
             if (rightPressed)
@@ -434,10 +439,10 @@ void FormationScene::HandleInput(float elapsedTime)
             // ユニットが選べる状態の時
             if (!enable_units[choose_num])
             {
-                if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('1') & 1)SelectUnit(gamePad.A);
-                else if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('2') & 1)SelectUnit(gamePad.B);
-                else if (gamePad.GetButtonDown() & gamePad.BTN_X || GetAsyncKeyState('3') & 1)SelectUnit(gamePad.X);
-                else if (gamePad.GetButtonDown() & gamePad.BTN_Y || GetAsyncKeyState('4') & 1)SelectUnit(gamePad.Y);
+                if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('1') & 0x8000)SelectUnit(gamePad.A);
+                else if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('2') & 0x8000)SelectUnit(gamePad.B);
+                else if (gamePad.GetButtonDown() & gamePad.BTN_X || GetAsyncKeyState('3') & 0x8000)SelectUnit(gamePad.X);
+                else if (gamePad.GetButtonDown() & gamePad.BTN_Y || GetAsyncKeyState('4') & 0x8000)SelectUnit(gamePad.Y);
             }
         }
     }
@@ -612,7 +617,7 @@ void FormationScene::Render(float elapsedTime)
         }
         // ボタン
         if (all_unit_num >= 4)Button->RenderCenter(immediate_context, 1300.0f, 980.0f, 500 * button.value, 200 * button.value);
-
+        reset_text->Render(immediate_context, 10, 1000, 300, 100);
         {
             DirectX::XMFLOAT4X4 view;
             DirectX::XMFLOAT4X4 projection;

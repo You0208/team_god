@@ -11,6 +11,8 @@ public:
 
     void GaugeRender();
 
+    void  GaugeRenderTutorial();
+
     // XVˆ—
     void Update(float elapsedTime);
 

@@ -89,4 +89,20 @@ private:
     std::shared_ptr<Sprite> transition_line1_2  = nullptr;
     std::shared_ptr<Sprite> transition_line2_2  = nullptr;
     std::shared_ptr<Sprite> transition_line3_2  = nullptr;
+
+    std::shared_ptr<Sprite> window;
+    std::shared_ptr<Sprite> window_title;
+    std::shared_ptr<Sprite> window_yes;
+    std::shared_ptr<Sprite> window_no;
+    EasingFunction  pause_window_scale = {};     // ポーズセレクト画面イージング
+    EasingFunction          yes = {};                   // セレクトサイズ用
+    EasingFunction          no = {};                   // もう一度のサイズ用
+    enum Button
+    {
+        YES,
+        NO
+    };
+    int  select_num = 1;                    // 今何のボタンが選ばれているか
+    bool is_title_window = false;  // ポーズフラグ
+    bool is_title_next = false;  // ポーズフラグ
 };

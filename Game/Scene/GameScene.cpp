@@ -48,9 +48,11 @@ void GameScene::Initialize()
 	}
 	// スプライト読み込み
 	{
+		if (Lemur::Scene::SceneManager::Instance().cont_type)	button_ui_base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
+		else 	button_ui_base = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI_PC.png");
+
 		timer_hands         = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_hands.png");
 		timer_ui_base       = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\timer_base.png");
-		button_ui_base      = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\button_UI.png");
 		button_ui_chara     = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_sheet.png");
 		button_ui_circle    = ResourceManager::Instance().load_sprite_resource(graphics.GetDevice(), L".\\resources\\Image\\UI\\UI_unit_circle.png");
 
@@ -347,7 +349,7 @@ void GameScene::Update(HWND hwnd, float elapsedTime)
 			return;
 		}
 		else is_bloom = true;
-		if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
+		if (gamePad.GetButtonDown() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 0x0001)
 		{
 			pause_window_scale.value = 0.0f;
 			is_pause = !is_pause;
@@ -678,8 +680,8 @@ void GameScene::PauseUpdate(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	Mouse& mouse = Input::Instance().GetMouse();
 
-	bool down_pressed = gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_DOWN) || GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState('S');
-	bool up_pressed = gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_UP) || GetAsyncKeyState(VK_UP) || GetAsyncKeyState('W');
+	bool down_pressed = gamePad.GetAxisLY() <= -0.5f || gamePad.GetAxisRY() <= -0.5f || (gamePad.GetButtonDown() & gamePad.BTN_DOWN) || GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState('S') & 0x8000;
+	bool up_pressed = gamePad.GetAxisLY() >= 0.5f || gamePad.GetAxisRY() >= 0.5f || (gamePad.GetButtonDown() & gamePad.BTN_UP) || GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState('W') & 0x8000;
 	bool buttonB_pressed = gamePad.GetButtonDown() & gamePad.BTN_B || mouse.GetButtonDown() & mouse.BTN_LEFT;
 
 	if (GetAsyncKeyState(VK_RETURN)& 0x8000)buttonB_pressed = true;
@@ -696,7 +698,10 @@ void GameScene::PauseUpdate(float elapsedTime)
 
 	if (!is_select_text)
 	{
-		if (gamePad.GetButtonUp() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 1)
+		pause_window_scale.EasingValue(elapsedTime);
+		if (pause_window_scale.is_easing)return;
+
+		if (gamePad.GetButtonDown() & gamePad.BTN_START || GetAsyncKeyState(VK_BACK) & 0x0001)
 		{
 			is_title_text = true;
 			pause_window_scale.CallValueEasing(1.0f, pause_window_scale.value, pause_window_scale.OutSine);
@@ -706,14 +711,12 @@ void GameScene::PauseUpdate(float elapsedTime)
 		}
 		if (is_title_text)
 		{
-			pause_window_scale.EasingValue(elapsedTime);
-			if (pause_window_scale.is_easing)return;
 
 			switch (select_num)
 			{
 			case Button::YES:
 				// 右を選んだとき
-				if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1 || GetAsyncKeyState('D') & 1)
+				if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState('D') & 0x8000)
 				{
 					Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 					no.CallValueEasing(1.1f, no.value, EasingFunction::EasingType::InSine);
@@ -744,7 +747,7 @@ void GameScene::PauseUpdate(float elapsedTime)
 				break;
 
 			case Button::NO:
-				if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
+				if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState('A') & 0x8000)// 左選択すると
 				{
 					Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 					yes.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::InSine);
@@ -824,7 +827,7 @@ void GameScene::PauseUpdate(float elapsedTime)
 		{
 		case Button::YES:
 			// 右を選んだとき
-			if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 1 || GetAsyncKeyState('D') & 1)
+			if (gamePad.GetAxisLX() >= 0.5f || gamePad.GetAxisRX() >= 0.5f || gamePad.GetButtonDown() & gamePad.BTN_RIGHT || GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState('D') & 0x8000)
 			{
 				Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 				no.CallValueEasing(1.1f, no.value, EasingFunction::EasingType::InSine);
@@ -854,7 +857,7 @@ void GameScene::PauseUpdate(float elapsedTime)
 			break;
 
 		case Button::NO:
-			if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 1 || GetAsyncKeyState('A') & 1)// 左選択すると
+			if (gamePad.GetAxisLX() <= -0.5f || gamePad.GetAxisRX() <= -0.5f || gamePad.GetButtonDown() & gamePad.BTN_LEFT || GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState('A') & 0x8000)// 左選択すると
 			{
 				Lemur::Audio::AudioManager::Instance().PlaySe(Lemur::Audio::SE::STICK, false);
 				yes.CallValueEasing(1.1f, yes.value, EasingFunction::EasingType::InSine);

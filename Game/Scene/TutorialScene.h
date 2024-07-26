@@ -56,11 +56,13 @@ private:// ゲーム
 
     float           timer_angle               = 0.0f;// タイマーの角度
 
-    int             tutorial_glf_num_x[9]     = {2,0,5,0,9,9,9,4,6};// 一番下のラインのとこ
+    int             tutorial_glf_num_x[4]     = {9,9,4,6};// 一番下のラインのとこ
     int             tutorial_gif_num          = 0;// GIFの番号
-
+    bool is_tutorial_gif;
     int             tutorial_state            = 0;// ステート
     int             unit_category             = 0;
+    bool is_menu_text;
+
 
     Fence*          fence                     = nullptr;
     Player*         player                    = nullptr;
@@ -76,10 +78,8 @@ private:
     std::shared_ptr<Sprite> pause_text_continue;
     std::shared_ptr<Sprite> pause_text_select;
 
-    std::shared_ptr<Sprite> tutorial_gif[9];
+    std::shared_ptr<Sprite> tutorial_gif[4];
 
-    std::shared_ptr<Sprite> button[4]       = {};
-    std::shared_ptr<Sprite> mission_text[8] = {};
     std::shared_ptr<Sprite> menu_text       = nullptr;
     std::shared_ptr<Sprite> reset_text      = nullptr;
     std::shared_ptr<Sprite> button_beside   = nullptr;
@@ -87,8 +87,20 @@ private:
     std::shared_ptr<Sprite> left_row        = nullptr;
     std::shared_ptr<Sprite> right_row       = nullptr;
     std::shared_ptr<Sprite> Frame_tutorial  = nullptr;
+    std::shared_ptr<Sprite> Base_tutorial  = nullptr;
     std::shared_ptr<Sprite> left_text       = nullptr;
     std::shared_ptr<Sprite> right_text      = nullptr;
+
+    std::shared_ptr<Sprite> button_anim_r = nullptr;
+    std::shared_ptr<Sprite> button_anim_l = nullptr;
+    std::shared_ptr<Sprite> button_anim_A = nullptr;
+    std::shared_ptr<Sprite> button_anim_D = nullptr;
+    std::shared_ptr<Sprite> mouse_click = nullptr;
+
+    std::shared_ptr<Sprite> change_unit_text = nullptr;
+    std::shared_ptr<Sprite> attack_text = nullptr;
+
+    std::shared_ptr<Sprite> select_back = nullptr;
 
     std::shared_ptr<Sprite> OK      = nullptr;
 
@@ -103,4 +115,5 @@ private:
     // skyMap
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> skymap;
 
+    DirectX::XMFLOAT2 try_pos;
 };

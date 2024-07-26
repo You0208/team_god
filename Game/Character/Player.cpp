@@ -74,6 +74,19 @@ void Player::GaugeRender()
     gauge_frame->RenderCenter(immediate_context, position.x * 66 + 960 - 90, 960, 44, 206);
 }
 
+void Player::GaugeRenderTutorial()
+{
+    float scaling_max = StageManager::Instance().GetStage(StageManager::Instance().GetStageIndex())->GetVariableStageWidth().y * 2;
+    float scale = (mouse_timer - dis_scarecrow) / scaling_max;
+    if (scaling_max <= mouse_timer)scale = 1.0f;
+
+    Lemur::Graphics::Graphics& graphics = Lemur::Graphics::Graphics::Instance();
+    ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+    gauge_base->RenderCenter(immediate_context, position.x * 66 + 1430 - 90, 960, 44, 206);
+    gauge_bar->RenderLeftDown(immediate_context, position.x * 66 + 1430 - 90 - 22, 960 + 103, 44, 206 * scale, 0);
+    gauge_frame->RenderCenter(immediate_context, position.x * 66 + 1430 - 90, 960, 44, 206);
+}
+
 // çXêVèàóù
 void Player::Update(float elapsedTime)
 {
@@ -319,10 +332,10 @@ void Player::ChangeCategory()
     //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X]= UnitManager::UNIT_INDEX::GreenPumpkin;
     //Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y]= UnitManager::UNIT_INDEX::OrangePumpkin;
 
-    if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('1') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
-    else if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('2') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
-    else if (gamePad.GetButtonDown() & gamePad.BTN_X || GetAsyncKeyState('3') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X];
-    else if (gamePad.GetButtonDown() & gamePad.BTN_Y || GetAsyncKeyState('4') & 1)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y];
+    if (gamePad.GetButtonDown() & gamePad.BTN_B || GetAsyncKeyState('2') & 0x8000)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.B];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_A || GetAsyncKeyState('3')  & 0x8000)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.A];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_X || GetAsyncKeyState('4')  & 0x8000)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.X];
+    else if (gamePad.GetButtonDown() & gamePad.BTN_Y || GetAsyncKeyState('1')  & 0x8000)unit_category = Lemur::Scene::SceneManager::Instance().set_unit_cont[gamePad.Y];
 }
 
 // ì¸óÕèàóù

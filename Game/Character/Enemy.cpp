@@ -136,7 +136,5 @@ void Enemy::Update(float elapsed_time)
 
     // サイズの更新
     UpdateScale();
-
-    DrawDebugPrimitive();
 }
 
